@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 //181A1B - darkgrey
 export default function NavBar() {
   return (
@@ -18,7 +19,15 @@ export default function NavBar() {
         />
       </svg>
 
-      <div className="text-lg font-bold">My Navbar</div>
+      <Link key="logo" href={"/"}>
+        <Image
+          className="mt-1"
+          src={"/img/OTR_Logo.avif"}
+          width={110}
+          height={110}
+          alt="picture of otr logo"
+        />
+      </Link>
       <div className="space-x-4">
         <a href="#home" className="text-gray-800 hover:text-blue-600">
           Home
