@@ -1,15 +1,15 @@
-import Link from "next/link";
-import Image from "next/image";
+import Link from 'next/link';
+import Image from 'next/image';
 
 export default function NavBar() {
   return (
-    <nav className="h-20 w-full z-50 shadow bg-white flex justify-between px-5 items-center">
+    <nav className="h-16 w-full z-50 shadow bg-[#181a1c] flex justify-between px-5 items-center">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
         viewBox="0 0 24 24"
         strokeWidth={1.5}
-        stroke="black"
+        stroke="white"
         className="size-8"
       >
         <path
@@ -18,9 +18,9 @@ export default function NavBar() {
           d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
         />
       </svg>
-      <Link href={"/"}>
+      <Link href={'/'}>
         <Image
-          src={"/img/OTR-Logo.avif"}
+          src={'/img/OTR-Logo.avif'}
           width={110}
           height={110}
           alt="picture of OTR logo"
@@ -31,7 +31,7 @@ export default function NavBar() {
         fill="none"
         viewBox="0 0 24 24"
         strokeWidth={1.5}
-        stroke="black"
+        stroke="white"
         className="size-8"
       >
         <path
