@@ -15,7 +15,7 @@ export default function GradeSelect({ onGradeChange }) {
   return (
     <>
       <div className="background flex h-6 items-center justify-start gap-3 border-none">
-        <h3 className="text-lg font-bold text-[#181a1c]">Grade:</h3>
+        <h3 className="text-lg font-bold text-[#181a1c] w-14">Grade:</h3>
         <select
           name="type"
           id=""

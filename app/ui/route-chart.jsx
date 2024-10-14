@@ -43,8 +43,6 @@ export default function RouteChart({ data, type }) {
     barColor = '#ee8919';
   }
 
-  console.log(transformedData);
-
   const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload && payload.length) {
       return (

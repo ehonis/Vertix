@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server';
 
 export async function POST(request) {
   const res = await request.json();
-  const { routeName, grade, type } = res;
+  const { routeName, grade, type, color } = res;
 
   const currentDate = new Date();
 
@@ -12,6 +12,7 @@ export async function POST(request) {
       title: routeName,
       grade,
       type,
+      color,
     },
   });
 

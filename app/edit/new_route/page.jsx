@@ -4,14 +4,16 @@ import GradeSelect from '@/app/ui/edit/new_route/grade-select';
 import ConfirmationPopUp from '@/app/ui/edit/new_route/confirmation-pop-up';
 import { findType } from '@/lib/routeScripts';
 import Notification from '@/app/ui/notification';
+import Link from 'next/link';
 
-export default function page() {
+export default function Page() {
   const [isNotification, setNotification] = useState(false);
   const [emotion, setEmotion] = useState();
   const [message, setMessage] = useState();
   const [isPopUp, setIsPopUp] = useState(false);
   const [routeName, setRouteName] = useState('');
   const [grade, setGrade] = useState('');
+  const [color, setColor] = useState();
 
   const handleRouteNameChange = (event) => setRouteName(event.target.value);
   const handleGradeChange = (selectedGrade) => setGrade(selectedGrade);
@@ -28,7 +30,7 @@ export default function page() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ routeName, grade, type }),
+        body: JSON.stringify({ routeName, grade, type, color }),
       });
       setEmotion('happy');
       setMessage('Successfully Added a New Route');
@@ -45,9 +47,33 @@ export default function page() {
   const handleQuit = () => {
     setNotification(false);
   };
+  const handleColorChange = (event) => {
+    setColor(event.target.value);
+  };
 
   return (
     <>
+      <div className="flex items-center justify-between text-center py-14 px-24 w-full">
+        <Link href={'/edit'}>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={1.5}
+            stroke="White"
+            className="size-10"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M9 15 3 9m0 0 6-6M3 9h12a6 6 0 0 1 0 12h-3"
+            />
+          </svg>
+        </Link>
+        <h1 className="text-white font-bold text-3xl">New Route</h1>
+        <div></div>
+      </div>
+
       {isNotification && (
         <Notification emotion={emotion} message={message} onQuit={handleQuit} />
       )}
@@ -59,11 +85,8 @@ export default function page() {
           onCancel={handleCancel}
         />
       )}
-      <div className="mt-32 bg-[#181a1c] mx-24  flex items-center justify-center py-10 rounded-3xl">
+      <div className=" bg-[#181a1c] mx-24  flex items-center justify-center py-10 rounded-3xl">
         <div className="flex w-1/2 flex-col justify-center overflow-hidden rounded-3xl bg-bg1 p-5 bg-[#3d4349] shadow-md">
-          <h1 className="mb-5 text-center text-3xl font-bold text-[#181a1c] ">
-            Create A New Route
-          </h1>
           <div className="flex flex-col items-center gap-3">
             <input
               type="text"
@@ -75,10 +98,30 @@ export default function page() {
             <div className="flex justify-start w-3/4 my-2">
               <GradeSelect onGradeChange={handleGradeChange} />
             </div>
+            <div className="flex justify-start w-3/4 my-2 gap-3">
+              <p className="text-lg font-bold text-[#181a1c] w-14">Color:</p>
+              <select
+                className="bg-[#181a1c] rounded text-gray-400 p-1"
+                name=""
+                id=""
+                onChange={handleColorChange}
+              >
+                <option value="">Black</option>
+                <option value="">White</option>
+                <option value="">Red</option>
+                <option value="">Orange</option>
+                <option value="">Yellow</option>
+                <option value="">Green</option>
+                <option value="">Blue</option>
+                <option value="">Purple</option>
+                <option value="">Pink</option>
+                <option value="">Brown</option>
+              </select>
+            </div>
             <div className="flex justify-end w-3/4">
               <button
                 onClick={handleSubmit}
-                className="mt-4 rounded-lg bg-blue-500 p-2 text-white"
+                className=" rounded-lg bg-blue-500 p-2 text-white"
               >
                 Submit
               </button>
