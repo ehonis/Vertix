@@ -1,18 +1,18 @@
-'use client';
-import { useState } from 'react';
-import GradeSelect from '@/app/ui/edit/new_route/grade-select';
-import ConfirmationPopUp from '@/app/ui/edit/new_route/confirmation-pop-up';
-import { findType } from '@/lib/routeScripts';
-import Notification from '@/app/ui/notification';
-import Link from 'next/link';
+"use client";
+import { useState } from "react";
+import GradeSelect from "@/app/ui/edit/new_route/grade-select";
+import ConfirmationPopUp from "@/app/ui/edit/new_route/confirmation-pop-up";
+import { findType } from "@/lib/routeScripts";
+import Notification from "@/app/ui/notification";
+import Link from "next/link";
 
 export default function Page() {
   const [isNotification, setNotification] = useState(false);
   const [emotion, setEmotion] = useState();
   const [message, setMessage] = useState();
   const [isPopUp, setIsPopUp] = useState(false);
-  const [routeName, setRouteName] = useState('');
-  const [grade, setGrade] = useState('');
+  const [routeName, setRouteName] = useState("");
+  const [grade, setGrade] = useState("");
   const [color, setColor] = useState();
 
   const handleRouteNameChange = (event) => setRouteName(event.target.value);
@@ -25,18 +25,18 @@ export default function Page() {
     setIsPopUp(false);
     const type = findType(grade);
     try {
-      await fetch('/api/add-route', {
-        method: 'POST',
+      await fetch("/api/add-route", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ routeName, grade, type, color }),
       });
-      setEmotion('happy');
-      setMessage('Successfully Added a New Route');
+      setEmotion("happy");
+      setMessage("Successfully Added a New Route");
       setNotification(true);
     } catch (error) {
-      setEmotion('bad');
+      setEmotion("bad");
       setMessage(error);
       setNotification(true);
     }
@@ -54,7 +54,7 @@ export default function Page() {
   return (
     <>
       <div className="flex items-center justify-between text-center py-14 px-24 w-full">
-        <Link href={'/edit'}>
+        <Link href={"/edit"}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -86,7 +86,7 @@ export default function Page() {
         />
       )}
       <div className=" bg-[#181a1c] mx-24  flex items-center justify-center py-10 rounded-3xl">
-        <div className="flex w-1/2 flex-col justify-center overflow-hidden rounded-3xl bg-bg1 p-5 bg-[#3d4349] shadow-md">
+        <div className="flex w-1/2 flex-col justify-center overflow-hidden rounded-3xl p-5 bg-[#3d4349] shadow-md">
           <div className="flex flex-col items-center gap-3">
             <input
               type="text"

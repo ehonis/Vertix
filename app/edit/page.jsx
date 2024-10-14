@@ -1,36 +1,13 @@
-'use client';
-
-import RoutePanel from '../ui/edit/route-panel';
-import Link from 'next/link';
-import { useState, useEffect } from 'react';
+import Link from "next/link";
+import { Suspense } from "react";
+import RoutePanels from "../ui/edit/route-panels";
 
 export default function Page() {
-  const [routes, setRoutes] = useState([]);
-
-  useEffect(() => {
-    const getRoutes = async () => {
-      try {
-        const response = await fetch('/api/get-route', {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
-
-        const data = await response.json();
-        setRoutes(data);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-    getRoutes();
-  }, []);
-
   return (
     <>
       <div className="flex justify-between w-full p-5">
         <h1 className="text-white text-3xl font-bold">Edit Routes</h1>
-        <Link href={'./edit/new_route'}>
+        <Link href={"./edit/new_route"}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -47,24 +24,20 @@ export default function Page() {
           </svg>
         </Link>
       </div>
-      <div className="bg-bg1 m-5 rounded">
+      <div className="bg-bg1 m-5 rounded p-5">
         <h2 className="text-white text-xl font-bold px-5">Ropes</h2>
         <div className="flex flex-col gap-5 p-5">
-          <RoutePanel />
-          <RoutePanel />
-          <RoutePanel />
-          <RoutePanel />
-          <RoutePanel />
+          <Suspense>
+            <RoutePanels />
+          </Suspense>
         </div>
       </div>
-      <div className="bg-bg1 m-5 rounded">
-        <h2 className="text-white text-xl font-bold px-5 p">Boulders</h2>
+      <div className="bg-bg1 m-5 rounded p-5">
+        <h2 className="text-white text-xl font-bold px-5">Boulders</h2>
         <div className="flex flex-col gap-5 p-5">
-          <RoutePanel />
-          <RoutePanel />
-          <RoutePanel />
-          <RoutePanel />
-          <RoutePanel />
+          <Suspense>
+            <RoutePanels />
+          </Suspense>
         </div>
       </div>
     </>
