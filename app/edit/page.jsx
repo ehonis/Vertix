@@ -2,7 +2,29 @@ import Link from "next/link";
 import { Suspense } from "react";
 import RoutePanels from "../ui/edit/route-panels";
 
-export default function Page() {
+const getRoutes = async () => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/get-route`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    return response.json();
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export default async function Page() {
+  const routes = await getRoutes();
+  const boulderRoutes = routes.data.filter((route) => route.type === "boulder");
+  const ropeRoutes = routes.data.filter((route) => route.type === "rope");
+
   return (
     <>
       <div className="flex justify-between w-full p-5">
@@ -27,17 +49,13 @@ export default function Page() {
       <div className="bg-bg1 m-5 rounded p-5">
         <h2 className="text-white text-xl font-bold px-5">Ropes</h2>
         <div className="flex flex-col gap-5 p-5">
-          <Suspense>
-            <RoutePanels />
-          </Suspense>
+          <RoutePanels routes={ropeRoutes} />
         </div>
       </div>
       <div className="bg-bg1 m-5 rounded p-5">
         <h2 className="text-white text-xl font-bold px-5">Boulders</h2>
         <div className="flex flex-col gap-5 p-5">
-          <Suspense>
-            <RoutePanels />
-          </Suspense>
+          <RoutePanels routes={boulderRoutes} />
         </div>
       </div>
     </>
