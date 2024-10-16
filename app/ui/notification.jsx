@@ -11,7 +11,7 @@ export default function Notification({ emotion, message, onQuit }) {
     const timer = setTimeout(() => {
       setIsVisible(false);
       onQuit(); // Call the onQuit function when it disappears
-    }, 3000);
+    }, 100000);
 
     return () => clearTimeout(timer); // Clean up the timer on unmount
   }, [onQuit]);
@@ -25,11 +25,11 @@ export default function Notification({ emotion, message, onQuit }) {
 
   return (
     <div
-      className={`fixed transition-all w-full duration-500 ease-in-out transform ${
+      className={`fixed top-16 transition-all w-full duration-500 ease-in-out transform ${
         isVisible ? 'h-8 opacity-100' : 'h-0 opacity-0 overflow-hidden'
       } flex ${color} p-1 items-center gap-2 justify-between z-50`}
     >
-      <button onClick={onQuit} className="rounded-full bg-red-500">
+      <button onClick={onQuit} className="rounded-full bg-red-600">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -45,7 +45,7 @@ export default function Notification({ emotion, message, onQuit }) {
           />
         </svg>
       </button>
-      <p className="text-black">{message}</p>
+      <p className="text-black font-bold ">{message}</p>
       <div></div>
     </div>
   );

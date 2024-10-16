@@ -5,7 +5,7 @@ import BoulderGradeSelect from './boulder-grade-select';
 import { useState } from 'react';
 
 export default function GradeSelect({ onGradeChange }) {
-  const [type, setType] = useState('rope');
+  const [type, setType] = useState();
 
   const handleTypeChange = (event) => setType(event.target.value);
   const handleGradeSelect = (selectedGrade) => {
@@ -22,14 +22,15 @@ export default function GradeSelect({ onGradeChange }) {
           onChange={handleTypeChange}
           className="bg-[#181a1c] rounded text-gray-400 p-1"
         >
+          <option value="none"></option>
           <option value="rope">Rope</option>
           <option value="boulder">Boulder</option>
         </select>
         {type === 'boulder' ? (
           <BoulderGradeSelect onGradeChange={handleGradeSelect} />
-        ) : (
+        ) : type === 'rope' ? (
           <RopeGradeSelect onGradeChange={handleGradeSelect} />
-        )}
+        ) : null}
       </div>
     </>
   );

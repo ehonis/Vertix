@@ -14,7 +14,7 @@ model Route {
     id      String   @id @default(cuid())
     title   String
     setDate DateTime @default(now())
-    color   String   @default("defaultColor") // Set a default color value
+    color   String // Set a default color value
     grade   String
     type    String
 }
