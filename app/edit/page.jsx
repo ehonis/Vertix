@@ -1,5 +1,7 @@
-import Link from 'next/link';
+'use server';
 
+import Link from 'next/link';
+import { revalidateTag } from 'next/cache';
 import RoutePanels from '../ui/edit/route-panels';
 
 const getRoutes = async () => {
@@ -10,7 +12,8 @@ const getRoutes = async () => {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-        }, // Move cache inside the options object
+        },
+        next: { tags: ['collection'] }, // Move cache inside the options object
       }
     );
 
@@ -21,6 +24,7 @@ const getRoutes = async () => {
 };
 
 export default async function Page() {
+  await revalidateTag('collection');
   const routes = await getRoutes();
 
   try {
