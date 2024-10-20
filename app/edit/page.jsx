@@ -4,15 +4,12 @@ import RoutePanels from '../ui/edit/route-panels';
 
 const getRoutes = async () => {
   try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/get-route`,
-      {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        }, // Move cache inside the options object
-      }
-    );
+    const response = await fetch(`/api/get-route`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      }, // Move cache inside the options object
+    });
 
     return response.json();
   } catch (error) {
