@@ -12,6 +12,7 @@ const getRoutes = async () => {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
+          'Cache-Control': 'no-store',
         }, // Move cache inside the options object
       }
     );
