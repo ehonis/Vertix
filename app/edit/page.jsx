@@ -13,7 +13,8 @@ const getRoutes = async () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        next: { tags: ['collection'] }, // Move cache inside the options object
+
+        cache: 'no-store', // Move cache inside the options object
       }
     );
 
@@ -24,7 +25,6 @@ const getRoutes = async () => {
 };
 
 export default async function Page() {
-  await revalidateTag('collection');
   const routes = await getRoutes();
 
   try {
