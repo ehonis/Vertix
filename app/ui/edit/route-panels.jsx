@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-
 import RoutePanel from './route-panel';
 import ConfirmationPopUp from './new_route/confirmation-pop-up';
 import Notification from '../notification';
@@ -11,7 +10,7 @@ export default function RoutePanels({ routes }) {
   const [isPopUp, setIsPopUp] = useState(false);
   const [emotion, setEmotion] = useState();
   const [message, setMessage] = useState();
-  const [checkedRoutes, setCheckedRoutes] = useState([]);
+
   const [isNotification, setIsNotification] = useState(false);
 
   const [checkedState, setCheckedState] = useState(
@@ -43,7 +42,10 @@ export default function RoutePanels({ routes }) {
   const handleCancel = () => {
     setIsPopUp(false);
   };
-  const handleConfirmation = () => {
+
+  const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+  const handleConfirmation = async () => {
     const checkedRoutes = checkedState.filter((route) => route.isChecked);
     let checkedRouteIds = [];
     checkedRoutes.forEach((element) => {
@@ -51,6 +53,30 @@ export default function RoutePanels({ routes }) {
     });
 
     console.log(checkedRouteIds);
+
+    try {
+      const data = await fetch('/api/delete-route', {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ routeIds: checkedRouteIds }),
+      });
+
+      const response = await data.json();
+      setEmotion('happy');
+      setMessage(response.message);
+      setIsNotification(true);
+
+      await wait(3000);
+
+      window.location.reload();
+    } catch (error) {
+      const response = await data.json();
+      setEmotion('bad');
+      setMessage(response.message);
+      setIsNotification(true);
+    }
 
     setIsPopUp(false);
   };

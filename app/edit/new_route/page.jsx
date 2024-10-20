@@ -121,16 +121,16 @@ export default function Page() {
                 onChange={handleColorChange}
               >
                 <option value=""></option>
-                <option value="">Black</option>
-                <option value="">White</option>
-                <option value="">Red</option>
-                <option value="">Orange</option>
-                <option value="">Yellow</option>
-                <option value="">Green</option>
-                <option value="">Blue</option>
-                <option value="">Purple</option>
-                <option value="">Pink</option>
-                <option value="">Brown</option>
+                <option value="black">Black</option>
+                <option value="white">White</option>
+                <option value="red">Red</option>
+                <option value="orange">Orange</option>
+                <option value="yellow">Yellow</option>
+                <option value="green">Green</option>
+                <option value="blue">Blue</option>
+                <option value="purple">Purple</option>
+                <option value="pink">Pink</option>
+                <option value="brown">Brown</option>
               </select>
             </div>
             <div className="flex justify-end w-3/4">

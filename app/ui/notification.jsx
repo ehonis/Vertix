@@ -25,7 +25,7 @@ export default function Notification({ emotion, message, onQuit }) {
 
   return (
     <div
-      className={`fixed top-16 transition-all w-full duration-500 ease-in-out transform ${
+      className={`fixed top-16 left-0 transition-all w-full duration-500 ease-in-out transform ${
         isVisible ? 'h-8 opacity-100' : 'h-0 opacity-0 overflow-hidden'
       } flex ${color} p-1 items-center gap-2 justify-between z-50`}
     >
