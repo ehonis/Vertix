@@ -1,7 +1,3 @@
-'use client';
-
-import { useState } from 'react';
-
 export default function ConfirmationPopUp({
   onConfirmation,
   onCancel,
@@ -25,7 +21,7 @@ export default function ConfirmationPopUp({
             onClick={onCancel}
             className="mt-4 rounded-lg bg-red-500 p-2 text-white"
           >
-            {' '}
+            {" "}
             Cancel
           </button>
         </div>
