@@ -10,12 +10,12 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { getTicks } from "@/lib/routeScripts";
-import { useEffect, useRef, useState } from "react";
+import useScrollAnimation from "../hooks/useScrollAnimation";
 import clsx from "clsx";
 
 export default function RouteChart({ data, type }) {
-  const [isVisible, setIsVisible] = useState(false);
-  const itemRef = useRef(null);
+  const [elementRef, isVisible] = useScrollAnimation(0.1);
+
   let barColor = "#7898ad";
   const routes = data.filter((route) => route.type === type);
 
@@ -62,24 +62,9 @@ export default function RouteChart({ data, type }) {
     return null;
   };
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([Entry]) => {
-        if (Entry.isIntersecting) {
-          setIsVisible(true);
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.1 }
-    );
-    if (itemRef.current) {
-      observer.observe(itemRef.current);
-    }
-  }, []);
-
   return (
     <div
-      ref={itemRef}
+      ref={elementRef}
       className={clsx(
         "w-1/2 h-96 pr-8 transition-all duration-500 transform",
         isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
