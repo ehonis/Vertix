@@ -1,7 +1,6 @@
 'use server';
 
 import Link from 'next/link';
-import { revalidatePath } from 'next/cache';
 import RoutePanels from '../ui/edit/route-panels';
 
 const getRoutes = async () => {
@@ -14,7 +13,7 @@ const getRoutes = async () => {
           'Content-Type': 'application/json',
           'Cache-Control': 'no-store',
         },
-        next: { revalidate: 10 }, // Move cache inside the options object
+        next: { revalidate: 1 }, // Move cache inside the options object
       }
     );
 
@@ -25,7 +24,6 @@ const getRoutes = async () => {
 };
 
 export default async function Page() {
-  revalidatePath('/edit');
   const routes = await getRoutes();
 
   try {

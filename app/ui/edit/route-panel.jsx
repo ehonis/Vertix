@@ -1,26 +1,50 @@
 import Link from 'next/link';
+import clsx from 'clsx';
 import { formatDate } from '@/lib/routeScripts';
 
-export default function RoutePanel({ id, name, grade, date, color, onChange }) {
-  if (color == 'defaultColor') {
-    color = 'gray';
-  }
+export default function RoutePanel({ id, name, grade, date, color }) {
+  // Format the date using routeScripts helper
   date = formatDate(date);
 
   return (
     <Link
       href={`/${id}`}
       key={id}
-      className="h-12 w-full bg-bg2 rounded flex justify-between pr-2 items-center"
+      className="h-16 w-full bg-bg2 rounded flex justify-between items-center pr-4 py-2 space-x-4"
     >
-      <div className="flex h-full items-center justify-center">
+      {/* Color block and name */}
+      <div className="flex items-center space-x-4 flex-grow">
+        {/* Color block */}
         <div
-          className={`bg-${color}-400 overflow-hidden h-full w-16 rounded-l`}
+          className={clsx(
+            'h-16 w-16 rounded-l overflow-hidden',
+            {
+              'bg-green-400': color === 'green',
+              'bg-red-400': color === 'red',
+              'bg-blue-400': color === 'blue',
+              'bg-yellow-400': color === 'yellow',
+              'bg-purple-400': color === 'purple',
+              'bg-orange-400': color === 'orange',
+              'bg-white': color === 'white',
+              'bg-slate-400': color === 'defaultColor',
+              'bg-pink-400': color === 'pink',
+            } // Using clsx for dynamic color
+          )}
         ></div>
-        <p className="text-white font-bold ml-2 w-14">{name}</p>
+
+        {/* Route name, taking up remaining space */}
+        <p className="text-white font-bold truncate">{name}</p>
       </div>
-      <p className="text-white font-bold">{grade}</p>
-      <p className="text-white font-bold">{date}</p>
+
+      {/* Grade and Date aligned on the right */}
+      <div className="flex space-x-4 items-center">
+        <p className="text-white font-extrabold">{grade}</p>
+
+        {/* Divider */}
+        <div className="w-[2px] h-12 bg-white"></div>
+
+        <p className="text-white font-bold">{date}</p>
+      </div>
     </Link>
   );
 }
