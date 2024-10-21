@@ -32,6 +32,10 @@ export default function NavBar() {
     setIsNavbar(!isNavbar);
   };
 
+  const navClick = () => {
+    setIsNavbar(true);
+  };
+
   return (
     <>
       <div
@@ -48,7 +52,7 @@ export default function NavBar() {
           isNavbar ? "opacity-0 -translate-x-full" : "opacity-100 translate-x-0"
         )}
       >
-        <Link href={"/edit"} className="flex z-[100]">
+        <Link href={"/edit"} className="flex z-[100]" onClick={navClick}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
