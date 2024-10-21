@@ -13,7 +13,8 @@ const getRoutes = async () => {
         headers: {
           'Content-Type': 'application/json',
           'Cache-Control': 'no-store',
-        }, // Move cache inside the options object
+        },
+        cache: 'no-cache', // Move cache inside the options object
       }
     );
 
