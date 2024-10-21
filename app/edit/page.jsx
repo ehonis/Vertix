@@ -4,6 +4,8 @@ import Link from 'next/link';
 import { revalidatePath } from 'next/cache';
 import RoutePanels from '../ui/edit/route-panels';
 
+export const revalidate = 10;
+
 const getRoutes = async () => {
   try {
     const response = await fetch(
