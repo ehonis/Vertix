@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import { useState, useRef, useEffect } from "react";
-import clsx from "clsx";
-import RoutePanel from "./route-panel";
-import ConfirmationPopUp from "./new_route/confirmation-pop-up";
-import Notification from "../notification";
+import { useState, useRef, useEffect } from 'react';
+import clsx from 'clsx';
+import RoutePanel from './route-panel';
+import ConfirmationPopUp from './new_route/confirmation-pop-up';
+import Notification from '../notification';
 
 export default function RoutePanels({ routes }) {
   const [isEdit, setIsEdit] = useState(false);
@@ -30,9 +30,9 @@ export default function RoutePanels({ routes }) {
     if (checkedState.find((route) => route.isChecked)) {
       setIsPopUp(true);
     } else {
-      setEmotion("bad");
+      setEmotion('bad');
       setMessage(
-        "Please make sure you check at least one route before you hit delete"
+        'Please make sure you check at least one route before you hit delete'
       );
       setIsNotification(true);
     }
@@ -56,16 +56,16 @@ export default function RoutePanels({ routes }) {
     console.log(checkedRouteIds);
 
     try {
-      const data = await fetch("/api/delete-route", {
-        method: "DELETE",
+      const data = await fetch('/api/delete-route', {
+        method: 'DELETE',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({ routeIds: checkedRouteIds }),
       });
 
       const response = await data.json();
-      setEmotion("happy");
+      setEmotion('happy');
       setMessage(response.message);
       setIsNotification(true);
 
@@ -74,7 +74,7 @@ export default function RoutePanels({ routes }) {
       window.location.reload();
     } catch (error) {
       const response = await data.json();
-      setEmotion("bad");
+      setEmotion('bad');
       setMessage(response.message);
       setIsNotification(true);
     }
@@ -127,13 +127,13 @@ export default function RoutePanels({ routes }) {
             (item) => item.id === route.id
           );
           return (
-            <div key={route.id}>
+            <div key={route.id} className="flex items-center ">
               {isEdit ? (
                 <input
                   type="checkbox"
                   checked={routeCheckbox.isChecked}
                   onChange={() => handleCheckboxChange(route.id)}
-                  className="mr-3"
+                  className="mr-3 w-6 h-6"
                 />
               ) : null}
               <RoutePanel
