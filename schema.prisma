@@ -21,15 +21,21 @@ model Route {
 }
 
 model User {
-    id          String            @id @default(cuid())
-    username    String            @unique
-    password    String
-    email       String            @unique
-    completions RouteCompletion[] // One-to-many relationship with RouteCompletion
-    attempts    RouteAttempt[] // One-to-many relationship with RouteAttempt
-    score       Int               @default(0)
-    badges      Badge[]
-    admin       Boolean           @default(false)
+    id            String            @id @default(cuid())
+    name          String?
+    email         String            @unique
+    emailVerified DateTime?
+    image         String?
+    password      String?
+    completions   RouteCompletion[] // One-to-many relationship with RouteCompletion
+    attempts      RouteAttempt[] // One-to-many relationship with RouteAttempt
+    score         Int               @default(0)
+    badges        Badge[]
+    admin         Boolean           @default(false)
+    createdAt     DateTime          @default(now())
+    updatedAt     DateTime          @updatedAt
+    Account       Account[]
+    Session       Session[]
 }
 
 model Badge {
@@ -54,4 +60,43 @@ model RouteAttempt {
     route       Route    @relation(fields: [routeId], references: [id])
     routeId     String
     attemptDate DateTime @default(now())
+}
+
+model Account {
+    userId            String
+    type              String
+    provider          String
+    providerAccountId String
+    refresh_token     String?
+    access_token      String?
+    expires_at        Int?
+    token_type        String?
+    scope             String?
+    id_token          String?
+    session_state     String?
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    @@id([provider, providerAccountId])
+}
+
+model Session {
+    sessionToken String   @unique
+    userId       String
+    expires      DateTime
+    user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model VerificationToken {
+    identifier String
+    token      String
+    expires    DateTime
+
+    @@id([identifier, token])
 }
