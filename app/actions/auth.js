@@ -1,6 +1,7 @@
 import prisma from '@/lib/prisma';
 import bcrypt from 'bcryptjs';
 import { SignupFormSchema } from '@/lib/definitions';
+import { redirect } from 'next/dist/server/api-utils';
 
 async function checkUniqueFields(username, email) {
   // Check for existing username
@@ -59,5 +60,14 @@ export async function signup(state, formData) {
     body: JSON.stringify({ username, email, hashedPassword }),
   });
 
+  await createSession(newUser.id);
+
+  redirect('/profile');
+
   return { status: 'success', user: newUser };
+}
+
+export async function logout() {
+  deleteSession();
+  redirect('/login');
 }

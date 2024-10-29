@@ -29,6 +29,7 @@ model User {
     attempts    RouteAttempt[] // One-to-many relationship with RouteAttempt
     score       Int               @default(0)
     badges      Badge[]
+    admin       Boolean           @default(false)
 }
 
 model Badge {
