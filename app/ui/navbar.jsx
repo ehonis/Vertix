@@ -8,7 +8,7 @@ export default async function NavBar() {
   const session = await auth();
   return (
     <>
-      <nav className="h-16 w-full z-50 shadow bg-[#181a1c] flex justify-between px-5 items-center">
+      <nav className="h-16 w-full z-50 shadow bg-[#181a1c] flex px-5 justify-between  items-center">
         <SideNav />
         <Link href={'/'}>
           <Image

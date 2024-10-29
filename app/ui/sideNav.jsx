@@ -43,7 +43,7 @@ export default function SideNav() {
           isNavbar ? 'invisible opacity-0' : 'visible opacity-25'
         )}
       ></div>
-      <div className="flex flex-col fixed top-16 w-30 h-30 z-50 bg-white right-0"></div>
+      <div className="flex flex-col fixed top-16 w-30 h-30 z-50 bg-bg1 "></div>
       <div
         ref={navRef}
         className={clsx(
