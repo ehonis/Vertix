@@ -1,19 +1,63 @@
+import prisma from '@/lib/prisma';
+import bcrypt from 'bcryptjs';
 import { SignupFormSchema } from '@/lib/definitions';
 
+async function checkUniqueFields(username, email) {
+  // Check for existing username
+
+  const response = await fetch(
+    `/api/user?username=${username}&email=${email}`,
+    {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    }
+  );
+  const result = await response.json();
+  const existingUser = result.data;
+
+  const errors = {};
+  if (existingUser) {
+    if (existingUser.username === username)
+      errors.username = ['Username is already taken'];
+    if (existingUser.email === email) errors.email = ['Email is already taken'];
+  }
+  return errors;
+}
+
 export async function signup(state, formData) {
-  // Validate form fields
-  const validatedFields = SignupFormSchema.safeParse({
-    name: formData.get('name'),
+  // Validate initial Zod schema (synchronous checks)
+  const parsedData = SignupFormSchema.safeParse({
+    username: formData.get('username'),
     email: formData.get('email'),
     password: formData.get('password'),
   });
 
-  // If any form fields are invalid, return early
-  if (!validatedFields.success) {
+  if (!parsedData.success) {
+    // Return field validation errors early if schema validation fails
     return {
-      errors: validatedFields.error.flatten().fieldErrors,
+      errors: parsedData.error.flatten().fieldErrors,
     };
   }
+  const { username, email, password } = parsedData.data;
+  // Check for unique fields asynchronously
+  const uniqueErrors = await checkUniqueFields(username, email);
+  if (Object.keys(uniqueErrors).length > 0) {
+    return { errors: uniqueErrors };
+  }
 
-  // Call the provider or db to create a user...
+  // Prepare user data for database insertion
+
+  const hashedPassword = await bcrypt.hash(password, 10);
+
+  const newUser = await fetch('/api/user', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ username, email, hashedPassword }),
+  });
+
+  return { status: 'success', user: newUser };
 }

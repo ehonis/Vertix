@@ -2,6 +2,7 @@
 
 import { useFormState, useFormStatus } from 'react-dom';
 import { signup } from '@/app/actions/auth';
+import Link from 'next/link';
 
 export default function SignupForm() {
   const [state, action] = useFormState(signup, undefined);
@@ -13,21 +14,30 @@ export default function SignupForm() {
         className="bg-bg1 flex flex-col items-center justify-center p-5 w-96 rounded-lg shadow-md"
         action={action}
       >
-        <div className="mb-4">
-          <label
-            htmlFor="name"
-            className="block text-sm font-medium text-white"
-          >
-            Name
-          </label>
-          <input
-            id="name"
-            name="name"
-            placeholder="Name"
-            className="mt-1 p-2 w-full border rounded"
-          />
+        <div className="mb-4 flex-col flex">
+          <div>
+            <label
+              htmlFor="name"
+              className="block text-sm font-medium text-white"
+            >
+              Username
+            </label>
+          </div>
+          <div className="flex">
+            <div className="w-8 text-white font-bold text-center rounded-l-md p-2 bg-bg2 border mt-1">
+              @
+            </div>
+            <input
+              id="username"
+              name="username"
+              placeholder="Username"
+              className="mt-1 p-2 w-full border rounded-r"
+            />
+          </div>
         </div>
-        {state?.errors?.name && <p>{state.errors.name}</p>}
+        {state?.errors?.username && (
+          <p className="text-red-500">{state.errors.username}</p>
+        )}
         <div className="mb-4">
           <label
             htmlFor="email"
@@ -43,7 +53,9 @@ export default function SignupForm() {
             className="mt-1 p-2 w-full border rounded"
           />
         </div>
-        {state?.errors?.email && <p>{state.errors.email}</p>}
+        {state?.errors?.email && (
+          <p className="text-red-500">{state.errors.email}</p>
+        )}
         <div className="mb-4">
           <label
             htmlFor="password"
@@ -73,9 +85,11 @@ export default function SignupForm() {
         <SubmitButton />
       </form>
       <p className="text-white mt-5 mb-2">Already have an account?</p>
-      <button className="bg-green-400 w-20 p-2 rounded text-white font-bold ">
-        Login
-      </button>
+      <Link href={'/login'}>
+        <button className="bg-green-400 w-20 p-2 rounded text-white font-bold ">
+          Login
+        </button>
+      </Link>
     </div>
   );
 }

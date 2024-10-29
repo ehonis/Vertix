@@ -23,7 +23,6 @@ model Route {
 model User {
     id          String            @id @default(cuid())
     username    String            @unique
-    name        String?
     password    String
     email       String            @unique
     completions RouteCompletion[] // One-to-many relationship with RouteCompletion
