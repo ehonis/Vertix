@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import SideNav from './sideNav';
-import UserAvatar from './UserAvatar';
+import UserProfile from './UserProfile';
 import { auth } from '@/auth';
 
 export default async function NavBar() {
@@ -20,9 +20,9 @@ export default async function NavBar() {
         </Link>
         <button>
           {session && session.user ? (
-            <UserAvatar userAvatar={session.user.image} />
+            <UserProfile user={session.user} />
           ) : (
-            <UserAvatar userAvatar={null} />
+            <UserProfile user={null} />
           )}
         </button>
       </nav>

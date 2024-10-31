@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import RoutePanels from '../ui/edit/route-panels';
+import { auth } from '@/auth';
 
 const getRoutes = async () => {
   try {

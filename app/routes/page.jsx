@@ -1,5 +1,5 @@
 import RouteTiles from '../ui/routes/routeTiles';
-
+import { auth } from '@/auth';
 const getRoutes = async () => {
   try {
     const response = await fetch(
@@ -19,8 +19,23 @@ const getRoutes = async () => {
     console.error(error);
   }
 };
+const postRouteCompletion = async (userId, routeId) => {
+  try {
+    await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/user/add-route-completion`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId: userId, routeId: routeId }),
+      }
+    );
+  } catch (error) {
+    console.error(error);
+  }
+};
 
 export default async function RoutePage() {
+  const session = await auth();
   const routes = await getRoutes();
 
   try {

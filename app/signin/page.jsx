@@ -4,8 +4,8 @@ import SignOut from '../ui/sign-out-button';
 
 export default function SignInForm() {
   return (
-    <div className="flex items-center flex-col justify-center min-h-screen -translate-y-[6rem]">
-      <h1 className="text-3xl text-white font-bold m-5">Login</h1>
+    <div className="flex items-center flex-col justify-center mt-16">
+      <h1 className="text-3xl text-white font-bold m-5">Login or Sign Up</h1>
       <div className="bg-bg1 flex flex-col items-center justify-center p-5 w-96 rounded-lg shadow-md gap-3">
         <form
           action={async () => {
@@ -39,7 +39,7 @@ export default function SignInForm() {
                 d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z"
               ></path>
             </svg>
-            Sign in with Google
+            Sign in/up with Google
           </button>
         </form>
 
@@ -65,18 +65,10 @@ export default function SignInForm() {
                 clipRule="evenodd"
               />
             </svg>
-            Sign in with GitHub
+            Sign in/up with GitHub
           </button>
         </form>
-        <SignOut />
       </div>
-
-      <p className="text-white mt-5 mb-2">Need an Account?</p>
-      <Link href={'/login'}>
-        <button className="bg-green-400 w-max p-2 rounded text-white font-bold ">
-          <span>Create an Account</span>
-        </button>
-      </Link>
     </div>
   );
 }
