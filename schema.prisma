@@ -52,6 +52,8 @@ model RouteCompletion {
     route          Route    @relation(fields: [routeId], references: [id])
     routeId        String
     completionDate DateTime @default(now())
+
+    @@unique([userId, routeId])
 }
 
 model RouteAttempt {

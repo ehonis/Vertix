@@ -1,5 +1,6 @@
 import RouteTiles from '../ui/routes/routeTiles';
 import { auth } from '@/auth';
+import { getRouteCompletions } from '@/lib/routeCompletions';
 const getRoutes = async () => {
   try {
     const response = await fetch(
@@ -19,24 +20,12 @@ const getRoutes = async () => {
     console.error(error);
   }
 };
-const postRouteCompletion = async (userId, routeId) => {
-  try {
-    await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/user/add-route-completion`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId: userId, routeId: routeId }),
-      }
-    );
-  } catch (error) {
-    console.error(error);
-  }
-};
 
 export default async function RoutePage() {
   const session = await auth();
+  const user = session?.user || null;
   const routes = await getRoutes();
+  const completions = await getRouteCompletions(user.id);
 
   try {
     const boulderRoutes = routes.data.filter(
@@ -45,7 +34,12 @@ export default async function RoutePage() {
     const ropeRoutes = routes.data.filter((route) => route.type === 'rope');
     return (
       <>
-        <RouteTiles ropes={ropeRoutes} boulders={boulderRoutes} />
+        <RouteTiles
+          ropes={ropeRoutes}
+          boulders={boulderRoutes}
+          user={user}
+          completions={completions}
+        />
       </>
     );
   } catch {
