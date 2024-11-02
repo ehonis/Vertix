@@ -1,3 +1,5 @@
+'use client';
+
 import { useEffect, useState } from 'react';
 
 export default function Notification({ emotion, message, onQuit }) {
@@ -7,11 +9,11 @@ export default function Notification({ emotion, message, onQuit }) {
     // Show the notification when the component mounts
     setIsVisible(true);
 
-    // Hide the notification after some time (e.g., 3 seconds)
+    // Hide the notification after 3 seconds
     const timer = setTimeout(() => {
       setIsVisible(false);
       onQuit(); // Call the onQuit function when it disappears
-    }, 100000);
+    }, 3000);
 
     return () => clearTimeout(timer); // Clean up the timer on unmount
   }, [onQuit]);
@@ -25,18 +27,18 @@ export default function Notification({ emotion, message, onQuit }) {
 
   return (
     <div
-      className={`fixed top-16 left-0 transition-all w-full duration-500 ease-in-out transform ${
-        isVisible ? 'h-8 opacity-100' : 'h-0 opacity-0 overflow-hidden'
-      } flex ${color} p-1 items-center gap-2 justify-between z-50`}
+      className={`fixed bottom-4 left-4 transition-all duration-500 ease-in-out transform ${
+        isVisible ? 'opacity-100' : 'opacity-0'
+      } ${color} p-3 rounded-lg shadow-lg flex items-center gap-2 z-50 w-72`}
     >
-      <button onClick={onQuit} className="rounded-full bg-red-600">
+      <button onClick={onQuit} className="rounded-full bg-red-600 p-1">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
           viewBox="0 0 24 24"
           strokeWidth={2}
           stroke="white"
-          className="size-4"
+          className="w-4 h-4"
         >
           <path
             strokeLinecap="round"
@@ -45,8 +47,7 @@ export default function Notification({ emotion, message, onQuit }) {
           />
         </svg>
       </button>
-      <p className="text-black font-bold ">{message}</p>
-      <div></div>
+      <p className="text-black font-bold truncate">{message}</p>
     </div>
   );
 }

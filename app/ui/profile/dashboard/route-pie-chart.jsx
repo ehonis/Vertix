@@ -30,7 +30,7 @@ function CustomTooltip({ active, payload }) {
   return null;
 }
 
-export default function RoutePieChart() {
+export default function RoutePieChart({ userData }) {
   return (
     <div className="w-72 h-72 bg-bg1 rounded-lg p-4 flex flex-col justify-between items-center">
       <h2 className="text-white font-bold text-xl">Total Completed Routes</h2>

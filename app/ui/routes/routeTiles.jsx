@@ -2,9 +2,17 @@
 
 import Link from 'next/link';
 import RouteTile from './routeTile';
+import { useState } from 'react';
+import Notification from '../notification';
+import { useRouter } from 'next/navigation';
 
 export default function RouteTiles({ ropes, boulders, user, completions }) {
-  const postRouteCompletion = async (userId, routeId) => {
+  const router = useRouter();
+  const [isNotification, setNotification] = useState(false);
+  const [emotion, setEmotion] = useState();
+  const [message, setMessage] = useState();
+
+  const postRouteCompletion = async (userId, routeId, routeName) => {
     try {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_BASE_URL}/api/user/add-route-completion`,
@@ -14,22 +22,75 @@ export default function RouteTiles({ ropes, boulders, user, completions }) {
           body: JSON.stringify({ userId: userId, routeId: routeId }),
         }
       );
+      if (response.ok) {
+        setEmotion('happy');
+        setMessage(`Completed ${routeName}`);
+        setNotification(true);
+      } else {
+        setEmotion('bad');
+        setMessage(
+          `Could not completed ${routeName}, error : ${response.error}`
+        );
+        setNotification(true);
+      }
+    } catch (error) {
+      setEmotion('bad');
+      setMessage(error);
+      setNotification(true);
+      console.error(error);
+    }
+    router.refresh();
+  };
+
+  const postRouteUnCompletion = async (userId, routeId, routeName) => {
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/user/remove-route-completion`,
+        {
+          method: 'DELETE',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ userId: userId, routeId: routeId }),
+        }
+      );
+      if (response.ok) {
+        setEmotion('happy');
+        setMessage(`Uncompleted ${routeName}`);
+        setNotification(true);
+      } else {
+        setEmotion('bad');
+        setMessage(
+          `Could not Uncompleted ${routeName}, error : ${response.error}`
+        );
+        setNotification(true);
+      }
+
+      router.refresh();
     } catch (error) {
       console.error(error);
     }
   };
 
-  const handleQuickCompletion = async (routeId) => {
-    postRouteCompletion(user.id, routeId);
+  const handleQuickCompletion = async (routeId, routeName) => {
+    postRouteCompletion(user.id, routeId, routeName);
+  };
+  const handleQuickUncomplete = async (routeId, routeName) => {
+    postRouteUnCompletion(user.id, routeId, routeName);
+  };
+  const handleQuit = () => {
+    setNotification(false);
   };
 
   const completedRouteIds = completions.map((completion) => completion.routeId);
 
   return (
     <>
+      {isNotification && (
+        <Notification emotion={emotion} message={message} onQuit={handleQuit} />
+      )}
       <div className="flex flex-col h-screen">
         <div className="flex justify-between px-5 pt-5 pb-1">
-          <div>
+          <h1 className="text-white font-bold text-3xl">Routes</h1>
+          {/* <div>
             <button className="relative bg-transparent text-white outline outline-1 outline-white px-3 overflow-hidden group ">
               <span className="absolute inset-0 bg-white transition-all duration-500 transform -translate-x-full group-hover:translate-x-0"></span>
               <span className="relative group-hover:text-black transition-all duration-500">
@@ -50,7 +111,7 @@ export default function RouteTiles({ ropes, boulders, user, completions }) {
                 quickFilter
               </span>
             </button>
-          </div>
+          </div> */}
         </div>
         <div className="flex gap-5 p-5">
           <div className="bg-bg1 w-max h-full rounded-xl">
@@ -70,9 +131,14 @@ export default function RouteTiles({ ropes, boulders, user, completions }) {
                     </Link>
                     {user && !completedRouteIds.includes(route.id) ? (
                       <button
-                        onClick={() => handleQuickCompletion(route.id)}
-                        className="bg-slate-500 size-10 flex items-center justify-center rounded-full group hover:bg-green-400 transition-all duration-300"
+                        onClick={() =>
+                          handleQuickCompletion(route.id, route.title)
+                        }
+                        className="bg-slate-500 size-10 flex items-center justify-center rounded-full group hover:bg-green-400 transition-all duration-300 relative"
                       >
+                        <span className="absolute left-full ml-2 px-2 py-1 text-xs text-white bg-black rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap">
+                          Quick Complete
+                        </span>
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           fill="none"
@@ -90,9 +156,14 @@ export default function RouteTiles({ ropes, boulders, user, completions }) {
                     ) : null}
                     {user && completedRouteIds.includes(route.id) ? (
                       <button
-                        onClick={() => handleQuickCompletion(route.id)}
-                        className="bg-green-500 size-10 flex items-center justify-center rounded-full group hover:bg-red-400 transition-all duration-300"
+                        onClick={() =>
+                          handleQuickUncomplete(route.id, route.title)
+                        }
+                        className="bg-green-500 size-10 flex items-center justify-center rounded-full group hover:bg-red-400 transition-all duration-300 relative"
                       >
+                        <span className="absolute left-full ml-2 px-2 py-1 text-xs text-white bg-black rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap">
+                          Uncomplete
+                        </span>
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           fill="none"
@@ -130,9 +201,14 @@ export default function RouteTiles({ ropes, boulders, user, completions }) {
                     </Link>
                     {user && !completedRouteIds.includes(route.id) ? (
                       <button
-                        onClick={() => handleQuickCompletion(route.id)}
-                        className="bg-slate-500 size-10 flex items-center justify-center rounded-full group hover:bg-green-400 transition-all duration-300"
+                        onClick={() =>
+                          handleQuickCompletion(route.id, route.title)
+                        }
+                        className="bg-slate-500 size-10 flex items-center justify-center rounded-full group hover:bg-green-400 transition-all duration-300 relative"
                       >
+                        <span className="absolute left-full ml-2 px-2 py-1 text-xs text-white bg-black rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap">
+                          Quick Complete
+                        </span>
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           fill="none"
@@ -150,9 +226,14 @@ export default function RouteTiles({ ropes, boulders, user, completions }) {
                     ) : null}
                     {user && completedRouteIds.includes(route.id) ? (
                       <button
-                        onClick={() => handleQuickCompletion(route.id)}
-                        className="bg-green-500 size-10 flex items-center justify-center rounded-full group hover:bg-red-400 transition-all duration-300"
+                        onClick={() =>
+                          handleQuickUncomplete(route.id, route.title)
+                        }
+                        className="bg-green-500 size-10 flex items-center justify-center rounded-full group hover:bg-red-400 transition-all duration-300 relative"
                       >
+                        <span className="absolute left-full ml-2 px-2 py-1 text-xs text-white bg-black rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap">
+                          Uncomplete
+                        </span>
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           fill="none"
