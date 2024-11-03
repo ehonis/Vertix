@@ -16,6 +16,7 @@ model Route {
     grade       String
     type        String
     score       Int               @default(0) // New score field with a default value of 0
+    isArchive   Boolean           @default(false)
     completions RouteCompletion[] // One-to-many relationship with RouteCompletion
     attempts    RouteAttempt[] // One-to-many relationship with RouteAttempt
 }
@@ -37,6 +38,7 @@ model User {
     updatedAt     DateTime          @updatedAt
     Account       Account[]
     Session       Session[]
+    private       Boolean           @default(false)
 }
 
 model Badge {
