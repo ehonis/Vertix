@@ -25,24 +25,45 @@ export default async function RoutePage() {
   const session = await auth();
   const user = session?.user || null;
   const routes = await getRoutes();
-  const completions = await getRouteCompletions(user.id);
 
-  try {
-    const boulderRoutes = routes.data.filter(
-      (route) => route.type === 'boulder'
-    );
-    const ropeRoutes = routes.data.filter((route) => route.type === 'rope');
-    return (
-      <>
-        <RouteTiles
-          ropes={ropeRoutes}
-          boulders={boulderRoutes}
-          user={user}
-          completions={completions}
-        />
-      </>
-    );
-  } catch {
-    return <div>failed to get any routes</div>;
+  if (user) {
+    const completions = await getRouteCompletions(user.id);
+    try {
+      const boulderRoutes = routes.data.filter(
+        (route) => route.type === 'boulder'
+      );
+      const ropeRoutes = routes.data.filter((route) => route.type === 'rope');
+      return (
+        <>
+          <RouteTiles
+            ropes={ropeRoutes}
+            boulders={boulderRoutes}
+            user={user}
+            completions={completions}
+          />
+        </>
+      );
+    } catch {
+      return <div className="text-white">failed to get any routes</div>;
+    }
+  } else {
+    try {
+      const boulderRoutes = routes.data.filter(
+        (route) => route.type === 'boulder'
+      );
+      const ropeRoutes = routes.data.filter((route) => route.type === 'rope');
+      return (
+        <>
+          <RouteTiles
+            ropes={ropeRoutes}
+            boulders={boulderRoutes}
+            user={user}
+            completions={{}}
+          />
+        </>
+      );
+    } catch {
+      return <div className="text-white">failed to get any routes</div>;
+    }
   }
 }
