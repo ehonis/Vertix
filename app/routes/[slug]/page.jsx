@@ -8,7 +8,7 @@ import { formatDate } from '@/lib/routeScripts';
 import { auth } from '@/auth';
 import Link from 'next/link';
 
-export default async function ({ params }) {
+export default async function IndividualRoute({ params }) {
   const session = await auth();
   const routeId = params.slug;
   const user = session?.user || null;
