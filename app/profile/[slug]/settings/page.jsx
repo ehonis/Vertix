@@ -2,6 +2,7 @@ import SignOut from '@/app/ui/sign-out-button';
 import SettingsNavBar from '@/app/ui/profile/settings/settings-nav-bar';
 import { redirect } from 'next/navigation';
 import { auth } from '@/auth';
+import prisma from '@/prisma';
 
 export default async function Settings({ params }) {
   const session = await auth();
