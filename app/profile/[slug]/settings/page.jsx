@@ -14,10 +14,12 @@ export default async function Settings({ params }) {
 
   if (user && user.id === session.user.id) {
     return (
-      <div className="flex flex-col w-screen h-screen p-5 gap-5">
-        <h1 className="text-white text-3xl font-bold">Settings</h1>
+      <div className="flex flex-col h-screen ml-5 p-5 gap-5">
+        <div className="flex justify-between">
+          <h1 className="text-white text-3xl font-bold">Settings</h1>
+          <SignOut />
+        </div>
         <SettingsNavBar userData={user} />
-        <SignOut />
       </div>
     );
   } else {

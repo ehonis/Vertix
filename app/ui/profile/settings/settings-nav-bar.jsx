@@ -6,7 +6,7 @@ import ProfileSettingsPane from './profile-settings-pane';
 export default function SettingsNavBar({ userData }) {
   console.log(userData);
   const [isPrivacy, setIsPrivacy] = useState(false);
-  const [isProfile, setIsProfile] = useState(true);
+  const [isProfile, setIsProfile] = useState(false);
 
   const handleProfileClick = () => {
     setIsProfile(!isProfile);
@@ -16,9 +16,12 @@ export default function SettingsNavBar({ userData }) {
   };
 
   return (
-    <div className="flex gap-5 w-full p-5">
+    <div className="flex gap-5 w-full ">
       <nav className="bg-bg1 w-48 h-max rounded-lg p-5 flex flex-col gap-3">
-        <button className="flex items-center justify-between bg-bg2 rounded p-1 group hover:bg-white transition-all duration-300">
+        <button
+          className="flex items-center justify-between bg-bg2 rounded p-1 group hover:bg-white transition-all duration-300"
+          onClick={handleProfileClick}
+        >
           <p className="text-white group-hover:text-black">Profile Settings</p>
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -34,7 +37,10 @@ export default function SettingsNavBar({ userData }) {
             />
           </svg>
         </button>
-        <button className="flex items-center justify-between bg-bg2 rounded p-1 group hover:bg-white transition-all duration-300">
+        <button
+          className="flex items-center justify-between bg-bg2 rounded p-1 group hover:bg-white transition-all duration-300"
+          onClick={handlePrivacyClick}
+        >
           <p className="text-white group-hover:text-black">Privacy Settings</p>
           <svg
             xmlns="http://www.w3.org/2000/svg"

@@ -11,6 +11,7 @@ export async function POST(request) {
       grade,
       type,
       color,
+      communityGrade: grade,
     },
   });
 

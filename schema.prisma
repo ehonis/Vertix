@@ -9,16 +9,26 @@ datasource db {
 }
 
 model Route {
-    id          String            @id @default(cuid())
-    title       String
-    setDate     DateTime          @default(now())
-    color       String // Set a default color value
-    grade       String
-    type        String
-    score       Int               @default(0) // New score field with a default value of 0
-    isArchive   Boolean           @default(false)
-    completions RouteCompletion[] // One-to-many relationship with RouteCompletion
-    attempts    RouteAttempt[] // One-to-many relationship with RouteAttempt
+    id             String            @id @default(cuid())
+    title          String
+    setDate        DateTime          @default(now())
+    color          String // Set a default color value
+    grade          String
+    communityGrade String?
+    images         RouteImage[]
+    type           String
+    score          Int               @default(0) // New score field with a default value of 0
+    isArchive      Boolean           @default(false)
+    completions    RouteCompletion[] // One-to-many relationship with RouteCompletion
+    attempts       RouteAttempt[] // One-to-many relationship with RouteAttempt
+}
+
+model RouteImage {
+    id        String   @id @default(cuid())
+    url       String // URL of the image
+    route     Route    @relation(fields: [routeId], references: [id])
+    routeId   String
+    createdAt DateTime @default(now())
 }
 
 model User {
@@ -53,6 +63,7 @@ model RouteCompletion {
     userId         String
     route          Route    @relation(fields: [routeId], references: [id])
     routeId        String
+    sends          Int      @default(1)
     completionDate DateTime @default(now())
 
     @@unique([userId, routeId])
