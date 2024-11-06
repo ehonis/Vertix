@@ -36,7 +36,6 @@ export default function RoutePieChart({ userData }) {
       data[1] = { rope: 0 };
     }
 
-    console.log(data);
     const dataTransformed = data.map((type) => {
       // Get the key and value from each object
       const [name, value] = Object.entries(type)[0];

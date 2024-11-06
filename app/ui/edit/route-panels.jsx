@@ -53,8 +53,6 @@ export default function RoutePanels({ routes }) {
       checkedRouteIds.push(element.id);
     });
 
-    console.log(checkedRouteIds);
-
     try {
       const data = await fetch('/api/delete-route', {
         method: 'DELETE',

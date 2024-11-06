@@ -4,7 +4,6 @@ import { useState } from 'react';
 import ProfileSettingsPane from './profile-settings-pane';
 
 export default function SettingsNavBar({ userData }) {
-  console.log(userData);
   const [isPrivacy, setIsPrivacy] = useState(false);
   const [isProfile, setIsProfile] = useState(false);
 
