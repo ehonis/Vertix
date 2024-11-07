@@ -2,9 +2,14 @@
 
 import { useState } from 'react';
 import clsx from 'clsx';
-import FunctionButtonMenu from './function-button-menu';
+import FunctionButtonMenu from './menus/function-button-menu';
 
-export default function FunctionButton({ route, userId, isComplete }) {
+export default function FunctionButton({
+  route,
+  userId,
+  isComplete,
+  isGraded,
+}) {
   const [isButtonActive, setIsButtonActive] = useState(false);
 
   const handleButtonClick = () => {
@@ -37,6 +42,7 @@ export default function FunctionButton({ route, userId, isComplete }) {
           route={route}
           userId={userId}
           isComplete={isComplete}
+          isGraded={isGraded}
         />
       ) : null}
     </div>

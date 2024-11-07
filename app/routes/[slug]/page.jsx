@@ -5,6 +5,7 @@ import ImageSlider from '@/app/ui/routes/individualRoutePage/route-image-slider'
 import FunctionButton from '@/app/ui/routes/individualRoutePage/function-button';
 import { findIfCompleted } from '@/lib/routeCompletions';
 import { formatDate } from '@/lib/routeScripts';
+import { findIfCommunityGraded } from '@/lib/communityGrade';
 import { auth } from '@/auth';
 import Link from 'next/link';
 
@@ -16,8 +17,10 @@ export default async function IndividualRoute({ params }) {
   const route = await getRouteById(routeId);
   const color = route.color;
   const date = formatDate(route.setDate);
+
   if (user) {
     const isComplete = await findIfCompleted(user.id, routeId);
+    const isGraded = await findIfCommunityGraded(user.id, routeId);
     return (
       <div className="w-screen flex items-center justify-center flex-col mt-10">
         <div className="flex w-4/5 md:w-3/5 justify-between items-center mb-4">
@@ -41,6 +44,7 @@ export default async function IndividualRoute({ params }) {
             route={route}
             userId={user.id}
             isComplete={isComplete}
+            isGraded={isGraded}
           />
         </div>
         <div className="w-4/5 md:w-3/5 bg-bg1 h-max">

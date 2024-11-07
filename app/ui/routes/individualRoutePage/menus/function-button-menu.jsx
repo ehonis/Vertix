@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { getGradeRange } from '@/lib/routes';
 import CompleteMenu from './complete-menu';
 
 export default function FunctionButtonMenu({
@@ -9,6 +8,7 @@ export default function FunctionButtonMenu({
   route,
   userId,
   isComplete,
+  isGraded,
 }) {
   const [isVisible, setIsVisible] = useState(false);
   const [menu, setIsMenu] = useState('Action Menu');
@@ -146,7 +146,12 @@ export default function FunctionButtonMenu({
             </div>
           ) : null}
           {menu === 'Complete Menu' ? (
-            <CompleteMenu isComplete={isComplete} route={route} />
+            <CompleteMenu
+              isComplete={isComplete}
+              route={route}
+              userId={userId}
+              isGraded={isGraded}
+            />
           ) : null}
         </div>
       </div>

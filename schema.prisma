@@ -9,18 +9,18 @@ datasource db {
 }
 
 model Route {
-    id             String            @id @default(cuid())
-    title          String
-    setDate        DateTime          @default(now())
-    color          String // Set a default color value
-    grade          String
-    communityGrade String?
-    images         RouteImage[]
-    type           String
-    score          Int               @default(0) // New score field with a default value of 0
-    isArchive      Boolean           @default(false)
-    completions    RouteCompletion[] // One-to-many relationship with RouteCompletion
-    attempts       RouteAttempt[] // One-to-many relationship with RouteAttempt
+    id              String            @id @default(cuid())
+    title           String
+    setDate         DateTime          @default(now())
+    color           String // Set a default color value
+    grade           String
+    communityGrades CommunityGrade[]
+    images          RouteImage[]
+    type            String
+    score           Int               @default(0) // New score field with a default value of 0
+    isArchive       Boolean           @default(false)
+    completions     RouteCompletion[] // One-to-many relationship with RouteCompletion
+    attempts        RouteAttempt[] // One-to-many relationship with RouteAttempt
 }
 
 model RouteImage {
@@ -31,24 +31,38 @@ model RouteImage {
     createdAt DateTime @default(now())
 }
 
+model CommunityGrade {
+    id        Int      @id @default(autoincrement())
+    grade     String // The grade assigned by the user
+    user      User     @relation(fields: [userId], references: [id])
+    userId    String
+    route     Route    @relation(fields: [routeId], references: [id])
+    routeId   String
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@unique([userId, routeId]) // Ensure only one grade per user per route
+}
+
 model User {
-    id            String            @id @default(cuid())
-    name          String?
-    email         String            @unique
-    emailVerified DateTime?
-    image         String?
-    password      String?
-    completions   RouteCompletion[] // One-to-many relationship with RouteCompletion
-    attempts      RouteAttempt[] // One-to-many relationship with RouteAttempt
-    score         Int               @default(0)
-    badges        Badge[]
-    admin         Boolean           @default(false)
-    routeSetter   Boolean           @default(false)
-    createdAt     DateTime          @default(now())
-    updatedAt     DateTime          @updatedAt
-    Account       Account[]
-    Session       Session[]
-    private       Boolean           @default(false)
+    id              String            @id @default(cuid())
+    name            String?
+    email           String            @unique
+    emailVerified   DateTime?
+    image           String?
+    password        String?
+    completions     RouteCompletion[] // One-to-many relationship with RouteCompletion
+    attempts        RouteAttempt[] // One-to-many relationship with RouteAttempt
+    communityGrades CommunityGrade[]
+    score           Int               @default(0)
+    badges          Badge[]
+    admin           Boolean           @default(false)
+    routeSetter     Boolean           @default(false)
+    createdAt       DateTime          @default(now())
+    updatedAt       DateTime          @updatedAt
+    Account         Account[]
+    Session         Session[]
+    private         Boolean           @default(false)
 }
 
 model Badge {

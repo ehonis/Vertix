@@ -2,6 +2,7 @@ import localFont from 'next/font/local';
 import './globals.css';
 import NavBar from './ui/navbar';
 import { SpeedInsights } from '@vercel/speed-insights/next';
+import { NotificationProvider } from './contexts/NotificationContext';
 
 const geistSans = localFont({
   src: './fonts/GeistVF.woff',
@@ -25,9 +26,11 @@ export default function RootLayout({ children }) {
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <NavBar />
-        <SpeedInsights />
-        {children}
+        <NotificationProvider>
+          <NavBar />
+          <SpeedInsights />
+          {children}
+        </NotificationProvider>
       </body>
     </html>
   );
