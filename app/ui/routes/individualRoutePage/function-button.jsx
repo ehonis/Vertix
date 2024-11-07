@@ -9,6 +9,7 @@ export default function FunctionButton({
   userId,
   isComplete,
   isGraded,
+  proposedGrade,
 }) {
   const [isButtonActive, setIsButtonActive] = useState(false);
 
@@ -43,6 +44,7 @@ export default function FunctionButton({
           userId={userId}
           isComplete={isComplete}
           isGraded={isGraded}
+          proposedGrade={proposedGrade}
         />
       ) : null}
     </div>

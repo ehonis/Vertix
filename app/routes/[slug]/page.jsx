@@ -4,10 +4,14 @@ import clsx from 'clsx';
 import ImageSlider from '@/app/ui/routes/individualRoutePage/route-image-slider';
 import FunctionButton from '@/app/ui/routes/individualRoutePage/function-button';
 import { findIfCompleted } from '@/lib/routeCompletions';
-import { formatDate } from '@/lib/routeScripts';
-import { findIfCommunityGraded } from '@/lib/communityGrade';
+import { formatDate, findDaysOld } from '@/lib/dates';
 import { auth } from '@/auth';
 import Link from 'next/link';
+import {
+  findAllTotalSends,
+  findProposedGrade,
+  findIfCommunityGraded,
+} from '@/lib/routes';
 
 export default async function IndividualRoute({ params }) {
   const session = await auth();
@@ -17,8 +21,12 @@ export default async function IndividualRoute({ params }) {
   const route = await getRouteById(routeId);
   const color = route.color;
   const date = formatDate(route.setDate);
+  const daysOld = findDaysOld(route.setDate);
+  const totalSends = await findAllTotalSends(route.id);
 
   if (user) {
+    const proposedGrade = await findProposedGrade(user.id, routeId);
+    console.log(proposedGrade);
     const isComplete = await findIfCompleted(user.id, routeId);
     const isGraded = await findIfCommunityGraded(user.id, routeId);
     return (
@@ -45,6 +53,7 @@ export default async function IndividualRoute({ params }) {
             userId={user.id}
             isComplete={isComplete}
             isGraded={isGraded}
+            proposedGrade={proposedGrade}
           />
         </div>
         <div className="w-4/5 md:w-3/5 bg-bg1 h-max">
@@ -99,6 +108,22 @@ export default async function IndividualRoute({ params }) {
                 </p>
               </div>
             </div>
+          </div>
+        </div>
+        <div className="flex mt-3 justify-between w-4/5 md:w-3/5">
+          <div className="mr-3 flex w-full flex-col items-center rounded-xl bg-bg1 p-4 shadow-lg">
+            <h2 className="gradient-text-blue m-0 p-0 text-8xl font-bold">
+              {totalSends}
+            </h2>
+            <p className="m-0 p-0 text-lg font-semibold text-white">Sends</p>
+          </div>
+          <div className="ml-2 flex w-full flex-col items-center rounded-xl bg-bg1 p-4 shadow-lg">
+            <h2 className="gradient-text m-0 p-0 text-8xl font-bold">
+              {daysOld}
+            </h2>
+            <p className="m-0 p-0 text-lg font-semibold text-white">
+              days <span className="text-iconbg">(old)</span>
+            </p>
           </div>
         </div>
       </div>
@@ -197,6 +222,22 @@ export default async function IndividualRoute({ params }) {
                 </p>
               </div>
             </div>
+          </div>
+        </div>
+        <div className="flex mt-3 justify-between w-4/5 md:w-3/5">
+          <div className="mr-3 flex w-full flex-col items-center rounded-xl bg-bg1 p-4 shadow-lg">
+            <h2 className="gradient-text-blue m-0 p-0 text-8xl font-bold">
+              {totalSends}
+            </h2>
+            <p className="m-0 p-0 text-lg font-semibold text-white">Sends</p>
+          </div>
+          <div className="ml-2 flex w-full flex-col items-center rounded-xl bg-bg1 p-4 shadow-lg">
+            <h2 className="gradient-text m-0 p-0 text-8xl font-bold">
+              {daysOld}
+            </h2>
+            <p className="m-0 p-0 text-lg font-semibold text-white">
+              days <span className="text-iconbg">(old)</span>
+            </p>
           </div>
         </div>
       </div>

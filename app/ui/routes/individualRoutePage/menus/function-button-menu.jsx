@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import CompleteMenu from './complete-menu';
+import GradeMenu from './grade-menu';
 
 export default function FunctionButtonMenu({
   onCancel,
@@ -9,6 +10,7 @@ export default function FunctionButtonMenu({
   userId,
   isComplete,
   isGraded,
+  proposedGrade,
 }) {
   const [isVisible, setIsVisible] = useState(false);
   const [menu, setIsMenu] = useState('Action Menu');
@@ -105,7 +107,10 @@ export default function FunctionButtonMenu({
                 </button>
               </div>
               <div className="flex gap-3 ">
-                <button className="bg-bg2 flex  p-1 rounded w-32 justify-between group hover:bg-white">
+                <button
+                  className="bg-bg2 flex  p-1 rounded w-32 justify-between group hover:bg-white"
+                  onClick={() => handleMenuChange('Grade Menu')}
+                >
                   <p className="group-hover:text-black">Grade</p>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -152,6 +157,16 @@ export default function FunctionButtonMenu({
               userId={userId}
               isGraded={isGraded}
               onCancel={onCancel}
+            />
+          ) : null}
+          {menu === 'Grade Menu' ? (
+            <GradeMenu
+              isComplete={isComplete}
+              route={route}
+              userId={userId}
+              isGraded={isGraded}
+              onCancel={onCancel}
+              proposedGrade={proposedGrade}
             />
           ) : null}
         </div>

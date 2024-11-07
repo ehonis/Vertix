@@ -43,7 +43,6 @@ export default function CompleteMenu({
       if (!response.ok) {
         throw new Error('Error in API Call');
       }
-      const result = await response.json();
       showNotification({
         message: `completed ${route.title}`,
         color: 'green',
