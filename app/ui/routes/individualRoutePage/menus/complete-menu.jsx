@@ -2,8 +2,16 @@
 import { useState, useEffect } from 'react';
 import { getGradeRange } from '@/lib/routes';
 import { useRouter } from 'next/navigation';
+import { useNotification } from '@/app/contexts/NotificationContext';
 
-export default function CompleteMenu({ route, userId, isComplete, isGraded }) {
+export default function CompleteMenu({
+  route,
+  userId,
+  isComplete,
+  isGraded,
+  onCancel,
+}) {
+  const { showNotification } = useNotification();
   const gradeOptions = getGradeRange(route.grade);
   const router = useRouter();
   const [selectedGrade, setSelectedGrade] = useState(gradeOptions[0]);
@@ -36,9 +44,19 @@ export default function CompleteMenu({ route, userId, isComplete, isGraded }) {
         throw new Error('Error in API Call');
       }
       const result = await response.json();
+      showNotification({
+        message: `completed ${route.title}`,
+        color: 'green',
+      });
     } catch (error) {
       console.error('submission failed:', error);
+      showNotification({
+        message: `could not complete ${route.title}`,
+        color: 'red',
+      });
     }
+    router.refresh();
+    onCancel();
   };
 
   useEffect(() => {
@@ -79,7 +97,6 @@ export default function CompleteMenu({ route, userId, isComplete, isGraded }) {
               onChange={handleSelectGradeChange}
               className="w-12 rounded bg-bg2"
             >
-              <option value=""></option>
               {gradeOptions.map((grade, idx) => (
                 <option key={idx} value={grade}>
                   {grade}
@@ -105,7 +122,6 @@ export default function CompleteMenu({ route, userId, isComplete, isGraded }) {
             onChange={handleSelectGradeChange}
             className="w-12 rounded bg-bg2"
           >
-            <option value=""></option>
             {gradeOptions.map((grade, idx) => (
               <option key={idx} value={grade}>
                 {grade}
@@ -136,7 +152,7 @@ export default function CompleteMenu({ route, userId, isComplete, isGraded }) {
             <option value="1">1</option>
             <option value="2">2</option>
             <option value="3">3</option>
-            <option value="4">3</option>
+            <option value="4">4</option>
             <option value="5">5</option>
             <option value="6">6</option>
             <option value="7">7</option>
