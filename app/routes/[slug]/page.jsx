@@ -26,7 +26,6 @@ export default async function IndividualRoute({ params }) {
 
   if (user) {
     const proposedGrade = await findProposedGrade(user.id, routeId);
-    console.log(proposedGrade);
     const isComplete = await findIfCompleted(user.id, routeId);
     const isGraded = await findIfCommunityGraded(user.id, routeId);
     return (

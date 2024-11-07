@@ -1,4 +1,4 @@
-import RouteTiles from '../ui/routes/routeTiles';
+import Routes from '../ui/routes/routes';
 import { auth } from '@/auth';
 import { getRouteCompletions } from '@/lib/routeCompletions';
 const getRoutes = async () => {
@@ -24,7 +24,6 @@ const getRoutes = async () => {
 export default async function RoutePage() {
   const session = await auth();
   const user = session?.user || null;
-
   const routes = await getRoutes();
   const boulderRoutes = routes.data.filter((route) => route.type === 'boulder');
   const ropeRoutes = routes.data.filter((route) => route.type === 'rope');
@@ -41,7 +40,7 @@ export default async function RoutePage() {
 
   return (
     <>
-      <RouteTiles
+      <Routes
         ropes={ropeRoutes}
         boulders={boulderRoutes}
         user={user}

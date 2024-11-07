@@ -3,7 +3,8 @@
 import { useEffect, useState } from 'react';
 import CompleteMenu from './complete-menu';
 import GradeMenu from './grade-menu';
-
+import AttemptMenu from './attempt-menu';
+import UploadPhotoMenu from './upload-photo-menu';
 export default function FunctionButtonMenu({
   onCancel,
   route,
@@ -89,7 +90,10 @@ export default function FunctionButtonMenu({
                     />
                   </svg>
                 </button>
-                <button className="bg-bg2 flex  p-1 rounded w-32 justify-between hover:bg-white group">
+                <button
+                  className="bg-bg2 flex  p-1 rounded w-32 justify-between hover:bg-white group"
+                  onClick={() => handleMenuChange('Attempt Menu')}
+                >
                   <p className="group-hover:text-black">Attempt</p>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -126,7 +130,10 @@ export default function FunctionButtonMenu({
                     />
                   </svg>
                 </button>
-                <button className="bg-bg2 flex p-1 rounded w-32 justify-between group hover:bg-white">
+                <button
+                  className="bg-bg2 flex p-1 rounded w-32 justify-between group hover:bg-white"
+                  onClick={() => handleMenuChange('Upload Photo Menu')}
+                >
                   <p className="group-hover:text-black">Add Photo</p>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -161,6 +168,26 @@ export default function FunctionButtonMenu({
           ) : null}
           {menu === 'Grade Menu' ? (
             <GradeMenu
+              isComplete={isComplete}
+              route={route}
+              userId={userId}
+              isGraded={isGraded}
+              onCancel={onCancel}
+              proposedGrade={proposedGrade}
+            />
+          ) : null}
+          {menu === 'Attempt Menu' ? (
+            <AttemptMenu
+              isComplete={isComplete}
+              route={route}
+              userId={userId}
+              isGraded={isGraded}
+              onCancel={onCancel}
+              proposedGrade={proposedGrade}
+            />
+          ) : null}
+          {menu === 'Upload Photo Menu' ? (
+            <UploadPhotoMenu
               isComplete={isComplete}
               route={route}
               userId={userId}

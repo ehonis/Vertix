@@ -21,6 +21,7 @@ model Route {
     isArchive       Boolean           @default(false)
     completions     RouteCompletion[] // One-to-many relationship with RouteCompletion
     attempts        RouteAttempt[] // One-to-many relationship with RouteAttempt
+    location        String            @default("Boulder1")
 }
 
 model RouteImage {
