@@ -19,7 +19,9 @@ body {
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
 }
-
+.font-jersey {
+  font-family: var(--font-jersey), Arial, sans-serif; /* Fallback fonts */
+}
 @layer utilities {
   .text-balance {
     text-wrap: balance;

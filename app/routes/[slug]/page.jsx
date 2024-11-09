@@ -77,7 +77,9 @@ export default async function IndividualRoute({ params }) {
               <ImageSlider images={images} />
             ) : (
               <Image
-                src={'/img/Mountain Image.jpeg'}
+                src={
+                  'https://utfs.io/f/bujx12z5cHJjc9Ak3DLO1WJXeZH487yuvrhiVgUb5MoAPlpN'
+                }
                 height={600}
                 width={600}
                 style={{ objectFit: 'cover' }}

@@ -15,6 +15,12 @@ const geistMono = localFont({
   variable: '--font-geist-mono',
   weight: '100 900',
 });
+const jerseyFont = localFont({
+  src: '/fonts/Jersey15-Regular.ttf', // Path to the font file in the `public` folder
+  variable: '--font-jersey', // Optional: Define a CSS variable for the font
+  weight: '400', // Specify weight if applicable
+  style: 'normal', // Specify style if applicable
+});
 
 export const metadata = {
   title: 'On The Rocks',
@@ -25,7 +31,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${jerseyFont.variable} antialiased`}
       >
         <NotificationProvider>
           <Notification />

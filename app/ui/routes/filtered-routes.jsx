@@ -1,13 +1,21 @@
+'use client';
+
 import Link from 'next/link';
 import RouteTile from './routeTile';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useNotification } from '@/app/contexts/NotificationContext';
 
-export default function DefaultRoutes({ ropes, boulders, user, completions }) {
+export default function FilteredRoutes({
+  filter,
+  ropes,
+  boulders,
+  user,
+  completions,
+}) {
   const { showNotification } = useNotification();
   const router = useRouter();
-
+  console.log(filter);
   const postRouteCompletion = async (userId, routeId, routeName) => {
     try {
       const response = await fetch(

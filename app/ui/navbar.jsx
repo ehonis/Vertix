@@ -10,7 +10,9 @@ export default async function NavBar() {
     <>
       <nav className="h-16 w-full z-50 shadow bg-[#181a1c] flex px-5 justify-between  items-center">
         <SideNav />
-        <Link href={'/'}>
+        <Link href={'/'} className="flex items-center gap-2">
+          <h1 className="font-jersey text-white text-3xl">ClimbTrak</h1>
+          <div className="h-12 w-px bg-white"></div>
           <Image
             src={'/img/OTR-Logo.avif'}
             width={110}
