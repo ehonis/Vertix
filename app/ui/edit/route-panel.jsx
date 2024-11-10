@@ -2,14 +2,14 @@
 
 import Link from 'next/link';
 import clsx from 'clsx';
-import { formatDate } from '@/lib/routeScripts';
+import { formatDateString } from '@/lib/dates';
 import useScrollAnimation from '@/app/hooks/useScrollAnimation';
 
 export default function RoutePanel({ id, name, grade, date, color }) {
   const [elementRef, isVisible] = useScrollAnimation(0.1);
 
   // Format the date using routeScripts helper
-  date = formatDate(date);
+  date = formatDateString(date);
 
   return (
     <Link

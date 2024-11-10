@@ -197,8 +197,8 @@ function MainWall2({ selectedPart, setSelectedPart }) {
       />
       <rect
         id="main7"
-        width="10.0286111"
-        height="20.01745"
+        width="9.0286111"
+        height="23.01745"
         x="-215.25677"
         y="-70.06575"
         transform="rotate(-145)"
@@ -219,10 +219,10 @@ function Boulder1({ selectedPart, setSelectedPart }) {
     <g className="cursor-pointer" fill={fillColor} onClick={handleClick}>
       <rect
         id="RightofSlabWall"
-        width="10.0286111"
-        height="10.630193"
+        width="9.0286111"
+        height="15.630193"
         x="59.813866"
-        y="243.29147"
+        y="239.29147"
         transform="rotate(-35)"
       />
       <rect

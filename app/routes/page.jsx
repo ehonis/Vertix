@@ -1,32 +1,17 @@
 import Routes from '../ui/routes/routes';
 import { auth } from '@/auth';
 import { getRouteCompletions } from '@/lib/routeCompletions';
-const getRoutes = async () => {
-  try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/get-route`,
-      {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          'Cache-Control': 'no-store',
-        },
-        next: { revalidate: 1 }, // Move cache inside the options object
-      }
-    );
-
-    return response.json();
-  } catch (error) {
-    console.error(error);
-  }
-};
+import prisma from '@/prisma';
 
 export default async function RoutePage() {
   const session = await auth();
   const user = session?.user || null;
-  const routes = await getRoutes();
-  const boulderRoutes = routes.data.filter((route) => route.type === 'boulder');
-  const ropeRoutes = routes.data.filter((route) => route.type === 'rope');
+  const routes = await prisma.Route.findMany();
+  const nonArchiveRoutes = routes.filter((route) => !route.isArchive);
+  const boulderRoutes = nonArchiveRoutes.filter(
+    (route) => route.type === 'boulder'
+  );
+  const ropeRoutes = nonArchiveRoutes.filter((route) => route.type === 'rope');
 
   let completions = {};
 

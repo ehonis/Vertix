@@ -3,7 +3,7 @@ import clsx from 'clsx';
 export default function RouteTile({ color, name, grade }) {
   return (
     <>
-      <div className="bg-bg2 w-80 rounded-xl flex">
+      <div className="bg-bg2 md:w-80 flex-grow rounded-xl flex">
         <div
           className={clsx(
             ' w-12 rounded-l-xl',
@@ -20,11 +20,8 @@ export default function RouteTile({ color, name, grade }) {
             } // Using clsx for dynamic color
           )}
         ></div>
-        <div className="flex flex-col w-64 pt-1 pl-2">
-          <p
-            className="text-white text-lg font-bold break-words whitespace-nowrap overflow-hidden text-ellipsis"
-            style={{ maxWidth: '100%' }}
-          >
+        <div className="flex flex-col md:w-64 w-56 pt-1 pl-2">
+          <p className="text-white text-lg font-bold break-words whitespace-nowrap overflow-hidden text-ellipsis max-w-full">
             {name}
           </p>
           <p className="text-gray-300 text-md font-bold italic">{grade}</p>

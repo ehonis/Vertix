@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import RouteTile from './routeTile';
+import RouteTile from './route-tile';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useNotification } from '@/app/contexts/NotificationContext';
@@ -80,11 +80,11 @@ export default function DefaultRoutes({ ropes, boulders, user, completions }) {
   }
   return (
     <div className="flex md:flex-row flex-col gap-5 p-5">
-      <div className="bg-bg1 w-max h-full flex-grow rounded-xl">
+      <div className="bg-bg1 flex-grow rounded-xl">
         <div className="p-3">
           <h2 className="text-white font-bold text-3xl">Ropes</h2>
         </div>
-        <div className="p-3 flex flex-col gap-2">
+        <div className="p-3 flex flex-col items-center gap-2">
           {ropes.map((route) => {
             return (
               <div className="flex items-center gap-2" key={route.id}>
@@ -146,11 +146,11 @@ export default function DefaultRoutes({ ropes, boulders, user, completions }) {
           })}
         </div>
       </div>
-      <div className="bg-bg1 w-max h-full flex-grow rounded-xl">
+      <div className="bg-bg1 flex-grow rounded-xl">
         <div className="p-3">
           <h2 className="text-white font-bold text-3xl">Boulders</h2>
         </div>
-        <div className="p-3 flex flex-col gap-2">
+        <div className="p-3 flex flex-col items-center gap-2">
           {boulders.map((route) => {
             return (
               <div className="flex items-center gap-2" key={route.id}>
