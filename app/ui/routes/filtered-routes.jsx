@@ -16,8 +16,45 @@ export default function FilteredRoutes({
   const [filteredRoutes, setFilteredRoutes] = useState([]);
   const routes = [...ropes, ...boulders];
 
-  useEffect(() => {}, [filter]);
+  useEffect(() => {
+    const { boulderFilter, ropeFilter, colorFilter, sectionFilter } = filter;
 
+    const newFilteredRoutes = routes.filter((route) => {
+      // Check if the route matches any color filter
+      const matchesColor =
+        colorFilter.length === 0 || colorFilter.includes(route.color);
+
+      // Check if the route matches boulder grade if it's a boulder
+      const matchesBoulderGrade =
+        boulderFilter.length === 0 ||
+        (route.type === 'boulder' && boulderFilter.includes(route.grade));
+
+      // Check if the route matches rope grade if it's a rope
+      const matchesRopeGrade =
+        ropeFilter.length === 0 ||
+        (route.type === 'rope' &&
+          ropeFilter.some((grade) => route.grade.startsWith(grade)));
+
+      // Check if the route matches any section filter
+      const matchesSection =
+        sectionFilter.length === 0 ||
+        sectionFilter.includes(route.location.toLowerCase());
+
+      // Return true if the route matches all active filters
+      return (
+        matchesColor &&
+        matchesBoulderGrade &&
+        matchesRopeGrade &&
+        matchesSection
+      );
+    });
+
+    setFilteredRoutes(newFilteredRoutes);
+  }, [filter]);
+
+  // Rest of your code remains the same
+  // Dependency array includes routes and filter
+  console.log(filteredRoutes);
   const { showNotification } = useNotification();
   const router = useRouter();
 
@@ -94,11 +131,8 @@ export default function FilteredRoutes({
   return (
     <div className="flex md:flex-grow flex-col gap-5 p-5">
       <div className="bg-bg1 h-full flex-grow rounded-xl">
-        <div className="p-3">
-          <h2 className="text-white font-bold text-3xl">Filtered Routes</h2>
-        </div>
         <div className="p-3 flex flex-col items-center gap-2">
-          {routes.map((route) => (
+          {filteredRoutes.map((route) => (
             <div className="flex items-center gap-2" key={route.id}>
               <Link href={`routes/${route.id}`}>
                 <RouteTile
