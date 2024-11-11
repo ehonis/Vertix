@@ -84,7 +84,7 @@ export default function DefaultRoutes({ ropes, boulders, user, completions }) {
         <div className="p-3">
           <h2 className="text-white font-bold text-3xl">Ropes</h2>
         </div>
-        <div className="p-3 flex flex-col items-center gap-2">
+        <div className="p-3 flex flex-col md:items-start items-center gap-2">
           {ropes.map((route) => {
             return (
               <div className="flex items-center gap-2" key={route.id}>
@@ -150,7 +150,7 @@ export default function DefaultRoutes({ ropes, boulders, user, completions }) {
         <div className="p-3">
           <h2 className="text-white font-bold text-3xl">Boulders</h2>
         </div>
-        <div className="p-3 flex flex-col items-center gap-2">
+        <div className="p-3 flex flex-col md:items-start items-center gap-2">
           {boulders.map((route) => {
             return (
               <div className="flex items-center gap-2" key={route.id}>

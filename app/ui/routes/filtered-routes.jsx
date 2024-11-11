@@ -37,8 +37,7 @@ export default function FilteredRoutes({
 
       // Check if the route matches any section filter
       const matchesSection =
-        sectionFilter.length === 0 ||
-        sectionFilter.includes(route.location.toLowerCase());
+        sectionFilter.length === 0 || sectionFilter.includes(route.location);
 
       // Return true if the route matches all active filters
       return (
@@ -130,7 +129,7 @@ export default function FilteredRoutes({
   return (
     <div className="flex md:flex-grow flex-col gap-5 p-5">
       <div className="bg-bg1 h-full flex-grow rounded-xl">
-        <div className="p-3 flex flex-col items-center gap-2">
+        <div className="p-3 flex flex-col  md:items-start items-center gap-2">
           {filteredRoutes.map((route) => (
             <div className="flex items-center gap-2" key={route.id}>
               <Link href={`routes/${route.id}`}>
