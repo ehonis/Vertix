@@ -35,6 +35,7 @@ export default function RoutePanel({ id, name, grade, date, color }) {
               'bg-purple-400': color === 'purple',
               'bg-orange-400': color === 'orange',
               'bg-white': color === 'white',
+              'bg-black': color === 'black',
               'bg-slate-400': color === 'defaultColor',
               'bg-pink-400': color === 'pink',
             } // Using clsx for dynamic color

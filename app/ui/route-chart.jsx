@@ -20,21 +20,55 @@ export default function RouteChart({ data, type }) {
   const routes = data.filter((route) => route.type === type);
 
   // Count grades
+
+  const ropeGradeOrder = [
+    '5.B',
+    '5.7',
+    '5.8',
+    '5.9',
+    '5.10',
+    '5.11',
+    '5.12',
+    '5.13',
+  ];
+
+  const boulderGradeOrder = [
+    'vB',
+    'v0',
+    'v1',
+    'v2',
+    'v3',
+    'v4',
+    'v5',
+    'v6',
+    'v7',
+    'v8',
+    'v9',
+    'v10',
+  ];
+
+  // Helper function to normalize grades (removes + or -)
+  const normalizeGrade = (grade) => grade.replace(/[+-]/g, '');
+
+  // Transform data and normalize grades
   const gradeCounts = routes.reduce((acc, route) => {
-    const grade = route.grade;
-    acc[grade] = (acc[grade] || 0) + 1;
+    const normalizedGrade = normalizeGrade(route.grade);
+    acc[normalizedGrade] = (acc[normalizedGrade] || 0) + 1;
     return acc;
   }, {});
 
-  // Transform the gradeCounts object into an array for the chart
-  const transformedData = Object.keys(gradeCounts).map((grade) => ({
-    grade,
-    count: gradeCounts[grade],
-  }));
+  // Sort transformedData based on the defined grade order
+  const transformedData = Object.keys(gradeCounts)
+    .map((grade) => ({
+      grade,
+      count: gradeCounts[grade],
+    }))
+    .sort((a, b) => {
+      const order = type === 'boulder' ? boulderGradeOrder : ropeGradeOrder;
+      return order.indexOf(a.grade) - order.indexOf(b.grade);
+    });
 
   if (type === 'boulder') {
-    transformedData.unshift(transformedData[transformedData.length - 1]);
-    transformedData.pop();
     barColor = '#ee8919';
   }
 
