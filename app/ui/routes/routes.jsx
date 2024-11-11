@@ -98,7 +98,7 @@ export default function Routes({ ropes, boulders, user, completions }) {
     // Update the filter state
     setFilter({ boulderFilter, ropeFilter, colorFilter, sectionFilter });
   }, [checkedColors, filterByWall, checkedBoulderGrades, checkedRopeGrades]);
-  console.log(filter);
+
   const handleRopeCheckboxChange = (event) => {
     const { id, checked } = event.target;
     setCheckedRopeGrades((prev) => ({

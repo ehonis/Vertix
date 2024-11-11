@@ -40,7 +40,7 @@ export default async function Dashboard({ params }) {
       <h1 className="text-white font-bold text-3xl">
         {user.name}&apos;s Dashboard
       </h1>
-      <div className="flex gap-5 w-full">
+      <div className="flex md:flex-row flex-col gap-5 w-full ">
         <RoutePieChart userData={pieChartCompletionsData} />
         <RouteLineChart userData={lineChartCompletionsData} />
       </div>

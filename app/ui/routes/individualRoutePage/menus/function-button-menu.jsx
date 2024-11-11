@@ -33,11 +33,11 @@ export default function FunctionButtonMenu({
         }`}
       />
       <div
-        className={`z-[60] bg-[#181a1c] text-white fixed top-1/2 left-1/2 transform -translate-x-1/2 ${
+        className={`fixed z-40 bg-[#181a1c] text-white rounded-lg shadow-lg w-[20rem] p-1 transform transition-all duration-700 ease-out ${
           isVisible
-            ? '-translate-y-1/2 opacity-100'
-            : 'translate-y-full opacity-0'
-        } transition-all duration-700 ease-out m-5 rounded-lg shadow-lg w-[20rem]`}
+            ? 'top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-100'
+            : 'top-full left-1/2 -translate-x-1/2 opacity-0'
+        }`}
       >
         <div className="mx-2">
           <div className="flex justify-between items-center">

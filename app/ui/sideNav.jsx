@@ -53,7 +53,7 @@ export default function SideNav() {
         <Link
           href={'/routes'}
           className={clsx(
-            'flex z-[100] items-center group hover:bg-white  transition-all duration-700 rounded',
+            'flex z-[100] items-center group md:hover:bg-white bg-white md:bg-bg1 transition-all duration-700 rounded',
             isNavbar ? 'p-0' : 'p-5'
           )}
           onClick={navClick}
@@ -63,7 +63,7 @@ export default function SideNav() {
             fill="none"
             viewBox="0 0 24 24"
             strokeWidth={1.5}
-            className="size-8 group-hover:stroke-bg1 stroke-white transition-all duration-300"
+            className="size-8 md:group-hover:stroke-bg1 md:stroke-white stroke-black transition-all duration-300"
           >
             <path
               strokeLinecap="round"
@@ -72,7 +72,7 @@ export default function SideNav() {
             />
           </svg>
 
-          <p className="text-white font-bold ml-3 group-hover:text-bg1 transition-all duration-300 text-2xl">
+          <p className="md:text-white text-blackfont-bold ml-3 md:group-hover:text-bg1 transition-all duration-300 text-2xl">
             Routes
           </p>
         </Link>

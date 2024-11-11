@@ -66,7 +66,7 @@ export default function RouteChart({ data, type }) {
     <div
       ref={elementRef}
       className={clsx(
-        'w-1/2 h-96 pr-8 transition-all duration-500 transform',
+        'md:w-1/2 w-full h-96 pr-8 transition-all duration-500 transform',
         isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
       )}
     >

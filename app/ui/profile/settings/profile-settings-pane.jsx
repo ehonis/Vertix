@@ -11,7 +11,7 @@ export default function ProfileSettingsPane({ userData }) {
     }
   };
   return (
-    <div className=" bg-bg1 w-[30rem] p-5 rounded-lg flex-col flex gap-3">
+    <div className=" bg-bg1 md:w-[30rem] w-[22rem] p-5 rounded-lg flex-col flex gap-3">
       <div className="flex justify-between">
         <h2 className="text-white text-2xl font-bold ">Profile Settings</h2>
         <Image

@@ -54,7 +54,6 @@ export default function FilteredRoutes({
 
   // Rest of your code remains the same
   // Dependency array includes routes and filter
-  console.log(filteredRoutes);
   const { showNotification } = useNotification();
   const router = useRouter();
 

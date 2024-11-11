@@ -131,7 +131,7 @@ export default function RoutePanels({ routes }) {
                   type="checkbox"
                   checked={routeCheckbox.isChecked}
                   onChange={() => handleCheckboxChange(route.id)}
-                  className="mr-3 w-6 h-6"
+                  className="mr-3 size-10"
                 />
               ) : null}
               <RoutePanel

@@ -15,7 +15,7 @@ export default async function Home() {
   return (
     <div>
       <TextHeader text="Current Routes" />
-      <div className="flex justify-between">
+      <div className="flex md:flex-row flex-col justify-between">
         <RouteChart data={routes} type="boulder" />
         <RouteChart data={routes} type="rope" />
       </div>

@@ -22,11 +22,11 @@ export default function RoutePanel({ id, name, grade, date, color }) {
       )}
     >
       {/* Color block and name */}
-      <div className="flex items-center space-x-4 flex-grow">
+      <div className="flex items-center space-x-4 w-56 md:flex-grow">
         {/* Color block */}
         <div
           className={clsx(
-            'h-16 w-16 rounded-l overflow-hidden',
+            'h-16 w-4 rounded-l overflow-hidden',
             {
               'bg-green-400': color === 'green',
               'bg-red-400': color === 'red',
@@ -42,11 +42,13 @@ export default function RoutePanel({ id, name, grade, date, color }) {
         ></div>
 
         {/* Route name, taking up remaining space */}
-        <p className="text-white font-bold truncate">{name}</p>
+        <p className="text-white text-lg font-bold break-words whitespace-nowrap overflow-hidden text-ellipsis w-32">
+          {name}
+        </p>
       </div>
 
       {/* Grade and Date aligned on the right */}
-      <div className="flex space-x-4 items-center">
+      <div className="flex space-x-2 items-center">
         <p className="text-white font-extrabold">{grade}</p>
 
         {/* Divider */}

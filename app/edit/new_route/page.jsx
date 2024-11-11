@@ -67,7 +67,7 @@ export default function Page() {
 
   return (
     <>
-      <div className="flex items-center justify-between text-center py-14 px-24 w-full">
+      <div className="flex items-center justify-between text-center py-14 md:px-24 px-11 w-full">
         <Link href={'/edit'}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -99,8 +99,8 @@ export default function Page() {
           onCancel={handleCancel}
         />
       )}
-      <div className=" bg-[#181a1c] mx-24  flex items-center justify-center py-10 rounded-3xl">
-        <div className="flex w-[400px] flex-col justify-center overflow-hidden rounded-3xl py-5 bg-[#3d4349] shadow-md">
+      <div className=" bg-[#181a1c] md:mx-24 mx-10  flex items-center justify-center py-10 rounded-3xl md:px-0 px-5">
+        <div className="flex w-[400px] flex-col justify-center overflow-hidden rounded-3xl py-5 md:px-0 bg-[#3d4349] shadow-md">
           <div className="flex flex-col items-center gap-3">
             <input
               type="text"
