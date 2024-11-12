@@ -32,8 +32,9 @@ export default function RouteLineChart({ userData }) {
     return (
       <div className="flex-grow bg-bg1 rounded-lg py-4 flex flex-col gap-3 justify-between items-center md:h-auto h-72">
         <h2 className="text-white font-bold text-xl">
-          Total Completed Routes Over Time
+          Total Completed Routes By Week
         </h2>
+
         <ResponsiveContainer width="100%" height="100%">
           <LineChart
             data={userData}

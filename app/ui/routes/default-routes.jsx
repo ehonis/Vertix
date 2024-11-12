@@ -82,7 +82,7 @@ export default function DefaultRoutes({ ropes, boulders, user, completions }) {
     <div className="flex md:flex-row flex-col gap-5 p-5">
       <div className="bg-bg1 flex-grow rounded-xl">
         <div className="p-3">
-          <h2 className="text-white font-bold text-3xl">Ropes</h2>
+          <h2 className="text-white font-bold text-3xl">All Ropes</h2>
         </div>
         <div className="p-3 flex flex-col md:items-start items-center gap-2">
           {ropes.map((route) => {
@@ -148,7 +148,7 @@ export default function DefaultRoutes({ ropes, boulders, user, completions }) {
       </div>
       <div className="bg-bg1 flex-grow rounded-xl">
         <div className="p-3">
-          <h2 className="text-white font-bold text-3xl">Boulders</h2>
+          <h2 className="text-white font-bold text-3xl">All Boulders</h2>
         </div>
         <div className="p-3 flex flex-col md:items-start items-center gap-2">
           {boulders.map((route) => {

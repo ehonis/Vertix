@@ -10,7 +10,7 @@ export default function SignInForm() {
         <form
           action={async () => {
             'use server';
-            await signIn('google');
+            await signIn('google', { redirectTo: '/profile' });
           }}
         >
           <button

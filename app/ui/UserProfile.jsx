@@ -75,6 +75,7 @@ export default function UserProfile({ user }) {
           <Link
             href={`/profile/${user.id}/dashboard`}
             className="flex bg-bg2 rounded p-1 gap-2 group hover:bg-white transition-all duration-200"
+            onClick={handleClick}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -97,6 +98,7 @@ export default function UserProfile({ user }) {
           <Link
             href={`/profile/${user.id}/settings`}
             className="flex bg-bg2 rounded p-1 gap-2 group hover:bg-white transition-all duration-300"
+            onClick={handleClick}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -126,6 +128,7 @@ export default function UserProfile({ user }) {
             <Link
               href={`/edit`}
               className="flex bg-bg2 rounded p-1 gap-2 group hover:bg-white transition-all duration-300"
+              onClick={handleClick}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
