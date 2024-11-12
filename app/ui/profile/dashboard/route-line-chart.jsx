@@ -1,4 +1,5 @@
 'use client';
+import { getLineChartCompletionsData } from '@/lib/routeCompletionsClientScripts';
 
 import {
   LineChart,
@@ -11,6 +12,8 @@ import {
   ResponsiveContainer,
 } from 'recharts';
 import Link from 'next/link';
+import { get } from 'http';
+import { useEffect, useState } from 'react';
 // Define colors for each slice
 const COLORS = ['#0088FE', '#00C49F'];
 
@@ -27,17 +30,52 @@ function CustomTooltip({ active, payload }) {
   return null;
 }
 
-export default function RouteLineChart({ userData }) {
-  if (userData.length > 0) {
+export default function RouteLineChart({ completedRoutes }) {
+  const [lineCompletion, setLineCompletion] = useState([]);
+  const [timePeriod, setTimePeriod] = useState('Day');
+
+  const handleTimePeriodChange = (event) => {
+    setTimePeriod(event.target.value);
+  };
+
+  const getData = () => {
+    const lineChartCompletionsData = getLineChartCompletionsData(
+      completedRoutes,
+      timePeriod
+    );
+    setLineCompletion(lineChartCompletionsData);
+  };
+
+  useEffect(() => {
+    console.log(completedRoutes);
+    getData();
+  }, [timePeriod]);
+  console.log(lineCompletion);
+
+  useEffect;
+  if (lineCompletion.length > 0) {
     return (
       <div className="flex-grow bg-bg1 rounded-lg py-4 flex flex-col gap-3 justify-between items-center md:h-auto h-72">
-        <h2 className="text-white font-bold text-xl">
-          Total Completed Routes By Week
-        </h2>
+        <div className="flex justify-between items-center w-full px-7">
+          <h2 className="text-white font-bold text-xl">
+            Total Completed Routes By{' '}
+            {timePeriod.charAt(0).toLocaleUpperCase() + timePeriod.slice(1)}
+          </h2>
+          <select
+            name=""
+            id=""
+            onChange={handleTimePeriodChange}
+            className="bg-bg2 rounded-lg p-1 text-white"
+          >
+            <option value="Day">Day</option>
+            <option value="Week">Week</option>
+            <option value="Month">Month</option>
+          </select>
+        </div>
 
         <ResponsiveContainer width="100%" height="100%">
           <LineChart
-            data={userData}
+            data={lineCompletion}
             margin={{
               top: 5,
               right: 30,
@@ -46,11 +84,11 @@ export default function RouteLineChart({ userData }) {
             }}
           >
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="Week" />
+            <XAxis dataKey={timePeriod} />
             <YAxis
               tickCount={
                 Math.max(
-                  ...userData.map((d) => Math.max(d.Boulders, d.Ropes))
+                  ...lineCompletion.map((d) => Math.max(d.Boulders, d.Ropes))
                 ) + 5
               } // Limit Y-axis based on max value in the data
               interval={0} // Display every tick

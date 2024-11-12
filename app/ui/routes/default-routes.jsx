@@ -8,6 +8,26 @@ export default function DefaultRoutes({ ropes, boulders, user, completions }) {
   const { showNotification } = useNotification();
   const router = useRouter();
 
+  const [currentRopePage, setCurrentRopePage] = useState(1);
+  const [currentBoulderPage, setCurrentBoulderPage] = useState(1);
+
+  const itemsPerPage = 8; // Number of items per page
+
+  // Calculate the routes to display on the current page
+  const paginateBoulder = (data) => {
+    const start = (currentBoulderPage - 1) * itemsPerPage;
+    const end = start + itemsPerPage;
+    return data.slice(start, end);
+  };
+  const paginateRope = (data) => {
+    const start = (currentRopePage - 1) * itemsPerPage;
+    const end = start + itemsPerPage;
+    return data.slice(start, end);
+  };
+
+  const totalRopePages = Math.ceil(ropes.length / itemsPerPage);
+  const totalBoulderPages = Math.ceil(boulders.length / itemsPerPage);
+
   const postRouteCompletion = async (userId, routeId, routeName) => {
     try {
       const response = await fetch(
@@ -85,65 +105,81 @@ export default function DefaultRoutes({ ropes, boulders, user, completions }) {
           <h2 className="text-white font-bold text-3xl">All Ropes</h2>
         </div>
         <div className="p-3 flex flex-col md:items-start items-center gap-2">
-          {ropes.map((route) => {
-            return (
-              <div className="flex items-center gap-2" key={route.id}>
-                <Link href={`routes/${route.id}`}>
-                  <RouteTile
-                    color={route.color}
-                    name={route.title}
-                    grade={route.grade}
-                  />
-                </Link>
-                {user && !completedRouteIds.includes(route.id) ? (
-                  <button
-                    onClick={() => handleQuickCompletion(route.id, route.title)}
-                    className="bg-slate-500 size-10 flex items-center justify-center rounded-full group hover:bg-green-400 transition-all duration-300 relative"
+          {paginateRope(ropes).map((route) => (
+            <div className="flex items-center gap-2" key={route.id}>
+              <Link href={`routes/${route.id}`}>
+                <RouteTile
+                  color={route.color}
+                  name={route.title}
+                  grade={route.grade}
+                />
+              </Link>
+              {user && !completedRouteIds.includes(route.id) ? (
+                <button
+                  onClick={() => handleQuickCompletion(route.id, route.title)}
+                  className="bg-slate-500 size-10 flex items-center justify-center rounded-full group hover:bg-green-400 transition-all duration-300 relative"
+                >
+                  <span className="absolute left-full ml-2 px-2 py-1 text-xs text-white bg-black rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap">
+                    Quick Complete
+                  </span>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={1.5}
+                    className="size-8 stroke-white group-hover:size-9"
                   >
-                    <span className="absolute left-full ml-2 px-2 py-1 text-xs text-white bg-black rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap">
-                      Quick Complete
-                    </span>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth={1.5}
-                      className="size-8 stroke-white group-hover:size-9"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
-                      />
-                    </svg>
-                  </button>
-                ) : null}
-                {user && completedRouteIds.includes(route.id) ? (
-                  <button
-                    onClick={() => handleQuickUncomplete(route.id, route.title)}
-                    className="bg-green-500 size-10 flex items-center justify-center rounded-full group hover:bg-red-400 transition-all duration-300 relative"
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                    />
+                  </svg>
+                </button>
+              ) : null}
+              {user && completedRouteIds.includes(route.id) ? (
+                <button
+                  onClick={() => handleQuickUncomplete(route.id, route.title)}
+                  className="bg-green-500 size-10 flex items-center justify-center rounded-full group hover:bg-red-400 transition-all duration-300 relative"
+                >
+                  <span className="absolute left-full ml-2 px-2 py-1 text-xs text-white bg-black rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap">
+                    Uncomplete
+                  </span>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={1.5}
+                    className="size-8 stroke-white group-hover:size-9"
                   >
-                    <span className="absolute left-full ml-2 px-2 py-1 text-xs text-white bg-black rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap">
-                      Uncomplete
-                    </span>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth={1.5}
-                      className="size-8 stroke-white group-hover:size-9"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
-                      />
-                    </svg>
-                  </button>
-                ) : null}
-              </div>
-            );
-          })}
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                    />
+                  </svg>
+                </button>
+              ) : null}
+            </div>
+          ))}
+        </div>
+        {/* Ropes Pagination Controls */}
+        <div className="flex justify-center gap-3 p-3">
+          <button
+            disabled={currentRopePage === 1}
+            onClick={() => setCurrentRopePage(currentRopePage - 1)}
+            className="text-white px-2 py-1 rounded bg-gray-700 hover:bg-gray-500 disabled:bg-gray-800"
+          >
+            Previous
+          </button>
+          <span className="text-white">{`Page ${currentRopePage} of ${totalRopePages}`}</span>
+          <button
+            disabled={currentRopePage === totalRopePages}
+            onClick={() => setCurrentRopePage(currentRopePage + 1)}
+            className="text-white px-2 py-1 rounded bg-gray-700 hover:bg-gray-500 disabled:bg-gray-800"
+          >
+            Next
+          </button>
         </div>
       </div>
       <div className="bg-bg1 flex-grow rounded-xl">
@@ -151,7 +187,7 @@ export default function DefaultRoutes({ ropes, boulders, user, completions }) {
           <h2 className="text-white font-bold text-3xl">All Boulders</h2>
         </div>
         <div className="p-3 flex flex-col md:items-start items-center gap-2">
-          {boulders.map((route) => {
+          {paginateBoulder(boulders).map((route) => {
             return (
               <div className="flex items-center gap-2" key={route.id}>
                 <Link href={`routes/${route.id}`}>
@@ -210,6 +246,24 @@ export default function DefaultRoutes({ ropes, boulders, user, completions }) {
               </div>
             );
           })}
+        </div>
+
+        <div className="flex justify-center gap-3 p-3">
+          <button
+            disabled={currentBoulderPage === 1}
+            onClick={() => setCurrentBoulderPage(currentBoulderPage - 1)}
+            className="text-white px-2 py-1 rounded bg-gray-700 hover:bg-gray-500 disabled:bg-gray-800"
+          >
+            Previous
+          </button>
+          <span className="text-white">{`Page ${currentBoulderPage} of ${totalBoulderPages}`}</span>
+          <button
+            disabled={currentBoulderPage === totalRopePages}
+            onClick={() => setCurrentBoulderPage(currentBoulderPage + 1)}
+            className="text-white px-2 py-1 rounded bg-gray-700 hover:bg-gray-500 disabled:bg-gray-800"
+          >
+            Next
+          </button>
         </div>
       </div>
     </div>

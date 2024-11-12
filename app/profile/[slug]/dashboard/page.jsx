@@ -6,6 +6,7 @@ import RouteLineChart from '@/app/ui/profile/dashboard/route-line-chart';
 import {
   getLineChartCompletionsData,
   getPieChartCompletionsData,
+  getRouteCompletions,
 } from '@/lib/routeCompletions';
 
 export default async function Dashboard({ params }) {
@@ -33,7 +34,7 @@ export default async function Dashboard({ params }) {
   }
 
   const pieChartCompletionsData = await getPieChartCompletionsData(user.id);
-  const lineChartCompletionsData = await getLineChartCompletionsData(user.id);
+  const lineChartData = await getRouteCompletions(user.id);
 
   return (
     <div className="flex flex-col p-5 gap-5 w-screen">
@@ -42,7 +43,7 @@ export default async function Dashboard({ params }) {
       </h1>
       <div className="flex md:flex-row flex-col gap-5 w-full ">
         <RoutePieChart userData={pieChartCompletionsData} />
-        <RouteLineChart userData={lineChartCompletionsData} />
+        <RouteLineChart completedRoutes={lineChartData} />
       </div>
     </div>
   );
