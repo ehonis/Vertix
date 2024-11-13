@@ -1,4 +1,4 @@
-import Routes from '../ui/routes/routes';
+import Routes from '../../ui/routes/routes';
 import { auth } from '@/auth';
 import { getRouteCompletions } from '@/lib/routeCompletions';
 import prisma from '@/prisma';

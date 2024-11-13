@@ -5,7 +5,6 @@ import clsx from 'clsx';
 import DefaultRoutes from './default-routes';
 import FilteredRoutes from './filtered-routes';
 import TopDown from './topdown';
-import { set } from 'zod';
 
 export default function Routes({ ropes, boulders, user, completions }) {
   const [type, setType] = useState('boulder');
@@ -132,12 +131,6 @@ export default function Routes({ ropes, boulders, user, completions }) {
   };
   const handleFilterQaulity = () => {
     setIsFilterQaulity(!isFilterQaulity);
-  };
-  const removeItem = (itemToRemove) => {
-    setFilter((prevItems) => prevItems.filter((item) => item !== itemToRemove));
-  };
-  const addItem = (itemToAdd) => {
-    setFilter((prevItems) => [...prevItems, itemToAdd]);
   };
   const resetFilters = () => {
     setFilter({});
@@ -402,7 +395,9 @@ export default function Routes({ ropes, boulders, user, completions }) {
 
       <div className="flex flex-col h-screen">
         <div className="flex justify-between px-5 pb-1">
-          <h1 className="text-white font-bold text-3xl">{header}</h1>
+          <h1 className="text-white font-bold text-3xl">
+            {header} ({ropes.length + boulders.length})
+          </h1>
           {header === 'Filtered Routes' ? (
             <button className="bg-red-500 p-2 rounded" onClick={resetFilters}>
               Reset Filters

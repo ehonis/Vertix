@@ -4,8 +4,15 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useNotification } from '@/app/contexts/NotificationContext';
 
-export default function DefaultRoutes({ ropes, boulders, user, completions }) {
+export default function DefaultRoutes({
+  ropes,
+  boulders,
+  user,
+  completions,
+  totalRoutes,
+}) {
   const { showNotification } = useNotification();
+  const [totalRoutesInt, setTotalRoutesInt] = useState(0);
   const router = useRouter();
 
   const [currentRopePage, setCurrentRopePage] = useState(1);
@@ -104,7 +111,7 @@ export default function DefaultRoutes({ ropes, boulders, user, completions }) {
         <div className="p-3">
           <h2 className="text-white font-bold text-3xl">All Ropes</h2>
         </div>
-        <div className="p-3 flex flex-col md:items-start items-center gap-2">
+        <div className="p-3 flex flex-col items-center gap-2">
           {paginateRope(ropes).map((route) => (
             <div className="flex items-center gap-2" key={route.id}>
               <Link href={`routes/${route.id}`}>
@@ -170,7 +177,19 @@ export default function DefaultRoutes({ ropes, boulders, user, completions }) {
             onClick={() => setCurrentRopePage(currentRopePage - 1)}
             className="text-white px-2 py-1 rounded bg-gray-700 hover:bg-gray-500 disabled:bg-gray-800"
           >
-            Previous
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              className="size-6 stroke-white"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M15.75 19.5 8.25 12l7.5-7.5"
+              />
+            </svg>
           </button>
           <span className="text-white">{`Page ${currentRopePage} of ${totalRopePages}`}</span>
           <button
@@ -178,7 +197,19 @@ export default function DefaultRoutes({ ropes, boulders, user, completions }) {
             onClick={() => setCurrentRopePage(currentRopePage + 1)}
             className="text-white px-2 py-1 rounded bg-gray-700 hover:bg-gray-500 disabled:bg-gray-800"
           >
-            Next
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              class="size-6 stroke-white"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="m8.25 4.5 7.5 7.5-7.5 7.5"
+              />
+            </svg>
           </button>
         </div>
       </div>
@@ -186,7 +217,7 @@ export default function DefaultRoutes({ ropes, boulders, user, completions }) {
         <div className="p-3">
           <h2 className="text-white font-bold text-3xl">All Boulders</h2>
         </div>
-        <div className="p-3 flex flex-col md:items-start items-center gap-2">
+        <div className="p-3 flex flex-col items-center gap-2">
           {paginateBoulder(boulders).map((route) => {
             return (
               <div className="flex items-center gap-2" key={route.id}>
@@ -254,15 +285,39 @@ export default function DefaultRoutes({ ropes, boulders, user, completions }) {
             onClick={() => setCurrentBoulderPage(currentBoulderPage - 1)}
             className="text-white px-2 py-1 rounded bg-gray-700 hover:bg-gray-500 disabled:bg-gray-800"
           >
-            Previous
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              className="size-6 stroke-white"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M15.75 19.5 8.25 12l7.5-7.5"
+              />
+            </svg>
           </button>
           <span className="text-white">{`Page ${currentBoulderPage} of ${totalBoulderPages}`}</span>
           <button
-            disabled={currentBoulderPage === totalRopePages}
+            disabled={currentBoulderPage === totalBoulderPages}
             onClick={() => setCurrentBoulderPage(currentBoulderPage + 1)}
             className="text-white px-2 py-1 rounded bg-gray-700 hover:bg-gray-500 disabled:bg-gray-800"
           >
-            Next
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              class="size-6 stroke-white"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="m8.25 4.5 7.5 7.5-7.5 7.5"
+              />
+            </svg>
           </button>
         </div>
       </div>
