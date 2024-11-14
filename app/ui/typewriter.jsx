@@ -19,7 +19,7 @@ function TypewriterText() {
       setTypingSpeed(150);
       if (updatedText === currentWord) {
         // Pause at the end of the word
-        setTimeout(() => setIsDeleting(true), 1000);
+        setTimeout(() => setIsDeleting(true), 3000);
       }
     } else {
       // Deleting the word

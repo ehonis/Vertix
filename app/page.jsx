@@ -3,8 +3,13 @@ import Image from 'next/image';
 import { Suspense } from 'react';
 import Link from 'next/link';
 import TypewriterText from './ui/typewriter';
+import { auth } from '@/auth';
+import clsx from 'clsx';
 
-export default function Home() {
+export default async function Home() {
+  const session = await auth();
+  const user = session?.user || null;
+
   return (
     <>
       <div className="relative flex justify-center items-center md:py-5 px-5 py-5">
@@ -37,7 +42,17 @@ export default function Home() {
           </div>
 
           {/* Buttons */}
-          <div className="flex md:flex-col flex-row items-center gap-4 md:mt-24 mt-5">
+          {user ? (
+            <div className="bg-slate-800 md:text-2xl text-xs font-barlow text-white md:p-2 md:rounded-xl p-1 rounded-md md:mt-24 mt-5">
+              Welcome Back, {session.user.name}
+            </div>
+          ) : null}
+          <div
+            className={clsx(
+              'flex md:flex-col flex-row items-center gap-4 md:mt-24 mt-5',
+              user ? 'md:mt-0 mt-0' : ''
+            )}
+          >
             <div className="flex items-center justify-center gradient-background-blue rounded-lg shadow-2xl w-fit">
               <div className="bg-slate-800 md:m-2 md:p-2 m-1 p-1 rounded-lg flex items-center gap-2">
                 <Link
@@ -63,12 +78,21 @@ export default function Home() {
             </div>
             <div className="flex items-center justify-center bg-green-500 rounded-lg shadow-2xl w-fit">
               <div className="bg-slate-800 md:m-2 md:p-2 m-1 p-1 rounded-lg flex items-center gap-2">
-                <Link
-                  href="/signin"
-                  className="font-barlow text-white md:text-2xl text-xs text-center"
-                >
-                  Sign in / Sign up
-                </Link>
+                {!user ? (
+                  <Link
+                    href="/signin"
+                    className="font-barlow text-white md:text-2xl text-xs text-center"
+                  >
+                    Sign in / Sign up
+                  </Link>
+                ) : (
+                  <Link
+                    href="/signin"
+                    className="font-barlow text-white md:text-2xl text-xs text-center"
+                  >
+                    Dashboard
+                  </Link>
+                )}
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
