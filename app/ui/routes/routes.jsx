@@ -177,59 +177,19 @@ export default function Routes({ ropes, boulders, user, completions }) {
 
   return (
     <>
-      <div
-        className={clsx(
-          'bg-bg1 mx-5 mt-5 rounded-xl p-3 flex flex-grow items-center justify-between cursor-pointer',
-          !isFilterMenu ? 'mb-3' : ''
-        )}
-        onClick={handleFilterMenu}
-      >
-        <button className="text-white flex text-xl items-center gap-2 font-bold">
-          Filters
-        </button>
-        {!isFilterMenu ? (
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={1.5}
-            className="size-6 stroke-white"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="m19.5 8.25-7.5 7.5-7.5-7.5"
-            />
-          </svg>
-        ) : (
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={1.5}
-            className="size-6 stroke-white"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="m4.5 15.75 7.5-7.5 7.5 7.5"
-            />
-          </svg>
-        )}
-      </div>
-      {isFilterMenu ? (
-        <div className="mb-3">
+      <div className="flex md:flex-row flex-col">
+        <div className="flex flex-col">
           <div
             className={clsx(
-              'bg-bg1 mx-8 mt-1 rounded-xl p-3 flex flex-grow items-center justify-between cursor-pointer',
-              isFilterQaulity ? 'rounded-b-none' : ''
+              'bg-bg1 mx-5 mt-5 rounded-xl p-3 flex h-12 w-96 items-center justify-between cursor-pointer',
+              !isFilterMenu ? 'mb-3' : ''
             )}
-            onClick={handleFilterQaulity}
+            onClick={handleFilterMenu}
           >
-            <button className="text-white flex text-xl items-center gap-2">
-              By Qualities
+            <button className="text-white flex text-xl items-center gap-2 font-bold">
+              Filters
             </button>
-            {!isFilterQaulity ? (
+            {!isFilterMenu ? (
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -259,167 +219,215 @@ export default function Routes({ ropes, boulders, user, completions }) {
               </svg>
             )}
           </div>
-          {isFilterQaulity ? (
-            <div className="flex justify-evenly">
-              <div className="ml-8 bg-bg1 px-5 pb-5 rounded-bl-xl flex-grow justify-center flex flex-col items-center">
-                <h3 className="text-white text-lg">Color</h3>
-                <div className="grid grid-cols-2 gap-2">
-                  {Object.keys(checkedColors).map((color) => (
-                    <label key={color} className="flex items-center gap-2">
-                      <div
-                        className={clsx(
-                          `size-3 rounded-full bg-${color}-500`,
-                          color === 'black' &&
-                            'bg-black outline outline-1 outline-white',
-                          color === 'white' && 'bg-white',
-                          color === 'brown' && 'bg-yellow-950'
-                        )}
-                      ></div>
-                      <input
-                        type="checkbox"
-                        id={color}
-                        checked={checkedColors[color]}
-                        onChange={handleColorCheckboxChange}
-                        className="form-checkbox size-4"
-                      />
-                    </label>
-                  ))}
-                </div>
-              </div>
-
-              <div className="mr-8 bg-bg1 px-5 pb-5 rounded-br-xl flex-grow justify-center flex flex-col items-center">
-                <h3 className="text-white text-lg">Grade</h3>
-                <select
-                  name="gradeType"
-                  id="gradeType"
-                  className="bg-bg2 rounded text-white p-1 mb-2"
-                  onChange={handleTypeChange}
-                >
-                  <option value="boulder">Boulders</option>
-                  <option value="rope">Ropes</option>
-                </select>
-                {type === 'boulder' ? (
-                  <div className="grid grid-cols-3 gap-1 grid-flow-row">
-                    {Object.keys(checkedBoulderGrades).map((grade) => (
-                      <label key={grade} className="flex items-center gap-2">
-                        <span className="text-white text-sm">{grade}</span>
-                        <input
-                          type="checkbox"
-                          id={grade}
-                          checked={checkedBoulderGrades[grade]}
-                          onChange={handleBoulderCheckboxChange}
-                          className="form-checkbox size-4"
-                        />
-                      </label>
-                    ))}
-                  </div>
+          {isFilterMenu ? (
+            <div className="mb-3">
+              <div
+                className={clsx(
+                  'bg-bg1 mx-8 mt-1 rounded-xl p-3 flex flex-grow items-center justify-between cursor-pointer',
+                  isFilterQaulity ? 'rounded-b-none' : ''
+                )}
+                onClick={handleFilterQaulity}
+              >
+                <button className="text-white flex text-xl items-center gap-2">
+                  By Qualities
+                </button>
+                {!isFilterQaulity ? (
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={1.5}
+                    className="size-6 stroke-white"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="m19.5 8.25-7.5 7.5-7.5-7.5"
+                    />
+                  </svg>
                 ) : (
-                  <div className="grid grid-cols-3 gap-1 grid-flow-row">
-                    {Object.keys(checkedRopeGrades).map((grade) => (
-                      <label key={grade} className="flex items-center gap-2">
-                        <span className="text-white text-sm">{grade}</span>
-                        <input
-                          type="checkbox"
-                          id={grade}
-                          checked={checkedRopeGrades[grade]}
-                          onChange={handleRopeCheckboxChange}
-                          className="form-checkbox size-4"
-                        />
-                      </label>
-                    ))}
-                  </div>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={1.5}
+                    className="size-6 stroke-white"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="m4.5 15.75 7.5-7.5 7.5 7.5"
+                    />
+                  </svg>
                 )}
               </div>
-            </div>
-          ) : null}
-
-          <div
-            className={clsx(
-              'bg-bg1 mx-8 mt-1 rounded-xl p-3 flex flex-grow items-center justify-between cursor-pointer',
-              isFilterMap ? 'rounded-b-none' : ''
-            )}
-            onClick={handleFilterMap}
-          >
-            <button className="text-white flex text-xl items-center gap-2 ">
-              By Map
-            </button>
-            {!isFilterMap ? (
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={1.5}
-                className="size-6 stroke-white"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="m19.5 8.25-7.5 7.5-7.5-7.5"
-                />
-              </svg>
-            ) : (
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={1.5}
-                className="size-6 stroke-white"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="m4.5 15.75 7.5-7.5 7.5 7.5"
-                />
-              </svg>
-            )}
-          </div>
-          {isFilterMap ? (
-            <div className="px-8">
-              <div className="bg-bg1 flex items-center px-4 pb-8 rounded-b-xl justify-center">
-                <div className="flex flex-col items-center gap-1">
-                  <div className="flex flex-col items-center">
-                    <h3 className="text-white font-bold">Route Section</h3>
-                    <p className="italic text-slate-400 text-sm">
-                      Click on the section you want to filter
-                    </p>
+              {isFilterQaulity ? (
+                <div className="flex justify-evenly">
+                  <div className="ml-8 bg-bg1 px-5 pb-5 rounded-bl-xl flex-grow justify-center flex flex-col items-center">
+                    <h3 className="text-white text-lg">Color</h3>
+                    <div className="grid grid-cols-2 gap-2">
+                      {Object.keys(checkedColors).map((color) => (
+                        <label key={color} className="flex items-center gap-2">
+                          <div
+                            className={clsx(
+                              `size-3 rounded-full bg-${color}-500`,
+                              color === 'black' &&
+                                'bg-black outline outline-1 outline-white',
+                              color === 'white' && 'bg-white',
+                              color === 'brown' && 'bg-yellow-950'
+                            )}
+                          ></div>
+                          <input
+                            type="checkbox"
+                            id={color}
+                            checked={checkedColors[color]}
+                            onChange={handleColorCheckboxChange}
+                            className="form-checkbox size-4"
+                          />
+                        </label>
+                      ))}
+                    </div>
                   </div>
-                  <div className="bg-bg2 flex flex-col pl-3 pr-4 py-1 rounded-xl">
-                    <TopDown onData={handleData} />
+
+                  <div className="mr-8 bg-bg1 px-5 pb-5 rounded-br-xl flex-grow justify-center flex flex-col items-center">
+                    <h3 className="text-white text-lg">Grade</h3>
+                    <select
+                      name="gradeType"
+                      id="gradeType"
+                      className="bg-bg2 rounded text-white p-1 mb-2"
+                      onChange={handleTypeChange}
+                    >
+                      <option value="boulder">Boulders</option>
+                      <option value="rope">Ropes</option>
+                    </select>
+                    {type === 'boulder' ? (
+                      <div className="grid grid-cols-3 gap-1 grid-flow-row">
+                        {Object.keys(checkedBoulderGrades).map((grade) => (
+                          <label
+                            key={grade}
+                            className="flex items-center gap-2"
+                          >
+                            <span className="text-white text-sm">{grade}</span>
+                            <input
+                              type="checkbox"
+                              id={grade}
+                              checked={checkedBoulderGrades[grade]}
+                              onChange={handleBoulderCheckboxChange}
+                              className="form-checkbox size-4"
+                            />
+                          </label>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="grid grid-cols-3 gap-1 grid-flow-row">
+                        {Object.keys(checkedRopeGrades).map((grade) => (
+                          <label
+                            key={grade}
+                            className="flex items-center gap-2"
+                          >
+                            <span className="text-white text-sm">{grade}</span>
+                            <input
+                              type="checkbox"
+                              id={grade}
+                              checked={checkedRopeGrades[grade]}
+                              onChange={handleRopeCheckboxChange}
+                              className="form-checkbox size-4"
+                            />
+                          </label>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 </div>
+              ) : null}
+
+              <div
+                className={clsx(
+                  'bg-bg1 mx-8 mt-1 rounded-xl p-3 flex flex-grow items-center justify-between cursor-pointer',
+                  isFilterMap ? 'rounded-b-none' : ''
+                )}
+                onClick={handleFilterMap}
+              >
+                <button className="text-white flex text-xl items-center gap-2 ">
+                  By Map
+                </button>
+                {!isFilterMap ? (
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={1.5}
+                    className="size-6 stroke-white"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="m19.5 8.25-7.5 7.5-7.5-7.5"
+                    />
+                  </svg>
+                ) : (
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={1.5}
+                    className="size-6 stroke-white"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="m4.5 15.75 7.5-7.5 7.5 7.5"
+                    />
+                  </svg>
+                )}
               </div>
+              {isFilterMap ? (
+                <div className="px-8">
+                  <div className="bg-bg1 flex items-center px-4 pb-8 rounded-b-xl justify-center">
+                    <div className="flex flex-col items-center gap-1">
+                      <div className="flex flex-col items-center">
+                        <h3 className="text-white font-bold">Route Section</h3>
+                        <p className="italic text-slate-400 text-sm">
+                          Click on the section you want to filter
+                        </p>
+                      </div>
+                      <div className="bg-bg2 flex flex-col pl-3 pr-4 py-1 rounded-xl">
+                        <TopDown onData={handleData} />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ) : null}
             </div>
           ) : null}
         </div>
-      ) : null}
 
-      <div className="flex flex-col h-screen">
-        <div className="flex justify-between px-5 pb-1">
-          <h1 className="text-white font-bold text-3xl">
-            {header} ({ropes.length + boulders.length})
-          </h1>
-          {header === 'Filtered Routes' ? (
-            <button className="bg-red-500 p-2 rounded" onClick={resetFilters}>
-              Reset Filters
-            </button>
-          ) : null}
+        <div className="flex flex-col h-screen py-5">
+          <div className="flex justify-between px-5 pb-1">
+            <h1 className="text-white font-bold text-3xl">{header}</h1>
+            {header === 'Filtered Routes' ? (
+              <button className="bg-red-500 p-2 rounded" onClick={resetFilters}>
+                Reset Filters
+              </button>
+            ) : null}
+          </div>
+          {isFilter ? (
+            <FilteredRoutes
+              filter={filter}
+              ropes={ropes}
+              boulders={boulders}
+              user={user}
+              completions={completions}
+            />
+          ) : (
+            <DefaultRoutes
+              ropes={ropes}
+              boulders={boulders}
+              user={user}
+              completions={completions}
+            />
+          )}
         </div>
-        {isFilter ? (
-          <FilteredRoutes
-            filter={filter}
-            ropes={ropes}
-            boulders={boulders}
-            user={user}
-            completions={completions}
-          />
-        ) : (
-          <DefaultRoutes
-            ropes={ropes}
-            boulders={boulders}
-            user={user}
-            completions={completions}
-          />
-        )}
       </div>
     </>
   );
