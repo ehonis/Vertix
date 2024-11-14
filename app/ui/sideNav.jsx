@@ -63,7 +63,7 @@ export default function SideNav() {
             fill="none"
             viewBox="0 0 24 24"
             strokeWidth={1.5}
-            className="size-8 md:group-hover:stroke-bg1 md:stroke-white stroke-black transition-all duration-300"
+            className="size-8 md:group-hover:stroke-bg1 md:stroke-white stroke-white transition-all duration-300"
           >
             <path
               strokeLinecap="round"
@@ -72,7 +72,7 @@ export default function SideNav() {
             />
           </svg>
 
-          <p className="md:text-white text-blackfont-bold ml-3 md:group-hover:text-bg1 transition-all duration-300 text-2xl">
+          <p className="md:text-white text-white font-bold ml-3 md:group-hover:text-bg1 transition-all duration-300 text-2xl">
             Routes
           </p>
         </Link>

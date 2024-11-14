@@ -94,12 +94,16 @@ export default async function IndividualRoute({ params }) {
               </h2>
               <div className="w-full bg-white h-px"></div>
               <div>
-                <p className="text-white text-sm">Grade: {route.grade}</p>
-                <p className="text-white text-sm">
+                <p className="text-white md:text-base text-sm">
+                  Grade: {route.grade}
+                </p>
+                <p className="text-white md:text-base text-sm">
                   Community Grade: {route.communityGrade}
                 </p>
-                <p className="text-white text-sm">Set Date: {date}</p>
-                <p className="text-white text-sm">
+                <p className="text-white md:text-base text-sm">
+                  Set Date: {date}
+                </p>
+                <p className="text-white md:text-base text-sm">
                   Current Set?:{' '}
                   {!route.isArchive ? (
                     <span className="text-green-500">Yes</span>
@@ -208,12 +212,16 @@ export default async function IndividualRoute({ params }) {
               </h2>
               <div className="w-full bg-white h-px"></div>
               <div>
-                <p className="text-white text-sm">Grade: {route.grade}</p>
-                <p className="text-white text-sm">
+                <p className="text-white md:text-base text-sm">
+                  Grade: {route.grade}
+                </p>
+                <p className="text-white md:text-base text-sm">
                   Community Grade: {route.communityGrade}
                 </p>
-                <p className="text-white text-sm">Set Date: {date}</p>
-                <p className="text-white text-sm">
+                <p className="text-white md:text-base text-sm">
+                  Set Date: {date}
+                </p>
+                <p className="text-white md:text-base text-sm">
                   Current Set?:{' '}
                   {!route.isArchive ? (
                     <span className="text-green-500">Yes</span>
