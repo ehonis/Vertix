@@ -13,9 +13,11 @@ export default async function Home() {
 
   return (
     <>
-      <HomePageImage user={user} />
+      <Suspense fallback={<div className="text-white">Loading...</div>}>
+        <HomePageImage user={user} />
+      </Suspense>
       <div className="mb-10">
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense fallback={<div className="text-white">Loading...</div>}>
           <FrontPageRouteCharts />
         </Suspense>
       </div>

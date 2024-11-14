@@ -4,16 +4,14 @@ import { useState, useRef, useEffect } from 'react';
 import clsx from 'clsx';
 import RoutePanel from './route-panel';
 import ConfirmationPopUp from './new_route/confirmation-pop-up';
-import Notification from '../notification';
+import { useNotification } from '@/app/contexts/NotificationContext';
+import { useRouter } from 'next/navigation';
 
 export default function RoutePanels({ routes }) {
   const [isEdit, setIsEdit] = useState(false);
   const [isPopUp, setIsPopUp] = useState(false);
-  const [emotion, setEmotion] = useState();
-  const [message, setMessage] = useState();
-
-  const [isNotification, setIsNotification] = useState(false);
-
+  const router = useRouter();
+  const { showNotification } = useNotification();
   const [checkedState, setCheckedState] = useState(
     routes.map((route) => ({ id: route.id, isChecked: false })) // Default unchecked state
   );
@@ -30,21 +28,16 @@ export default function RoutePanels({ routes }) {
     if (checkedState.find((route) => route.isChecked)) {
       setIsPopUp(true);
     } else {
-      setEmotion('bad');
-      setMessage(
-        'Please make sure you check at least one route before you hit delete'
-      );
-      setIsNotification(true);
+      showNotification({
+        message: 'make sure you check at least one route before you hit delete',
+        color: 'red',
+      });
     }
   };
-  const handleQuit = () => {
-    setIsNotification(false);
-  };
+
   const handleCancel = () => {
     setIsPopUp(false);
   };
-
-  const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
   const handleConfirmation = async () => {
     const checkedRoutes = checkedState.filter((route) => route.isChecked);
@@ -63,18 +56,15 @@ export default function RoutePanels({ routes }) {
       });
 
       const response = await data.json();
-      setEmotion('happy');
-      setMessage(response.message);
-      setIsNotification(true);
+      showNotification({
+        message: `Error: ${response.message}`,
+        color: 'green',
+      });
 
-      await wait(3000);
-
-      window.location.reload();
+      router.refresh();
     } catch (error) {
       const response = await data.json();
-      setEmotion('bad');
-      setMessage(response.message);
-      setIsNotification(true);
+      showNotification({ message: `Error: ${response.message}`, color: 'red' });
     }
 
     setIsPopUp(false);
@@ -90,9 +80,6 @@ export default function RoutePanels({ routes }) {
 
   return (
     <div className="w-full ">
-      {isNotification && (
-        <Notification emotion={emotion} message={message} onQuit={handleQuit} />
-      )}
       {isPopUp && (
         <ConfirmationPopUp
           message="Are you sure you want to perform this action?"
