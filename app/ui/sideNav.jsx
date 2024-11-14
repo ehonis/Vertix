@@ -53,7 +53,7 @@ export default function SideNav() {
         <Link
           href={'/routes'}
           className={clsx(
-            'flex z-[100] items-center group md:hover:bg-white bg-white md:bg-bg1 transition-all duration-700 rounded',
+            'flex z-[100] items-center group md:hover:bg-white bg-bg2 md:bg-bg2 transition-all duration-700 rounded',
             isNavbar ? 'p-0' : 'p-5'
           )}
           onClick={navClick}

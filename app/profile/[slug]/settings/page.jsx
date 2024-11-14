@@ -18,9 +18,11 @@ export default async function Settings({ params }) {
       <div className="flex flex-col h-screen ml-5 md:p-5 py-5 p-2 gap-5">
         <div className="flex justify-between">
           <h1 className="text-white text-3xl font-bold">Settings</h1>
-          <SignOut />
         </div>
-        <SettingsNavBar userData={user} />
+        <div className="flex gap-5">
+          <SettingsNavBar userData={user} />
+        </div>
+        <SignOut />
       </div>
     );
   } else {

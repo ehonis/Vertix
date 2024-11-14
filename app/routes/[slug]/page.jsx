@@ -30,7 +30,7 @@ export default async function IndividualRoute({ params }) {
     const isGraded = await findIfCommunityGraded(user.id, routeId);
     return (
       <div className="w-screen flex items-center justify-center flex-col mt-10">
-        <div className="flex w-4/5 md:w-3/5 justify-between items-center mb-4">
+        <div className="flex w-11/12 md:w-3/5 justify-between items-center mb-4">
           <Link href={'/routes'}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -55,7 +55,7 @@ export default async function IndividualRoute({ params }) {
             proposedGrade={proposedGrade}
           />
         </div>
-        <div className="w-4/5 md:w-3/5 bg-bg1 h-max">
+        <div className="w-11/12 md:w-3/5 bg-bg1 h-max">
           <div
             className={clsx(
               ' w-full h-8 rounded-t-xl',
@@ -72,7 +72,7 @@ export default async function IndividualRoute({ params }) {
               } // Using clsx for dynamic color
             )}
           ></div>
-          <div className="p-5 flex gap-5">
+          <div className="p-5 flex md:gap-5 gap-3">
             {images.length > 0 ? (
               <ImageSlider images={images} />
             ) : (
@@ -94,12 +94,12 @@ export default async function IndividualRoute({ params }) {
               </h2>
               <div className="w-full bg-white h-px"></div>
               <div>
-                <p className="text-white">Grade: {route.grade}</p>
-                <p className="text-white">
+                <p className="text-white text-sm">Grade: {route.grade}</p>
+                <p className="text-white text-sm">
                   Community Grade: {route.communityGrade}
                 </p>
-                <p className="text-white">Set Date: {date}</p>
-                <p className="text-white">
+                <p className="text-white text-sm">Set Date: {date}</p>
+                <p className="text-white text-sm">
                   Current Set?:{' '}
                   {!route.isArchive ? (
                     <span className="text-green-500">Yes</span>
@@ -111,7 +111,7 @@ export default async function IndividualRoute({ params }) {
             </div>
           </div>
         </div>
-        <div className="flex mt-3 justify-between w-4/5 md:w-3/5">
+        <div className="flex mt-3 justify-between w-11/12 md:w-3/5">
           <div className="mr-3 flex w-full flex-col items-center rounded-xl bg-bg1 p-4 shadow-lg">
             <h2 className="gradient-text-blue m-0 p-0 text-8xl font-bold">
               {totalSends}
@@ -132,7 +132,7 @@ export default async function IndividualRoute({ params }) {
   } else {
     return (
       <div className="w-screen flex items-center justify-center flex-col mt-10">
-        <div className="flex w-4/5 md:w-3/5  justify-between items-center mb-4">
+        <div className="flex w-11/12 md:w-3/5  justify-between items-center mb-4">
           <Link href={'/routes'}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -171,7 +171,7 @@ export default async function IndividualRoute({ params }) {
             </Link>
           </div>
         </div>
-        <div className="w-4/5 md:w-3/5 bg-bg1 h-max">
+        <div className="w-11/12 md:w-3/5 bg-bg1 h-max">
           <div
             className={clsx(
               ' w-full h-8 rounded-t-xl',
@@ -188,7 +188,7 @@ export default async function IndividualRoute({ params }) {
               } // Using clsx for dynamic color
             )}
           ></div>
-          <div className="p-5 flex gap-5">
+          <div className="p-5 flex md:gap-5 gap-3">
             {images.length > 0 ? (
               <ImageSlider images={images} />
             ) : (
@@ -208,12 +208,12 @@ export default async function IndividualRoute({ params }) {
               </h2>
               <div className="w-full bg-white h-px"></div>
               <div>
-                <p className="text-white">Grade: {route.grade}</p>
-                <p className="text-white">
+                <p className="text-white text-sm">Grade: {route.grade}</p>
+                <p className="text-white text-sm">
                   Community Grade: {route.communityGrade}
                 </p>
-                <p className="text-white">Set Date: {date}</p>
-                <p className="text-white">
+                <p className="text-white text-sm">Set Date: {date}</p>
+                <p className="text-white text-sm">
                   Current Set?:{' '}
                   {!route.isArchive ? (
                     <span className="text-green-500">Yes</span>
@@ -225,7 +225,7 @@ export default async function IndividualRoute({ params }) {
             </div>
           </div>
         </div>
-        <div className="flex mt-3 justify-between w-4/5 md:w-3/5">
+        <div className="flex mt-3 justify-between w-11/12 md:w-3/5">
           <div className="mr-3 flex w-full flex-col items-center rounded-xl bg-bg1 p-4 shadow-lg">
             <h2 className="gradient-text-blue m-0 p-0 text-8xl font-bold">
               {totalSends}
