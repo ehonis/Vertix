@@ -16,7 +16,7 @@ export default function ProfileSettingsPane({ userData }) {
         <h2 className="text-white text-2xl font-bold ">
           Profile Settings <span className="text-red-500">WIP</span>
         </h2>
-        {!userData.image ? (
+        {userData.image ? (
           <Image
             src={userData.image}
             height={300}
