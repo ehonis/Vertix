@@ -12,6 +12,7 @@ import {
   findProposedGrade,
   findIfCommunityGraded,
 } from '@/lib/routes';
+import StarRating from '@/app/ui/general/star-rating';
 
 export default async function IndividualRoute({ params }) {
   const session = await auth();
@@ -34,15 +35,13 @@ export default async function IndividualRoute({ params }) {
           <Link href={'/routes'}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              fill="none"
               viewBox="0 0 24 24"
-              strokeWidth={1.5}
-              className="size-12 stroke-white"
+              className="size-10 fill-white"
             >
               <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="m18.75 4.5-7.5 7.5 7.5 7.5m-6-15L5.25 12l7.5 7.5"
+                fillRule="evenodd"
+                d="M9.53 2.47a.75.75 0 0 1 0 1.06L4.81 8.25H15a6.75 6.75 0 0 1 0 13.5h-3a.75.75 0 0 1 0-1.5h3a5.25 5.25 0 1 0 0-10.5H4.81l4.72 4.72a.75.75 0 1 1-1.06 1.06l-6-6a.75.75 0 0 1 0-1.06l6-6a.75.75 0 0 1 1.06 0Z"
+                clipRule="evenodd"
               />
             </svg>
           </Link>
@@ -55,7 +54,7 @@ export default async function IndividualRoute({ params }) {
             proposedGrade={proposedGrade}
           />
         </div>
-        <div className="w-11/12 md:w-3/5 bg-bg1 h-max">
+        <div className="w-11/12 md:w-3/5 bg-bg1 rounded-xl h-max">
           <div
             className={clsx(
               ' w-full h-8 rounded-t-xl',
@@ -114,6 +113,9 @@ export default async function IndividualRoute({ params }) {
               </div>
             </div>
           </div>
+        </div>
+        <div className="flex mt-3 justify-center bg-bg1 rounded-xl p-3 w-11/12 md:w-3/5">
+          <StarRating rating={route.starRating} />
         </div>
         <div className="flex mt-3 justify-between w-11/12 md:w-3/5">
           <div className="mr-3 flex w-full flex-col items-center rounded-xl bg-bg1 p-4 shadow-lg">
@@ -175,7 +177,7 @@ export default async function IndividualRoute({ params }) {
             </Link>
           </div>
         </div>
-        <div className="w-11/12 md:w-3/5 bg-bg1 h-max">
+        <div className="w-11/12 md:w-3/5 bg-bg1 rounded-xl h-max">
           <div
             className={clsx(
               ' w-full h-8 rounded-t-xl',
@@ -232,6 +234,9 @@ export default async function IndividualRoute({ params }) {
               </div>
             </div>
           </div>
+        </div>
+        <div className="flex mt-3 justify-center bg-bg1 rounded-xl p-3 w-11/12 md:w-3/5">
+          <StarRating rating={route.starRating} />
         </div>
         <div className="flex mt-3 justify-between w-11/12 md:w-3/5">
           <div className="mr-3 flex w-full flex-col items-center rounded-xl bg-bg1 p-4 shadow-lg">
