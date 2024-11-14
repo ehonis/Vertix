@@ -181,7 +181,7 @@ export default function Routes({ ropes, boulders, user, completions }) {
         <div className="flex flex-col">
           <div
             className={clsx(
-              'bg-bg1 mx-5 mt-5 rounded-xl p-3 flex h-12 w-96 items-center justify-between cursor-pointer',
+              'bg-bg1 mx-5 mt-5 rounded-xl p-3 flex h-12 md:w-96 md:flex-grow-0 flex-grow items-center justify-between cursor-pointer',
               !isFilterMenu ? 'mb-3' : ''
             )}
             onClick={handleFilterMenu}
