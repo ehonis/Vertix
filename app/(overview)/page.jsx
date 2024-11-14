@@ -1,11 +1,9 @@
-import FrontPageRouteCharts from './ui/front-page-charts';
-import Image from 'next/image';
+import FrontPageRouteCharts from '../ui/front-page-charts';
 import { Suspense } from 'react';
-import Link from 'next/link';
-import TypewriterText from './ui/typewriter';
+
 import { auth } from '@/auth';
-import clsx from 'clsx';
-import HomePageImage from './ui/home-page-image';
+
+import HomePageImage from '../ui/home-page-image';
 
 export default async function Home() {
   const session = await auth();
