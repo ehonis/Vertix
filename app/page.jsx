@@ -1,6 +1,8 @@
 import FrontPageRouteCharts from './ui/front-page-charts';
 import Image from 'next/image';
+import { Suspense } from 'react';
 import Link from 'next/link';
+import TypewriterText from './ui/typewriter';
 
 export default function Home() {
   return (
@@ -30,8 +32,7 @@ export default function Home() {
           {/* Subtitle */}
           <div className="bg-slate-800 bg-opacity-95 md:p-3 p-1 rounded-xl text-center md:max-w-4xl max-w-7xl">
             <h2 className="text-white lg:text-3xl md:text-3xl text-xs font-bold font-barlow opacity-100">
-              A community-driven platform for <br />
-              <span className="text-green-500">climbing and bouldering.</span>
+              A community-driven platform for <TypewriterText />
             </h2>
           </div>
 
@@ -87,7 +88,9 @@ export default function Home() {
         </div>
       </div>
       <div className="mb-10">
-        <FrontPageRouteCharts />
+        <Suspense fallback={<div>Loading...</div>}>
+          <FrontPageRouteCharts />
+        </Suspense>
       </div>
     </>
   );
