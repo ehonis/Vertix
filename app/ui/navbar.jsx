@@ -2,10 +2,10 @@ import Link from 'next/link';
 import Image from 'next/image';
 import SideNav from './sideNav';
 import UserProfile from './UserProfile';
-import { auth } from '@/auth';
+
+import { SessionProvider } from 'next-auth/react';
 
 export default async function NavBar() {
-  const session = await auth();
   return (
     <>
       <nav className="h-16 w-full z-50 shadow bg-[#181a1c] flex px-5 justify-between  items-center">
@@ -25,11 +25,9 @@ export default async function NavBar() {
           />
         </Link>
         <button>
-          {session && session.user ? (
-            <UserProfile user={session.user} />
-          ) : (
-            <UserProfile user={null} />
-          )}
+          <SessionProvider>
+            <UserProfile />
+          </SessionProvider>
         </button>
       </nav>
     </>

@@ -12,7 +12,6 @@ export default function DefaultRoutes({
   totalRoutes,
 }) {
   const { showNotification } = useNotification();
-  const [totalRoutesInt, setTotalRoutesInt] = useState(0);
   const router = useRouter();
 
   const [currentRopePage, setCurrentRopePage] = useState(1);
@@ -202,7 +201,7 @@ export default function DefaultRoutes({
               fill="none"
               viewBox="0 0 24 24"
               strokeWidth={1.5}
-              class="size-6 stroke-white"
+              className="size-6 stroke-white"
             >
               <path
                 strokeLinecap="round"
@@ -310,7 +309,7 @@ export default function DefaultRoutes({
               fill="none"
               viewBox="0 0 24 24"
               strokeWidth={1.5}
-              class="size-6 stroke-white"
+              className="size-6 stroke-white"
             >
               <path
                 strokeLinecap="round"

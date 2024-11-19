@@ -2,7 +2,7 @@ import prisma from '@/prisma';
 import RouteChart from './route-chart';
 import TextHeader from './text-header';
 
-export const revalidate = 10;
+export const revalidate = 60;
 
 async function getRoutes() {
   const routes = await prisma.Route.findMany();
