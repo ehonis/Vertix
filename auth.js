@@ -1,10 +1,28 @@
 import NextAuth from 'next-auth';
 import Github from 'next-auth/providers/github';
-import prisma from '@/prisma';
-import { PrismaAdapter } from '@auth/prisma-adapter';
 import Google from 'next-auth/providers/google';
+import { PrismaAdapter } from '@auth/prisma-adapter';
+import prisma from '@/prisma';
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   adapter: PrismaAdapter(prisma),
-  providers: [Github, Google],
+  providers: [
+    Github({
+      clientId: process.env.GITHUB_CLIENT_ID,
+      clientSecret: process.env.GITHUB_CLIENT_SECRET,
+    }),
+    Google({
+      clientId: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    }),
+  ],
+  callbacks: {
+    async session({ session, user }) {
+      // Add additional fields to the session object
+      session.user.id = user.id; // Include user ID
+      session.user.admin = user.admin; // Include admin flag
+      session.user.routeSetter = user.routeSetter; // Include routeSetter flag
+      return session;
+    },
+  },
 });

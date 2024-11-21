@@ -34,6 +34,8 @@ export default function UserProfile() {
     setIsProfilePopUp(!isProfilePopUp);
   };
 
+  console.log(user);
+
   if (!user) {
     return (
       <Link href={'/signin'}>
