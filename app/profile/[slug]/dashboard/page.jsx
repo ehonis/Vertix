@@ -17,7 +17,7 @@ export default async function Dashboard({ params }) {
     return;
   }
 
-  const slug = params?.slug;
+  const slug = await params.slug;
 
   if (!slug) {
     redirect('/404');
