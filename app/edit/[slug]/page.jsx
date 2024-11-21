@@ -1,6 +1,17 @@
 import IndividualRoutePageLoad from '@/app/ui/edit/routeEdit/individualpageload';
 import { auth } from '@/auth';
 import { redirect } from 'next/navigation';
+import prisma from '@/prisma';
+
+export const revalidate = 120;
+
+export function generateStaticParams() {
+  const ids = prisma.route.findMany().then((routes) => {
+    return routes.map((route) => ({ slug: route.id }));
+  });
+  return ids;
+}
+
 export default async function EditRoute({ params }) {
   const session = await auth();
   const routeId = params.slug;

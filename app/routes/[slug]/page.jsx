@@ -7,12 +7,22 @@ import { findIfCompleted } from '@/lib/routeCompletions';
 import { formatDate, findDaysOld } from '@/lib/dates';
 import { auth } from '@/auth';
 import Link from 'next/link';
+import prisma from '@/prisma';
 import {
   findAllTotalSends,
   findProposedGrade,
   findIfCommunityGraded,
 } from '@/lib/routes';
 import StarRating from '@/app/ui/general/star-rating';
+
+export const revalidate = 120;
+
+export function generateStaticParams() {
+  const ids = prisma.route.findMany().then((routes) => {
+    return routes.map((route) => ({ slug: route.id }));
+  });
+  return ids;
+}
 
 export default async function IndividualRoute({ params }) {
   const session = await auth();
