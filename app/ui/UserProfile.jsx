@@ -4,13 +4,13 @@ import { useState, useRef, useEffect } from 'react';
 import clsx from 'clsx';
 import Link from 'next/link';
 import { useSession } from 'next-auth/react';
+
 export default function UserProfile() {
   const [isProfilePopUp, setIsProfilePopUp] = useState(false);
   const { data: session } = useSession();
   const user = session?.user || null;
   const profileRef = useRef(null);
   const buttonRef = useRef(null);
-  // Should return "object" for null, but let's verify
 
   useEffect(() => {
     const handleClickOutside = (event) => {

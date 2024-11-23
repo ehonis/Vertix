@@ -22,7 +22,7 @@ model Route {
     completions     RouteCompletion[] // One-to-many relationship with RouteCompletion
     attempts        RouteAttempt[] // One-to-many relationship with RouteAttempt
     location        String            @default("Boulder1")
-    starRating      Float             @default(5.00)
+    stars           RouteStar[]
 }
 
 model RouteImage {
@@ -56,6 +56,7 @@ model User {
     completions     RouteCompletion[] // One-to-many relationship with RouteCompletion
     attempts        RouteAttempt[] // One-to-many relationship with RouteAttempt
     communityGrades CommunityGrade[]
+    stars           RouteStar[]
     score           Int               @default(0)
     badges          Badge[]
     admin           Boolean           @default(false)
@@ -81,6 +82,19 @@ model RouteCompletion {
     routeId        String
     sends          Int      @default(1)
     completionDate DateTime @default(now())
+
+    @@unique([userId, routeId])
+}
+
+model RouteStar {
+    id       Int      @id @default(autoincrement())
+    user     User     @relation(fields: [userId], references: [id])
+    userId   String
+    route    Route    @relation(fields: [routeId], references: [id], onDelete: Cascade)
+    routeId  String
+    stars    Int
+    comment  String?
+    starDate DateTime @default(now())
 
     @@unique([userId, routeId])
 }

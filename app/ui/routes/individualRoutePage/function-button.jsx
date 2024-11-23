@@ -10,6 +10,8 @@ export default function FunctionButton({
   isComplete,
   isGraded,
   proposedGrade,
+  intialMenu,
+  size,
 }) {
   const [isButtonActive, setIsButtonActive] = useState(false);
 
@@ -28,7 +30,7 @@ export default function FunctionButton({
           viewBox="0 0 24 24"
           strokeWidth={1.5}
           stroke="currentColor"
-          className="size-12 stroke-green-500"
+          className={`${size} stroke-green-500`}
         >
           <path
             strokeLinecap="round"
@@ -45,6 +47,7 @@ export default function FunctionButton({
           isComplete={isComplete}
           isGraded={isGraded}
           proposedGrade={proposedGrade}
+          intialMenu={intialMenu}
         />
       ) : null}
     </div>
