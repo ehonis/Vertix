@@ -5,6 +5,7 @@ import CompleteMenu from './complete-menu';
 import GradeMenu from './grade-menu';
 import AttemptMenu from './attempt-menu';
 import UploadPhotoMenu from './upload-photo-menu';
+import StarRatingMenu from './star-rating-menu';
 export default function FunctionButtonMenu({
   onCancel,
   route,
@@ -217,7 +218,7 @@ export default function FunctionButtonMenu({
             />
           ) : null}
           {menu === 'Star Rating Menu' ? (
-            <UploadPhotoMenu
+            <StarRatingMenu
               isComplete={isComplete}
               route={route}
               userId={userId}

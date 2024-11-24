@@ -177,7 +177,6 @@ export default async function IndividualRoute({ params }) {
 
   const images = (await getRouteImagesById(routeId)) || [];
   const starRating = await findStarRating(routeId);
-  console.log(starRating);
   const totalSends = await findAllTotalSends(route.id);
   const date = formatDate(route.setDate);
   const daysOld = findDaysOld(route.setDate);

@@ -47,6 +47,7 @@ export default function CompleteMenu({
         message: `completed ${route.title}`,
         color: 'green',
       });
+      onCancel();
     } catch (error) {
       console.error('submission failed:', error);
       showNotification({

@@ -91,6 +91,7 @@ export default function GradeMenu({
         message: `Graded ${route.title} w/ grade: ${selectedGrade}`,
         color: 'green',
       });
+      onCancel();
     } catch (error) {
       showNotification({ message: `could not grade route error:${error}` });
       console.error(error);

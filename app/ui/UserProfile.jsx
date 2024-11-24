@@ -7,7 +7,7 @@ import { useSession } from 'next-auth/react';
 
 export default function UserProfile() {
   const [isProfilePopUp, setIsProfilePopUp] = useState(false);
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const user = session?.user || null;
   const profileRef = useRef(null);
   const buttonRef = useRef(null);
