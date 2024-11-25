@@ -90,6 +90,7 @@ export default function editRoute({ route, images, daysOld, totalSends }) {
               width={600}
               style={{ objectFit: 'cover' }}
               className="w-32 h-40"
+              alt="default route picture"
             />
           )}
         </div>

@@ -43,7 +43,7 @@ function Header({ route, user, isComplete, isGraded, proposedGrade, rating }) {
         </svg>
       </Link>
       <h1 className="text-white text-3xl font-bold">{route.title}</h1>
-      {user && (
+      {user ? (
         <FunctionButton
           route={route}
           userId={user.id}
@@ -54,6 +54,8 @@ function Header({ route, user, isComplete, isGraded, proposedGrade, rating }) {
           rating={rating}
           size={'size-12'}
         />
+      ) : (
+        <div className="size-12"></div>
       )}
     </div>
   );
@@ -136,6 +138,28 @@ function RouteInfo({
             <p className="text-white font-barlow">
               No Star Rating, Be the first one {'->'}
             </p>
+            {user ? (
+              <FunctionButton
+                route={route}
+                userId={user.id}
+                isComplete={isComplete}
+                isGraded={isGraded}
+                proposedGrade={proposedGrade}
+                intialMenu={'Star Rating Menu'}
+                rating={rating}
+                size={'size-8'}
+              />
+            ) : (
+              <Link href={'/signin'}>
+                <span className="text-white bg-blue-500 p-2 rounded font-barlow">
+                  Sign In
+                </span>
+              </Link>
+            )}
+          </div>
+        ) : (
+          <div>
+            <StarRating rating={starRating} />{' '}
             {user && (
               <FunctionButton
                 route={route}
@@ -149,8 +173,6 @@ function RouteInfo({
               />
             )}
           </div>
-        ) : (
-          <StarRating rating={starRating} />
         )}
       </div>
       <div className="flex mt-3 justify-between w-11/12 md:w-3/5 gap-5">
@@ -175,20 +197,28 @@ export default async function IndividualRoute({ params }) {
   const user = session?.user || null;
 
   const routeId = params.slug;
-  const route = await getRouteById(routeId);
-  if (!route) return <p>Route not found.</p>;
-
-  const images = (await getRouteImagesById(routeId)) || [];
-  const starRating = await findStarRating(routeId);
-  const totalSends = await findAllTotalSends(route.id);
+  const [
+    route,
+    images,
+    starRating,
+    totalSends,
+    proposedGrade,
+    isComplete,
+    isGraded,
+    rating,
+  ] = await Promise.all([
+    getRouteById(routeId),
+    getRouteImagesById(routeId) || [],
+    findStarRating(routeId),
+    findAllTotalSends(routeId),
+    user ? findProposedGrade(user.id, routeId) : null,
+    user ? findIfCompleted(user.id, routeId) : false,
+    user ? findIfCommunityGraded(user.id, routeId) : false,
+    user ? findRating(user.id, routeId) : null,
+  ]);
   const date = formatDate(route.setDate);
   const daysOld = findDaysOld(route.setDate);
-
-  const proposedGrade = user ? await findProposedGrade(user.id, routeId) : null;
-  const isComplete = user ? await findIfCompleted(user.id, routeId) : false;
-  const isGraded = user ? await findIfCommunityGraded(user.id, routeId) : false;
-  const rating = user ? await findRating(user.id, routeId) : null;
-
+  if (!route) notFound();
   return (
     <div className="w-screen flex items-center justify-center flex-col mt-10">
       <Header

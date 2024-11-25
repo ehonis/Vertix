@@ -22,6 +22,7 @@ export default function ProfileSettingsPane({ userData }) {
             height={300}
             width={300}
             className="rounded-full size-28"
+            alt="profile picture"
           ></Image>
         ) : (
           <svg
