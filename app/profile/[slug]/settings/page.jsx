@@ -13,7 +13,7 @@ export default async function Settings({ params }) {
     },
   });
 
-  if (user && user.id === session.user.id) {
+  if (user && user.id === session?.user?.id) {
     return (
       <div className="flex flex-col h-screen ml-5 md:p-5 py-5 p-2 gap-5">
         <div className="flex justify-between">

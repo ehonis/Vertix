@@ -12,7 +12,6 @@ import {
   ResponsiveContainer,
 } from 'recharts';
 import Link from 'next/link';
-import { get } from 'http';
 import { useEffect, useState } from 'react';
 // Define colors for each slice
 const COLORS = ['#0088FE', '#00C49F'];
@@ -47,10 +46,8 @@ export default function RouteLineChart({ completedRoutes }) {
   };
 
   useEffect(() => {
-    console.log(completedRoutes);
     getData();
   }, [timePeriod]);
-  console.log(lineCompletion);
 
   useEffect;
   if (lineCompletion.length > 0) {

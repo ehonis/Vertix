@@ -13,6 +13,7 @@ export default function FunctionButtonMenu({
   isComplete,
   isGraded,
   proposedGrade,
+  rating,
   intialMenu,
 }) {
   const [isVisible, setIsVisible] = useState(false);
@@ -209,22 +210,17 @@ export default function FunctionButtonMenu({
           ) : null}
           {menu === 'Upload Photo Menu' ? (
             <UploadPhotoMenu
-              isComplete={isComplete}
               route={route}
               userId={userId}
-              isGraded={isGraded}
               onCancel={onCancel}
-              proposedGrade={proposedGrade}
             />
           ) : null}
           {menu === 'Star Rating Menu' ? (
             <StarRatingMenu
-              isComplete={isComplete}
               route={route}
               userId={userId}
-              isGraded={isGraded}
               onCancel={onCancel}
-              proposedGrade={proposedGrade}
+              rating={rating}
             />
           ) : null}
         </div>

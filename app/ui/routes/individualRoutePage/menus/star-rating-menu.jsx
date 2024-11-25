@@ -5,14 +5,15 @@ import clsx from 'clsx';
 import ConfirmationPopUp from '@/app/ui/edit/new_route/confirmation-pop-up';
 import { useNotification } from '@/app/contexts/NotificationContext';
 
-export default function StarRatingMenu({ route, userId, onCancel }) {
+export default function StarRatingMenu({ route, userId, onCancel, rating }) {
   const { showNotification } = useNotification();
-  const [selectedRating, setSelectedRating] = useState(0);
+  const [selectedRating, setSelectedRating] = useState(
+    rating.stars ? rating.stars : 0
+  );
   const [isPopUp, setIsPopUp] = useState(false);
   const [submessage, Setsubmessage] = useState('');
   const [message, SetMessage] = useState('');
-  const [comment, SetComment] = useState('');
-
+  const [comment, SetComment] = useState(rating.comment ? rating.comment : '');
   const handleStarClick = (rating) => {
     setSelectedRating(rating);
   };
@@ -38,6 +39,7 @@ export default function StarRatingMenu({ route, userId, onCancel }) {
           routeId: route.id,
           rating: selectedRating,
           comment: comment,
+          isRated: rating !== null,
         }),
       });
       if (!response.ok) {
@@ -62,6 +64,7 @@ export default function StarRatingMenu({ route, userId, onCancel }) {
   const handleCommentChange = (event) => {
     SetComment(event.target.value);
   };
+
   return (
     <>
       {isPopUp && (
@@ -73,7 +76,17 @@ export default function StarRatingMenu({ route, userId, onCancel }) {
         />
       )}
       <div className="flex items-center flex-col gap-1">
-        <p className="font-barlow text-white">Rate the Route!</p>
+        {rating ? (
+          <div className="flex flex-col items-center">
+            <p className="font-barlow text-white">Edit Rating</p>
+            <p className="font-barlow text-xs text-slate-500 italic text-center">
+              You have already rated this route, but you can still change your
+              rating
+            </p>{' '}
+          </div>
+        ) : (
+          <p className="font-barlow text-white">Rate the Route!</p>
+        )}
         <div className="flex">
           {[1, 2, 3, 4, 5].map((star) => (
             <svg
@@ -95,9 +108,15 @@ export default function StarRatingMenu({ route, userId, onCancel }) {
           ))}
         </div>
         <div className="flex flex-col items-center gap-1">
-          <p className="font-barlow text-slate-500 text-sm">
-            Write a comment to the routesetter {'(optional)'}
-          </p>
+          {!rating ? (
+            <p className="font-barlow text-slate-500 text-sm">
+              Write a comment to the routesetter {'(optional)'}
+            </p>
+          ) : (
+            <p className="font-barlow text-slate-500 text-sm">
+              Edit Your Comment {'(optional)'}
+            </p>
+          )}
 
           <textarea
             name=""
@@ -118,7 +137,7 @@ export default function StarRatingMenu({ route, userId, onCancel }) {
           className="text-white bg-blue-400 p-2 rounded "
           onClick={handleConfirmation}
         >
-          Submit
+          {rating.stars ? 'Update' : 'Submit'}
         </button>
       </div>
     </>

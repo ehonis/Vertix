@@ -28,7 +28,7 @@ export default async function Dashboard({ params }) {
     where: { id: slug },
   });
 
-  if (!user || user.id !== session.user.id) {
+  if (!user || user.id !== session?.user?.id) {
     redirect('/signin');
     return;
   }

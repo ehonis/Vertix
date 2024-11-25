@@ -1,4 +1,4 @@
-import { getRouteById, getRouteImagesById } from '@/lib/routes';
+import { getRouteById, getRouteImagesById, findRating } from '@/lib/routes';
 import Image from 'next/image';
 import clsx from 'clsx';
 import ImageSlider from '@/app/ui/routes/individualRoutePage/route-image-slider';
@@ -25,7 +25,7 @@ export async function generateStaticParams() {
   return ids;
 }
 
-function Header({ route, user, isComplete, isGraded, proposedGrade }) {
+function Header({ route, user, isComplete, isGraded, proposedGrade, rating }) {
   return (
     <div className="flex w-11/12 md:w-3/5 justify-between items-center mb-4">
       <Link href={'/routes'}>
@@ -51,6 +51,7 @@ function Header({ route, user, isComplete, isGraded, proposedGrade }) {
           isGraded={isGraded}
           proposedGrade={proposedGrade}
           intialMenu={'Action Menu'}
+          rating={rating}
           size={'size-12'}
         />
       )}
@@ -67,6 +68,7 @@ function RouteInfo({
   starRating,
   isComplete,
   isGraded,
+  rating,
   proposedGrade,
 }) {
   return (
@@ -142,6 +144,7 @@ function RouteInfo({
                 isGraded={isGraded}
                 proposedGrade={proposedGrade}
                 intialMenu={'Star Rating Menu'}
+                rating={rating}
                 size={'size-8'}
               />
             )}
@@ -184,6 +187,7 @@ export default async function IndividualRoute({ params }) {
   const proposedGrade = user ? await findProposedGrade(user.id, routeId) : null;
   const isComplete = user ? await findIfCompleted(user.id, routeId) : false;
   const isGraded = user ? await findIfCommunityGraded(user.id, routeId) : false;
+  const rating = user ? await findRating(user.id, routeId) : null;
 
   return (
     <div className="w-screen flex items-center justify-center flex-col mt-10">
@@ -192,6 +196,7 @@ export default async function IndividualRoute({ params }) {
         user={user}
         isComplete={isComplete}
         isGraded={isGraded}
+        rating={rating}
         proposedGrade={proposedGrade}
       />
       <RouteInfo
@@ -204,6 +209,7 @@ export default async function IndividualRoute({ params }) {
         isComplete={isComplete}
         isGraded={isGraded}
         proposedGrade={proposedGrade}
+        rating={rating}
       />
     </div>
   );

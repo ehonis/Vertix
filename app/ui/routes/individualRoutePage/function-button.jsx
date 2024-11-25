@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import clsx from 'clsx';
 import FunctionButtonMenu from './menus/function-button-menu';
 
 export default function FunctionButton({
@@ -11,6 +10,7 @@ export default function FunctionButton({
   isGraded,
   proposedGrade,
   intialMenu,
+  rating,
   size,
 }) {
   const [isButtonActive, setIsButtonActive] = useState(false);
@@ -46,6 +46,7 @@ export default function FunctionButton({
           userId={userId}
           isComplete={isComplete}
           isGraded={isGraded}
+          rating={rating}
           proposedGrade={proposedGrade}
           intialMenu={intialMenu}
         />
