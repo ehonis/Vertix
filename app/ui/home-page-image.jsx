@@ -35,14 +35,14 @@ export default function HomePageImage() {
 
         {/* Buttons */}
 
-        <div className="flex items-center justify-center gradient-background-blue rounded-lg shadow-2xl w-fit md:mt-24 mt-5">
+        <Link
+          className="flex items-center justify-center gradient-background-blue rounded-lg shadow-2xl w-fit md:mt-24 mt-5"
+          href="/routes"
+        >
           <div className="bg-slate-800 md:m-2 md:p-2 m-1 p-1 rounded-lg flex items-center gap-2">
-            <Link
-              href="/routes"
-              className="font-barlow text-white md:text-2xl text-xs text-center"
-            >
+            <span className="font-barlow text-white md:text-2xl text-xs text-center">
               View Routes
-            </Link>
+            </span>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -57,7 +57,7 @@ export default function HomePageImage() {
               />
             </svg>
           </div>
-        </div>
+        </Link>
       </div>
     </div>
   );

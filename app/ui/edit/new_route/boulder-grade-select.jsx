@@ -7,8 +7,9 @@ export default function BoulderGradeSelect({ onGradeChange }) {
       name="grade"
       id=""
       onChange={handleGradeChange}
-      className="bg-[#181a1c] rounded text-gray-400 p-1"
+      className="bg-[#181a1c] rounded text-white font-barlow p-1"
     >
+      <option value=""></option>
       <option value="vb">VB</option>
       <option value="v1">V1</option>
       <option value="v2">V2</option>

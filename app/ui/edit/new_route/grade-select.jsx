@@ -14,13 +14,15 @@ export default function GradeSelect({ onGradeChange }) {
 
   return (
     <>
-      <div className="background flex h-6 items-center justify-start gap-3 border-none">
-        <h3 className="text-lg font-bold text-[#181a1c] w-14">Grade:</h3>
+      <div className="background flex h-6 items-center justify-start gap-2 border-none">
+        <label className="text-lg font-bold text-white font-barlow w-14">
+          <span className="font-barlow text-red-500">*</span>Grade:
+        </label>
         <select
           name="type"
           id=""
           onChange={handleTypeChange}
-          className="bg-[#181a1c] rounded text-gray-400 p-1"
+          className="bg-[#181a1c] rounded text-white p-1 font-barlow"
         >
           <option value="none"></option>
           <option value="rope">Rope</option>

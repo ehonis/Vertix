@@ -1,0 +1,85 @@
+'use client';
+import { useState, useEffect } from 'react';
+import NewRoute from '@/app/ui/edit/new/new-route';
+
+export default function newWrappers() {
+  const options = ['Route', 'BOTW', 'Event', 'Announcement'];
+  const [table, setTable] = useState([]);
+  const [data, setData] = useState([]);
+
+  const handleNewOption = (optionText) => {
+    if (optionText == 'Route') {
+      setTable((prevTable) => [
+        ...prevTable,
+        <NewRoute key={prevTable.length} onSendData={handleRouteData} />,
+      ]);
+    }
+  };
+
+  const handleRouteData = (data) => {
+    setData((prevData) => [...prevData, data]);
+  };
+  useEffect(() => {
+    console.log(data);
+  }, [data]);
+
+  return (
+    <>
+      <div className="p-5 flex-col flex gap-3">
+        <h1 className="text-white font-barlow text-4xl">New</h1>
+        <div className="flex justify-between items-center">
+          <div className="flex gap-3 items-center overflow-x-auto w-[66%] rounded-r-full">
+            {options.map((optionText) => {
+              return (
+                <button
+                  key={optionText}
+                  className="bg-green-500 p-1 pr-2 flex font-barlow items-center text-white gap-1 rounded-full justify-between"
+                  onClick={() => handleNewOption(optionText)}
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={1.5}
+                    className="size-6 stroke-white"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                    />
+                  </svg>
+                  {optionText}
+                </button>
+              );
+            })}
+            {/* Gradient Overlay */}
+          </div>
+
+          {table.length > 0 && (
+            <button className="px-4 py-1 bg-slate-400 text-white font-barlow rounded">
+              Edit
+            </button>
+          )}
+        </div>
+        <div className="h-1 w-full bg-white rounded-full"></div>
+        <div className="flex flex-col gap-2">
+          {table.map((option) => {
+            return option;
+          })}
+        </div>
+
+        {table.length > 0 && (
+          <div className="flex flex-col gap-2">
+            <div className="h-1 w-full bg-white rounded-full"></div>
+            <div className="flex justify-end">
+              <button className="p-2 bg-blue-500 text-white font-barlow rounded">
+                Submit
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+    </>
+  );
+}

@@ -8,12 +8,12 @@ import { useNotification } from '@/app/contexts/NotificationContext';
 export default function StarRatingMenu({ route, userId, onCancel, rating }) {
   const { showNotification } = useNotification();
   const [selectedRating, setSelectedRating] = useState(
-    rating.stars ? rating.stars : 0
+    rating?.stars ? rating.stars : 0
   );
   const [isPopUp, setIsPopUp] = useState(false);
   const [submessage, Setsubmessage] = useState('');
   const [message, SetMessage] = useState('');
-  const [comment, SetComment] = useState(rating.comment ? rating.comment : '');
+  const [comment, SetComment] = useState(rating?.comment ? rating.comment : '');
   const handleStarClick = (rating) => {
     setSelectedRating(rating);
   };
@@ -137,7 +137,7 @@ export default function StarRatingMenu({ route, userId, onCancel, rating }) {
           className="text-white bg-blue-400 p-2 rounded "
           onClick={handleConfirmation}
         >
-          {rating.stars ? 'Update' : 'Submit'}
+          {rating?.stars ? 'Update' : 'Submit'}
         </button>
       </div>
     </>

@@ -25,8 +25,9 @@ export default function RopeGradeSelect({ onGradeChange }) {
         name="grade"
         id=""
         onChange={handleGradeChange}
-        className="bg-[#181a1c] rounded text-gray-400 p-1"
+        className="bg-[#181a1c] rounded text-white font-barlow p-1"
       >
+        <option value=""></option>
         <option value="5.B">5.B</option>
         <option value="5.7">5.7</option>
         <option value="5.8">5.8</option>
@@ -40,9 +41,9 @@ export default function RopeGradeSelect({ onGradeChange }) {
         name="modifier"
         id=""
         onChange={handleModifierChange}
-        className="bg-[#181a1c] rounded text-gray-400 p-1"
+        className="bg-[#181a1c] rounded text-white font-barlow p-1"
       >
-        <option value="">none</option> {/* Use empty string for no modifier */}
+        <option value=""></option>
         <option value="-">-</option>
         <option value="+">+</option>
       </select>

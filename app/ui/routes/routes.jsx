@@ -52,6 +52,25 @@ export default function Routes({ ropes, boulders, user, completions }) {
   });
 
   useEffect(() => {
+    const handleResize = () => {
+      const width = window.innerWidth;
+      setIsFilterMenu(width > 1024);
+      setIsFilterMap(width > 1024);
+      setIsFilterQaulity(width > 1024);
+    };
+
+    // Run on mount
+    handleResize();
+
+    // Add event listener
+    window.addEventListener('resize', handleResize);
+
+    // Cleanup on unmount
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+  useEffect(() => {
     const boulderFilter = [];
     const ropeFilter = [];
     const colorFilter = [];
