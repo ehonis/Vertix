@@ -4,6 +4,7 @@ import NavBar from './ui/navbar';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { NotificationProvider } from './contexts/NotificationContext';
 import Notification from './ui/notification';
+import { Analytics } from '@vercel/analytics/react';
 
 const geistSans = localFont({
   src: './fonts/GeistVF.woff',
@@ -43,6 +44,7 @@ export default function RootLayout({ children }) {
           <Notification />
           <NavBar />
           <SpeedInsights />
+          <Analytics />
           {children}
         </NotificationProvider>
       </body>
