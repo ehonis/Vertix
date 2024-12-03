@@ -1,30 +1,74 @@
 'use client';
 import { useState, useEffect } from 'react';
 import NewRoute from '@/app/ui/edit/new/new-route';
+import { v4 as uuidv4 } from 'uuid';
+import ErrorPopUpNew from './error-pop-up';
+import { isTemplateLiteralTypeNode } from 'typescript';
+import { useNotification } from '@/app/contexts/NotificationContext';
 
 export default function newWrappers() {
   const options = ['Route', 'BOTW', 'Event', 'Announcement'];
   const [table, setTable] = useState([]);
   const [data, setData] = useState([]);
 
+  const [isError, setIsError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+
   const handleNewOption = (optionText) => {
     if (optionText == 'Route') {
+      const newId = uuidv4();
       setTable((prevTable) => [
         ...prevTable,
-        <NewRoute key={prevTable.length} onSendData={handleRouteData} />,
+        <NewRoute
+          id={newId}
+          key={newId}
+          onCommit={handleCommit}
+          onUncommit={handleUncommit}
+        />,
       ]);
     }
   };
 
-  const handleRouteData = (data) => {
+  const handleCommit = (data) => {
     setData((prevData) => [...prevData, data]);
   };
-  useEffect(() => {
-    console.log(data);
-  }, [data]);
 
+  const handleSubmit = async () => {
+    if (data.length < table.length) {
+      setErrorMessage('You have Uncommitted Entries, please revise and commit');
+      setIsError(true);
+    } else {
+      try {
+        const response = await fetch('/api/new', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data),
+        });
+        if (!response.ok) {
+          console.error(response.message);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  };
+  const handleCancel = () => {
+    setIsError(false);
+  };
+  const handleUncommit = (id) => {
+    // Use functional update to ensure latest state is used
+    setData((prevData) => {
+      const newData = prevData.filter((item) => item.id !== id);
+      return newData; // Return the updated array
+    });
+  };
+
+  useEffect(() => {
+    console.log('data:', data);
+  }, [data]);
   return (
     <>
+      {isError && <ErrorPopUp message={errorMessage} onCancel={handleCancel} />}
       <div className="p-5 flex-col flex gap-3">
         <h1 className="text-white font-barlow text-4xl">New</h1>
         <div className="flex justify-between items-center">
@@ -73,7 +117,10 @@ export default function newWrappers() {
           <div className="flex flex-col gap-2">
             <div className="h-1 w-full bg-white rounded-full"></div>
             <div className="flex justify-end">
-              <button className="p-2 bg-blue-500 text-white font-barlow rounded">
+              <button
+                className="p-2 bg-blue-500 text-white font-barlow rounded"
+                onClick={handleSubmit}
+              >
                 Submit
               </button>
             </div>

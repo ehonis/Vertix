@@ -13,6 +13,7 @@ import {
   findProposedGrade,
   findIfCommunityGraded,
   findStarRating,
+  findCommunityGrade,
 } from '@/lib/routes';
 import StarRating from '@/app/ui/general/star-rating';
 
@@ -72,6 +73,7 @@ function RouteInfo({
   isGraded,
   rating,
   proposedGrade,
+  communityGrade,
 }) {
   return (
     <>
@@ -115,7 +117,7 @@ function RouteInfo({
                 Grade: {route.grade}
               </p>
               <p className="text-white md:text-base text-sm">
-                Community Grade: {route.communityGrade}
+                Community Grade: {communityGrade}
               </p>
               <p className="text-white md:text-base text-sm">
                 Set Date: {date}
@@ -158,7 +160,7 @@ function RouteInfo({
             )}
           </div>
         ) : (
-          <div>
+          <div className="flex gap-5 justify-center">
             <StarRating rating={starRating} />{' '}
             {user && (
               <FunctionButton
@@ -202,6 +204,7 @@ export default async function IndividualRoute({ params }) {
     images,
     starRating,
     totalSends,
+    communityGrade,
     proposedGrade,
     isComplete,
     isGraded,
@@ -211,6 +214,7 @@ export default async function IndividualRoute({ params }) {
     getRouteImagesById(routeId) || [],
     findStarRating(routeId),
     findAllTotalSends(routeId),
+    findCommunityGrade(routeId),
     user ? findProposedGrade(user.id, routeId) : null,
     user ? findIfCompleted(user.id, routeId) : false,
     user ? findIfCommunityGraded(user.id, routeId) : false,
@@ -240,6 +244,7 @@ export default async function IndividualRoute({ params }) {
         isGraded={isGraded}
         proposedGrade={proposedGrade}
         rating={rating}
+        communityGrade={communityGrade}
       />
     </div>
   );

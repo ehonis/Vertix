@@ -6,7 +6,10 @@ import prisma from '@/prisma';
 
 const getAllRoutes = unstable_cache(
   async () => prisma.Route.findMany(),
-  ['all-routes']
+  ['all-routes'],
+  {
+    revalidate: 60,
+  }
 );
 
 export default async function RoutePage() {

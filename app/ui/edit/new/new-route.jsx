@@ -2,9 +2,9 @@ import { useState, useEffect } from 'react';
 import clsx from 'clsx';
 import GradeSelect from '../new_route/grade-select';
 import TopDown from '../../routes/topdown';
-import ErrorPopUpNew from './confirmation-pop-up';
+import ErrorPopUp from './error-pop-up';
 
-export default function NewRoute({ onSendData }) {
+export default function NewRoute({ id, onCommit, onUncommit }) {
   const [commitText, setCommitText] = useState('Commit');
   const [isToday, setIsToday] = useState(false);
 
@@ -65,17 +65,20 @@ export default function NewRoute({ onSendData }) {
         );
         setIsError(true);
       } else {
-        onSendData({
+        onCommit({
+          id: id,
           title: name,
           setDate: selectedDate,
           grade: grade,
           color: color,
           wall: wall,
+          type: 'route',
         });
         setCommitText('Committed');
       }
       // Invalid inputs
     } else {
+      onUncommit(id);
       setCommitText('Commit');
     }
   };
@@ -96,9 +99,7 @@ export default function NewRoute({ onSendData }) {
 
   return (
     <>
-      {isError && (
-        <ErrorPopUpNew message={errorMessage} onCancel={handleCancel} />
-      )}
+      {isError && <ErrorPopUp message={errorMessage} onCancel={handleCancel} />}
       <div className="bg-bg2 w-full rounded-lg flex md:flex-row flex-col gap-2 p-3">
         <div className="flex flex-col md:gap-4 gap-2 w-full justify-center ">
           <div className="flex gap-1 items-center ">
