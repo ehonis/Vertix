@@ -4,8 +4,11 @@ import NewRoute from '@/app/ui/edit/new/new-route';
 import { v4 as uuidv4 } from 'uuid';
 import ErrorPopUp from './error-pop-up';
 import { useNotification } from '@/app/contexts/NotificationContext';
+import { useRouter } from 'next/navigation';
 
 export default function NewWrapper() {
+  const { showNotification } = useNotification();
+  const router = useRouter();
   const options = ['Route', 'BOTW', 'Event', 'Announcement'];
   const [table, setTable] = useState([]);
   const [data, setData] = useState([]);
@@ -46,8 +49,16 @@ export default function NewWrapper() {
         if (!response.ok) {
           console.error(response.message);
         }
+        showNotification({
+          message: `Successfully added new Item(s)`,
+          color: 'green',
+        });
+        router.refresh();
       } catch (error) {
-        console.error(error);
+        showNotification({
+          message: `${error}`,
+          color: 'red',
+        });
       }
     }
   };
@@ -62,9 +73,6 @@ export default function NewWrapper() {
     });
   };
 
-  useEffect(() => {
-    console.log('data:', data);
-  }, [data]);
   return (
     <>
       {isError && <ErrorPopUp message={errorMessage} onCancel={handleCancel} />}

@@ -220,9 +220,16 @@ export default async function IndividualRoute({ params }) {
     user ? findIfCommunityGraded(user.id, routeId) : false,
     user ? findRating(user.id, routeId) : null,
   ]);
+  if (!route) {
+    return (
+      <div className="text-white font-barlow flex justify-center items-center w-screen h-screen">
+        404 Could not find route
+      </div>
+    );
+  }
   const date = formatDate(route.setDate);
   const daysOld = findDaysOld(route.setDate);
-  if (!route) notFound();
+
   return (
     <div className="w-screen flex items-center justify-center flex-col mt-10">
       <Header

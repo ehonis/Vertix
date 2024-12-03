@@ -57,7 +57,7 @@ export default function RoutePanels({ routes }) {
 
       const response = await data.json();
       showNotification({
-        message: `Error: ${response.message}`,
+        message: `${response.message}`,
         color: 'green',
       });
 
