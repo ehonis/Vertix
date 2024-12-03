@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 
-const words = ['climbing', 'bouldering', 'tracking'];
+const words = ['Climbing', 'Bouldering', 'Workouts'];
 
 function TypewriterText() {
   const [index, setIndex] = useState(0); // Current word index

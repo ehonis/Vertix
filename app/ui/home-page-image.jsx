@@ -29,7 +29,7 @@ export default function HomePageImage() {
         {/* Subtitle */}
         <div className="bg-slate-800 bg-opacity-95 md:p-3 p-1 rounded-xl text-center md:max-w-7xl max-w-7xl">
           <h2 className="text-white lg:text-3xl md:text-xl text-xs font-bold font-barlow opacity-100">
-            A community-driven platform for <TypewriterText />
+            A Tracking Platform for <TypewriterText />
           </h2>
         </div>
 
