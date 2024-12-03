@@ -2,11 +2,10 @@
 import { useState, useEffect } from 'react';
 import NewRoute from '@/app/ui/edit/new/new-route';
 import { v4 as uuidv4 } from 'uuid';
-import ErrorPopUpNew from './error-pop-up';
-import { isTemplateLiteralTypeNode } from 'typescript';
+import ErrorPopUp from './error-pop-up';
 import { useNotification } from '@/app/contexts/NotificationContext';
 
-export default function newWrappers() {
+export default function NewWrapper() {
   const options = ['Route', 'BOTW', 'Event', 'Announcement'];
   const [table, setTable] = useState([]);
   const [data, setData] = useState([]);
