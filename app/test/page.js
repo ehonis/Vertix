@@ -1,16 +1,17 @@
 'use client';
 
 import { useState, useRef } from 'react';
+import clsx from 'clsx';
 
-export default function TiktokScroll() {
+export default function Scroll() {
   const [currentPanel, setCurrentPanel] = useState(0);
   const touchStartY = useRef(0);
   const touchEndY = useRef(0);
 
   const panels = [
-    { id: 1, content: 'Panel 1: Welcome to TikTok-like Scroll' },
-    { id: 2, content: 'Panel 2: Swipe Up or Down to Navigate' },
-    { id: 3, content: 'Panel 3: Built with React and Tailwind!' },
+    { id: 1, content: 'Panel 1' },
+    { id: 2, content: 'Panel 2' },
+    { id: 3, content: 'Panel 3' },
   ];
 
   const handleSwipe = () => {
@@ -37,10 +38,10 @@ export default function TiktokScroll() {
   };
 
   return (
-    <div className="h-screen w-screen overflow-hidden relative">
+    <div className="absolute w-screen overflow-hidden">
       {/* Panels */}
       <div
-        className="h-[calc(100vh-4rem)] w-full transition-transform duration-500"
+        className="h-screen w-full transition-transform duration-500"
         style={{
           transform: `translateY(-${currentPanel * 100}%)`,
         }}
@@ -51,7 +52,12 @@ export default function TiktokScroll() {
         {panels.map((panel) => (
           <div
             key={panel.id}
-            className="h-screen flex justify-center items-center text-white text-2xl font-bold bg-blue-500"
+            className={clsx(
+              'h-full flex justify-center items-center text-white text-2xl font-bold',
+              panel.id === 1 ? 'bg-red-500' : null,
+              panel.id === 2 ? 'bg-blue-500' : null,
+              panel.id === 3 ? 'bg-green-500' : null
+            )}
           >
             {panel.content}
           </div>
