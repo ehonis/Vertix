@@ -45,7 +45,7 @@ export default function RootLayout({ children }) {
           <NavBar />
           <SpeedInsights />
           <Analytics />
-          {children}
+          <main className="mt-16">{children}</main>
         </NotificationProvider>
       </body>
     </html>

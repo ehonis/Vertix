@@ -5,7 +5,7 @@ import HomePageImage from '../ui/home-page-image';
 
 export default async function Home() {
   return (
-    <>
+    <div>
       <Suspense fallback={<div className="text-white">Loading...</div>}>
         <HomePageImage />
       </Suspense>
@@ -14,6 +14,6 @@ export default async function Home() {
           <FrontPageRouteCharts />
         </Suspense>
       </div>
-    </>
+    </div>
   );
 }

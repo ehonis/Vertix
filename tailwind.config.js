@@ -14,6 +14,9 @@ module.exports = {
         bg1: '#181a1c',
         bg2: '#3d4349',
       },
+      animation: {
+        slowPulse: 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+      },
     },
   },
   safelist: [

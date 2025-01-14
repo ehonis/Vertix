@@ -1,20 +1,61 @@
 'use client';
 import { useState } from 'react';
+import { useNotification } from '@/app/contexts/NotificationContext';
 import Image from 'next/image';
 
 export default function ProfileSettingsPane({ userData }) {
+  const showNotification = useNotification();
   const [isSaveButton, setIsSaveButton] = useState(false);
+  const [id, setId] = useState(userData.id);
+  const [name, SetName] = useState(userData.name);
 
-  const handleTextFieldChange = () => {
+  const handleIdChange = (event) => {
+    const newId = event.target.value;
+    setId(newId);
+
     if (!isSaveButton) {
       setIsSaveButton(true);
     }
   };
+  const handleNameChange = (event) => {
+    const newName = event.target.value;
+    SetName(newName);
+
+    if (!isSaveButton) {
+      setIsSaveButton(true);
+    }
+  };
+
+  const handleSubmit = async () => {
+    const data = { name: name, id: id };
+    try {
+      const response = await fetch('/api/edit/updateRoute', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+      if (!response.ok) {
+        console.error(response.message);
+      } else {
+        showNotification({
+          message: `Successfully Updated ${route.title}`,
+          color: 'green',
+        });
+        router.refresh();
+      }
+    } catch (error) {
+      showNotification({
+        message: `${error}`,
+        color: 'red',
+      });
+    }
+  };
+
   return (
     <div className=" bg-bg1 md:w-[30rem] w-[22rem] p-5 rounded-lg flex-col flex gap-3">
       <div className="flex justify-between">
-        <h2 className="text-white text-2xl font-bold ">
-          Profile Settings <span className="text-red-500">WIP</span>
+        <h2 className="text-white text-2xl font-barlow ">
+          Profile Settings <span className="text-red-500 ">WIP</span>
         </h2>
         {userData.image ? (
           <Image
@@ -42,40 +83,44 @@ export default function ProfileSettingsPane({ userData }) {
         )}
       </div>
       <div className="flex gap-4">
-        <label htmlFor="" className="text-white text-xl ">
+        <label htmlFor="" className="text-white text-xl font-barlow">
           Name:
         </label>
         <input
           type="text"
-          defaultValue={userData.name}
-          className="p-1 rounded"
-          onChange={handleTextFieldChange}
+          value={name}
+          className="p-1 rounded font-barlow"
+          onChange={handleNameChange}
         />
       </div>
       <div className="flex gap-4">
-        <label htmlFor="" className="text-white text-xl">
+        <label htmlFor="" className="text-white text-xl font-barlow">
           Username:
         </label>
         <div className="flex">
-          <p className="bg-bg2 text-white rounded-l p-1 text-center">@</p>
+          <p className="bg-bg2 text-white rounded-l p-1 text-center font-barlow">
+            @
+          </p>
           <input
             type="text"
-            defaultValue={userData.id}
-            className="p-1 rounded-r"
-            onChange={handleTextFieldChange}
+            value={id}
+            className="p-1 rounded-r font-barlow"
+            onChange={handleIdChange}
           />
         </div>
       </div>
       <div className="flex gap-4 items-center">
-        <label htmlFor="" className="text-white text-xl ">
+        <label htmlFor="" className="text-white text-xl font-barlow">
           Email:
         </label>
-        <p className="text-white">{userData.email}</p>
+        <p className="text-white font-barlow underline">{userData.email}</p>
       </div>
       {isSaveButton ? (
-        <button className="bg-green-500 text-white w-32 p-1 rounded">
-          Save Changes?
-        </button>
+        <div className="flex w-full justify-end">
+          <button className="bg-green-500 text-white w-32 p-1 rounded font-barlow">
+            Save Changes?
+          </button>
+        </div>
       ) : null}
     </div>
   );
