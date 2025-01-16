@@ -7,6 +7,9 @@ module.exports = {
   ],
   theme: {
     extend: {
+      height: {
+        'screen-offset': 'calc(100vh - 4rem)',
+      },
       colors: {
         background: 'var(--background)',
         foreground: 'var(--foreground)',
