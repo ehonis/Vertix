@@ -2,7 +2,7 @@
 
 import { Swiper, SwiperSlide } from 'swiper/react';
 import clsx from 'clsx';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import 'swiper/css';
 import CountdownTimer from './count-down-timer';
 
@@ -10,17 +10,19 @@ const panels = [
   { id: 1, content: '1000', color: 'blue' },
   { id: 2, content: '2000', color: 'red' },
   { id: 3, content: '3000', color: 'green' },
+  { id: 4, content: '4000', color: 'red' },
+  { id: 5, content: '5000', color: 'red' },
 ];
 
 export default function ScoreTaker() {
-  // Initialize attempts state as an object with panel IDs as keys
   const [attempts, setAttempts] = useState(() =>
     panels.reduce((acc, panel) => {
       acc[panel.id] = 0; // Default value for each panel
       return acc;
     }, {})
   );
-  const [rangeValue, setRangeValue] = useState('');
+  const [rangeValue, setRangeValue] = useState(0); // Range slider value
+  const swiperRef = useRef(null); // Ref to control Swiper instance
 
   const handleChange = (panelId, e) => {
     const inputValue = e.target.value;
@@ -45,17 +47,53 @@ export default function ScoreTaker() {
     }));
   };
 
+  const handleRangeChange = (value) => {
+    setRangeValue(value);
+    if (swiperRef.current) {
+      swiperRef.current.slideTo(value);
+    }
+  };
+
   return (
     <div>
       <CountdownTimer />
+      <div className="flex flex-col items-center justify-center mb-2">
+        {/* Range Slider */}
+        <input
+          type="range"
+          min="0"
+          max={panels.length - 1}
+          step="1"
+          value={rangeValue}
+          onChange={(e) => handleRangeChange(Number(e.target.value))}
+          className="w-3/4 mb-2 appearance-none bg-gray-300 rounded h-2"
+        />
+
+        {/* Slider Labels */}
+        <div className="flex justify-between w-3/4 text-sm text-gray-400">
+          <span className="text-left font-barlow">{panels[0].content}</span>{' '}
+          {/* Start */}
+          <span className="text-center font-barlow">
+            {panels[Math.floor(panels.length / 2)].content}
+          </span>{' '}
+          {/* Middle */}
+          <span className="text-right font-barlow">
+            {panels[panels.length - 1].content}
+          </span>{' '}
+          {/* End */}
+        </div>
+      </div>
+
       <Swiper
         direction="vertical"
         spaceBetween={50}
         slidesPerView={1}
-        className="h-[calc(100vh-8rem)]"
+        onSwiper={(swiper) => (swiperRef.current = swiper)} // Get Swiper instance
+        onSlideChange={(swiper) => setRangeValue(swiper.activeIndex)} // Sync slider with Swiper
+        className="h-[calc(100vh-12rem)] rounded"
       >
         {panels.map((panel) => (
-          <SwiperSlide key={panel.id} className="p-8 pt-10 rounded-lg">
+          <SwiperSlide key={panel.id} className="p-8 pt-6 rounded-lg">
             <div className="flex flex-col p-5 pt-8 items-center h-full rounded-lg bg-black shadow-xl text-white text-2xl gap-5 justify-between">
               {/* header */}
               <div>
