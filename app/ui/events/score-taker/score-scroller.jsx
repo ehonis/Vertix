@@ -57,7 +57,7 @@ export default function ScoreTaker() {
   return (
     <div>
       <CountdownTimer />
-      <div className="flex flex-col items-center justify-center mb-2">
+      <div className="flex flex-col items-center justify-center mb-1">
         {/* Range Slider */}
         <input
           type="range"
@@ -90,7 +90,7 @@ export default function ScoreTaker() {
         slidesPerView={1}
         onSwiper={(swiper) => (swiperRef.current = swiper)} // Get Swiper instance
         onSlideChange={(swiper) => setRangeValue(swiper.activeIndex)} // Sync slider with Swiper
-        className="h-[calc(100vh-12rem)] rounded"
+        className="h-[calc(100vh-18rem)] rounded"
       >
         {panels.map((panel) => (
           <SwiperSlide key={panel.id} className="p-8 pt-6 rounded-lg">
