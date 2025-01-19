@@ -7,17 +7,43 @@ import 'swiper/css';
 import CountdownTimer from './count-down-timer';
 
 const panels = [
-  { id: 1, content: '1000', color: 'blue' },
-  { id: 2, content: '2000', color: 'red' },
-  { id: 3, content: '3000', color: 'green' },
-  { id: 4, content: '4000', color: 'red' },
-  { id: 5, content: '5000', color: 'red' },
+  { id: 1, content: '100', color: 'blue' },
+  { id: 2, content: '200', color: 'blue' },
+  { id: 3, content: '300', color: 'blue' },
+  { id: 4, content: '400', color: 'blue' },
+  { id: 5, content: '500', color: 'blue' },
+  { id: 6, content: '600', color: 'blue' },
+  { id: 7, content: '700', color: 'blue' },
+  { id: 8, content: '800', color: 'blue' },
+  { id: 9, content: '900', color: 'blue' },
+  { id: 10, content: '1000', color: 'yellow' },
+  { id: 11, content: '1100', color: 'yellow' },
+  { id: 12, content: '1200', color: 'yellow' },
+  { id: 13, content: '1300', color: 'yellow' },
+  { id: 14, content: '1400', color: 'yellow' },
+  { id: 15, content: '1500', color: 'yellow' },
+  { id: 16, content: '1600', color: 'orange' },
+  { id: 17, content: '1700', color: 'orange' },
+  { id: 18, content: '1800', color: 'orange' },
+  { id: 19, content: '1900', color: 'orange' },
+  { id: 20, content: '2000', color: 'orange' },
+  { id: 21, content: '2100', color: 'red' },
+  { id: 22, content: '2200', color: 'red' },
+  { id: 23, content: '2300', color: 'red' },
+  { id: 24, content: '2400', color: 'red' },
+  { id: 25, content: '2500', color: 'red' },
 ];
 
-export default function ScoreTaker() {
+export default function CompetitionScoreTraker() {
   const [attempts, setAttempts] = useState(() =>
     panels.reduce((acc, panel) => {
       acc[panel.id] = 0; // Default value for each panel
+      return acc;
+    }, {})
+  );
+  const [completions, setCompletions] = useState(() =>
+    panels.reduce((acc, panel) => {
+      acc[panel.id] = false;
       return acc;
     }, {})
   );
@@ -54,6 +80,19 @@ export default function ScoreTaker() {
     }
   };
 
+  const handleCompletion = (panelId) => {
+    setCompletions((prev) => ({
+      ...prev,
+      [panelId]: true,
+    }));
+  };
+  const handleUncompletion = (panelId) => {
+    setCompletions((prev) => ({
+      ...prev,
+      [panelId]: false,
+    }));
+  };
+
   return (
     <div>
       <CountdownTimer />
@@ -83,104 +122,189 @@ export default function ScoreTaker() {
           {/* End */}
         </div>
       </div>
-
+      {/* Panel Swiper*/}
       <Swiper
         direction="vertical"
         spaceBetween={50}
         slidesPerView={1}
         onSwiper={(swiper) => (swiperRef.current = swiper)} // Get Swiper instance
         onSlideChange={(swiper) => setRangeValue(swiper.activeIndex)} // Sync slider with Swiper
-        className="h-[calc(100vh-18rem)] rounded"
+        className="h-[calc(100vh-15rem)] rounded"
       >
         {panels.map((panel) => (
           <SwiperSlide key={panel.id} className="p-8 pt-6 rounded-lg">
-            <div className="flex flex-col p-5 pt-8 items-center h-full rounded-lg bg-black shadow-xl text-white text-2xl gap-5 justify-between">
-              {/* header */}
-              <div>
-                <h1
-                  className={clsx(
-                    'font-iceland text-9xl',
-                    panel.color === 'blue' ? 'text-blue-500' : null,
-                    panel.color === 'green' ? 'text-green-500' : null,
-                    panel.color === 'red' ? 'text-red-500' : null
-                  )}
-                >
-                  {panel.content}
-                </h1>
-                {/* attempts */}
-                <div className="flex flex-col items-center gap-3">
-                  <label htmlFor="" className="font-barlow text-3xl text-white">
-                    Attempts
-                  </label>
-                  <div className="flex items-center gap-6">
-                    <button
-                      className="rounded-full size-14 font-barlow bg-red-500 flex justify-center items-center"
-                      onClick={() => handleMinusAttempt(panel.id)}
+            {completions[panel.id] === false ? (
+              <div
+                className={clsx(
+                  'flex flex-col p-5 pt-8 items-center h-full rounded-lg bg-black shadow-blue-500 shadow-xl text-white text-2xl gap-5 justify-between',
+                  panel.color === 'blue' ? 'shadow-blue-500' : null,
+                  panel.color === 'red' ? 'shadow-red-500' : null,
+                  panel.color === 'orange' ? 'shadow-orange-500' : null,
+                  panel.color === 'yellow' ? 'shadow-yellow-400' : null
+                )}
+              >
+                <div>
+                  {/* header */}
+                  <h1
+                    className={clsx(
+                      'font-stalinist text-6xl text-center mb-5',
+                      panel.color === 'blue' ? 'text-blue-500' : null,
+                      panel.color === 'orange' ? 'text-orange-500' : null,
+                      panel.color === 'yellow' ? 'text-yellow-300' : null,
+                      panel.color === 'red' ? 'text-red-500' : null
+                    )}
+                  >
+                    {panel.content}
+                  </h1>
+                  {/* attempts */}
+                  <div className="flex flex-col items-center gap-3">
+                    <label
+                      htmlFor=""
+                      className="font-barlow text-3xl text-white"
                     >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth={5}
-                        stroke="currentColor"
-                        className="size-6"
+                      Attempts
+                    </label>
+                    <div className="flex items-center gap-6">
+                      <button
+                        className="rounded-full size-14 font-barlow bg-red-500 flex justify-center items-center"
+                        onClick={() => handleMinusAttempt(panel.id)}
                       >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M5 12h14"
-                        />
-                      </svg>
-                    </button>
-                    <input
-                      type="number"
-                      value={attempts[panel.id]}
-                      onChange={(e) => handleChange(panel.id, e)}
-                      className="border p-2 text-black font-barlow w-14 h-14 text-3xl rounded text-center"
-                      placeholder="#"
-                    />
-                    <button
-                      className="rounded-full size-14 font-barlow bg-green-500  flex justify-center items-center"
-                      onClick={() => handlePlusAttempt(panel.id)}
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth={5}
-                        stroke="currentColor"
-                        className="size-6"
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          strokeWidth={5}
+                          stroke="currentColor"
+                          className="size-6"
+                          style={{
+                            filter: 'drop-shadow(0px 4px 6px rgba(0, 0, 0, 1))',
+                          }}
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M5 12h14"
+                          />
+                        </svg>
+                      </button>
+                      <input
+                        type="number"
+                        value={attempts[panel.id]}
+                        onChange={(e) => handleChange(panel.id, e)}
+                        className="border p-2 text-black font-barlow w-14 h-14 text-3xl rounded text-center"
+                        placeholder="#"
+                      />
+                      <button
+                        className="rounded-full size-14 font-barlow bg-green-500  flex justify-center items-center"
+                        onClick={() => handlePlusAttempt(panel.id)}
                       >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M12 4.5v15m7.5-7.5h-15"
-                        />
-                      </svg>
-                    </button>
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          strokeWidth={5}
+                          stroke="currentColor"
+                          className="size-6"
+                          style={{
+                            filter: 'drop-shadow(0px 4px 6px rgba(0, 0, 0, 1))',
+                          }}
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M12 4.5v15m7.5-7.5h-15"
+                          />
+                        </svg>
+                      </button>
+                    </div>
                   </div>
                 </div>
-              </div>
-              {/* completion */}
-              <div className="flex flex-col gap-3 items-center">
-                <button className="bg-green-500 rounded-full size-16 flex justify-center items-center">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth={1.5}
-                    stroke="currentColor"
-                    className="size-14"
+                {/* completion */}
+                <div className="flex flex-col gap-3 items-center">
+                  <button
+                    className="bg-green-500 rounded-full size-16 flex justify-center items-center"
+                    onClick={() => handleCompletion(panel.id)}
                   >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
-                    />
-                  </svg>
-                </button>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth={1.5}
+                      stroke="currentColor"
+                      className="size-14"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                      />
+                    </svg>
+                  </button>
+                </div>
               </div>
-            </div>
+            ) : (
+              <div
+                className={clsx(
+                  'flex flex-col p-5 pt-8 items-center h-full rounded-lg bg-green-400 shadow-xl text-white text-2xl gap-5 justify-between ',
+                  panel.color === 'blue' ? 'shadow-blue-500' : null,
+                  panel.color === 'red' ? 'shadow-red-500' : null,
+                  panel.color === 'orange' ? 'shadow-orange-500' : null,
+                  panel.color === 'yellow' ? 'shadow-yellow-400' : null
+                )}
+              >
+                <div className="flex-col flex justify-center">
+                  <h1
+                    className={clsx(
+                      'font-stalinist text-6xl text-center mb-5 drop-shadow-customBlack',
+                      panel.color === 'blue' ? 'text-blue-500' : null,
+                      panel.color === 'orange' ? 'text-orange-500' : null,
+                      panel.color === 'yellow' ? 'text-yellow-300' : null,
+                      panel.color === 'red' ? 'text-red-500' : null
+                    )}
+                  >
+                    {panel.content}
+                  </h1>
+                  <div className="flex flex-col gap-5">
+                    <p className="font-barlow text-white text-3xl text-center drop-shadow-customBlack">
+                      Complete!
+                    </p>
+                    {attempts[panel.id] !== 0 ? (
+                      <p className="font-barlow text-white text-2xl text-center drop-shadow-customBlack">
+                        {attempts[panel.id]} attempt(s)
+                      </p>
+                    ) : (
+                      <p className="font-barlow text-white text-2xl text-center drop-shadow-customBlack">
+                        Flash!
+                      </p>
+                    )}
+                  </div>
+                </div>
+                <div className="flex flex-col items-center gap-3">
+                  <h2 className="text-3xl font-barlow text-white text-center drop-shadow-customBlack">
+                    Uncomplete?
+                  </h2>
+                  <button
+                    className="rounded-full size-14 font-barlow bg-red-500 flex justify-center items-center shadow-lg drop-shadow-customBlack"
+                    onClick={() => handleUncompletion(panel.id)}
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth={1.5}
+                      stroke="currentColor"
+                      className="size-10 "
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                      />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            )}
           </SwiperSlide>
         ))}
       </Swiper>

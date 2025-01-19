@@ -7,6 +7,9 @@ module.exports = {
   ],
   theme: {
     extend: {
+      dropShadow: {
+        customBlack: '0px 4px 6px rgba(0, 0, 0, 1)',
+      },
       height: {
         'screen-offset': 'calc(100vh - 4rem)',
       },

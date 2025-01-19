@@ -44,7 +44,7 @@ export default function DemoPage() {
         </div>
         <Link
           className="bg-green-500 text-white p-3 rounded-md font-barlow text-3xl"
-          href={'/events/competition/demo/score-keeper'}
+          href={'/events/competition/demo/competition-score-traker'}
         >
           Start Demo
         </Link>

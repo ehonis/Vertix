@@ -34,6 +34,10 @@ const icelandFont = localFont({
   weight: '400',
   style: 'normal',
 });
+const stalinistFont = localFont({
+  src: '/fonts/StalinistOne-Regular.ttf',
+  variable: '--font-stalinist',
+});
 
 export const metadata = {
   title: 'On The Rocks',
@@ -44,7 +48,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${jerseyFont.variable} ${barlowFont.variable} ${icelandFont.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${jerseyFont.variable} ${barlowFont.variable} ${icelandFont.variable} ${stalinistFont.variable} antialiased`}
       >
         <NotificationProvider>
           <Notification />
