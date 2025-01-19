@@ -5,6 +5,7 @@ import clsx from 'clsx';
 import { useState, useRef } from 'react';
 import 'swiper/css';
 import CountdownTimer from './count-down-timer';
+import { useNotification } from '@/app/contexts/NotificationContext';
 
 const panels = [
   { id: 1, content: '100', color: 'blue' },
@@ -35,6 +36,8 @@ const panels = [
 ];
 
 export default function CompetitionScoreTraker() {
+  const { showNotification } = useNotification();
+
   const [attempts, setAttempts] = useState(() =>
     panels.reduce((acc, panel) => {
       acc[panel.id] = 0; // Default value for each panel
@@ -80,11 +83,18 @@ export default function CompetitionScoreTraker() {
     }
   };
 
-  const handleCompletion = (panelId) => {
-    setCompletions((prev) => ({
-      ...prev,
-      [panelId]: true,
-    }));
+  const handleCompletion = (panelId, attempts) => {
+    if (attempts < 1) {
+      showNotification({
+        message: `1 Attempt Needed`,
+        color: 'red',
+      });
+    } else {
+      setCompletions((prev) => ({
+        ...prev,
+        [panelId]: true,
+      }));
+    }
   };
   const handleUncompletion = (panelId) => {
     setCompletions((prev) => ({
@@ -223,7 +233,9 @@ export default function CompetitionScoreTraker() {
                 <div className="flex flex-col gap-3 items-center">
                   <button
                     className="bg-green-500 rounded-full size-16 flex justify-center items-center"
-                    onClick={() => handleCompletion(panel.id)}
+                    onClick={() =>
+                      handleCompletion(panel.id, attempts[panel.id])
+                    }
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
