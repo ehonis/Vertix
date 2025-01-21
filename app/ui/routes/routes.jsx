@@ -5,6 +5,7 @@ import clsx from 'clsx';
 import DefaultRoutes from './default-routes';
 import FilteredRoutes from './filtered-routes';
 import TopDown from './topdown';
+import Link from 'next/link';
 
 export default function Routes({ ropes, boulders, user, completions }) {
   const [type, setType] = useState('boulder');
@@ -197,6 +198,7 @@ export default function Routes({ ropes, boulders, user, completions }) {
   return (
     <>
       <div className="flex lg:flex-row flex-col">
+        {/* filters */}
         <div className="flex flex-col">
           <div
             className={clsx(
@@ -428,7 +430,24 @@ export default function Routes({ ropes, boulders, user, completions }) {
               <button className="bg-red-500 p-2 rounded" onClick={resetFilters}>
                 Reset Filters
               </button>
-            ) : null}
+            ) : (
+              <Link href={'/search'} className="bg-bg2 p-3 rounded-full">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                  className="size-6"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
+                  />
+                </svg>
+              </Link>
+            )}
           </div>
           {isFilter ? (
             <FilteredRoutes

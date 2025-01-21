@@ -6,13 +6,26 @@ export default function ImageNamePlate({ image, name, id, title }) {
       <div className="flex flex-col items-start px-4 py-4 relative">
         {/* Profile Picture */}
         <div className="relative -mb-16 z-10">
-          <Image
-            src={image}
-            width={120}
-            height={120}
-            className="rounded-full border-4 border-bg2"
-            alt="picture of user"
-          />
+          {image === null ? (
+            <Image
+              src={
+                'https://8jiyvthxbb.ufs.sh/f/bujx12z5cHJjhC8qChmfsrL6AEIclW7bn0CeSKix1gBohFRZ'
+              }
+              width={120}
+              height={120}
+              className="rounded-full border-4 border-bg2"
+              alt="picture of user"
+            />
+          ) : (
+            <Image
+              src={image}
+              width={120}
+              height={120}
+              className="rounded-full border-4 border-bg2"
+              alt="picture of user"
+            />
+          )}
+
           <div className="absolute bottom-0 right-0 bg-white text-black text-xs px-2 py-1 rounded-full drop-shadow-customBlack">
             {title}
           </div>
