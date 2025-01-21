@@ -59,6 +59,75 @@ body {
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
+  .gradient-text-red-orange {
+    background-image: linear-gradient(to top right, red, rgb(255, 140, 0));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .gradient-text-blue-cyan {
+    background-image: linear-gradient(to top right, blue, rgb(4, 235, 251));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .gradient-text-green-lime {
+    background-image: linear-gradient(to top right, green, lime);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .gradient-text-purple-pink {
+    background-image: linear-gradient(to top right, purple, pink);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .gradient-text-yellow-red {
+    background-image: linear-gradient(to top right, yellow, red);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .gradient-text-teal-indigo {
+    background-image: linear-gradient(to top right, teal, indigo);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .gradient-text-pink-orange {
+    background-image: linear-gradient(to top right, pink, orange);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .gradient-text-cyan-purple {
+    background-image: linear-gradient(to top right, cyan, purple);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .gradient-text-gold-yellow {
+    background-image: linear-gradient(to top right, gold, yellow);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .gradient-text-indigo-violet {
+    background-image: linear-gradient(to top right, indigo, violet);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
   .gradient-background-blue {
     background-image: linear-gradient(to right, blue, rgb(4, 235, 251));
   }

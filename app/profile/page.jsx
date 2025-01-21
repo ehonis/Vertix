@@ -6,7 +6,7 @@ export default async function profile() {
   if (!session) {
     redirect('/');
   } else {
-    redirect(`/profile/${session.user.id}/dashboard`);
+    redirect(`/profile/${session.user.id}`);
   }
   return <div>Redirecting to Profile</div>;
 }

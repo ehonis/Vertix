@@ -255,16 +255,17 @@ export default function CompetitionScoreTraker() {
                 </div>
               </div>
             ) : (
-              <div
-                className={clsx(
-                  'flex flex-col p-5 pt-8 items-center h-full rounded-lg bg-green-400 shadow-xl text-white text-2xl gap-5 justify-between ',
-                  panel.color === 'blue' ? 'shadow-blue-500' : null,
-                  panel.color === 'red' ? 'shadow-red-500' : null,
-                  panel.color === 'orange' ? 'shadow-orange-500' : null,
-                  panel.color === 'yellow' ? 'shadow-yellow-400' : null
-                )}
-              >
-                <div className="flex-col flex justify-center">
+              <>
+                {/* complete panel */}
+                <div
+                  className={clsx(
+                    'flex flex-col p-5 pt-8 items-center h-full rounded-lg bg-green-400 shadow-xl text-white text-2xl gap-5 justify-between ',
+                    panel.color === 'blue' ? 'shadow-blue-500' : null,
+                    panel.color === 'red' ? 'shadow-red-500' : null,
+                    panel.color === 'orange' ? 'shadow-orange-500' : null,
+                    panel.color === 'yellow' ? 'shadow-yellow-400' : null
+                  )}
+                >
                   <h1
                     className={clsx(
                       'font-stalinist text-6xl text-center mb-5 drop-shadow-customBlack',
@@ -277,45 +278,43 @@ export default function CompetitionScoreTraker() {
                     {panel.content}
                   </h1>
                   <div className="flex flex-col gap-5">
-                    <p className="font-barlow text-white text-3xl text-center drop-shadow-customBlack">
-                      Complete!
-                    </p>
-                    {attempts[panel.id] !== 0 ? (
-                      <p className="font-barlow text-white text-2xl text-center drop-shadow-customBlack">
-                        {attempts[panel.id]} attempt(s)
+                    {attempts[panel.id] !== 1 ? (
+                      <p className="font-barlow text-white text-4xl text-center drop-shadow-customBlack">
+                        {attempts[panel.id]} attempts
                       </p>
                     ) : (
-                      <p className="font-barlow text-white text-2xl text-center drop-shadow-customBlack">
+                      <p className="font-barlow text-white text-4xl text-center drop-shadow-customBlack">
                         Flash!
                       </p>
                     )}
                   </div>
-                </div>
-                <div className="flex flex-col items-center gap-3">
-                  <h2 className="text-3xl font-barlow text-white text-center drop-shadow-customBlack">
-                    Uncomplete?
-                  </h2>
-                  <button
-                    className="rounded-full size-14 font-barlow bg-red-500 flex justify-center items-center shadow-lg drop-shadow-customBlack"
-                    onClick={() => handleUncompletion(panel.id)}
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth={1.5}
-                      stroke="currentColor"
-                      className="size-10 "
+
+                  <div className="flex flex-col items-center gap-3">
+                    <h2 className="text-3xl font-barlow text-white text-center drop-shadow-customBlack">
+                      Uncomplete?
+                    </h2>
+                    <button
+                      className="rounded-full size-14 font-barlow bg-red-500 flex justify-center items-center shadow-lg drop-shadow-customBlack"
+                      onClick={() => handleUncompletion(panel.id)}
                     >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
-                      />
-                    </svg>
-                  </button>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="size-10 "
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                        />
+                      </svg>
+                    </button>
+                  </div>
                 </div>
-              </div>
+              </>
             )}
           </SwiperSlide>
         ))}
