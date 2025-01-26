@@ -424,21 +424,26 @@ export default function Routes({ ropes, boulders, user, completions }) {
         </div>
 
         <div className="flex flex-col h-screen py-5">
-          <div className="flex justify-between px-5 pb-1">
-            <h1 className="text-white font-bold text-3xl">{header}</h1>
+          <div className="flex justify-between items-center px-5 pb-1">
+            <h1 className="text-white font-bold text-3xl drop-shadow-customBlack">
+              {header}
+            </h1>
             {header === 'Filtered Routes' ? (
               <button className="bg-red-500 p-2 rounded" onClick={resetFilters}>
                 Reset Filters
               </button>
             ) : (
-              <Link href={'/search'} className="bg-bg2 p-3 rounded-full">
+              <Link
+                href={'/search'}
+                className="bg-bg2 p-3 rounded-full drop-shadow-customBlack"
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
-                  strokeWidth={1.5}
+                  strokeWidth={2}
                   stroke="currentColor"
-                  className="size-6"
+                  className="size-6 stroke-white drop-shadow-customBlack"
                 >
                   <path
                     strokeLinecap="round"

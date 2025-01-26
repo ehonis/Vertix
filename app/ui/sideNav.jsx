@@ -102,6 +102,33 @@ export default function SideNav() {
             Events
           </p>
         </Link>
+        <Link
+          href={'/search'}
+          className={clsx(
+            'flex z-[100] items-center group md:hover:bg-white bg-bg2 md:bg-bg2 transition-all duration-700 rounded',
+            isNavbar ? 'p-0' : 'p-5'
+          )}
+          onClick={navClick}
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={1.5}
+            stroke="currentColor"
+            className="size-8 md:group-hover:stroke-bg1 md:stroke-white stroke-white transition-all duration-300"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
+            />
+          </svg>
+
+          <p className="md:text-white text-white font-bold ml-3 md:group-hover:text-bg1 transition-all duration-300 text-2xl">
+            Search
+          </p>
+        </Link>
       </div>
       <svg
         xmlns="http://www.w3.org/2000/svg"
