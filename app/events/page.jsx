@@ -46,7 +46,10 @@ export default function page() {
 
             <p className="font-barlow text-black text-xl">Demo Competition</p>
           </Link>
-          <div className="flex bg-gray-300 rounded-lg h-24 p-2 gap-3 items-center">
+          <Link
+            href={'/events/competition/mixer'}
+            className="flex bg-gray-300 rounded-lg h-24 p-2 gap-3 items-center"
+          >
             <Image
               src={'/img/circlebadge.png'}
               width={80}
@@ -54,10 +57,8 @@ export default function page() {
               alt="Picture of the author"
               className=""
             />
-            <p className="font-barlow text-black text-xl">
-              2024 Winter High Ball
-            </p>
-          </div>
+            <p className="font-barlow text-black text-xl">Spring Mixer</p>
+          </Link>
         </div>
       </div>
     </>

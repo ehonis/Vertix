@@ -1,5 +1,5 @@
-import CompetitionScoreTraker from '@/app/ui/events/score-taker/score-scroller';
+import CompetitionScoreTraker from '@/app/ui/events/demo/score-scroller';
 
-export default function GameDay() {
+export default function Page() {
   return <CompetitionScoreTraker />;
 }
