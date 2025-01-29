@@ -46,6 +46,7 @@ export default function EditRoute({ route, images, daysOld, totalSends }) {
       setIsModifier(true);
     }
   }, [grade, modifier]);
+
   const handleTitleChange = (event) => {
     const newTitle = event.target.value;
     setTitle(newTitle);

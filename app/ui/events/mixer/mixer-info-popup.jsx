@@ -28,9 +28,6 @@ export default function MixerInfoPopup({
     }
   }, []);
 
-  useEffect(() => {
-    console.log(predictedHoldsAndPoints);
-  });
   const handleCancel = () => {
     onCancel();
   };
@@ -84,7 +81,10 @@ export default function MixerInfoPopup({
               {predictedHoldsAndPoints.map((info) => {
                 const color = mixerRoutes[info.id].color;
                 return (
-                  <div className="flex flex-col bg-bg1 p-2 rounded">
+                  <div
+                    className="flex flex-col bg-bg1 p-2 rounded"
+                    key={info.id}
+                  >
                     <p className="text-white font-barlow">
                       Tope Rope Hold:{' '}
                       <span className="font-stalinist gradient-text-blue-cyan">
