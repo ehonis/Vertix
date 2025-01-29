@@ -31,6 +31,10 @@ body {
 .font-stalinist {
   font-family: var(--font-stalinist), Arial, Helvetica, sans-serif;
 }
+.font-orbitron {
+  font-family: var(--font-orbitron), Arial, Helvetica, sans-serif;
+}
+
 @layer utilities {
   .text-balance {
     text-wrap: balance;

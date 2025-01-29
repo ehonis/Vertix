@@ -38,6 +38,11 @@ const stalinistFont = localFont({
   src: '/fonts/StalinistOne-Regular.ttf',
   variable: '--font-stalinist',
 });
+const orbitronFont = localFont({
+  src: 'fonts/Orbitron-VariableFont_wght.ttf',
+  variable: '--font-orbitron',
+  weight: '100 900',
+});
 
 export const metadata = {
   title: 'On The Rocks',
@@ -48,7 +53,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${jerseyFont.variable} ${barlowFont.variable} ${icelandFont.variable} ${stalinistFont.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${jerseyFont.variable} ${barlowFont.variable} ${icelandFont.variable} ${stalinistFont.variable} ${orbitronFont.variable} antialiased`}
       >
         <NotificationProvider>
           <Notification />
