@@ -66,6 +66,7 @@ model User {
     Account         Account[]
     Session         Session[]
     private         Boolean           @default(false)
+    mixerClimber    MixerClimber[]
 }
 
 model Badge {
@@ -145,4 +146,100 @@ model VerificationToken {
     expires    DateTime
 
     @@id([identifier, token])
+}
+
+// mixer competition 
+// Enum to denote whether a climber’s entry was via the app or manually entered.
+enum EntryMethod {
+    APP
+    MANUAL
+}
+
+model MixerCompetition {
+    id                 String              @id @default(cuid())
+    name               String
+    year               Int
+    status             String              @default("upcoming") // upcoming, active, completed
+    // Optional timestamps for competition day if needed
+    compStartTime      DateTime?
+    compEndTime        DateTime?
+    mixerRoutes        MixerRoute[]
+    climbers           MixerClimber[]
+    divisions          MixerDivision[]
+    boulderScores      MixerBoulderScore[]
+    ropeScores         MixerRopeScore[]
+    ranks              MixerRank[]
+    createdAt          DateTime            @default(now())
+    updatedAt          DateTime            @updatedAt
+    areScoresAvailable Boolean             @default(false)
+}
+
+model MixerRoute {
+    id            String           @id @default(cuid())
+    name          String
+    color         String
+    holds         Json // Store hold data as JSON (Array of { holdNumber, topRopePoints, leadPoints })
+    competitionId String
+    competition   MixerCompetition @relation(fields: [competitionId], references: [id], onDelete: Cascade)
+}
+
+model MixerClimber {
+    id            String             @id @default(cuid())
+    name          String             @unique
+    divisionId    String?
+    division      MixerDivision?     @relation(fields: [divisionId], references: [id], onDelete: SetNull)
+    boulderScore  MixerBoulderScore?
+    ropeScore     MixerRopeScore?
+    rank          MixerRank?
+    competitionId String
+    competition   MixerCompetition   @relation(fields: [competitionId], references: [id], onDelete: Cascade)
+
+    registeredAt DateTime    @default(now()) // signup time
+    checkedIn    Boolean     @default(false) // set to true on comp day if participant shows up
+    entryMethod  EntryMethod @default(MANUAL) // APP if linked to a user account
+
+    // Optional relation to an existing User. If not linked, entry is considered manual.
+    userId    String?
+    user      User?    @relation(fields: [userId], references: [id])
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model MixerDivision {
+    id            String           @id @default(cuid())
+    name          String
+    climbers      MixerClimber[]
+    competitionId String
+    competition   MixerCompetition @relation(fields: [competitionId], references: [id], onDelete: Cascade)
+}
+
+model MixerBoulderScore {
+    id            String           @id @default(cuid())
+    climberId     String           @unique
+    climber       MixerClimber     @relation(fields: [climberId], references: [id], onDelete: Cascade)
+    score         Int
+    attempts      Int
+    competitionId String
+    competition   MixerCompetition @relation(fields: [competitionId], references: [id], onDelete: Cascade)
+}
+
+model MixerRopeScore {
+    id            String           @id @default(cuid())
+    climberId     String           @unique
+    climber       MixerClimber     @relation(fields: [climberId], references: [id], onDelete: Cascade)
+    score         Int
+    attempts      Int
+    competitionId String
+    competition   MixerCompetition @relation(fields: [competitionId], references: [id], onDelete: Cascade)
+}
+
+model MixerRank {
+    id            String           @id @default(cuid())
+    climberId     String           @unique
+    climber       MixerClimber     @relation(fields: [climberId], references: [id], onDelete: Cascade)
+    boulderRank   Int
+    ropeRank      Int
+    combinedRank  Int
+    competitionId String
+    competition   MixerCompetition @relation(fields: [competitionId], references: [id], onDelete: Cascade)
 }

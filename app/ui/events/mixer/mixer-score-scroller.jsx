@@ -166,36 +166,60 @@ export default function MixerScoreScroller({ mixerRoutes, StartTime }) {
 
   return (
     <div>
-      <MixerCountdownTimer />
-      <div className="flex flex-col items-center justify-center mb-1">
-        {/* Range Slider */}
-        <input
-          type="range"
-          min="0"
-          max={mixerRoutes.length - 1}
-          step="1"
-          value={rangeValue}
-          onChange={(e) => handleRangeChange(Number(e.target.value))}
-          className="w-3/4 mb-2 appearance-none bg-gray-300 rounded h-2"
-        />
+      <div className="flex flex-col px-5">
+        <div className="flex justify-between items-center">
+          <MixerCountdownTimer />
+          <button className=" flex justify-center items-center flex-col ">
+            <div className="bg-green-500 p-1 rounded-full">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                className="size-6 stroke-white"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                />
+              </svg>
+            </div>
+            <p className=" text-white text-xs font-thin text-center">
+              Submit Scores
+            </p>
+          </button>
+        </div>
+        <div className="flex flex-col items-center justify-center mb-1">
+          {/* Range Slider */}
+          <input
+            type="range"
+            min="0"
+            max={mixerRoutes.length - 1}
+            step="1"
+            value={rangeValue}
+            onChange={(e) => handleRangeChange(Number(e.target.value))}
+            className="w-3/4 mb-2 appearance-none bg-gray-300 rounded h-2"
+          />
 
-        {/* Slider Labels */}
-        <div className="flex justify-between w-3/4 text-sm text-gray-400">
-          <span className="text-left font-barlow">
-            {mixerRoutes[0].routeName}
-          </span>{' '}
-          {/* Start */}
-          <span className="text-center font-barlow">
-            {mixerRoutes[Math.floor(mixerRoutes.length / 2)].routeName}
-          </span>{' '}
-          {/* Middle */}
-          <span className="text-right font-barlow">
-            {mixerRoutes[mixerRoutes.length - 1].routeName}
-          </span>{' '}
-          {/* End */}
+          {/* Slider Labels */}
+          <div className="flex justify-between w-3/4 text-sm text-gray-400">
+            <span className="text-left font-barlow">
+              {mixerRoutes[0].routeName}
+            </span>{' '}
+            {/* Start */}
+            <span className="text-center font-barlow">
+              {mixerRoutes[Math.floor(mixerRoutes.length / 2)].routeName}
+            </span>{' '}
+            {/* Middle */}
+            <span className="text-right font-barlow">
+              {mixerRoutes[mixerRoutes.length - 1].routeName}
+            </span>{' '}
+            {/* End */}
+          </div>
         </div>
       </div>
-
       {/* Panel Swiper*/}
       <Swiper
         direction="vertical"
