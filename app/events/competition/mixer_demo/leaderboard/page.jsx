@@ -81,12 +81,10 @@ export default async function MixerDemoLeaderboard() {
     formattedRopeScores,
     formattedDivisions
   );
-  console.log(adjustedRankings);
-  console.log(formattedDivisions);
+
   return (
     <>
       <MixerLeaderBoard
-        formattedDivisions={formattedDivisions}
         combinedScores={combinedScores}
         adjustedRankings={adjustedRankings}
         boulderScoresRanked={boulderScoresRanked}

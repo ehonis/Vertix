@@ -91,9 +91,11 @@ export default function MixerLeaderBoard({
               ))}
             </div>
           </div>
-          {/* by division */}
-          <div className="flex flex-col gap-3 mb-8">
-            <h2 className="font-barlow text-3xl text-white">By Division</h2>
+          {/* By Division */}
+          <div className="flex flex-col gap-3 mb-8 px-6 w-full max-w-3xl">
+            <h2 className="font-barlow text-3xl text-white text-start">
+              By Division
+            </h2>
 
             {Object.entries(adjustedRankings.updatedDivisions).map(
               ([divisionName, divisionData]) => (
@@ -101,7 +103,7 @@ export default function MixerLeaderBoard({
                   {/* Division Button */}
                   <button
                     className={clsx(
-                      'bg-bg1 flex w-96 rounded justify-center p-2 outline outline-1 outline-white',
+                      'bg-bg1 flex w-full rounded justify-center p-2 outline outline-1 outline-white',
                       openDivisions[divisionName] && 'bg-bg2' // Change color when open
                     )}
                     onClick={() => handleToggleDivision(divisionName)}
@@ -115,25 +117,25 @@ export default function MixerLeaderBoard({
                   <AnimatePresence>
                     {openDivisions[divisionName] && (
                       <motion.div
-                        className="flex flex-col w-[23rem] gap-1 justify-center items-center bg-bg2 outline outline-white outline-1 p-3 self-center rounded"
+                        className="flex flex-col w-[95%] max-w-lg gap-1 justify-center items-center bg-bg2 outline outline-white outline-1 p-3 self-center rounded"
                         initial={{ opacity: 0, y: -10, scale: 0.95 }}
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: -10, scale: 0.95 }}
                         transition={{ duration: 0.3, ease: 'easeInOut' }}
                       >
-                        {console.log(divisionData.rankings)}
                         {/* Display rankings inside the division */}
                         {divisionData.rankings.map((climber, index) => (
                           <motion.div
                             key={climber.name}
                             className={clsx(
-                              'bg-bg1 w-[22rem] rounded flex justify-between px-2 py-1',
+                              'w-full max-w-md rounded flex justify-between px-4 py-1',
                               index === 0 &&
                                 'bg-amber-500 shadow-lg shadow-amber-500',
                               index === 1 &&
                                 'bg-gray-400 shadow-lg shadow-gray-400',
                               index === 2 &&
-                                'bg-orange-600 shadow-lg shadow-orange-600'
+                                'bg-orange-600 shadow-lg shadow-orange-600',
+                              index > 2 && 'bg-bg1'
                             )}
                             initial={{ opacity: 0, y: -5 }}
                             animate={{ opacity: 1, y: 0 }}
@@ -157,25 +159,30 @@ export default function MixerLeaderBoard({
               )
             )}
           </div>
-          {/* by category */}
-          <div className="flex flex-col gap-3 mb-20">
-            <h2 className="font-barlow text-3xl text-white">
+
+          {/* Total Scores by Type */}
+          <div className="flex flex-col gap-3 mb-20 px-6 w-full max-w-3xl">
+            <h2 className="font-barlow text-3xl text-white text-start">
               Total Scores by Type
             </h2>
+
             <div className="flex flex-col gap-2">
+              {/* Ropes Button */}
               <button
                 className={clsx(
-                  'bg-bg1 flex w-96 rounded justify-center p-2 outline outline-1 outline-white',
+                  'bg-bg1 flex w-full rounded justify-center p-2 outline outline-1 outline-white',
                   isRopes && 'bg-bg2'
                 )}
                 onClick={handleRopeScores}
               >
                 <p className="text-white font-barlow text-center">Ropes</p>
               </button>
+
+              {/* Ropes Scores List */}
               <AnimatePresence>
                 {isRopes && (
                   <motion.div
-                    className="flex flex-col w-[23rem] gap-1 justify-center items-center bg-bg2 outline outline-white outline-1 p-3 self-center rounded"
+                    className="flex flex-col w-[95%] max-w-lg gap-1 justify-center items-center bg-bg2 outline outline-white outline-1 p-3 self-center rounded"
                     initial={{ opacity: 0, y: -10, scale: 0.95 }}
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: -10, scale: 0.95 }}
@@ -185,13 +192,14 @@ export default function MixerLeaderBoard({
                       <motion.div
                         key={climber.name}
                         className={clsx(
-                          'bg-bg1 w-[22rem] rounded flex justify-between px-2 py-1',
+                          'w-full max-w-md rounded flex justify-between px-4 py-1',
                           climber.rank === 1 &&
                             'bg-amber-500 shadow-lg shadow-amber-500',
                           climber.rank === 2 &&
                             'bg-gray-400 shadow-lg shadow-gray-400',
                           climber.rank === 3 &&
-                            'bg-orange-600 shadow-lg shadow-orange-600'
+                            'bg-orange-600 shadow-lg shadow-orange-600',
+                          climber.rank > 3 && 'bg-bg1'
                         )}
                         initial={{ opacity: 0, y: -5 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -211,20 +219,24 @@ export default function MixerLeaderBoard({
                 )}
               </AnimatePresence>
             </div>
+
             <div className="flex flex-col gap-2">
+              {/* Boulders Button */}
               <button
                 className={clsx(
-                  'bg-bg1 flex w-96 rounded justify-center p-2 outline outline-1 outline-white',
+                  'bg-bg1 flex w-full rounded justify-center p-2 outline outline-1 outline-white',
                   isBoulders && 'bg-bg2'
                 )}
                 onClick={handleBoulderScores}
               >
                 <p className="text-white font-barlow text-center">Boulders</p>
               </button>
+
+              {/* Boulders Scores List */}
               <AnimatePresence>
                 {isBoulders && (
                   <motion.div
-                    className="flex flex-col w-[23rem] gap-1 justify-center items-center bg-bg2 outline outline-white outline-1 p-3 self-center rounded"
+                    className="flex flex-col w-[95%] max-w-lg gap-1 justify-center items-center bg-bg2 outline outline-white outline-1 p-3 self-center rounded"
                     initial={{ opacity: 0, y: -10, scale: 0.95 }}
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: -10, scale: 0.95 }}
@@ -234,13 +246,14 @@ export default function MixerLeaderBoard({
                       <motion.div
                         key={climber.name}
                         className={clsx(
-                          'bg-bg1 w-[22rem] rounded flex justify-between px-2 py-1',
+                          'w-full max-w-md rounded flex justify-between px-4 py-1',
                           climber.rank === 1 &&
                             'bg-amber-500 shadow-lg shadow-amber-500',
                           climber.rank === 2 &&
                             'bg-gray-400 shadow-lg shadow-gray-400',
                           climber.rank === 3 &&
-                            'bg-orange-600 shadow-lg shadow-orange-600'
+                            'bg-orange-600 shadow-lg shadow-orange-600',
+                          climber.rank > 3 && 'bg-bg1'
                         )}
                         initial={{ opacity: 0, y: -5 }}
                         animate={{ opacity: 1, y: 0 }}
