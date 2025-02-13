@@ -2,13 +2,14 @@ import prisma from '@/prisma';
 import { formatMixerDataFromDatabase, calculateScores } from '@/lib/mixer';
 import { unstable_cache } from 'next/cache';
 import MixerLeaderBoard from '@/app/ui/events/mixer/mixer-leaderboard/mixer-leaderboard';
+import { auth } from '@/auth';
 
 const Mixer2024Id = 'cm6ztnujb000019usu98gepuf';
 const getBoulderScores = async () => {
   return await prisma.MixerBoulderScore.findMany({
     where: { competitionId: Mixer2024Id },
     select: {
-      climber: { select: { name: true } },
+      climber: { select: { name: true, id: true, userId: true } },
       score: true,
       attempts: true,
     },
@@ -18,7 +19,7 @@ const getRopeScores = async () => {
   return await prisma.MixerRopeScore.findMany({
     where: { competitionId: Mixer2024Id },
     select: {
-      climber: { select: { name: true } },
+      climber: { select: { name: true, id: true, userId: true } },
       score: true,
       attempts: true,
     },
@@ -29,7 +30,7 @@ const getDivisions = async () => {
     where: { competitionId: Mixer2024Id },
     select: {
       name: true,
-      climbers: { select: { name: true } },
+      climbers: { select: { name: true, id: true, userId: true } },
     },
   });
 };
@@ -68,6 +69,7 @@ export default async function MixerDemoLeaderboard() {
   const boulderScores = await getCachedBoulderScores();
   const ropeScores = await getCachedRopeScores();
   const divisions = await getCachedDivisions();
+
   const { formattedDivisions, formattedBoulderScores, formattedRopeScores } =
     formatMixerDataFromDatabase(divisions, boulderScores, ropeScores);
   const {
@@ -80,10 +82,12 @@ export default async function MixerDemoLeaderboard() {
     formattedRopeScores,
     formattedDivisions
   );
-
+  const session = await auth();
+  const user = session?.user || null;
   return (
     <>
       <MixerLeaderBoard
+        user={user}
         combinedScores={combinedScores}
         adjustedRankings={adjustedRankings}
         boulderScoresRanked={boulderScoresRanked}

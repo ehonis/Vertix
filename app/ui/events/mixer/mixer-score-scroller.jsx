@@ -14,6 +14,7 @@ export default function MixerScoreScroller({ mixerRoutes, StartTime }) {
   const [tempRouteId, setTempRouteId] = useState('');
   const { showNotification } = useNotification();
   const [isInfoPopup, setIsInfoPopup] = useState(false);
+  const [category, setCategory] = useState('Rope');
   const [attempts, setAttempts] = useState(() =>
     mixerRoutes.reduce((acc, panel) => {
       acc[panel.id] = 0; // Default value for each panel
@@ -164,34 +165,43 @@ export default function MixerScoreScroller({ mixerRoutes, StartTime }) {
     setIsInfoPopup(false);
   };
 
+  const handleCategoryChange = (value) => {
+    setCategory(value);
+  };
+
   return (
     <div>
-      <div className="flex flex-col px-5">
-        <div className="flex justify-between items-center">
-          <MixerCountdownTimer />
-          <button className=" flex justify-center items-center flex-col ">
-            <div className="bg-green-500 p-1 rounded-full">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={1.5}
-                stroke="currentColor"
-                className="size-6 stroke-white"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
-                />
-              </svg>
-            </div>
-            <p className=" text-white text-xs font-thin text-center">
-              Submit Scores
-            </p>
-          </button>
+      <div className="flex justify-between w-full">
+        <MixerCountdownTimer />
+        <button className=" absolute right-0 text-sm flex items-center justify-center gap-1">
+          <div className="bg-green-500 rounded-bl-lg p-1">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+              className="size-7 stroke-white"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="m4.5 12.75 6 6 9-13.5"
+              />
+            </svg>
+          </div>
+        </button>
+      </div>
+      <div className="flex flex-col px-5 py-5">
+        <div className="mb-3">
+          <TypeToggleSwitch
+            leftLabel={'Boulder'}
+            rightLabel={'Rope'}
+            value={category}
+            onTypeSwitchValue={(value) => handleCategoryChange(value)}
+          />
         </div>
-        <div className="flex flex-col items-center justify-center mb-1">
+        <div className="flex flex-col items-center justify-center">
           {/* Range Slider */}
           <input
             type="range"
@@ -289,6 +299,8 @@ export default function MixerScoreScroller({ mixerRoutes, StartTime }) {
                       {panel.routeName}
                     </h1>
                     <TypeToggleSwitch
+                      leftLabel={'TR'}
+                      rightLabel={'Lead'}
                       value={typeToggles[panel.id]}
                       onTypeSwitchValue={(value) =>
                         handleTypeChange(panel.id, value)

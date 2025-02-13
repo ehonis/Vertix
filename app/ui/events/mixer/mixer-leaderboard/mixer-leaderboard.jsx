@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 
 export default function MixerLeaderBoard({
+  user,
   combinedScores,
   adjustedRankings,
   boulderScoresRanked,
@@ -43,7 +44,6 @@ export default function MixerLeaderBoard({
   const handleCombinedScores = () => {
     setIsTotalCombinedScores(!isTotalCombinedScores);
   };
-  console.log(combinedScores);
   return (
     <>
       {!isReady ? (
@@ -146,6 +146,7 @@ export default function MixerLeaderBoard({
                             key={climber.name}
                             className={clsx(
                               'w-full max-w-md rounded flex justify-between px-4 py-1',
+                              climber.userId === user?.id && 'bg-blue-500',
                               index === 0 &&
                                 'bg-amber-500 shadow-lg shadow-amber-500',
                               index === 1 &&
@@ -182,7 +183,7 @@ export default function MixerLeaderBoard({
             <h2 className="font-barlow text-3xl text-white text-start">
               Total Scores by Type
             </h2>
-
+            {/* ropes */}
             <div className="flex flex-col gap-2">
               {/* Ropes Button */}
               <button
@@ -221,6 +222,7 @@ export default function MixerLeaderBoard({
                         key={climber.name}
                         className={clsx(
                           'w-full max-w-md rounded grid grid-cols-4 px-1 py-1 text-center place-items-center',
+                          climber.userId === user?.id && 'bg-blue-500',
                           climber.rank === 1 &&
                             'bg-amber-500 shadow-lg shadow-amber-500',
                           climber.rank === 2 &&
@@ -252,7 +254,7 @@ export default function MixerLeaderBoard({
                 )}
               </AnimatePresence>
             </div>
-
+            {/* Boulders */}
             <div className="flex flex-col gap-2">
               {/* Boulders Button */}
               <button
@@ -291,6 +293,7 @@ export default function MixerLeaderBoard({
                         key={climber.name}
                         className={clsx(
                           'w-full max-w-md rounded grid grid-cols-4 px-1 py-1 text-center place-items-center',
+                          climber.userId === user?.id && 'bg-blue-500',
                           climber.rank === 1 &&
                             'bg-amber-500 shadow-lg shadow-amber-500',
                           climber.rank === 2 &&
@@ -368,6 +371,7 @@ export default function MixerLeaderBoard({
                         key={climber.name}
                         className={clsx(
                           'w-full max-w-md rounded grid grid-cols-5 px-1 py-1 text-center place-items-center',
+                          climber.userId === user?.id && 'bg-blue-500',
                           index === 0 &&
                             'bg-amber-500 shadow-lg shadow-amber-500',
                           index === 1 &&
