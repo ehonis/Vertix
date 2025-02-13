@@ -1,7 +1,6 @@
 import prisma from '@/prisma';
 import { formatMixerDataFromDatabase, calculateScores } from '@/lib/mixer';
 import { unstable_cache } from 'next/cache';
-import clsx from 'clsx';
 import MixerLeaderBoard from '@/app/ui/events/mixer/mixer-leaderboard/mixer-leaderboard';
 
 const Mixer2024Id = 'cm6ztnujb000019usu98gepuf';
@@ -50,11 +49,11 @@ const getCachedDivisions = unstable_cache(getDivisions, ['divisions-cache'], {
 });
 
 export default async function MixerDemoLeaderboard() {
-  const isScoresAvailable = await prisma.MixerCompetition.findMany({
+  const isScoresAvailable = await prisma.MixerCompetition.findFirst({
     where: { id: Mixer2024Id },
     select: { areScoresAvailable: true },
   });
-  if (isScoresAvailable.areScoresAvailable) {
+  if (!isScoresAvailable.areScoresAvailable) {
     return (
       <div className="flex flex-col h-screen-offset justify-center items-center">
         <h1 className="text-white font-barlow text-3xl text-center">

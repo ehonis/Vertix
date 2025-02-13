@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 
 export default function MixerLeaderBoard({
-  formattedDivisions,
   combinedScores,
   adjustedRankings,
   boulderScoresRanked,
@@ -13,6 +12,8 @@ export default function MixerLeaderBoard({
   const [isReady, setIsReady] = useState(false);
   const [isBoulders, setIsBoulders] = useState(false);
   const [isRopes, setIsRopes] = useState(false);
+  const [isTotalCombinedScores, setIsTotalCombinedScores] = useState(false);
+
   const [openDivisions, setOpenDivisions] = useState({});
   useEffect(() => {
     const storedIsReady = localStorage.getItem('isReady');
@@ -39,6 +40,10 @@ export default function MixerLeaderBoard({
   const handleRopeScores = () => {
     setIsRopes(!isRopes);
   };
+  const handleCombinedScores = () => {
+    setIsTotalCombinedScores(!isTotalCombinedScores);
+  };
+  console.log(combinedScores);
   return (
     <>
       {!isReady ? (
@@ -123,6 +128,18 @@ export default function MixerLeaderBoard({
                         exit={{ opacity: 0, y: -10, scale: 0.95 }}
                         transition={{ duration: 0.3, ease: 'easeInOut' }}
                       >
+                        <motion.div
+                          className="w-full max-w-md rounded flex justify-between px-1 py-1"
+                          initial={{ opacity: 0, y: -5 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ duration: 0.2 }}
+                        >
+                          <p className="text-white font-barlow">Rank</p>
+                          <p className="text-white font-barlow">Name</p>
+                          <div className="flex flex-col text-center">
+                            <p className="text-white font-barlow">Score</p>
+                          </div>
+                        </motion.div>
                         {/* Display rankings inside the division */}
                         {divisionData.rankings.map((climber, index) => (
                           <motion.div
@@ -161,7 +178,7 @@ export default function MixerLeaderBoard({
           </div>
 
           {/* Total Scores by Type */}
-          <div className="flex flex-col gap-3 mb-20 px-6 w-full max-w-3xl">
+          <div className="flex flex-col gap-3 mb-8 px-6 w-full max-w-3xl">
             <h2 className="font-barlow text-3xl text-white text-start">
               Total Scores by Type
             </h2>
@@ -188,11 +205,22 @@ export default function MixerLeaderBoard({
                     exit={{ opacity: 0, y: -10, scale: 0.95 }}
                     transition={{ duration: 0.3, ease: 'easeInOut' }}
                   >
+                    <motion.div
+                      className="w-full max-w-md rounded grid grid-cols-4 px-1 py-1 text-center"
+                      initial={{ opacity: 0, y: -5 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <p className="text-white font-barlow">Rank</p>
+                      <p className="text-white font-barlow">Name</p>
+                      <p className="text-white font-barlow">Attempts</p>
+                      <p className="text-white font-barlow">Score</p>
+                    </motion.div>
                     {ropeScoresRanked.map((climber) => (
                       <motion.div
                         key={climber.name}
                         className={clsx(
-                          'w-full max-w-md rounded flex justify-between px-4 py-1',
+                          'w-full max-w-md rounded grid grid-cols-4 px-1 py-1 text-center place-items-center',
                           climber.rank === 1 &&
                             'bg-amber-500 shadow-lg shadow-amber-500',
                           climber.rank === 2 &&
@@ -209,7 +237,12 @@ export default function MixerLeaderBoard({
                         }}
                       >
                         <p className="text-white font-jersey">{climber.rank}</p>
-                        <p className="text-white font-jersey">{climber.name}</p>
+                        <p className="text-white font-jersey text-sm">
+                          {climber.name}
+                        </p>
+                        <p className="text-white font-jersey">
+                          {climber.attempts}
+                        </p>
                         <p className="text-white font-jersey">
                           {climber.score}
                         </p>
@@ -242,11 +275,22 @@ export default function MixerLeaderBoard({
                     exit={{ opacity: 0, y: -10, scale: 0.95 }}
                     transition={{ duration: 0.3, ease: 'easeInOut' }}
                   >
+                    <motion.div
+                      className="w-full max-w-md rounded grid grid-cols-4 px-1 py-1 text-center"
+                      initial={{ opacity: 0, y: -5 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <p className="text-white font-barlow">Rank</p>
+                      <p className="text-white font-barlow">Name</p>
+                      <p className="text-white font-barlow">Attempts</p>
+                      <p className="text-white font-barlow">Score</p>
+                    </motion.div>
                     {boulderScoresRanked.map((climber) => (
                       <motion.div
                         key={climber.name}
                         className={clsx(
-                          'w-full max-w-md rounded flex justify-between px-4 py-1',
+                          'w-full max-w-md rounded grid grid-cols-4 px-1 py-1 text-center place-items-center',
                           climber.rank === 1 &&
                             'bg-amber-500 shadow-lg shadow-amber-500',
                           climber.rank === 2 &&
@@ -263,9 +307,94 @@ export default function MixerLeaderBoard({
                         }}
                       >
                         <p className="text-white font-jersey">{climber.rank}</p>
-                        <p className="text-white font-jersey">{climber.name}</p>
+                        <p className="text-white font-jersey text-sm">
+                          {climber.name}
+                        </p>
+                        <p className="text-white font-jersey">
+                          {climber.attempts}
+                        </p>
                         <p className="text-white font-jersey">
                           {climber.score}
+                        </p>
+                      </motion.div>
+                    ))}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          </div>
+          {/* total combined scores */}
+          <div className="flex flex-col gap-3 mb-20 px-6 w-full max-w-3xl">
+            <h2 className="font-barlow text-3xl text-white text-start">
+              Total Combined Scores
+            </h2>
+            <div className="flex flex-col gap-2">
+              <button
+                className={clsx(
+                  'bg-bg1 flex w-full rounded justify-center p-2 outline outline-1 outline-white',
+                  isRopes && 'bg-bg2'
+                )}
+                onClick={handleCombinedScores}
+              >
+                <p className="text-white font-barlow text-center">
+                  Combined Scores
+                </p>
+              </button>
+
+              {/* combinedScores list */}
+              <AnimatePresence>
+                {isTotalCombinedScores && (
+                  <motion.div
+                    className="flex flex-col w-[95%] max-w-lg gap-1 justify-center items-center bg-bg2 outline outline-white outline-1 p-3 self-center rounded"
+                    initial={{ opacity: 0, y: -10, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: -10, scale: 0.95 }}
+                    transition={{ duration: 0.3, ease: 'easeInOut' }}
+                  >
+                    <motion.div
+                      className="w-full max-w-md rounded grid grid-cols-5 px-1 py-1 text-center"
+                      initial={{ opacity: 0, y: -5 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <p className="text-white font-barlow text-xs">Rank</p>
+                      <p className="text-white font-barlow text-xs">Name</p>
+                      <p className="text-white font-barlow text-xs">Boulder</p>
+                      <p className="text-white font-barlow text-xs">Rope</p>
+                      <p className="text-white font-barlow text-xs">Combined</p>
+                    </motion.div>
+                    {combinedScores.map((climber, index) => (
+                      <motion.div
+                        key={climber.name}
+                        className={clsx(
+                          'w-full max-w-md rounded grid grid-cols-5 px-1 py-1 text-center place-items-center',
+                          index === 0 &&
+                            'bg-amber-500 shadow-lg shadow-amber-500',
+                          index === 1 &&
+                            'bg-gray-400 shadow-lg shadow-gray-400',
+                          index === 2 &&
+                            'bg-orange-600 shadow-lg shadow-orange-600',
+                          index > 2 && 'bg-bg1'
+                        )}
+                        initial={{ opacity: 0, y: -5 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{
+                          delay: 0.1 * index + 1,
+                          duration: 0.2,
+                        }}
+                      >
+                        <p className="text-white font-jersey">{index + 1}</p>
+                        <p className="text-white font-jersey text-sm">
+                          {climber.name}
+                        </p>
+                        <p className="text-white font-jersey">
+                          {climber.boulderRank}
+                        </p>
+                        <p className="text-white font-jersey">
+                          {climber.ropeRank}
+                        </p>
+                        <p className="text-white font-jersey">
+                          {climber.combinedRank}
                         </p>
                       </motion.div>
                     ))}
