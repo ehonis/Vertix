@@ -1,5 +1,5 @@
 import { auth } from '@/auth';
-import NewWrapper from '@/app/ui/edit/new/new-wrapper';
+import NewWrapper from '@/app/ui/admin/new/new-wrapper';
 import { redirect } from 'next/navigation';
 
 export default async function Page() {

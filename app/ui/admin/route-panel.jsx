@@ -13,7 +13,7 @@ export default function RoutePanel({ id, name, grade, date, color }) {
 
   return (
     <Link
-      href={`edit/${id}`}
+      href={`admin/routes/${id}`}
       key={id}
       ref={elementRef}
       className={clsx(

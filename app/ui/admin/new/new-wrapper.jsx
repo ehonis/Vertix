@@ -1,6 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
-import NewRoute from '@/app/ui/edit/new/new-route';
+import NewRoute from '@/app/ui/admin/new/new-route';
 import { v4 as uuidv4 } from 'uuid';
 import ErrorPopUp from './error-pop-up';
 import { useNotification } from '@/app/contexts/NotificationContext';
@@ -9,7 +9,7 @@ import { useRouter } from 'next/navigation';
 export default function NewWrapper() {
   const { showNotification } = useNotification();
   const router = useRouter();
-  const options = ['Route', 'BOTW', 'Event', 'Announcement'];
+  const options = ['Route', 'Comp'];
   const [table, setTable] = useState([]);
   const [data, setData] = useState([]);
 

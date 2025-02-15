@@ -1,7 +1,7 @@
 'use server';
 
 import Link from 'next/link';
-import RoutePanels from '../ui/edit/route-panels';
+import RoutePanels from '../../ui/admin/route-panels';
 import { redirect } from 'next/navigation';
 import { auth } from '@/auth';
 
@@ -42,8 +42,8 @@ export default async function Page() {
       return (
         <>
           <div className="flex justify-between items-center w-full p-5">
-            <h1 className="text-white text-3xl font-bold">Edit Routes</h1>
-            <Link href={'./edit/new'}>
+            <h1 className="text-white text-3xl font-bold">Route Manager</h1>
+            <Link href={'./admin/create'}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"

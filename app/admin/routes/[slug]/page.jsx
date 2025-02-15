@@ -1,4 +1,4 @@
-import IndividualRoutePageLoad from '@/app/ui/edit/route-edit/individualpageload';
+import IndividualRoutePageLoad from '@/app/ui/admin/route-edit/individualpageload';
 import { auth } from '@/auth';
 import { redirect } from 'next/navigation';
 import prisma from '@/prisma';

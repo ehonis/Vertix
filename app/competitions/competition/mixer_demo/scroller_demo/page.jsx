@@ -1,4 +1,4 @@
-import MixerScoreScroller from '@/app/ui/events/mixer/mixer-score-scroller';
+import MixerScoreScroller from '@/app/ui/competitions/mixer/mixer-score-scroller';
 
 const mixerRoutes = [
   {

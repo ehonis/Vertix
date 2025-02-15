@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import TrophyIcon from '../ui/events/trophy-icon';
+import TrophyIcon from '../ui/competitions/trophy-icon';
 import Image from 'next/image';
 
 export default function page() {

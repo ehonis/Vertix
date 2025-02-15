@@ -1,7 +1,7 @@
 import prisma from '@/prisma';
 import { formatMixerDataFromDatabase, calculateScores } from '@/lib/mixer';
 import { unstable_cache } from 'next/cache';
-import MixerLeaderBoard from '@/app/ui/events/mixer/mixer-leaderboard/mixer-leaderboard';
+import MixerLeaderBoard from '@/app/ui/competitions/mixer/mixer-leaderboard/mixer-leaderboard';
 import { auth } from '@/auth';
 
 const Mixer2024Id = 'cm6ztnujb000019usu98gepuf';

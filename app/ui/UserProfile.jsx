@@ -166,7 +166,7 @@ export default function UserProfile() {
           </Link>
           {user.admin || user.routeSetter ? (
             <Link
-              href={`/edit`}
+              href={`/admin`}
               className="flex bg-bg2 rounded p-1 gap-2 group hover:bg-white transition-all duration-300"
               onClick={handleClick}
             >
@@ -186,7 +186,7 @@ export default function UserProfile() {
               </svg>
 
               <p className="text-white font-bold group-hover:text-black">
-                Edit
+                Admin Center
               </p>
             </Link>
           ) : null}

@@ -77,7 +77,7 @@ export default function SideNav() {
           </p>
         </Link>
         <Link
-          href={'/events'}
+          href={'/competitions'}
           className={clsx(
             'flex z-[100] items-center group md:hover:bg-white bg-bg2 md:bg-bg2 transition-all duration-700 rounded',
             isNavbar ? 'p-0' : 'p-5'
@@ -99,7 +99,7 @@ export default function SideNav() {
           </svg>
 
           <p className="md:text-white text-white font-bold ml-3 md:group-hover:text-bg1 transition-all duration-300 text-2xl">
-            Events
+            Comps
           </p>
         </Link>
         <Link
