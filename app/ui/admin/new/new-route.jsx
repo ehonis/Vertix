@@ -102,18 +102,15 @@ export default function NewRoute({ id, onCommit, onUncommit }) {
       {isError && <ErrorPopUp message={errorMessage} onCancel={handleCancel} />}
       <div className="bg-bg2 w-full rounded-lg flex md:flex-row flex-col gap-2 p-3">
         <div className="flex flex-col md:gap-4 gap-2 w-full justify-center ">
+          <h2 className="text-white font-barlow text-2xl">Route</h2>
+          <div className="w-full h-[2px] bg-white"></div>
           <div className="flex gap-1 items-center ">
-            <label
-              htmlFor=""
-              className="text-white font-barlow text-lg lg:text-3xl"
-            >
-              <span className="font-barlow text-red-500">*</span>Name:
-            </label>
             <input
               type="text"
               value={name}
               onChange={handleNameChange}
-              className="rounded-full bg-bg1 text-white py-1 px-4 md:w-1/2 w-3/4 lg:h-14 lg:text-3xl"
+              placeholder="Name"
+              className="rounded-md bg-bg1 text-white py-1 px-2 max-w-min lg:h-14 lg:text-3xl font-barlow"
             />
           </div>
           <div className="flex gap-1 items-center">
@@ -165,7 +162,7 @@ export default function NewRoute({ id, onCommit, onUncommit }) {
             </select>
           </div>
         </div>
-        <div className="bg-bg1 pl-3 pr-4  rounded-lg">
+        <div className="bg-bg1 pl-3 pr-4  rounded-lg flex justify-center py-3">
           <TopDown onData={handleWallData} />
         </div>
       </div>

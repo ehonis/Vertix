@@ -12,33 +12,58 @@ export async function POST(request) {
     }
 
     // Use Promise.all to handle async operations for all elements
+
+    console.log(data);
     const results = await Promise.all(
       data.map(async (element) => {
-        let routeType = '';
-        if (element.grade.startsWith('v')) {
-          routeType = 'boulder';
-        } else {
-          routeType = 'rope';
+        if (element.type === 'route') {
+          let routeType = '';
+          if (element.grade.startsWith('v')) {
+            routeType = 'boulder';
+          } else {
+            routeType = 'rope';
+          }
+
+          const dateObject = parseDateString(element.setDate);
+
+          // Create a route in the database
+          return prisma.Route.create({
+            data: {
+              title: element.title,
+              grade: element.grade,
+              type: routeType,
+              color: element.color,
+              setDate: dateObject,
+              location: element.wall,
+            },
+          });
+        } else if (element.type === 'comp') {
+          if (element.compType === 'Mixer') {
+            const dateObject = parseDateString(element.selectedDate);
+            const year = dateObject.getFullYear();
+            let status = '';
+            if (element.isActive) {
+              status = 'upcoming';
+            } else {
+              status = 'unavailable';
+            }
+            return prisma.MixerCompetition.create({
+              data: {
+                name: element.title,
+                year: year,
+                status: status,
+              },
+            });
+          }
         }
-
-        const dateObject = parseDateString(element.setDate);
-
-        // Create a route in the database
-        return prisma.Route.create({
-          data: {
-            title: element.title,
-            grade: element.grade,
-            type: routeType,
-            color: element.color,
-            setDate: dateObject,
-            location: element.wall,
-          },
-        });
       })
     );
 
     // Return success response
-    return NextResponse.json({ message: 'Routes successfully added', results });
+    return NextResponse.json({
+      message: 'Content successfully added',
+      results,
+    });
   } catch (error) {
     console.error('Error committing routes:', error);
     return NextResponse.json({

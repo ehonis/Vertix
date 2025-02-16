@@ -23,7 +23,7 @@ export default function page() {
         <div className="absolute inset-0 bg-bg1 rounded opacity-65 h-full z-[-1]"></div>
         <div className="flex flex-col gap-3 p-3 relative ">
           <Link
-            href={'/events/competition/mixer_demo'}
+            href={'/competitions/competition/mixer_demo'}
             className="flex bg-gray-300 rounded-lg h-24 p-2 gap-3 items-center"
           >
             <svg

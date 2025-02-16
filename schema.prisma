@@ -159,16 +159,14 @@ model MixerCompetition {
     id                 String              @id @default(cuid())
     name               String
     year               Int
-    status             String              @default("upcoming") // upcoming, active, completed
-    // Optional timestamps for competition day if needed
-    compStartTime      DateTime?
-    compEndTime        DateTime?
+    status             String              @default("upcoming") // inactive, upcoming, In Progress, completed
+    time               Int? //active climbing time for comp
+    compDay            DateTime?
     mixerRoutes        MixerRoute[]
     climbers           MixerClimber[]
     divisions          MixerDivision[]
     boulderScores      MixerBoulderScore[]
     ropeScores         MixerRopeScore[]
-    ranks              MixerRank[]
     createdAt          DateTime            @default(now())
     updatedAt          DateTime            @updatedAt
     areScoresAvailable Boolean             @default(false)
@@ -190,7 +188,6 @@ model MixerClimber {
     division      MixerDivision?     @relation(fields: [divisionId], references: [id], onDelete: SetNull)
     boulderScore  MixerBoulderScore?
     ropeScore     MixerRopeScore?
-    rank          MixerRank?
     competitionId String
     competition   MixerCompetition   @relation(fields: [competitionId], references: [id], onDelete: Cascade)
 
@@ -229,17 +226,6 @@ model MixerRopeScore {
     climber       MixerClimber     @relation(fields: [climberId], references: [id], onDelete: Cascade)
     score         Int
     attempts      Int
-    competitionId String
-    competition   MixerCompetition @relation(fields: [competitionId], references: [id], onDelete: Cascade)
-}
-
-model MixerRank {
-    id            String           @id @default(cuid())
-    climberId     String           @unique
-    climber       MixerClimber     @relation(fields: [climberId], references: [id], onDelete: Cascade)
-    boulderRank   Int
-    ropeRank      Int
-    combinedRank  Int
     competitionId String
     competition   MixerCompetition @relation(fields: [competitionId], references: [id], onDelete: Cascade)
 }

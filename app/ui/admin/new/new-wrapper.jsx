@@ -1,10 +1,12 @@
 'use client';
 import { useState, useEffect } from 'react';
 import NewRoute from '@/app/ui/admin/new/new-route';
+import NewComp from './new-comp';
 import { v4 as uuidv4 } from 'uuid';
 import ErrorPopUp from './error-pop-up';
 import { useNotification } from '@/app/contexts/NotificationContext';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 export default function NewWrapper() {
   const { showNotification } = useNotification();
@@ -17,11 +19,23 @@ export default function NewWrapper() {
   const [errorMessage, setErrorMessage] = useState('');
 
   const handleNewOption = (optionText) => {
-    if (optionText == 'Route') {
+    if (optionText === 'Route') {
       const newId = uuidv4();
       setTable((prevTable) => [
         ...prevTable,
         <NewRoute
+          id={newId}
+          key={newId}
+          onCommit={handleCommit}
+          onUncommit={handleUncommit}
+        />,
+      ]);
+    }
+    if (optionText === 'Comp') {
+      const newId = uuidv4();
+      setTable((prevTable) => [
+        ...prevTable,
+        <NewComp
           id={newId}
           key={newId}
           onCommit={handleCommit}
@@ -72,11 +86,31 @@ export default function NewWrapper() {
       return newData; // Return the updated array
     });
   };
+  useEffect(() => {
+    console.log(data);
+  }, [data]);
 
   return (
     <>
       {isError && <ErrorPopUp message={errorMessage} onCancel={handleCancel} />}
       <div className="p-5 flex-col flex gap-3">
+        <Link href={'/admin'} className="flex gap-1 items-center">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={1.5}
+            stroke="currentColor"
+            className="size-7 stroke-white"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M9 15 3 9m0 0 6-6M3 9h12a6 6 0 0 1 0 12h-3"
+            />
+          </svg>
+          <p className="font-barlow text-xs text-white">Admin Center</p>
+        </Link>
         <h1 className="text-white font-barlow text-4xl">New</h1>
         <div className="flex justify-between items-center">
           <div className="flex gap-3 items-center overflow-x-auto w-[66%] rounded-r-full">

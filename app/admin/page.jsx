@@ -29,7 +29,7 @@ export default async function AdminCenter() {
     },
     {
       text: 'Comp Manager',
-      url: '/admin/events',
+      url: '/admin',
       svg: (
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -49,7 +49,7 @@ export default async function AdminCenter() {
     },
     {
       text: 'User Manager',
-      url: '/admin/users',
+      url: '/admin',
       svg: (
         <svg
           xmlns="http://www.w3.org/2000/svg"

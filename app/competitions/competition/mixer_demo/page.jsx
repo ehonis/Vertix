@@ -26,13 +26,13 @@ export default function page() {
             completions will be counted
           </p>
           <Link
-            href={'/events/competition/mixer_demo/scroller_demo'}
+            href={'/competitions/competition/mixer_demo/scroller_demo'}
             className="px-2 py-1 text-white bg-green-500 rounded font-barlow text-center"
           >
             Start Demo
           </Link>
           <Link
-            href={'/events/competition/mixer_demo/leaderboard'}
+            href={'/competitions/competition/mixer_demo/leaderboard'}
             className="px-2 py-1 text-white bg-yellow-500 rounded font-barlow text-center shadow-yellow-400 shadow-lg outline outline-2 outline-black"
           >
             Leaderboard
