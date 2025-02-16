@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from 'react';
 import clsx from 'clsx';
 import Link from 'next/link';
 import { useSession } from 'next-auth/react';
+import SignOut from './general/sign-out-button';
 
 export default function UserProfile() {
   const [isProfilePopUp, setIsProfilePopUp] = useState(false);
@@ -190,6 +191,9 @@ export default function UserProfile() {
               </p>
             </Link>
           ) : null}
+          <div className="flex justify-end">
+            <SignOut />
+          </div>
         </div>
       </div>
     );

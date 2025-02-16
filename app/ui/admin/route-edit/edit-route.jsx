@@ -127,7 +127,7 @@ export default function EditRoute({ route, images, daysOld, totalSends }) {
       <div className="flex justify-center items-center flex-col py-7 ">
         <div className="flex justify-between items-center w-11/12 md:w-3/5 ">
           <div className="">
-            <Link href={'/edit'}>
+            <Link href={'/admin/manager/routes'}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"

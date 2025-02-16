@@ -1,4 +1,4 @@
-import SignOut from '@/app/ui/sign-out-button';
+import SignOut from '@/app/ui/general/sign-out-button';
 import SettingsNavBar from '@/app/ui/profile/settings/settings-nav-bar';
 import { redirect } from 'next/navigation';
 import { auth } from '@/auth';

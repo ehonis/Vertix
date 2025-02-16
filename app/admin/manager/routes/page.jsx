@@ -1,7 +1,7 @@
 'use server';
 
 import Link from 'next/link';
-import RoutePanels from '../../ui/admin/route-panels';
+import RoutePanels from '../../../ui/admin/route-panels';
 import { redirect } from 'next/navigation';
 import { auth } from '@/auth';
 

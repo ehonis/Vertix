@@ -86,9 +86,6 @@ export default function NewWrapper() {
       return newData; // Return the updated array
     });
   };
-  useEffect(() => {
-    console.log(data);
-  }, [data]);
 
   return (
     <>

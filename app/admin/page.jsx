@@ -9,7 +9,7 @@ export default async function AdminCenter() {
   const adminPanels = [
     {
       text: 'Route Manager',
-      url: '/admin/routes',
+      url: '/admin/manager/routes',
       svg: (
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -29,7 +29,7 @@ export default async function AdminCenter() {
     },
     {
       text: 'Comp Manager',
-      url: '/admin',
+      url: '/admin/manager/competitions',
       svg: (
         <svg
           xmlns="http://www.w3.org/2000/svg"
