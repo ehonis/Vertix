@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import prisma from '@/prisma';
-
+import Image from 'next/image';
 export default async function UpcomingMixerCompetitions() {
   const competitions = await prisma.MixerCompetition.findMany({
     where: {
