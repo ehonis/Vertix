@@ -159,7 +159,8 @@ model MixerCompetition {
     id                 String              @id @default(cuid())
     name               String
     year               Int
-    status             String              @default("upcoming") // inactive, upcoming, In Progress, completed
+    status             String              @default("inactive") // inactive, upcoming, In Progress, completed
+    imageUrl           String?
     time               Int? //active climbing time for comp
     compDay            DateTime?
     mixerRoutes        MixerRoute[]
