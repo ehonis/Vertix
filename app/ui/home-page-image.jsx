@@ -22,7 +22,7 @@ export default function HomePageImage() {
         {/* Main Title */}
         <div className="bg-slate-800 bg-opacity-100 md:px-14 px-6 rounded-full text-center">
           <h1 className="text-white lg:text-9xl md:text-8xl text-6xl font-bold font-jersey opacity-100 gradient-text-blue">
-            ClimbTrak
+            Vertix
           </h1>
         </div>
 
