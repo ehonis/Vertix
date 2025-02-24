@@ -21,7 +21,7 @@ export default function HomePageImage() {
       <div className="absolute md:top-12 top-6 left-1/2 transform -translate-x-1/2 flex flex-col items-center md:gap-5 gap-1">
         {/* Main Title */}
         <div className="bg-slate-800 bg-opacity-100 md:px-14 px-6 rounded-full text-center">
-          <h1 className="text-white lg:text-9xl md:text-8xl text-6xl font-bold font-jersey opacity-100 gradient-text-blue">
+          <h1 className="text-white lg:text-9xl md:text-8xl text-6xl font-bold font-tomorrow opacity-100 gradient-text-blue">
             Vertix
           </h1>
         </div>

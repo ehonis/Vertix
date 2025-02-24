@@ -14,7 +14,8 @@ export function generateStaticParams() {
 
 export default async function EditRoute({ params }) {
   const session = await auth();
-  const routeId = params.slug;
+  const { slug } = await params;
+  const routeId = slug;
   const user = session?.user || null;
 
   if (!user || user.admin === false) {

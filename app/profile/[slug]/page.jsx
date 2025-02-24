@@ -11,7 +11,8 @@ export async function generateStaticParams() {
 }
 
 export default async function ProfilePage({ params }) {
-  const userId = params.slug;
+  const { slug } = await params;
+  const userId = slug;
 
   const user = await prisma.user.findUnique({
     where: {

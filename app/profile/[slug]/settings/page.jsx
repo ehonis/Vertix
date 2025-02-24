@@ -6,7 +6,8 @@ import prisma from '@/prisma';
 
 export default async function Settings({ params }) {
   const session = await auth();
-  const slug = (await params).slug;
+  const { slug } = await params;
+
   const user = await prisma.user.findUnique({
     where: {
       id: slug,

@@ -1,15 +1,30 @@
 import Link from 'next/link';
 import prisma from '@/prisma';
-import IndividualCompPageLoad from '@/app/ui/admin/competitions/mixer/individual-comp-page-load';
+import IndividualCompPageLoad from '@/app/ui/admin/competitions/mixer/individualMixerManagerPage/individual-comp-page-load';
 export default async function page({ params }) {
-  const compId = params.slug;
-  const comp = await prisma.MixerCompetition.findUnique({
+  const { slug } = await params;
+  const compId = slug;
+  const comp = await prisma.MixerCompetition.findFirst({
     where: { id: compId },
   });
+  const compRoutes = await prisma.MixerRoute.findMany({
+    where: { competitionId: compId },
+  });
+  console.log(compRoutes);
   console.log(comp);
+  if (!comp) {
+    return (
+      <div className="w-screen py-5 flex flex-col items-center font-barlow text-white">
+        <p className="text-red-500">
+          Competition not found or is still loading...
+        </p>
+        <Link href={'/admin/manager/competitions/mixer'}>Go Back</Link>
+      </div>
+    );
+  }
   return (
-    <div className="w-screen px-3 py-5 flex flex-col items-center font-barlow text-white">
-      <div className="max-w-md flex-col flex">
+    <div className="w-screen  py-5 flex flex-col items-center font-barlow text-white">
+      <div className="max-w-lg flex-col w-full px-5">
         <Link
           href={'/admin/manager/competitions/mixer'}
           className="flex gap-1 items-center "
@@ -30,8 +45,14 @@ export default async function page({ params }) {
           </svg>
           <p className="font-barlow text-xs text-white">Mixer Manager</p>
         </Link>
-        <div>
-          <IndividualCompPageLoad name={comp.name} />
+        <div className="">
+          <IndividualCompPageLoad
+            name={comp.name}
+            status={comp.status}
+            compDay={comp.compDay}
+            imageUrl={comp.imageUrl}
+            routes={compRoutes}
+          />
         </div>
       </div>
     </div>

@@ -197,8 +197,9 @@ function StatCard({ value, label }) {
 export default async function IndividualRoute({ params }) {
   const session = await auth();
   const user = session?.user || null;
+  const { slug } = await params;
+  const routeId = slug;
 
-  const routeId = params.slug;
   const [
     route,
     images,

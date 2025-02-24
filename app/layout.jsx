@@ -5,6 +5,13 @@ import { SpeedInsights } from '@vercel/speed-insights/next';
 import { NotificationProvider } from './contexts/NotificationContext';
 import Notification from './ui/notification';
 import { Analytics } from '@vercel/analytics/react';
+import { Tomorrow } from 'next/font/google';
+
+const tomorrow = Tomorrow({
+  subsets: ['latin'],
+  weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'],
+  variable: '--font-tomorrow',
+});
 
 const geistSans = localFont({
   src: './fonts/GeistVF.woff',
@@ -45,15 +52,15 @@ const orbitronFont = localFont({
 });
 
 export const metadata = {
-  title: 'On The Rocks',
+  title: 'Vertix',
   description: '',
 };
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
+    <html lang="en" className={tomorrow.variable}>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${jerseyFont.variable} ${barlowFont.variable} ${icelandFont.variable} ${stalinistFont.variable} ${orbitronFont.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${jerseyFont.variable} ${barlowFont.variable} ${icelandFont.variable} ${stalinistFont.variable} ${orbitronFont.variable} ${tomorrow.variable}antialiased`}
       >
         <NotificationProvider>
           <Notification />

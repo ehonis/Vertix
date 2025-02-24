@@ -16,8 +16,7 @@ export default async function Dashboard({ params }) {
     redirect('/signin');
     return;
   }
-
-  const slug = await params.slug;
+  const { slug } = await params;
 
   if (!slug) {
     redirect('/404');

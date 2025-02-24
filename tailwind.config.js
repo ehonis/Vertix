@@ -1,5 +1,7 @@
 /** @type {import('tailwindcss').Config} */
-module.exports = {
+const { withUt } = require('uploadthing/tw');
+
+module.exports = withUt({
   content: [
     './pages/**/*.{js,ts,jsx,tsx,mdx}',
     './components/**/*.{js,ts,jsx,tsx,mdx}',
@@ -22,6 +24,10 @@ module.exports = {
       },
       animation: {
         slowPulse: 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+      },
+      fontFamily: {
+        sans: ['var(--font-tomorrow)', 'sans-serif'],
+        tomorrow: ['var(--font-tomorrow)', 'sans-serif'],
       },
     },
   },
@@ -60,4 +66,4 @@ module.exports = {
     'bg-black',
   ],
   plugins: [],
-};
+});

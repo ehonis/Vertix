@@ -11,16 +11,9 @@ export default async function NavBar() {
       <nav className="sticky h-16 top-0 w-full z-50 shadow bg-[#181a1c] flex px-5 justify-between  items-center">
         <SideNav />
         <Link href={'/'} className="flex items-center gap-2">
-          <h1 className="font-jersey text-white md:text-3xl text-xl">Vertix</h1>
-          <div className="h-12 w-px bg-white"></div>
-          <Image
-            src={'/img/OTR-Logo.avif'}
-            width={110}
-            height={110}
-            style={{ objectFit: 'cover' }}
-            alt="picture of OTR logo"
-            className="w-20 h-9"
-          />
+          <h1 className="font-tomorrow text-white md:text-4xl text-2xl font-bold italic">
+            Vertix
+          </h1>
         </Link>
         <button>
           <SessionProvider>

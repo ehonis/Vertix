@@ -191,9 +191,7 @@ export default function UserProfile() {
               </p>
             </Link>
           ) : null}
-          <div className="flex justify-end">
-            <SignOut />
-          </div>
+          <div className="flex justify-end"></div>
         </div>
       </div>
     );
