@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 
 export default function HomeLogoAnimation() {
   const [textCount, setTextCount] = useState(9); // Default to largest size
-  const speedFactor = 0.1;
+  const speedFactor = 0.05;
   const baseDelay = textCount * speedFactor + 0.3;
 
   const words = ['climb', 'track', 'boulder'];

@@ -6,7 +6,7 @@ import Link from 'next/link';
 import clsx from 'clsx';
 
 export default function RouteImage() {
-  const baseDelay = 9 * 0.1 + 0.3;
+  const baseDelay = 9 * 0.05 + 0.3;
   const content = [
     {
       text: 'Routes',
