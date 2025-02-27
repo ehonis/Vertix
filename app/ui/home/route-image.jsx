@@ -20,7 +20,7 @@ export default function RouteImage() {
     },
   ];
   return (
-    <div className="mt-20 flex flex-col gap-3 md:gap-5 md:mt-28 w-screen items-center">
+    <div className="mt-20 flex flex-col gap-3 md:flex-row md:gap-5 md:mt-28 w-screen items-center md:justify-center">
       {content.map((content, index) => (
         <motion.div
           key={index}
@@ -31,7 +31,7 @@ export default function RouteImage() {
             duration: 0.3,
             ease: 'easeIn',
           }}
-          className="relative  outline-1 w-80 h-36 md:w-3/5 md:h-64 rounded-md overflow-hidden"
+          className="relative  outline-1 w-80 h-36 md:w-1/3 md:h-48 rounded-md overflow-hidden"
         >
           <div className="absolute inset-0 bg-gradient-to-l from-black/100 to-transparent z-10 min-w-full" />
 

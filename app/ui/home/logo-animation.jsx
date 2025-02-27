@@ -82,7 +82,7 @@ export default function HomeLogoAnimation() {
           initial={{ clipPath: 'inset(0% 0% 0% 100%)' }} // Start fully hidden on the right
           animate={{ clipPath: 'inset(0% 0% 0% 0%)' }} // Reveal from right to left
           transition={{ delay: baseDelay, duration: 1, ease: 'easeInOut' }}
-          className="absolute flex flex-col left-[-1rem] top-[-3.5rem] md:left-[-4rem] md:top-[-4.5rem] justify-center items-center w-[110%] h-[400%] bg-white rounded-md z-10"
+          className="absolute flex flex-col left-[-1rem] top-[-3.5rem] md:left-[-3rem] md:top-[-4.5rem] justify-center items-center w-[110%] h-[400%] bg-white rounded-md z-10"
         >
           {/* Main Logo Animation */}
           <motion.p
