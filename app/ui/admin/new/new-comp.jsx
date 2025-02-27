@@ -75,7 +75,7 @@ export default function NewComp({ id, onCommit, onUncommit }) {
   };
   const handleInfoButton = () => {
     setInformationalPopUpText(
-      <div className="font-barlow text-white flex-col flex gap-2 text-sm">
+      <div className="font-barlow font-bold text-white flex-col flex gap-2 text-sm">
         <div>
           <p>
             <span className="text-green-500 text-lg">Active:</span> This comp
@@ -112,7 +112,9 @@ export default function NewComp({ id, onCommit, onUncommit }) {
       )}
       {isError && <ErrorPopUp message={errorMessage} onCancel={handleCancel} />}
       <div className="bg-bg2 w-full rounded-lg flex flex-col p-3 gap-2">
-        <h2 className="text-white font-barlow text-2xl">Competition</h2>
+        <h2 className="text-white font-barlow font-bold text-2xl">
+          Competition
+        </h2>
         <div className="w-full h-[2px] bg-white"></div>
         <div className="flex gap-2">
           <input
@@ -126,7 +128,7 @@ export default function NewComp({ id, onCommit, onUncommit }) {
           />
         </div>
         <div className="flex gap-2">
-          <label htmlFor="" className="text-white font-barlow">
+          <label htmlFor="" className="text-white font-barlow font-bold">
             Type:
           </label>
           <select
@@ -140,7 +142,10 @@ export default function NewComp({ id, onCommit, onUncommit }) {
           </select>
         </div>
         <div className="flex gap-1 items-center">
-          <label htmlFor="" className="text-white font-barlow text-lg">
+          <label
+            htmlFor=""
+            className="text-white font-barlow font-bold text-lg"
+          >
             Date:
           </label>
           <input
@@ -149,14 +154,17 @@ export default function NewComp({ id, onCommit, onUncommit }) {
             name="date"
             value={selectedDate} // Controlled value
             onChange={handleDateChange} // Update state on change
-            className="p-1 rounded-lg bg-bg1 text-white cursor-pointer font-barlow"
+            className="p-1 rounded-lg bg-bg1 text-white cursor-pointer font-barlow font-bold"
           />
-          <p className="text-xs text-white font-barlow">
+          <p className="text-xs text-white font-barlow font-bold">
             {'(this can be changed later)'}
           </p>
         </div>
         <div className="flex gap-2">
-          <label htmlFor="" className="text-white font-barlow text-lg">
+          <label
+            htmlFor=""
+            className="text-white font-barlow font-bold text-lg"
+          >
             Is Active:
           </label>
           <OnOffSwitch
@@ -181,7 +189,7 @@ export default function NewComp({ id, onCommit, onUncommit }) {
           </button>
         </div>
         <div className="w-full h-[2px] bg-white"></div>
-        <p className="text-white font-barlow italic text-sm">
+        <p className="text-white font-barlow font-bold italic text-sm">
           Divisions, Points, and other variables will be determined in the Comp
           Manager Page
         </p>
@@ -189,7 +197,7 @@ export default function NewComp({ id, onCommit, onUncommit }) {
       <div className="flex gap-1 items-center justify-end mt-2">
         {commitText === 'Commit' && (
           <div className="flex gap-1">
-            <p className="text-white font-barlow md:text-base text-xs">
+            <p className="text-white font-barlow font-bold md:text-base text-xs">
               you must commit before submitting
             </p>
             <svg
@@ -210,7 +218,7 @@ export default function NewComp({ id, onCommit, onUncommit }) {
 
         <button
           className={clsx(
-            'text-white  md:p-2 p-2 md:text-base text-sm md:w-32 min-w-16 rounded-full font-barlow',
+            'text-white  md:p-2 p-2 md:text-base text-sm md:w-32 min-w-16 rounded-full font-barlow font-bold',
             commitText === 'Committed' ? 'bg-green-500' : 'bg-slate-500'
           )}
           onClick={handleCommit}

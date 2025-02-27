@@ -121,7 +121,7 @@ export default function EditRoute({ route, images, daysOld, totalSends }) {
 
   return (
     <>
-      <div className="font-barlow text-white text-4xl items-center justify-center flex mt-5">
+      <div className="font-barlow font-bold text-white text-4xl items-center justify-center flex mt-5">
         Edit
       </div>
       <div className="flex justify-center items-center flex-col py-7 ">
@@ -146,7 +146,7 @@ export default function EditRoute({ route, images, daysOld, totalSends }) {
           <input
             type="text"
             defaultValue={route.title}
-            className="text-black font-barlow text-center p-2 rounded text-xl"
+            className="text-black font-barlow font-bold text-center p-2 rounded text-xl"
             onChange={handleTitleChange}
           />
           <button className="flex flex-col items-center">
@@ -163,7 +163,10 @@ export default function EditRoute({ route, images, daysOld, totalSends }) {
                 d="m20.25 7.5-.625 10.632a2.25 2.25 0 0 1-2.247 2.118H6.622a2.25 2.25 0 0 1-2.247-2.118L3.75 7.5m8.25 3v6.75m0 0-3-3m3 3 3-3M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125Z"
               />
             </svg>
-            <label htmlFor="" className="font-barlow text-white text-xs">
+            <label
+              htmlFor=""
+              className="font-barlow font-bold text-white text-xs"
+            >
               {route.isArchive ? 'Unarchive' : 'Archive'}
             </label>
           </button>
@@ -191,13 +194,13 @@ export default function EditRoute({ route, images, daysOld, totalSends }) {
             <div className="flex-col flex gap-2">
               {/* Type */}
               <div className="flex gap-2">
-                <label htmlFor="" className="text-white font-barlow">
+                <label htmlFor="" className="text-white font-barlow font-bold">
                   Type:
                 </label>
                 <select
                   name="type"
                   id="type"
-                  className="font-barlow rounded"
+                  className="font-barlow font-bold rounded"
                   value={type}
                   onChange={handleTypeChange}
                 >
@@ -207,7 +210,7 @@ export default function EditRoute({ route, images, daysOld, totalSends }) {
               </div>
               {/* Grade */}
               <div className="flex gap-2">
-                <label htmlFor="" className="text-white font-barlow">
+                <label htmlFor="" className="text-white font-barlow font-bold">
                   Grade:
                 </label>
                 {type === 'rope' ? (
@@ -215,7 +218,7 @@ export default function EditRoute({ route, images, daysOld, totalSends }) {
                     <select
                       name="type"
                       id="type"
-                      className="font-barlow rounded"
+                      className="font-barlow font-bold rounded"
                       value={grade}
                       onChange={handleRopeGradeChange}
                     >
@@ -232,7 +235,7 @@ export default function EditRoute({ route, images, daysOld, totalSends }) {
                       <select
                         name="type"
                         id="type"
-                        className="font-barlow rounded w-10"
+                        className="font-barlow font-bold rounded w-10"
                         value={modifier}
                         onChange={handleRopeModifierChange}
                       >
@@ -246,7 +249,7 @@ export default function EditRoute({ route, images, daysOld, totalSends }) {
                   <select
                     name="type"
                     id="type"
-                    className="font-barlow rounded"
+                    className="font-barlow font-bold rounded"
                     value={grade}
                     onChange={handleBoulderGradeChange}
                   >
@@ -264,25 +267,25 @@ export default function EditRoute({ route, images, daysOld, totalSends }) {
               </div>
               {/* Date */}
               <div className="flex gap-2">
-                <label htmlFor="" className="font-barlow text-white">
+                <label htmlFor="" className="font-barlow font-bold text-white">
                   setDate:{' '}
                 </label>
                 <input
                   type="date"
                   value={date}
-                  className="font-barlow rounded w-32"
+                  className="font-barlow font-bold rounded w-32"
                   onChange={handleDateChange}
                 />
               </div>
               {/* Location */}
               <div className="flex gap-2">
-                <label htmlFor="" className="text-white font-barlow">
+                <label htmlFor="" className="text-white font-barlow font-bold">
                   Location:
                 </label>
                 <select
                   name=""
                   id=""
-                  className="font-barlow rounded"
+                  className="font-barlow font-bold rounded"
                   value={location}
                   onChange={handleLocationChange}
                 >
@@ -293,8 +296,10 @@ export default function EditRoute({ route, images, daysOld, totalSends }) {
                   <option value="boulder2">boulderSouth</option>
                 </select>
               </div>
-              <div className="text-white font-barlow">Id: {route.id}</div>
-              <div className="text-white font-barlow">
+              <div className="text-white font-barlow font-bold">
+                Id: {route.id}
+              </div>
+              <div className="text-white font-barlow font-bold">
                 IsArchive: {route.isArchive ? 'Yes' : 'No'}
               </div>
             </div>
@@ -318,7 +323,7 @@ export default function EditRoute({ route, images, daysOld, totalSends }) {
         <div className="flex justify-end mt-3 w-11/12 md:w-3/5">
           {isSubmit ? (
             <button
-              className="bg-green-400 rounded font-barlow text-white p-2"
+              className="bg-green-400 rounded font-barlow font-bold text-white p-2"
               onClick={handleSubmit}
             >
               Submit Changes

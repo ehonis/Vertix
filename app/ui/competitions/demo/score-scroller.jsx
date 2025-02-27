@@ -120,13 +120,15 @@ export default function CompetitionScoreTraker() {
 
         {/* Slider Labels */}
         <div className="flex justify-between w-3/4 text-sm text-gray-400">
-          <span className="text-left font-barlow">{panels[0].content}</span>{' '}
+          <span className="text-left font-barlow font-bold">
+            {panels[0].content}
+          </span>{' '}
           {/* Start */}
-          <span className="text-center font-barlow">
+          <span className="text-center font-barlow font-bold">
             {panels[Math.floor(panels.length / 2)].content}
           </span>{' '}
           {/* Middle */}
-          <span className="text-right font-barlow">
+          <span className="text-right font-barlow font-bold">
             {panels[panels.length - 1].content}
           </span>{' '}
           {/* End */}
@@ -170,13 +172,13 @@ export default function CompetitionScoreTraker() {
                   <div className="flex flex-col items-center gap-3">
                     <label
                       htmlFor=""
-                      className="font-barlow text-3xl text-white"
+                      className="font-barlow font-bold text-3xl text-white"
                     >
                       Attempts
                     </label>
                     <div className="flex items-center gap-6">
                       <button
-                        className="rounded-full size-14 font-barlow bg-red-500 flex justify-center items-center"
+                        className="rounded-full size-14 font-barlow font-bold bg-red-500 flex justify-center items-center"
                         onClick={() => handleMinusAttempt(panel.id)}
                       >
                         <svg
@@ -201,11 +203,11 @@ export default function CompetitionScoreTraker() {
                         type="number"
                         value={attempts[panel.id]}
                         onChange={(e) => handleChange(panel.id, e)}
-                        className="border p-2 text-black font-barlow w-14 h-14 text-3xl rounded text-center"
+                        className="border p-2 text-black font-barlow font-bold w-14 h-14 text-3xl rounded text-center"
                         placeholder="#"
                       />
                       <button
-                        className="rounded-full size-14 font-barlow bg-green-500  flex justify-center items-center"
+                        className="rounded-full size-14 font-barlow font-bold bg-green-500  flex justify-center items-center"
                         onClick={() => handlePlusAttempt(panel.id)}
                       >
                         <svg
@@ -279,22 +281,22 @@ export default function CompetitionScoreTraker() {
                   </h1>
                   <div className="flex flex-col gap-5">
                     {attempts[panel.id] !== 1 ? (
-                      <p className="font-barlow text-white text-4xl text-center drop-shadow-customBlack">
+                      <p className="font-barlow font-bold text-white text-4xl text-center drop-shadow-customBlack">
                         {attempts[panel.id]} attempts
                       </p>
                     ) : (
-                      <p className="font-barlow text-white text-4xl text-center drop-shadow-customBlack">
+                      <p className="font-barlow font-bold text-white text-4xl text-center drop-shadow-customBlack">
                         Flash!
                       </p>
                     )}
                   </div>
 
                   <div className="flex flex-col items-center gap-3">
-                    <h2 className="text-3xl font-barlow text-white text-center drop-shadow-customBlack">
+                    <h2 className="text-3xl font-barlow font-bold text-white text-center drop-shadow-customBlack">
                       Uncomplete?
                     </h2>
                     <button
-                      className="rounded-full size-14 font-barlow bg-red-500 flex justify-center items-center shadow-lg drop-shadow-customBlack"
+                      className="rounded-full size-14 font-barlow font-bold bg-red-500 flex justify-center items-center shadow-lg drop-shadow-customBlack"
                       onClick={() => handleUncompletion(panel.id)}
                     >
                       <svg

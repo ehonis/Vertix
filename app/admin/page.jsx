@@ -75,7 +75,9 @@ export default async function AdminCenter() {
     return (
       <div className="flex justify-center w-screen">
         <div className="flex p-5 flex-col w-full max-w-lg">
-          <h1 className="text-white font-barlow text-3xl mb-3">Admin Center</h1>
+          <h1 className="text-white font-barlow font-bold text-3xl mb-3">
+            Admin Center
+          </h1>
           <div className="flex flex-col bg-bg2 gap-3 rounded-md p-5 mb-10">
             <Link
               className="bg-bg1 flex p-2 items-center w-full rounded outline outline-white"
@@ -95,12 +97,12 @@ export default async function AdminCenter() {
                   d="m21 7.5-2.25-1.313M21 7.5v2.25m0-2.25-2.25 1.313M3 7.5l2.25-1.313M3 7.5l2.25 1.313M3 7.5v2.25m9 3 2.25-1.313M12 12.75l-2.25-1.313M12 12.75V15m0 6.75 2.25-1.313M12 21.75V19.5m0 2.25-2.25-1.313m0-16.875L12 2.25l2.25 1.313M21 14.25v2.25l-2.25 1.313m-13.5 0L3 16.5v-2.25"
                 />
               </svg>
-              <h3 className="text-white font-barlow text-2xl flex-1 text-center">
+              <h3 className="text-white font-barlow font-bold text-2xl flex-1 text-center">
                 Create Content
               </h3>
             </Link>
           </div>
-          <h2 className="text-white font-barlow text-3xl mb-3">
+          <h2 className="text-white font-barlow font-bold text-3xl mb-3">
             Content Manager
           </h2>
           <div className="flex flex-col bg-bg2 gap-5 rounded-md p-5 mb-10">
@@ -111,7 +113,7 @@ export default async function AdminCenter() {
                 className="bg-bg1 flex p-2 items-center w-full rounded outline outline-white"
               >
                 <span>{panel.svg}</span>
-                <h3 className="text-white font-barlow text-2xl flex-1 text-center">
+                <h3 className="text-white font-barlow font-bold text-2xl flex-1 text-center">
                   {panel.text}
                 </h3>
               </Link>

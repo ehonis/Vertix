@@ -24,7 +24,7 @@ export default function CountdownTimer() {
   };
 
   return (
-    <div className="text-center text-3xl font-bold text-white font-barlow p-4 rounded-lg">
+    <div className="text-center text-3xl font-bold text-white font-barlow font-bold p-4 rounded-lg">
       {formatTime(timeLeft)}
     </div>
   );

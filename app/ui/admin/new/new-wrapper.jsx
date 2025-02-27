@@ -106,16 +106,18 @@ export default function NewWrapper() {
               d="M9 15 3 9m0 0 6-6M3 9h12a6 6 0 0 1 0 12h-3"
             />
           </svg>
-          <p className="font-barlow text-xs text-white">Admin Center</p>
+          <p className="font-barlow font-bold text-xs text-white">
+            Admin Center
+          </p>
         </Link>
-        <h1 className="text-white font-barlow text-4xl">New</h1>
+        <h1 className="text-white font-barlow font-bold text-4xl">New</h1>
         <div className="flex justify-between items-center">
           <div className="flex gap-3 items-center overflow-x-auto w-[66%] rounded-r-full">
             {options.map((optionText) => {
               return (
                 <button
                   key={optionText}
-                  className="bg-green-500 p-1 pr-2 flex font-barlow items-center text-white gap-1 rounded-full justify-between"
+                  className="bg-green-500 p-1 pr-2 flex font-barlow font-bold items-center text-white gap-1 rounded-full justify-between"
                   onClick={() => handleNewOption(optionText)}
                 >
                   <svg
@@ -139,7 +141,7 @@ export default function NewWrapper() {
           </div>
 
           {table.length > 0 && (
-            <button className="px-4 py-1 bg-slate-400 text-white font-barlow rounded">
+            <button className="px-4 py-1 bg-slate-400 text-white font-barlow font-bold rounded">
               Edit
             </button>
           )}
@@ -156,7 +158,7 @@ export default function NewWrapper() {
             <div className="h-1 w-full bg-white rounded-full"></div>
             <div className="flex justify-end">
               <button
-                className="p-2 bg-blue-500 text-white font-barlow rounded"
+                className="p-2 bg-blue-500 text-white font-barlow font-bold rounded"
                 onClick={handleSubmit}
               >
                 Submit

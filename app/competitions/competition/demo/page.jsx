@@ -43,12 +43,12 @@ export default function DemoPage() {
           </svg>
         </div>
         <Link
-          className="bg-green-500 text-white p-3 rounded-md font-barlow text-3xl"
+          className="bg-green-500 text-white p-3 rounded-md font-barlow font-bold text-3xl"
           href={'/events/competition/demo/competition-score-traker'}
         >
           Start Demo
         </Link>
-        <p className="font-barlow text-xl text-white text-center">
+        <p className="font-barlow font-bold text-xl text-white text-center">
           This is a demo of starting a competition. Depending on the
           competition, the layout, scores, and time might be different. No
           scores will be recorded during the demo.

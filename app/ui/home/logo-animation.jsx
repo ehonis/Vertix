@@ -112,7 +112,7 @@ export default function HomeLogoAnimation() {
               duration: 1,
               ease: 'easeInOut',
             }}
-            className="z-20 text-xl md:text-2xl font-bold font-barlow text-center"
+            className="z-20 text-xl md:text-2xl font-bold font-barlow font-bold text-center"
           >
             a new way to{' '}
             <span className="text-primary">

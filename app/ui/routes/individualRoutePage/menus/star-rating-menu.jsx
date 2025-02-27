@@ -78,14 +78,14 @@ export default function StarRatingMenu({ route, userId, onCancel, rating }) {
       <div className="flex items-center flex-col gap-1">
         {rating ? (
           <div className="flex flex-col items-center">
-            <p className="font-barlow text-white">Edit Rating</p>
-            <p className="font-barlow text-xs text-slate-500 italic text-center">
+            <p className="font-barlow font-bold text-white">Edit Rating</p>
+            <p className="font-barlow font-bold text-xs text-slate-500 italic text-center">
               You have already rated this route, but you can still change your
               rating
             </p>{' '}
           </div>
         ) : (
-          <p className="font-barlow text-white">Rate the Route!</p>
+          <p className="font-barlow font-bold text-white">Rate the Route!</p>
         )}
         <div className="flex">
           {[1, 2, 3, 4, 5].map((star) => (
@@ -109,11 +109,11 @@ export default function StarRatingMenu({ route, userId, onCancel, rating }) {
         </div>
         <div className="flex flex-col items-center gap-1">
           {!rating ? (
-            <p className="font-barlow text-slate-500 text-sm">
+            <p className="font-barlow font-bold text-slate-500 text-sm">
               Write a comment to the routesetter {'(optional)'}
             </p>
           ) : (
-            <p className="font-barlow text-slate-500 text-sm">
+            <p className="font-barlow font-bold text-slate-500 text-sm">
               Edit Your Comment {'(optional)'}
             </p>
           )}
@@ -126,7 +126,7 @@ export default function StarRatingMenu({ route, userId, onCancel, rating }) {
             placeholder="Optional Comment"
             className="bg-bg2 rounded w-full text-sm h-16 p-2 max-h-40 min-h-10"
           ></textarea>
-          <p className="font-barlow text-xs text-slate-500 italic">
+          <p className="font-barlow font-bold text-xs text-slate-500 italic">
             Only the routesetter can see what you write
           </p>
         </div>

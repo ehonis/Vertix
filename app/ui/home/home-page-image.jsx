@@ -28,7 +28,7 @@ export default function HomePageImage() {
 
         {/* Subtitle */}
         <div className="bg-slate-800 bg-opacity-95 md:p-3 p-1 rounded-xl text-center md:max-w-7xl max-w-7xl">
-          <h2 className="text-white lg:text-3xl md:text-xl text-xs font-bold font-barlow opacity-100">
+          <h2 className="text-white lg:text-3xl md:text-xl text-xs font-bold font-barlow font-bold opacity-100">
             A Tracking Platform for <TypewriterText />
           </h2>
         </div>
@@ -40,7 +40,7 @@ export default function HomePageImage() {
           href="/routes"
         >
           <div className="bg-slate-800 md:m-2 md:p-2 m-1 p-1 rounded-lg flex items-center gap-2">
-            <span className="font-barlow text-white md:text-2xl text-xs text-center">
+            <span className="font-barlow font-bold text-white md:text-2xl text-xs text-center">
               View Routes
             </span>
             <svg

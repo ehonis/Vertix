@@ -36,7 +36,7 @@ export default function Search() {
                         className="rounded-full drop-shadow-customBlack"
                         alt={`picture of ${profile.name}`}
                       />
-                      <p className="font-barlow text-white text-center">
+                      <p className="font-barlow font-bold text-white text-center">
                         {profile.name}
                       </p>
                     </Link>
@@ -80,10 +80,10 @@ export default function Search() {
                       alt={`picture of ${route.title}`}
                     />
                     <div className="flex flex-col items-start">
-                      <p className="font-barlow text-white text-center truncate drop-shadow-customBlack">
+                      <p className="font-barlow font-bold text-white text-center truncate drop-shadow-customBlack">
                         {route.title}
                       </p>
-                      <p className="font-barlow text-white text-center truncate drop-shadow-customBlack">
+                      <p className="font-barlow font-bold text-white text-center truncate drop-shadow-customBlack">
                         {route.grade}
                       </p>
                     </div>

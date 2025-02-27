@@ -3,7 +3,9 @@ import Link from 'next/link';
 export default function page() {
   return (
     <div className="flex flex-col justify-center items-center p-10 gap-5">
-      <h1 className="text-white font-barlow text-3xl">Spring Mixer Demo</h1>
+      <h1 className="text-white font-barlow font-bold text-3xl">
+        Spring Mixer Demo
+      </h1>
       <div className="flex flex-col justify-center items-center gap-32 bg-bg2 p-10 rounded-md">
         <svg
           viewBox="0 0 24 24"
@@ -20,20 +22,20 @@ export default function page() {
         </svg>
 
         <div className="flex flex-col gap-5">
-          <p className="text-white font-barlow text-center text-xs">
+          <p className="text-white font-barlow font-bold text-center text-xs">
             this uses previous year{"'"}s{' (2024)'} data. This is just a demo
             for you to see how comp day will work. No points, attempts, or
             completions will be counted
           </p>
           <Link
             href={'/competitions/competition/mixer_demo/scroller_demo'}
-            className="px-2 py-1 text-white bg-green-500 rounded font-barlow text-center"
+            className="px-2 py-1 text-white bg-green-500 rounded font-barlow font-bold text-center"
           >
             Start Demo
           </Link>
           <Link
             href={'/competitions/competition/mixer_demo/leaderboard'}
-            className="px-2 py-1 text-white bg-yellow-500 rounded font-barlow text-center shadow-yellow-400 shadow-lg outline outline-2 outline-black"
+            className="px-2 py-1 text-white bg-yellow-500 rounded font-barlow font-bold text-center shadow-yellow-400 shadow-lg outline outline-2 outline-black"
           >
             Leaderboard
           </Link>

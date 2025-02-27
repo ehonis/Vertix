@@ -33,10 +33,10 @@ export default function ImageNamePlate({ image, name, id, title }) {
 
         {/* Name and ID Plate */}
         <div className="bg-bg2 w-full max-w-md rounded-lg mt-12 p-6 px-5 relative">
-          <h1 className="text-white font-barlow text-3xl text-start drop-shadow-customBlack">
+          <h1 className="text-white font-barlow font-bold text-3xl text-start drop-shadow-customBlack">
             {name}
           </h1>
-          <h2 className="text-gray-400 font-barlow text-start drop-shadow-customBlack">
+          <h2 className="text-gray-400 font-barlow font-bold text-start drop-shadow-customBlack">
             @{id}
           </h2>
         </div>

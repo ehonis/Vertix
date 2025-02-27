@@ -18,7 +18,9 @@ export default function Notification() {
             : 'bg-gray-400'
         } rounded-l-lg w-12 h-12`}
       ></div>
-      <p className="text-white font-barlow w-48">{notification.message}</p>
+      <p className="text-white font-barlow font-bold w-48">
+        {notification.message}
+      </p>
     </div>
   );
 }

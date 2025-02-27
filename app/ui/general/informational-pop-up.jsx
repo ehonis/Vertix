@@ -34,7 +34,7 @@ export default function InformationalPopUp({ html, onCancel, type }) {
             />
           </svg>
         </button>
-        <h2 className="font-barlow text-xl ">Info</h2>
+        <h2 className="font-barlow font-bold text-xl ">Info</h2>
         <div className="h-[2px] w-full bg-white"></div>
         <span>{html}</span>
       </motion.div>

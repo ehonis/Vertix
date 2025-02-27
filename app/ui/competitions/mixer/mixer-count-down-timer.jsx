@@ -24,7 +24,7 @@ export default function MixerCountdownTimer() {
   };
 
   return (
-    <div className="text-center font-bold text-black font-barlow bg-white outline p-1 outline-black w-min absolute rounded-br">
+    <div className="text-center font-bold text-black font-barlow font-bold bg-white outline p-1 outline-black w-min absolute rounded-br">
       {formatTime(timeLeft)}
     </div>
   );

@@ -189,7 +189,7 @@ export default function IndividualCompPageLoad({
               name="date"
               value={selectedDate} // Controlled value
               onChange={(e) => setSelectedDate(e.target.value)} // Update state on change
-              className="p-1 rounded-lg bg-bg2 text-white cursor-pointer font-barlow"
+              className="p-1 rounded-lg bg-bg2 text-white cursor-pointer font-barlow font-bold"
             />
           </div>
           {/* <UploadDropzone

@@ -137,7 +137,7 @@ function RouteInfo({
       <div className="flex mt-3 justify-center bg-bg1 rounded-xl p-3 w-11/12 md:w-3/5">
         {starRating === 0 ? (
           <div className="flex items-center gap-3">
-            <p className="text-white font-barlow">
+            <p className="text-white font-barlow font-bold">
               No Star Rating, Be the first one {'->'}
             </p>
             {user ? (
@@ -153,7 +153,7 @@ function RouteInfo({
               />
             ) : (
               <Link href={'/signin'}>
-                <span className="text-white bg-blue-500 p-2 rounded font-barlow">
+                <span className="text-white bg-blue-500 p-2 rounded font-barlow font-bold">
                   Sign In
                 </span>
               </Link>
@@ -223,7 +223,7 @@ export default async function IndividualRoute({ params }) {
   ]);
   if (!route) {
     return (
-      <div className="text-white font-barlow flex justify-center items-center w-screen h-screen">
+      <div className="text-white font-barlow font-bold flex justify-center items-center w-screen h-screen">
         404 Could not find route
       </div>
     );

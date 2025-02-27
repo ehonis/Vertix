@@ -102,7 +102,7 @@ export default function NewRoute({ id, onCommit, onUncommit }) {
       {isError && <ErrorPopUp message={errorMessage} onCancel={handleCancel} />}
       <div className="bg-bg2 w-full rounded-lg flex md:flex-row flex-col gap-2 p-3">
         <div className="flex flex-col md:gap-4 gap-2 w-full justify-center ">
-          <h2 className="text-white font-barlow text-2xl">Route</h2>
+          <h2 className="text-white font-barlow font-bold text-2xl">Route</h2>
           <div className="w-full h-[2px] bg-white"></div>
           <div className="flex gap-1 items-center ">
             <input
@@ -110,16 +110,20 @@ export default function NewRoute({ id, onCommit, onUncommit }) {
               value={name}
               onChange={handleNameChange}
               placeholder="Name"
-              className="rounded-md bg-bg1 text-white py-1 px-2 max-w-min lg:h-14 lg:text-3xl font-barlow"
+              className="rounded-md bg-bg1 text-white py-1 px-2 max-w-min lg:h-14 lg:text-3xl font-barlow font-bold"
             />
           </div>
           <div className="flex gap-1 items-center">
-            <label htmlFor="" className="text-white font-barlow text-lg">
-              <span className="font-barlow text-red-500">*</span>Set Date:
+            <label
+              htmlFor=""
+              className="text-white font-barlow font-bold text-lg"
+            >
+              <span className="font-barlow font-bold text-red-500">*</span>Set
+              Date:
             </label>
             <button
               className={clsx(
-                'font-barlow px-2 py-1 rounded-lg bg-bg1 text-white',
+                'font-barlow font-bold px-2 py-1 rounded-lg bg-bg1 text-white',
                 isToday && 'bg-green-500'
               )}
               onClick={handleNowButton}
@@ -132,13 +136,17 @@ export default function NewRoute({ id, onCommit, onUncommit }) {
               name="date"
               value={selectedDate} // Controlled value
               onChange={handleDateChange} // Update state on change
-              className="p-1 rounded-lg bg-bg1 text-white cursor-pointer font-barlow"
+              className="p-1 rounded-lg bg-bg1 text-white cursor-pointer font-barlow font-bold"
             />
           </div>
           <GradeSelect onGradeChange={handleGradeData} />
           <div className="flex gap-2 w-2/6 items-center">
-            <label htmlFor="" className="text-white font-barlow text-lg">
-              <span className="font-barlow text-red-500">*</span>Color:
+            <label
+              htmlFor=""
+              className="text-white font-barlow font-bold text-lg"
+            >
+              <span className="font-barlow font-bold text-red-500">*</span>
+              Color:
             </label>
 
             <select
@@ -146,7 +154,7 @@ export default function NewRoute({ id, onCommit, onUncommit }) {
               id="color"
               value={color}
               onChange={handleColorChange}
-              className="bg-bg1 text-white font-barlow p-1 rounded"
+              className="bg-bg1 text-white font-barlow font-bold p-1 rounded"
             >
               <option value=""></option>
               <option value="black">Black</option>
@@ -169,7 +177,7 @@ export default function NewRoute({ id, onCommit, onUncommit }) {
       <div className="flex gap-1 items-center justify-end">
         {commitText === 'Commit' && (
           <div className="flex gap-1">
-            <p className="text-white font-barlow md:text-base text-xs">
+            <p className="text-white font-barlow font-bold md:text-base text-xs">
               you must commit before submitting
             </p>
             <svg
@@ -190,7 +198,7 @@ export default function NewRoute({ id, onCommit, onUncommit }) {
 
         <button
           className={clsx(
-            'text-white  md:p-2 p-2 md:text-base text-sm md:w-32 min-w-16 rounded-full font-barlow',
+            'text-white  md:p-2 p-2 md:text-base text-sm md:w-32 min-w-16 rounded-full font-barlow font-bold',
             commitText === 'Committed' ? 'bg-green-500' : 'bg-slate-500'
           )}
           onClick={handleCommit}

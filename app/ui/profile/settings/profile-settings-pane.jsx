@@ -54,7 +54,7 @@ export default function ProfileSettingsPane({ userData }) {
   return (
     <div className=" bg-bg1 md:w-[30rem] w-[22rem] p-5 rounded-lg flex-col flex gap-3">
       <div className="flex justify-between">
-        <h2 className="text-white text-2xl font-barlow ">
+        <h2 className="text-white text-2xl font-barlow font-bold ">
           Profile Settings <span className="text-red-500 ">WIP</span>
         </h2>
         {userData.image ? (
@@ -83,41 +83,43 @@ export default function ProfileSettingsPane({ userData }) {
         )}
       </div>
       <div className="flex gap-4">
-        <label htmlFor="" className="text-white text-xl font-barlow">
+        <label htmlFor="" className="text-white text-xl font-barlow font-bold">
           Name:
         </label>
         <input
           type="text"
           value={name}
-          className="p-1 rounded font-barlow"
+          className="p-1 rounded font-barlow font-bold"
           onChange={handleNameChange}
         />
       </div>
       <div className="flex gap-4">
-        <label htmlFor="" className="text-white text-xl font-barlow">
+        <label htmlFor="" className="text-white text-xl font-barlow font-bold">
           Username:
         </label>
         <div className="flex">
-          <p className="bg-bg2 text-white rounded-l p-1 text-center font-barlow">
+          <p className="bg-bg2 text-white rounded-l p-1 text-center font-barlow font-bold">
             @
           </p>
           <input
             type="text"
             value={id}
-            className="p-1 rounded-r font-barlow"
+            className="p-1 rounded-r font-barlow font-bold"
             onChange={handleIdChange}
           />
         </div>
       </div>
       <div className="flex gap-4 items-center">
-        <label htmlFor="" className="text-white text-xl font-barlow">
+        <label htmlFor="" className="text-white text-xl font-barlow font-bold">
           Email:
         </label>
-        <p className="text-white font-barlow underline">{userData.email}</p>
+        <p className="text-white font-barlow font-bold underline">
+          {userData.email}
+        </p>
       </div>
       {isSaveButton ? (
         <div className="flex w-full justify-end">
-          <button className="bg-green-500 text-white w-32 p-1 rounded font-barlow">
+          <button className="bg-green-500 text-white w-32 p-1 rounded font-barlow font-bold">
             Save Changes?
           </button>
         </div>

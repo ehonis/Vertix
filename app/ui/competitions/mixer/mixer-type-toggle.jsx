@@ -24,7 +24,7 @@ export default function TypeToggleSwitch({
     <div className="flex items-center justify-center space-x-4">
       {/* Left Label */}
       <span
-        className={`font-barlow ${
+        className={`font-barlow font-bold ${
           isLeftLabel === leftLabel
             ? 'text-blue-500 underline'
             : 'text-gray-500'
@@ -49,7 +49,7 @@ export default function TypeToggleSwitch({
 
       {/* Right Label */}
       <span
-        className={`font-barlow ${
+        className={`font-barlow font-bold ${
           isLeftLabel === rightLabel
             ? 'text-green-500 underline'
             : 'text-gray-500'

@@ -215,15 +215,15 @@ export default function MixerScoreScroller({ mixerRoutes, StartTime }) {
 
           {/* Slider Labels */}
           <div className="flex justify-between w-3/4 text-sm text-gray-400">
-            <span className="text-left font-barlow">
+            <span className="text-left font-barlow font-bold">
               {mixerRoutes[0].routeName}
             </span>{' '}
             {/* Start */}
-            <span className="text-center font-barlow">
+            <span className="text-center font-barlow font-bold">
               {mixerRoutes[Math.floor(mixerRoutes.length / 2)].routeName}
             </span>{' '}
             {/* Middle */}
-            <span className="text-right font-barlow">
+            <span className="text-right font-barlow font-bold">
               {mixerRoutes[mixerRoutes.length - 1].routeName}
             </span>{' '}
             {/* End */}
@@ -310,13 +310,13 @@ export default function MixerScoreScroller({ mixerRoutes, StartTime }) {
                   <div className="flex flex-col items-center gap-1">
                     <label
                       htmlFor=""
-                      className="font-barlow text-2xl text-white"
+                      className="font-barlow font-bold text-2xl text-white"
                     >
                       Hold {'#'}
                     </label>
                     <div className="flex items-center gap-4">
                       <button
-                        className="rounded-full size-10 font-barlow bg-red-500 flex justify-center items-center"
+                        className="rounded-full size-10 font-barlow font-bold bg-red-500 flex justify-center items-center"
                         onClick={() => handleMinusHold(panel.id)}
                       >
                         <svg
@@ -341,11 +341,11 @@ export default function MixerScoreScroller({ mixerRoutes, StartTime }) {
                         type="text"
                         value={hold[panel.id]}
                         onChange={(e) => handleChange(panel.id, e)}
-                        className="border p-2 text-black font-barlow size-10 text-2xl rounded text-center"
+                        className="border p-2 text-black font-barlow font-bold size-10 text-2xl rounded text-center"
                         placeholder="#"
                       />
                       <button
-                        className="rounded-full size-10 font-barlow bg-green-500  flex justify-center items-center"
+                        className="rounded-full size-10 font-barlow font-bold bg-green-500  flex justify-center items-center"
                         onClick={() =>
                           handlePlusHold(panel.id, panel.holds.length)
                         }
@@ -384,13 +384,13 @@ export default function MixerScoreScroller({ mixerRoutes, StartTime }) {
                   <div className="flex flex-col items-center gap-3">
                     <label
                       htmlFor=""
-                      className="font-barlow text-2xl text-white"
+                      className="font-barlow font-bold text-2xl text-white"
                     >
                       Attempts
                     </label>
                     <div className="flex items-center gap-6">
                       <button
-                        className="rounded-full size-10 font-barlow bg-red-500 flex justify-center items-center"
+                        className="rounded-full size-10 font-barlow font-bold bg-red-500 flex justify-center items-center"
                         onClick={() => handleMinusAttempt(panel.id)}
                       >
                         <svg
@@ -415,11 +415,11 @@ export default function MixerScoreScroller({ mixerRoutes, StartTime }) {
                         type="text"
                         value={attempts[panel.id]}
                         onChange={(e) => handleChange(panel.id, e)}
-                        className="border p-2 text-black font-barlow size-10 text-2xl rounded text-center"
+                        className="border p-2 text-black font-barlow font-bold size-10 text-2xl rounded text-center"
                         placeholder="#"
                       />
                       <button
-                        className="rounded-full size-10 font-barlow bg-green-500  flex justify-center items-center"
+                        className="rounded-full size-10 font-barlow font-bold bg-green-500  flex justify-center items-center"
                         onClick={() => handlePlusAttempt(panel.id)}
                       >
                         <svg
@@ -501,7 +501,7 @@ export default function MixerScoreScroller({ mixerRoutes, StartTime }) {
                         Completed
                       </p>
                     </div>
-                    <p className="font-barlow text-center text-4xl">
+                    <p className="font-barlow font-bold text-center text-4xl">
                       {typeToggles[panel.id] === 'TR' ? 'Top Rope' : 'Lead'}
                     </p>
                     <div className="flex flex-col gap-2">
@@ -514,22 +514,22 @@ export default function MixerScoreScroller({ mixerRoutes, StartTime }) {
                     </div>
                     <div className="flex flex-col gap-5">
                       {attempts[panel.id] !== 1 ? (
-                        <p className="font-barlow text-white text-2xl text-center drop-shadow-customBlack">
+                        <p className="font-barlow font-bold text-white text-2xl text-center drop-shadow-customBlack">
                           {attempts[panel.id]} attempts
                         </p>
                       ) : (
-                        <p className="font-barlow text-white text-4xl text-center drop-shadow-customBlack">
+                        <p className="font-barlow font-bold text-white text-4xl text-center drop-shadow-customBlack">
                           Flash!
                         </p>
                       )}
                     </div>
 
                     <div className="flex flex-col items-center gap-3">
-                      <h2 className="text-2xl font-barlow text-white text-center drop-shadow-customBlack">
+                      <h2 className="text-2xl font-barlow font-bold text-white text-center drop-shadow-customBlack">
                         Uncomplete?
                       </h2>
                       <button
-                        className="rounded-full size-14 font-barlow bg-red-500 flex justify-center items-center shadow-lg drop-shadow-customBlack"
+                        className="rounded-full size-14 font-barlow font-bold bg-red-500 flex justify-center items-center shadow-lg drop-shadow-customBlack"
                         onClick={() => handleUncompletion(panel.id)}
                       >
                         <svg

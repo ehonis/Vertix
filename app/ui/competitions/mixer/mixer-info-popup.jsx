@@ -68,10 +68,10 @@ export default function MixerInfoPopup({
             </svg>
           </button>
           <div className="flex flex-col">
-            <h2 className="text-2xl font-barlow text-white ">
+            <h2 className="text-2xl font-barlow font-bold text-white ">
               Point Prediction
             </h2>
-            <p className="text-gray-300 text-xs font-barlow italic">
+            <p className="text-gray-300 text-xs font-barlow font-bold italic">
               These are holds you need to get too to improve your previous
               score(s)
             </p>
@@ -85,7 +85,7 @@ export default function MixerInfoPopup({
                     className="flex flex-col bg-bg1 p-2 rounded"
                     key={info.id}
                   >
-                    <p className="text-white font-barlow">
+                    <p className="text-white font-barlow font-bold">
                       Tope Rope Hold:{' '}
                       <span className="font-stalinist gradient-text-blue-cyan">
                         {info.topRopetoBeat.hold}
@@ -95,7 +95,7 @@ export default function MixerInfoPopup({
                         {info.topRopetoBeat.topRopePts}pts
                       </span>
                     </p>
-                    <p className="text-white font-barlow">
+                    <p className="text-white font-barlow font-bold">
                       Lead Hold:{' '}
                       <span className="font-stalinist gradient-text-blue-cyan">
                         {info.leadToBeat.hold}
@@ -105,7 +105,7 @@ export default function MixerInfoPopup({
                         {info.leadToBeat.leadPts}pts
                       </span>
                     </p>
-                    <p className="text-white font-barlow">
+                    <p className="text-white font-barlow font-bold">
                       To beat{' '}
                       <span
                         className={clsx(
@@ -125,7 +125,7 @@ export default function MixerInfoPopup({
               })}
             </div>
           ) : (
-            <p className="text-white font-barlow text-center">
+            <p className="text-white font-barlow font-bold text-center">
               You have not completed any routes. So there is nothing to predict
               yet
             </p>

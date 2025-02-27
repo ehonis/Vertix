@@ -425,7 +425,7 @@ export default function Routes({ ropes, boulders, user, completions }) {
 
         <div className="flex flex-col h-screen py-5">
           <div className="flex justify-between items-center px-5 pb-1">
-            <h1 className="text-white font-bold text-3xl drop-shadow-customBlack">
+            <h1 className="text-white  text-4xl drop-shadow-customBlack font-barlow font-bold font-bold">
               {header}
             </h1>
             {header === 'Filtered Routes' ? (

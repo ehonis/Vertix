@@ -25,16 +25,20 @@ export default async function MixerManager() {
               d="M9 15 3 9m0 0 6-6M3 9h12a6 6 0 0 1 0 12h-3"
             />
           </svg>
-          <p className="font-barlow text-xs text-white">Competitions Manager</p>
+          <p className="font-barlow font-bold text-xs text-white">
+            Competitions Manager
+          </p>
         </Link>
         <div className="mt-3 flex flex-col">
           <div className="flex flex-col gap-2 mb-2">
-            <h1 className="font-barlow text-white text-4xl">Mixer Manager</h1>
+            <h1 className="font-barlow font-bold text-white text-4xl">
+              Mixer Manager
+            </h1>
             <div className="h-[2px] w-full bg-white"></div>
           </div>
         </div>
         <div className="mb-3">
-          <h2 className="font-barlow text-2xl text-white mb-2">
+          <h2 className="font-barlow font-bold text-2xl text-white mb-2">
             <span className="text-orange-400">Upcoming</span> Mixer Competitions
           </h2>
           <div className="bg-bg2 w-full p-3 rounded flex justify-center">
@@ -44,7 +48,7 @@ export default async function MixerManager() {
           </div>
         </div>
         <div>
-          <h2 className="font-barlow text-2xl text-white mb-2">
+          <h2 className="font-barlow font-bold text-2xl text-white mb-2">
             <span className="text-green-500">Completed</span> Mixer Competitions
           </h2>
           <div className="bg-bg2 w-full p-3 rounded flex justify-center">

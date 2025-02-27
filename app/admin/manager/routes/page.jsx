@@ -56,7 +56,9 @@ export default async function Page() {
                 d="M9 15 3 9m0 0 6-6M3 9h12a6 6 0 0 1 0 12h-3"
               />
             </svg>
-            <p className="font-barlow text-xs text-white">Admin Center</p>
+            <p className="font-barlow font-bold text-xs text-white">
+              Admin Center
+            </p>
           </Link>
           <div className="flex justify-between items-center w-full px-5 pt-2 pb-5">
             <h1 className="text-white text-3xl font-bold">Route Manager</h1>

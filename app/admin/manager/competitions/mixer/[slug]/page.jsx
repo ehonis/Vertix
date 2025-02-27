@@ -14,7 +14,7 @@ export default async function page({ params }) {
   console.log(comp);
   if (!comp) {
     return (
-      <div className="w-screen py-5 flex flex-col items-center font-barlow text-white">
+      <div className="w-screen py-5 flex flex-col items-center font-barlow font-bold text-white">
         <p className="text-red-500">
           Competition not found or is still loading...
         </p>
@@ -23,7 +23,7 @@ export default async function page({ params }) {
     );
   }
   return (
-    <div className="w-screen  py-5 flex flex-col items-center font-barlow text-white">
+    <div className="w-screen  py-5 flex flex-col items-center font-barlow font-bold text-white">
       <div className="max-w-lg flex-col w-full px-5">
         <Link
           href={'/admin/manager/competitions/mixer'}
@@ -43,7 +43,9 @@ export default async function page({ params }) {
               d="M9 15 3 9m0 0 6-6M3 9h12a6 6 0 0 1 0 12h-3"
             />
           </svg>
-          <p className="font-barlow text-xs text-white">Mixer Manager</p>
+          <p className="font-barlow font-bold text-xs text-white">
+            Mixer Manager
+          </p>
         </Link>
         <div className="">
           <IndividualCompPageLoad

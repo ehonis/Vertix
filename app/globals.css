@@ -22,9 +22,7 @@ body {
 .font-jersey {
   font-family: var(--font-jersey), Arial, sans-serif; /* Fallback fonts */
 }
-.font-barlow {
-  font-family: var(--font-barlow), Arial, sans-serif; /* Fallback fonts */
-}
+
 .font-iceland {
   font-family: var(--font-iceland), Arial, Helvetica, sans-serif;
 }

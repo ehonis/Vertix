@@ -49,7 +49,7 @@ export default function RouteImage() {
 
           <Link
             href={content.pageUrl}
-            className="absolute flex items-center gap-2 right-6 top-1/2 -translate-y-1/2 z-20 bg-blue-500 text-white font-barlow px-2 py-2 rounded-md outline"
+            className="absolute flex items-center gap-2 right-6 top-1/2 -translate-y-1/2 z-20 bg-blue-500 text-white font-barlow font-bold px-2 py-2 rounded-md outline"
           >
             <p className="md:text-3xl">{content.text}</p>
 

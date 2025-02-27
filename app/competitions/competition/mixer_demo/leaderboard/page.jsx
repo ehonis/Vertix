@@ -57,10 +57,10 @@ export default async function MixerDemoLeaderboard() {
   if (!isScoresAvailable.areScoresAvailable) {
     return (
       <div className="flex flex-col h-screen-offset justify-center items-center">
-        <h1 className="text-white font-barlow text-3xl text-center">
+        <h1 className="text-white font-barlow font-bold text-3xl text-center">
           Scores Not Yet Available
         </h1>
-        <p className="text-white font-barlow text-sm text-center">
+        <p className="text-white font-barlow font-bold text-sm text-center">
           Please wait until Scores are being announced and refresh
         </p>
       </div>
