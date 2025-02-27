@@ -1,6 +1,9 @@
 import Link from 'next/link';
 import prisma from '@/prisma';
 import IndividualCompPageLoad from '@/app/ui/admin/competitions/mixer/individualMixerManagerPage/individual-comp-page-load';
+import { auth } from '@/auth';
+import { EntryMethod } from '@prisma/client';
+
 export default async function page({ params }) {
   const { slug } = await params;
   const compId = slug;
@@ -10,8 +13,19 @@ export default async function page({ params }) {
   const compRoutes = await prisma.MixerRoute.findMany({
     where: { competitionId: compId },
   });
-  console.log(compRoutes);
-  console.log(comp);
+  const compDivisions = await prisma.MixerDivision.findMany({
+    where: { competitionId: compId },
+    select: { name: true },
+  });
+  const compClimbers = await prisma.MixerClimber.findMany({
+    where: { competitionId: compId },
+    select: { id: true, name: true, entryMethod: true },
+  });
+  console.log(compClimbers);
+  // console.log(compDivisions);
+  // // console.log(compRoutes);
+  // // console.log(comp);
+  // console.log(comp.areScoresAvailable);
   if (!comp) {
     return (
       <div className="w-screen py-5 flex flex-col items-center font-barlow font-bold text-white">
@@ -54,6 +68,9 @@ export default async function page({ params }) {
             compDay={comp.compDay}
             imageUrl={comp.imageUrl}
             routes={compRoutes}
+            divisions={compDivisions}
+            areScoresAvailable={comp.areScoresAvailable}
+            climbers={compClimbers}
           />
         </div>
       </div>

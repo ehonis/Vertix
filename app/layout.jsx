@@ -10,7 +10,7 @@ import { Tomorrow, Barlow } from 'next/font/google';
 const barlow = Barlow({
   subsets: ['latin'],
   weight: ['100', '200', '300', '400', '500', '600', '700'],
-  variable: '--font-barlow font-bold',
+  variable: '--font-barlow',
 });
 const tomorrow = Tomorrow({
   subsets: ['latin'],

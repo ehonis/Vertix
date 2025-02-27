@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { UploadDropzone } from '@/utils/uploadthing';
 import InformationalPopUp from '@/app/ui/general/informational-pop-up';
 import { clsx } from 'clsx';
@@ -16,6 +16,7 @@ export default function IndividualCompPageLoad({
   compDay,
   time,
   status,
+  divisions,
 }) {
   const [compRoutes, setCompRoutes] = useState(
     routes.map((route) => ({
@@ -23,50 +24,82 @@ export default function IndividualCompPageLoad({
       holds: JSON.parse(route.holds), // Convert holds JSON string to array
     }))
   );
+  const [compDivisions, setCompDivisions] = useState(divisions);
   const [selectedDate, setSelectedDate] = useState(
     compDay.toISOString().split('T')[0]
   );
-  const [isInfoPopUp, setIsInfoPopUp] = useState(false);
+  const [isScoresAvailable, setIsScoresAvailable] =
+    useState(areScoresAvailable);
+  const [isStatusInfoPopUp, setIsStatusInfoPopUp] = useState(false);
+  const [isScoresAvailableInfoPopUp, setIsScoresAvailableInfoPopUp] =
+    useState(false);
   const [infoPopUpHtml, setInfoPopUpHtml] = useState(<div></div>);
   const [statusOption, setStatusOption] = useState(status);
   const [isNewEditRoutePopUp, setIsNewEditRoutePopup] = useState(false);
   const [isEditRoutePopup, setIsEditRoutePopup] = useState(false);
   const [tempHolds, setTempHolds] = useState();
   const [tempRouteName, setTempRouteName] = useState('');
-  const handleInfoStatusButtonClick = () => {
-    setIsInfoPopUp(true);
+
+  const handleScoresAvailableButtonClick = () => {
+    setIsScoresAvailableInfoPopUp(true);
     setInfoPopUpHtml(
       <div className="flex flex-col gap-1">
-        <p className="text-sm">
-          <span className="text-red-500 text-lg underline">Unavailable:</span>{' '}
+        <p className="text-sm font-normal">
+          <span className="text-green-400 font-bold underline">
+            AreAvailable:
+          </span>{' '}
+          After the comp is finished and after the manual user's points have
+          entered, you can turn this setting to release the leaderboard to
+          everyone. This should be done right before the announcement of
+          rankings.
+        </p>
+        <p className="text-sm font-normal">
+          <span className="text-red-500 font-bold underline">
+            AreNotAvailable:
+          </span>{' '}
+          This should remain the toggle when scores are not calculated. No one
+          will be able to see the leaderboard when this is the current setting.
+        </p>
+      </div>
+    );
+  };
+  const handleInfoStatusButtonClick = () => {
+    setIsStatusInfoPopUp(true);
+    setInfoPopUpHtml(
+      <div className="flex flex-col gap-1">
+        <p className="text-sm font-normal">
+          <span className="text-red-500 font-bold underline">Unavailable:</span>{' '}
           Only admins can see the comp in the comp manager. Use this setting
           when first setting up the comp.
         </p>
-        <p className="text-sm">
-          <span className="text-orange-400 text-lg underline">Upcoming:</span>{' '}
+        <p className="text-sm font-normal">
+          <span className="text-orange-400 font-bold underline">Upcoming:</span>{' '}
           Users will be able to see the comp in the comp page, but they can only
           sign up. Please have divisions ready before enabling this status
         </p>
-        <p className="text-sm">
-          <span className="text-blue-400 text-lg underline">In Progress:</span>
+        <p className="text-sm font-normal">
+          <span className="text-blue-400 font-bold underline">
+            In Progress:
+          </span>
           This will start the comp. Users will be able to submit scores. This
           status will only last for the time allotted to the comp and switch to
           completed when the timer is finished.
         </p>
-        <p className="text-sm">
-          <span className="text-green-500 text-lg underline">Completed:</span>
+        <p className="text-sm font-normal">
+          <span className="text-green-500 font-bold underline">Completed:</span>
           The comp has ended, but the comp is still listed on the comp page.
           Users will be able to see scores/leaderboard, but not enter any scores
         </p>
-        <p className="text-sm">
-          <span className="text-yellow-400 text-lg underline">Archived:</span>
+        <p className="text-sm font-normal">
+          <span className="text-yellow-400 font-bold underline">Archived:</span>
           The comp has ended, comp is not listed on comp page
         </p>
       </div>
     );
   };
   const handleOnCancelClick = () => {
-    setIsInfoPopUp(false);
+    setIsStatusInfoPopUp(false);
+    setIsScoresAvailableInfoPopUp(false);
   };
   const handleEditRoutePopUp = (id) => {
     const tempRoute = compRoutes.find((route) => route.id === id);
@@ -79,7 +112,9 @@ export default function IndividualCompPageLoad({
       console.error(`Route with ID ${id} not found`);
     }
   };
-
+  useEffect(() => {
+    console.log(isScoresAvailable);
+  }, [isScoresAvailable]);
   return (
     <div>
       {isNewEditRoutePopUp && (
@@ -95,7 +130,7 @@ export default function IndividualCompPageLoad({
           routeName={tempRouteName}
         />
       )}
-      {isInfoPopUp && (
+      {(isStatusInfoPopUp || isScoresAvailableInfoPopUp) && (
         <InformationalPopUp
           html={infoPopUpHtml}
           onCancel={handleOnCancelClick}
@@ -111,7 +146,7 @@ export default function IndividualCompPageLoad({
               <label htmlFor="" className="text-xl">
                 Comp Image
               </label>
-              <label htmlFor="" className="text-sm text-gray-400">
+              <label htmlFor="" className="text-sm text-gray-400 font-normal">
                 {'(Tap the image to upload new)'}
               </label>
             </div>
@@ -135,6 +170,45 @@ export default function IndividualCompPageLoad({
                 <Image src={imageUrl} />
               )}
             </button>
+          </div>
+          <div className="flex gap-2 bg-bg1 rounded p-2 justify-between items-center">
+            <div className="flex items-center">
+              <label htmlFor="" className="text-xl">
+                Scores:
+              </label>
+              <button onClick={handleScoresAvailableButtonClick}>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                  className="size-5"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z"
+                  />
+                </svg>
+              </button>
+            </div>
+            <select
+              name=""
+              id=""
+              value={isScoresAvailable}
+              onChange={(e) => setIsScoresAvailable(e.target.value === 'true')}
+              className={clsx(
+                'px-1 py-1 bg-bg1 rounded-md text-center',
+
+                isScoresAvailable === false && 'bg-red-500',
+
+                isScoresAvailable === true && 'bg-green-500'
+              )}
+            >
+              <option value={'true'}>AreAvailable</option>
+              <option value={'false'}>AreNotAvailable</option>
+            </select>
           </div>
           <div className="flex gap-2 bg-bg1 rounded p-2 justify-between items-center">
             <div className="flex items-center">
@@ -205,57 +279,99 @@ export default function IndividualCompPageLoad({
           /> */}
         </div>
       </div>
-      <h3 className="text-3xl mt-3">Routes</h3>
-      <div className="bg-bg2 flex-col gap-2 flex p-3 rounded w-full">
-        {compRoutes.length > 0 ? (
-          <div className="w-full flex-col flex gap-2">
-            {compRoutes.map((route) => (
-              <button
-                key={route.id}
-                className={clsx(
-                  ' flex p-1 rounded',
-                  route.color === 'red' && 'bg-red-500',
-                  route.color === 'blue' && 'bg-blue-500',
-                  route.color === 'green' && 'bg-green-400',
-                  route.color === 'orange' && 'bg-orange-500',
-                  route.color === 'yellow' && 'bg-yellow-500'
-                )}
-                onClick={() => handleEditRoutePopUp(route.id)}
-              >
-                <div className="grid bg-bg1 grid-cols-2 items-center p-1 px-2 w-full rounded">
-                  <p className="text-xl place-self-start">{route.name}</p>
-                  <p className="text-xl place-self-end">
-                    Holds: {route.holds.length}
-                  </p>
-                </div>
-              </button>
-            ))}
-            <div className="flex items-center gap-1">
-              <button
-                className="bg-green-400 p-1 rounded-full max-w-fit"
-                onClick={() => setIsNewEditRoutePopup(!isNewEditRoutePopUp)}
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={2}
-                  stroke="currentColor"
-                  className="size-7 "
+      <div>
+        <h3 className="text-3xl mt-3">Divisions</h3>
+        <div className="bg-bg2 flex-col gap-2 flex p-3 rounded w-full">
+          {compDivisions.length > 0 ? (
+            <div className="flex flex-col gap-2">
+              {compDivisions.map((division, index) => (
+                <button
+                  key={index}
+                  className="bg-bg1 w-full gap-3 rounded flex p-2 justify-center items-center"
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
-                  />
-                </svg>
-              </button>
-              <p>Add Route</p>
+                  <p className="text-white font-barlow font-semibold text-xl">
+                    {division.name}
+                  </p>
+                </button>
+              ))}
+              <div className="flex items-center gap-1">
+                <button className="bg-green-400 p-1 rounded-full max-w-fit">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={2}
+                    stroke="currentColor"
+                    className="size-7 "
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                    />
+                  </svg>
+                </button>
+                <p className="font-medium font-barlow">Add Division</p>
+              </div>
             </div>
-          </div>
-        ) : (
-          <div></div>
-        )}
+          ) : (
+            <div></div>
+          )}
+        </div>
+      </div>
+      <div>
+        <h3 className="text-3xl mt-3">Routes</h3>
+        <div className="bg-bg2 flex-col gap-2 flex p-3 rounded w-full">
+          {compRoutes.length > 0 ? (
+            <div className="w-full flex-col flex gap-2">
+              {compRoutes.map((route) => (
+                <button
+                  key={route.id}
+                  className={clsx(
+                    ' flex p-1 rounded',
+                    route.color === 'red' && 'bg-red-500',
+                    route.color === 'blue' && 'bg-blue-500',
+                    route.color === 'green' && 'bg-green-400',
+                    route.color === 'orange' && 'bg-orange-500',
+                    route.color === 'yellow' && 'bg-yellow-500'
+                  )}
+                  onClick={() => handleEditRoutePopUp(route.id)}
+                >
+                  <div className="grid bg-bg1 grid-cols-2 items-center p-1 px-2 w-full rounded">
+                    <p className="text-xl place-self-start">{route.name}</p>
+                    <p className="text-xl place-self-end">
+                      Holds: {route.holds.length}
+                    </p>
+                  </div>
+                </button>
+              ))}
+              <div className="flex items-center gap-1">
+                <button
+                  className="bg-green-400 p-1 rounded-full max-w-fit"
+                  onClick={() => setIsNewEditRoutePopup(!isNewEditRoutePopUp)}
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={2}
+                    stroke="currentColor"
+                    className="size-7 "
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                    />
+                  </svg>
+                </button>
+                <p className="font-medium">Add Route</p>
+              </div>
+            </div>
+          ) : (
+            <div></div>
+          )}
+        </div>
       </div>
     </div>
   );

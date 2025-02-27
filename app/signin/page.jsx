@@ -4,7 +4,7 @@ export default function SignInForm() {
   return (
     <div className="flex items-center flex-col justify-center mt-16">
       <h1 className="text-3xl text-white font-bold m-5">Login or Sign Up</h1>
-      <div className="bg-bg2 flex flex-col items-center justify-center p-5 w-96 rounded-lg shadow-md gap-3">
+      <div className="bg-bg2 flex flex-col items-center justify-center p-5 md:w-96 w-80 rounded-lg shadow-md gap-3">
         <div className="flex gap-2">
           <form
             action={async () => {
@@ -14,7 +14,7 @@ export default function SignInForm() {
           >
             <button
               type="submit"
-              className=" w-max gap-3 items-center p-2 rounded-full text-black bg-white flex"
+              className=" w-max gap-3 items-center p-2 rounded-full text-black bg-white flex font-barlow font-medium "
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -38,7 +38,7 @@ export default function SignInForm() {
                   d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z"
                 ></path>
               </svg>
-              Google
+              <p className="font-barlow font-bold">Google</p>
             </button>
           </form>
 
@@ -64,7 +64,7 @@ export default function SignInForm() {
                   clipRule="evenodd"
                 />
               </svg>
-              GitHub
+              <p className="font-barlow font-bold">GitHub</p>
             </button>
           </form>
         </div>
@@ -84,7 +84,7 @@ export default function SignInForm() {
           />
           <button
             type="submit"
-            className="bg-purple-500 px-2 py-1 text-white font-barlow font-semibold rounded flex gap-2 justify-center"
+            className="bg-purple-500 px-2 py-1 text-white font-barlow font-semibold rounded-full flex gap-2 justify-center"
           >
             <p>Send Magic Link</p>
             <svg

@@ -57,7 +57,7 @@ export default function HomeLogoAnimation() {
     return () => window.removeEventListener('resize', updateTextCount);
   }, []);
   return (
-    <div className="relative flex justify-center mt-20 md:mt-32">
+    <div className="relative flex justify-center mt-20 md:mt-28">
       <div className="relative flex">
         {/* Sequential Animated Text */}
         {Array(textCount)
@@ -81,7 +81,7 @@ export default function HomeLogoAnimation() {
         <motion.div
           initial={{ clipPath: 'inset(0% 0% 0% 100%)' }} // Start fully hidden on the right
           animate={{ clipPath: 'inset(0% 0% 0% 0%)' }} // Reveal from right to left
-          transition={{ delay: baseDelay, duration: 1, ease: 'easeInOut' }}
+          transition={{ delay: baseDelay, duration: 0.75, ease: 'easeInOut' }}
           className="absolute flex flex-col left-[-1rem] top-[-3.5rem] md:left-[-3rem] md:top-[-4.5rem] justify-center items-center w-[110%] h-[400%] bg-white rounded-md z-10"
         >
           {/* Main Logo Animation */}

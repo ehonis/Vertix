@@ -28,7 +28,7 @@ module.exports = withUt({
       fontFamily: {
         sans: ['var(--font-tomorrow)', 'sans-serif'],
         tomorrow: ['var(--font-tomorrow)', 'sans-serif'],
-        barlow: ['var(--font-barlow font-bold)', 'sans-serif'],
+        barlow: ['var(--font-barlow)', 'sans-serif'],
       },
     },
   },
