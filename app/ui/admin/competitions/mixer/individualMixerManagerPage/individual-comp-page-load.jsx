@@ -157,7 +157,7 @@ export default function IndividualCompPageLoad({
     );
   };
   return (
-    <div>
+    <div className="w-full overflow-hidden">
       {isDivisionPopup && (
         <EditDivisionPopUp
           onCancel={() => setIsDivisionPopup(false)}
@@ -429,18 +429,18 @@ export default function IndividualCompPageLoad({
       </div>
       <div>
         <h3 className="text-3xl mt-3">Climbers</h3>
-        <div className="bg-bg2 flex-col gap-2 flex p-3 rounded w-full">
+        <div className="bg-bg2 flex-col gap-2 flex p-3 rounded w-full overflow-hidden">
           {compClimbers.length > 0 ? (
-            <div className="w-full flex-col flex gap-2">
+            <div className="w-full flex-col flex gap-2 overflow-hidden">
               {displayedClimbers.map((climber) => (
-                <button key={climber.id}>
-                  <div className="grid bg-bg1 grid-cols-2 items-center p-1 px-2 w-full rounded">
-                    <p className="text-xl justify-self-start truncate">
+                <button key={climber.id} className="w-full">
+                  <div className="grid bg-bg1 grid-cols-[1fr,auto] items-center p-1 px-2 w-full max-w-full rounded">
+                    <p className="text-xl justify-self-start truncate max-w-[90%]">
                       {climber.name}
                     </p>
                     <p
                       className={clsx(
-                        'text-base place-self-end font-normal',
+                        'text-base whitespace-nowrap place-self-end font-normal',
                         climber.entryMethod === 'APP'
                           ? 'text-green-500'
                           : 'text-white'

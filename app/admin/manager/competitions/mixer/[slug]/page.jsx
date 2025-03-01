@@ -43,8 +43,8 @@ export default async function page({ params }) {
     );
   }
   return (
-    <div className="w-screen py-5 flex flex-col items-center font-barlow font-bold text-white">
-      <div className="max-w-md flex-col ">
+    <div className="w-full max-w-full py-5 flex flex-col items-center font-barlow font-bold text-white">
+      <div className="max-w-md flex-col overflow-hidden">
         <Link
           href={'/admin/manager/competitions/mixer'}
           className="flex gap-1 items-center "
@@ -67,7 +67,7 @@ export default async function page({ params }) {
             Mixer Manager
           </p>
         </Link>
-        <div className="">
+        <div className="w-full overflow-hidden">
           <IndividualCompPageLoad
             name={comp.name}
             status={comp.status}
