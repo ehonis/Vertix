@@ -61,7 +61,7 @@ export default function IndividualCompPageLoad({
           <span className="text-green-400 font-bold underline">
             AreAvailable:
           </span>{' '}
-          After the comp is finished and after the manual user's points have
+          After the comp is finished and after the manual user{"'"}s points have
           entered, you can turn this setting to release the leaderboard to
           everyone. This should be done right before the announcement of
           rankings.
