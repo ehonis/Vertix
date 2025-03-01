@@ -2,9 +2,15 @@ import Link from 'next/link';
 import prisma from '@/prisma';
 import IndividualCompPageLoad from '@/app/ui/admin/competitions/mixer/individualMixerManagerPage/individual-comp-page-load';
 import { auth } from '@/auth';
+import { redirect } from 'next/navigation';
 import { EntryMethod } from '@prisma/client';
 
 export default async function page({ params }) {
+  const session = await auth();
+  const user = session?.user || null;
+  if (!user.admin) {
+    redirect('/');
+  }
   const { slug } = await params;
   const compId = slug;
   const comp = await prisma.MixerCompetition.findFirst({
@@ -15,16 +21,16 @@ export default async function page({ params }) {
   });
   const compDivisions = await prisma.MixerDivision.findMany({
     where: { competitionId: compId },
-    select: { name: true },
+    select: { id: true, name: true },
   });
   const compClimbers = await prisma.MixerClimber.findMany({
     where: { competitionId: compId },
     select: { id: true, name: true, entryMethod: true },
   });
-  console.log(compClimbers);
+  // console.log(compClimbers);
   // console.log(compDivisions);
-  // // console.log(compRoutes);
-  // // console.log(comp);
+  // console.log(compRoutes);
+  // console.log(comp);
   // console.log(comp.areScoresAvailable);
   if (!comp) {
     return (
@@ -37,8 +43,8 @@ export default async function page({ params }) {
     );
   }
   return (
-    <div className="w-screen  py-5 flex flex-col items-center font-barlow font-bold text-white">
-      <div className="max-w-lg flex-col w-full px-5">
+    <div className="w-screen py-5 flex flex-col items-center font-barlow font-bold text-white">
+      <div className="max-w-md flex-col ">
         <Link
           href={'/admin/manager/competitions/mixer'}
           className="flex gap-1 items-center "

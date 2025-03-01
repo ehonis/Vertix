@@ -6,6 +6,7 @@ import InformationalPopUp from '@/app/ui/general/informational-pop-up';
 import { clsx } from 'clsx';
 import EditRoutePopUp from './mixer-edit-route-popup';
 import Image from 'next/image';
+import EditDivisionPopUp from './mixer-edit-division-popup';
 
 export default function IndividualCompPageLoad({
   name,
@@ -37,9 +38,15 @@ export default function IndividualCompPageLoad({
   const [infoPopUpHtml, setInfoPopUpHtml] = useState(<div></div>);
   const [statusOption, setStatusOption] = useState(status);
   const [isNewEditRoutePopUp, setIsNewEditRoutePopup] = useState(false);
+
   const [isEditRoutePopup, setIsEditRoutePopup] = useState(false);
-  const [tempHolds, setTempHolds] = useState();
+  const [tempHolds, setTempHolds] = useState([]);
+  const [tempRouteId, setTempRouteId] = useState(null);
   const [tempRouteName, setTempRouteName] = useState('');
+
+  const [isDivisionPopup, setIsDivisionPopup] = useState(false);
+  const [tempDivisionText, setTempDivisionText] = useState('');
+  const [tempDivisionId, setTempDivisionId] = useState('');
 
   const [showAllClimbers, setShowAllClimbers] = useState(false);
   const displayedClimbers = showAllClimbers
@@ -112,17 +119,53 @@ export default function IndividualCompPageLoad({
 
     if (tempRoute) {
       setTempHolds(tempRoute.holds);
+      setTempRouteId(tempRoute.id);
       setTempRouteName(tempRoute.name);
       setIsEditRoutePopup(true);
     } else {
       console.error(`Route with ID ${id} not found`);
     }
   };
-  useEffect(() => {
-    console.log(isScoresAvailable);
-  }, [isScoresAvailable]);
+
+  const updateRouteHolds = (routeId, newHolds, newName) => {
+    setCompRoutes((prevRoutes) =>
+      prevRoutes.map((route) =>
+        route.id === routeId
+          ? { ...route, holds: newHolds, name: newName }
+          : route
+      )
+    );
+  };
+  const handleDivisionPopup = (id) => {
+    const tempDivision = compDivisions.find((division) => division.id === id);
+
+    if (tempDivision) {
+      setTempDivisionId(tempDivision.id);
+      setTempDivisionText(tempDivision.name);
+      setIsDivisionPopup(true);
+    } else {
+      console.error(`Division with ID ${id} not found`);
+    }
+  };
+  const updateDivision = (newDivisionName, divisionId) => {
+    setCompDivisions((prevDivisions) =>
+      prevDivisions.map((division) =>
+        division.id === divisionId
+          ? { ...division, name: newDivisionName }
+          : division
+      )
+    );
+  };
   return (
     <div>
+      {isDivisionPopup && (
+        <EditDivisionPopUp
+          onCancel={() => setIsDivisionPopup(false)}
+          divisionText={tempDivisionText}
+          divisionId={tempDivisionId}
+          updateDivision={updateDivision}
+        />
+      )}
       {isNewEditRoutePopUp && (
         <EditRoutePopUp
           onCancel={() => setIsNewEditRoutePopup(false)}
@@ -134,6 +177,8 @@ export default function IndividualCompPageLoad({
           onCancel={() => setIsEditRoutePopup(false)}
           holds={tempHolds}
           routeName={tempRouteName}
+          routeId={tempRouteId}
+          updateRouteHolds={updateRouteHolds}
         />
       )}
       {(isStatusInfoPopUp || isScoresAvailableInfoPopUp) && (
@@ -291,10 +336,11 @@ export default function IndividualCompPageLoad({
         <div className="bg-bg2 flex-col gap-2 flex p-3 rounded w-full">
           {compDivisions.length > 0 ? (
             <div className="flex flex-col gap-2">
-              {compDivisions.map((division, index) => (
+              {compDivisions.map((division) => (
                 <button
-                  key={index}
+                  key={division.id}
                   className="bg-bg1 w-full gap-3 rounded flex p-2 justify-center items-center"
+                  onClick={() => handleDivisionPopup(division.id)}
                 >
                   <p className="text-white font-barlow font-semibold text-xl">
                     {division.name}

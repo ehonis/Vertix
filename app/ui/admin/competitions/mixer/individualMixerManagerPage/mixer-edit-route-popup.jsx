@@ -1,21 +1,20 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import clsx from 'clsx';
 
-export default function EditRoutePopUp({ type, routeName, onCancel, holds }) {
+export default function EditRoutePopUp({
+  onCancel,
+  routeId,
+  routeName,
+  holds,
+  updateRouteHolds,
+}) {
   const [name, setName] = useState(routeName);
-  const [tempHolds, setTempHolds] = useState(holds ? [...holds] : []);
-
-  useEffect(() => {
-    if (name === null) {
-      setName('');
-    }
-  }, [name]);
+  const [tempHolds, setTempHolds] = useState([...holds]);
 
   const handleHoldChange = (index, field, value) => {
-    // Convert to string, remove leading zeros, then convert back to number
     const cleanedValue = Number(String(value).replace(/^0+/, '') || '0');
 
     setTempHolds((prevHolds) => {
@@ -25,6 +24,22 @@ export default function EditRoutePopUp({ type, routeName, onCancel, holds }) {
     });
   };
 
+  const handleAddHold = () => {
+    setTempHolds((prevHolds) => [
+      ...prevHolds,
+      {
+        holdNumber: prevHolds.length + 1, // Auto-increment hold number
+        topRopePoints: 0,
+        leadPoints: 0,
+      },
+    ]);
+  };
+
+  const handleSaveChanges = () => {
+    updateRouteHolds(routeId, tempHolds, name);
+    onCancel(); // Close the popup
+  };
+
   return (
     <div>
       <motion.div
@@ -32,7 +47,7 @@ export default function EditRoutePopUp({ type, routeName, onCancel, holds }) {
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: -20 }}
         transition={{ duration: 0.3 }}
-        className="fixed inset-0 flex items-center justify-center bg-black/50 z-20 "
+        className="fixed inset-0 flex items-center justify-center bg-black/50 z-20"
       >
         <motion.div
           initial={{ scale: 0.8 }}
@@ -59,15 +74,13 @@ export default function EditRoutePopUp({ type, routeName, onCancel, holds }) {
           </button>
           <h2 className="text-xl">Route Editor</h2>
 
-          <div className="mt-1">
-            <input
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              className="bg-bg1 p-2 rounded w-full"
-              placeholder="Route Name"
-            />
-          </div>
+          <input
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            className="bg-bg1 p-2 rounded w-full"
+            placeholder="Route Name"
+          />
 
           <div>
             <div className="grid grid-cols-3 bg-bg1 rounded px-1 mb-1">
@@ -76,7 +89,7 @@ export default function EditRoutePopUp({ type, routeName, onCancel, holds }) {
               <p className="place-self-end">Lead Pts</p>
             </div>
 
-            {/* Scrollable holds list */}
+            {/* Holds List */}
             <div className="max-h-80 overflow-y-auto rounded w-full p-1">
               {tempHolds.length > 0 ? (
                 <div className="flex flex-col gap-1 w-full">
@@ -94,10 +107,8 @@ export default function EditRoutePopUp({ type, routeName, onCancel, holds }) {
                           'outline outline-red-500'
                       )}
                     >
-                      {/* Non-editable Hold Number */}
                       <p className="text-start">{hold.holdNumber}</p>
 
-                      {/* Editable TR Points */}
                       <input
                         type="number"
                         value={hold.topRopePoints}
@@ -111,7 +122,6 @@ export default function EditRoutePopUp({ type, routeName, onCancel, holds }) {
                         className="bg-bg2 p-1 rounded w-3/4 text-center place-self-center"
                       />
 
-                      {/* Editable Lead Points */}
                       <input
                         type="number"
                         value={hold.leadPoints}
@@ -129,19 +139,10 @@ export default function EditRoutePopUp({ type, routeName, onCancel, holds }) {
             </div>
 
             {/* Add Hold Button */}
-            <div className="flex gap-1 items-center mt-2">
+            <div className="flex justify-between items-center mt-3">
               <button
-                onClick={() =>
-                  setTempHolds((prev) => [
-                    ...prev,
-                    {
-                      holdNumber: prev.length + 1,
-                      topRopePoints: 0,
-                      leadPoints: 0,
-                    },
-                  ])
-                }
-                className="bg-green-400 p-1 rounded-full max-w-fit"
+                className="bg-green-500 px-2 py-1 rounded-md flex items-center gap-2"
+                onClick={handleAddHold}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -149,7 +150,7 @@ export default function EditRoutePopUp({ type, routeName, onCancel, holds }) {
                   viewBox="0 0 24 24"
                   strokeWidth={2}
                   stroke="currentColor"
-                  className="size-7 "
+                  className="size-6"
                 >
                   <path
                     strokeLinecap="round"
@@ -157,8 +158,15 @@ export default function EditRoutePopUp({ type, routeName, onCancel, holds }) {
                     d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
                   />
                 </svg>
+                <span>Add Hold</span>
               </button>
-              <p>Add Hold</p>
+
+              <button
+                className="bg-blue-500 px-3 py-1 rounded-md"
+                onClick={handleSaveChanges}
+              >
+                Save Changes
+              </button>
             </div>
           </div>
         </motion.div>
