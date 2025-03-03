@@ -161,7 +161,7 @@ model MixerCompetition {
     year               Int
     status             String              @default("inactive") // inactive, upcoming, In Progress, completed
     imageUrl           String?
-    time               Int? //active climbing time for comp
+    time               Int                 @default(180)
     compDay            DateTime?
     mixerRoutes        MixerRoute[]
     climbers           MixerClimber[]

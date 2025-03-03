@@ -77,6 +77,7 @@ export default async function page({ params }) {
             divisions={compDivisions}
             areScoresAvailable={comp.areScoresAvailable}
             climbers={compClimbers}
+            time={comp.time}
           />
         </div>
       </div>
