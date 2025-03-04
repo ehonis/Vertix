@@ -9,19 +9,34 @@ export default function UsersComponent({
   ropeScores,
   boulderScores,
 }) {
-  const [compClimbers, setCompClimbers] = useState(climbers); //user
-  const [showAllClimbers, setShowAllClimbers] = useState(false); //user
+  const [compClimbers, setCompClimbers] = useState(climbers); //sets users for rendering
+  const [showAllClimbers, setShowAllClimbers] = useState(false); //for user rendering
   const displayedClimbers = showAllClimbers
     ? compClimbers
-    : compClimbers.slice(0, 10); //users
-  const [isEditClimberPopUp, setIsEditClimberPopUp] = useState(false);
-  const [foundClimber, setFoundClimber] = useState({});
+    : compClimbers.slice(0, 10); //for users rendering
+
+  const [foundClimber, setFoundClimber] = useState({}); //for popup
+  const [foundRopeScore, setFoundRopeScore] = useState({}); //for popup
+  const [foundBoulderScore, setFoundBoulderScore] = useState({}); //for popup
+
+  const [isEditClimberPopUp, setIsEditClimberPopUp] = useState(false); //for popup rendering
 
   const handleClimberClick = (climberId) => {
+    //find functions
     const tempFoundClimber = compClimbers.find(
       (climber) => climber.id === climberId
     );
+    const tempFoundRopeScore = ropeScores.find(
+      (score) => score.climberId === climberId
+    );
+    const tempFoundBoulderScore = boulderScores.find(
+      (score) => score.climberId === climberId
+    );
+    //set functions
+    setFoundRopeScore(tempFoundRopeScore);
+    setFoundBoulderScore(tempFoundBoulderScore);
     setFoundClimber(tempFoundClimber);
+
     setIsEditClimberPopUp(true);
   };
   const handleCancel = () => {
@@ -30,7 +45,12 @@ export default function UsersComponent({
   return (
     <div>
       {isEditClimberPopUp && (
-        <EditUserPopUp onCancel={handleCancel} climber={foundClimber} />
+        <EditUserPopUp
+          onCancel={handleCancel}
+          climber={foundClimber}
+          ropeScore={foundRopeScore}
+          boulderScore={foundBoulderScore}
+        />
       )}
       <div>
         <h3 className="text-3xl mt-3">Climbers</h3>
