@@ -2,22 +2,47 @@
 
 import { useEffect, useState } from 'react';
 import { clsx } from 'clsx';
+import EditUserPopUp from './mixer-edit-user-popup';
 
-export default function UsersComponent({ climbers }) {
+export default function UsersComponent({
+  climbers,
+  ropeScores,
+  boulderScores,
+}) {
   const [compClimbers, setCompClimbers] = useState(climbers); //user
   const [showAllClimbers, setShowAllClimbers] = useState(false); //user
   const displayedClimbers = showAllClimbers
     ? compClimbers
     : compClimbers.slice(0, 10); //users
+  const [isEditClimberPopUp, setIsEditClimberPopUp] = useState(false);
+  const [foundClimber, setFoundClimber] = useState({});
+
+  const handleClimberClick = (climberId) => {
+    const tempFoundClimber = compClimbers.find(
+      (climber) => climber.id === climberId
+    );
+    setFoundClimber(tempFoundClimber);
+    setIsEditClimberPopUp(true);
+  };
+  const handleCancel = () => {
+    setIsEditClimberPopUp(false);
+  };
   return (
     <div>
+      {isEditClimberPopUp && (
+        <EditUserPopUp onCancel={handleCancel} climber={foundClimber} />
+      )}
       <div>
         <h3 className="text-3xl mt-3">Climbers</h3>
         <div className="bg-bg2 flex-col gap-2 flex p-3 rounded w-full overflow-hidden">
           {compClimbers.length > 0 ? (
             <div className="w-full flex-col flex gap-2 overflow-hidden">
               {displayedClimbers.map((climber) => (
-                <button key={climber.id} className="w-full">
+                <button
+                  key={climber.id}
+                  className="w-full"
+                  onClick={() => handleClimberClick(climber.id)}
+                >
                   <div className="grid bg-bg1 grid-cols-[1fr,auto] items-center p-1 px-2 w-full max-w-full rounded">
                     <p className="text-xl justify-self-start truncate max-w-[90%]">
                       {climber.name}

@@ -1,7 +1,7 @@
-import VariablesComponent from './components/variables-component';
-import DivisionsComponent from './components/divisions-component';
-import RoutesComponent from './components/routes-components';
-import UsersComponent from './components/users-component';
+import VariablesComponent from './components/variables/variables-component';
+import DivisionsComponent from './components/divisions/divisions-component';
+import RoutesComponent from './components/routes/routes-component';
+import UsersComponent from './components/users/users-component';
 
 export default function IndividualCompPageLoad({
   name,
@@ -13,11 +13,12 @@ export default function IndividualCompPageLoad({
   time,
   status,
   divisions,
+  ropeScores,
+  boulderScores,
 }) {
   return (
     <div className="w-full overflow-hidden">
       <h2 className="text-4xl mb-3 ">{name}</h2>
-      {/*Route Variables*/}
       <VariablesComponent
         compDay={compDay}
         areScoresAvailable={areScoresAvailable}
@@ -25,12 +26,13 @@ export default function IndividualCompPageLoad({
         time={time}
         imageUrl={imageUrl}
       />
-      {/* divisions */}
       <DivisionsComponent divisions={divisions} />
-      {/* routes */}
       <RoutesComponent routes={routes} />
-      {/* climbers */}
-      <UsersComponent climbers={climbers} />
+      <UsersComponent
+        climbers={climbers}
+        ropeScores={ropeScores}
+        boulderScores={boulderScores}
+      />
     </div>
   );
 }

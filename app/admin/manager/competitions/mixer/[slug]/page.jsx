@@ -25,13 +25,22 @@ export default async function page({ params }) {
   });
   const compClimbers = await prisma.MixerClimber.findMany({
     where: { competitionId: compId },
-    select: { id: true, name: true, entryMethod: true },
+    select: { id: true, name: true, entryMethod: true, userId: true },
   });
+  const compBoulderScores = await prisma.MixerBoulderScore.findMany({
+    where: { competitionId: compId },
+    select: { id: true, climberId: true, score: true, attempts: true },
+  });
+  const compRopeScores = await prisma.MixerRopeScore.findMany({
+    where: { competitionId: compId },
+  });
+
   // console.log(compClimbers);
   // console.log(compDivisions);
   // console.log(compRoutes);
   // console.log(comp);
   // console.log(comp.areScoresAvailable);
+  // console.log(compRopeScores);
   if (!comp) {
     return (
       <div className="w-screen py-5 flex flex-col items-center font-barlow font-bold text-white">
@@ -73,11 +82,13 @@ export default async function page({ params }) {
             status={comp.status}
             compDay={comp.compDay}
             imageUrl={comp.imageUrl}
+            areScoresAvailable={comp.areScoresAvailable}
+            time={comp.time}
             routes={compRoutes}
             divisions={compDivisions}
-            areScoresAvailable={comp.areScoresAvailable}
             climbers={compClimbers}
-            time={comp.time}
+            ropeScores={compRopeScores}
+            boulderScores={compBoulderScores}
           />
         </div>
       </div>

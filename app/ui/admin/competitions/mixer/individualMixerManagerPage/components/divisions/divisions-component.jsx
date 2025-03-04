@@ -1,5 +1,6 @@
 'use client';
-import EditDivisionPopUp from '../mixer-edit-division-popup';
+
+import EditDivisionPopUp from './mixer-edit-division-popup';
 import { useEffect, useState } from 'react';
 import clsx from 'clsx';
 

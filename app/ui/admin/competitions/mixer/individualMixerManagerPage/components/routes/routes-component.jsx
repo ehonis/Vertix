@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
-import EditRoutePopUp from '../mixer-edit-route-popup';
+import EditRoutePopUp from './mixer-edit-route-popup';
 import { clsx } from 'clsx';
 
 export default function RoutesComponent({ routes }) {
