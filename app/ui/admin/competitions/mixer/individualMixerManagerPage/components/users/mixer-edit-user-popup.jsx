@@ -3,6 +3,8 @@ import { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import clsx from 'clsx';
 import Image from 'next/image';
+import FindUserPopUp from './mixer-find-user-popup';
+
 export default function EditUserPopUp({
   onCancel,
   climber,
@@ -22,6 +24,10 @@ export default function EditUserPopUp({
   );
   const [tempRopeAttempts, setTempRopeAttempts] = useState(ropeScore.attempts);
 
+  const [isSaveButton, setIsSaveButton] = useState(false);
+  const [isUserSearchPopUp, setIsUserSearchPopUp] = useState(false);
+
+  // Fetch connected user if entry method is APP
   useEffect(() => {
     const getConnectUser = async () => {
       const queryData = new URLSearchParams({
@@ -50,10 +56,77 @@ export default function EditUserPopUp({
     };
 
     setConnectedUserAsync();
-  }, []);
+  }, [climber.userId, entryMethod]);
+
+  // Check for changes in any field
+  useEffect(() => {
+    // Check if any field has changed from its original value
+    const hasChanges =
+      climberName !== climber.name ||
+      entryMethod !== climber.entryMethod ||
+      tempBoulderScore !== boulderScore.score ||
+      tempBoulderAttempts !== boulderScore.attempts ||
+      tempRopeScore !== ropeScore.score ||
+      tempRopeAttempts !== ropeScore.attempts;
+
+    setIsSaveButton(hasChanges);
+  }, [
+    climberName,
+    entryMethod,
+    tempBoulderScore,
+    tempBoulderAttempts,
+    tempRopeScore,
+    tempRopeAttempts,
+    climber.name,
+    climber.entryMethod,
+    boulderScore.score,
+    boulderScore.attempts,
+    ropeScore.score,
+    ropeScore.attempts,
+  ]);
+
+  // Handle form changes
+  const handleNameChange = (e) => {
+    setClimberName(e.target.value);
+  };
+
+  const handleEntryMethodChange = (e) => {
+    setEntryMethod(e.target.value);
+  };
+
+  const handleBoulderScoreChange = (e) => {
+    setTempBoulderScore(e.target.value);
+  };
+
+  const handleBoulderAttemptsChange = (e) => {
+    setTempBoulderAttempts(e.target.value);
+  };
+
+  const handleRopeScoreChange = (e) => {
+    setTempRopeScore(e.target.value);
+  };
+
+  const handleRopeAttemptsChange = (e) => {
+    setTempRopeAttempts(e.target.value);
+  };
+
+  // Handle form submission
+  const handleSubmit = async () => {
+    // Implement your update logic here
+    console.log('Updating changes...');
+  };
+  const handleUpdateConnectedUser = (user) => {
+    setConnectedUser(user);
+  };
 
   return (
     <div>
+      {isUserSearchPopUp && (
+        <FindUserPopUp
+          onCancel={() => setIsUserSearchPopUp(false)}
+          onConnectUser={handleUpdateConnectedUser}
+        />
+      )}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -92,14 +165,14 @@ export default function EditUserPopUp({
               value={climberName}
               name=""
               id=""
-              onChange={(e) => setClimberName(e.target.value)}
+              onChange={handleNameChange}
               className="text-white rounded-l bg-bg0 px-2 py-1 w-48"
             />
             <select
               name=""
               id=""
               value={entryMethod}
-              onChange={(e) => setEntryMethod(e.target.value)}
+              onChange={handleEntryMethodChange}
               className={clsx(
                 'font-light bg-bg1 p-1 rounded-r text-center w-24',
                 entryMethod === 'MANUAL' ? 'text-gray-300' : 'text-green-400'
@@ -110,7 +183,17 @@ export default function EditUserPopUp({
             </select>
           </div>
           {/* connected user */}
-          {connectedUser !== null && (
+          {connectedUser === null && entryMethod === 'APP' ? (
+            <div className="flex justify-center">
+              <button
+                className="px-2 py-1 bg-blue-500 rounded w-72 "
+                onClick={() => setIsUserSearchPopUp(true)}
+              >
+                Connect to a User
+              </button>
+            </div>
+          ) : null}
+          {connectedUser !== null && entryMethod === 'APP' ? (
             <div className="flex justify-center">
               <div className="flex bg-bg1 items-center p-2 rounded w-72 justify-between">
                 {/* user image */}
@@ -150,7 +233,7 @@ export default function EditUserPopUp({
                 </div>
               </div>
             </div>
-          )}
+          ) : null}
 
           {/* boulder scores */}
           <div className="flex flex-col bg-bg1 rounded p-2 gap-2 w-72 place-self-center">
@@ -164,7 +247,7 @@ export default function EditUserPopUp({
                 name=""
                 id=""
                 value={tempBoulderScore}
-                onChange={(e) => setTempBoulderScore(e.target.value)}
+                onChange={handleBoulderScoreChange}
                 className="w-16 bg-white text-bg1 rounded px-2  text-sm"
               />
               <label htmlFor=" " className="text-sm">
@@ -175,7 +258,7 @@ export default function EditUserPopUp({
                 name=""
                 id=""
                 value={tempBoulderAttempts}
-                onChange={(e) => setTempBoulderAttempts(e.target.value)}
+                onChange={handleBoulderAttemptsChange}
                 className="w-10 bg-white text-bg1 rounded px-2 text-sm"
               />
             </div>
@@ -192,7 +275,7 @@ export default function EditUserPopUp({
                 name=""
                 id=""
                 value={tempRopeScore}
-                onChange={(e) => setTempRopeScore(e.target.value)}
+                onChange={handleRopeScoreChange}
                 className="w-16 bg-white text-bg1 rounded px-2 text-sm"
               />
               <label htmlFor="" className="text-sm">
@@ -202,12 +285,20 @@ export default function EditUserPopUp({
                 type="text"
                 name=""
                 id=""
-                value={tempBoulderAttempts}
-                onChange={(e) => setTempRopeAttempts(e.target.value)}
+                value={tempRopeAttempts}
+                onChange={handleRopeAttemptsChange}
                 className="w-10 bg-white text-bg1 rounded px-2 text-sm"
               />
             </div>
           </div>
+          {isSaveButton && (
+            <button
+              className="px-2 py-1 mr-1 bg-green-500 rounded place-self-end font-normal"
+              onClick={handleSubmit}
+            >
+              Update Changes
+            </button>
+          )}
         </motion.div>
       </motion.div>
     </div>
