@@ -4,6 +4,7 @@ import RoutesComponent from './components/routes/routes-component';
 import UsersComponent from './components/users/users-component';
 
 export default function IndividualCompPageLoad({
+  compId,
   name,
   imageUrl,
   climbers,
@@ -29,6 +30,7 @@ export default function IndividualCompPageLoad({
       <DivisionsComponent divisions={divisions} />
       <RoutesComponent routes={routes} />
       <UsersComponent
+        compId={compId}
         climbers={climbers}
         ropeScores={ropeScores}
         boulderScores={boulderScores}

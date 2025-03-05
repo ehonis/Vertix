@@ -78,6 +78,7 @@ export default async function page({ params }) {
         </Link>
         <div className="w-full overflow-hidden">
           <IndividualCompPageLoad
+            compId={compId}
             name={comp.name}
             status={comp.status}
             compDay={comp.compDay}

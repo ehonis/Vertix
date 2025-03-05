@@ -4,7 +4,7 @@ import prisma from '@/prisma';
 export async function POST(request) {
   const { routeId, newTitle, newType, newGrade, newDate, newLocation } =
     await request.json();
-  console.log(routeId, newTitle, newType, newGrade, newDate, newLocation);
+
   try {
     await prisma.Route.update({
       where: { id: routeId },

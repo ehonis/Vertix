@@ -46,7 +46,6 @@ export default function FindUserPopUp({ onConnectUser, onCancel }) {
       }
       const result = await response.json();
       setFoundUsers(result.users);
-      console.log(result);
     } catch (error) {
       console.error(error);
     } finally {
