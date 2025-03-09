@@ -34,7 +34,7 @@ export default function HomeLogoAnimation() {
           setCharIndex(charIndex + 1);
         }, 150);
       } else {
-        setTimeout(() => setIsDeleting(true), 2000); // Pause before deleting
+        setTimeout(() => setIsDeleting(true), 1900); // Pause before deleting
       }
     }
   }, [charIndex, isDeleting, wordIndex]);
