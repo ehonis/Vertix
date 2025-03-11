@@ -60,7 +60,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" className={`${tomorrow.variable} ${barlow.variable}`}>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${jerseyFont.variable} ${icelandFont.variable} ${stalinistFont.variable} ${orbitronFont.variable} ${tomorrow.variable} ${barlow.variable}antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${jerseyFont.variable} ${icelandFont.variable} ${stalinistFont.variable} ${orbitronFont.variable} ${tomorrow.variable} ${barlow.variable}antialiased min-h-screen w-screen bg-gradient-to-br from-[#202224] to-gray-900 bg-fixed`}
       >
         <NotificationProvider>
           <Notification />

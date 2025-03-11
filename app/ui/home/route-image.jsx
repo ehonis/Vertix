@@ -31,7 +31,7 @@ export default function RouteImage() {
             duration: 0.3,
             ease: 'easeIn',
           }}
-          className="relative  outline-1 w-80 h-36 md:w-1/3 md:h-48 rounded-md overflow-hidden"
+          className="relative  outline-1 w-[70%] h-36 md:w-1/3 md:h-48 rounded-md overflow-hidden"
         >
           <div className="absolute inset-0 bg-gradient-to-l from-black/100 to-transparent z-10 min-w-full" />
 
@@ -49,7 +49,7 @@ export default function RouteImage() {
 
           <Link
             href={content.pageUrl}
-            className="absolute flex items-center gap-2 right-6 top-1/2 -translate-y-1/2 z-20 bg-blue-500 text-white font-barlow font-bold px-2 py-2 rounded-md outline"
+            className="absolute flex items-center gap-2 right-6 top-1/2 -translate-y-1/2 z-20 bg-blue-500/65 outline-blue-500 outline outline-1 text-white font-barlow font-bold px-2 py-2 rounded-md "
           >
             <p className="md:text-3xl">{content.text}</p>
 

@@ -2,21 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #202224;
-  --foreground: #202224;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #202224;
-    --foreground: #202224;
-  }
-}
-
 body {
-  color: var(--foreground);
-  background: var(--background);
+  margin: 0;
+  padding: 0;
+  /* Let the height grow with content; using min-height: 100% or auto works best */
+  min-height: 100%;
   font-family: Arial, Helvetica, sans-serif;
 }
 .font-jersey {
@@ -189,6 +179,12 @@ body {
       rgb(255, 255, 0),
       rgb(255, 204, 0)
     );
+  }
+  .blue-button {
+    /* 25% opacity of #3B82F6 */
+    background-color: rgba(59, 130, 246, 0.25);
+    /* Tailwind's default outline uses a 1px solid border */
+    outline: 1px solid #3b82f6;
   }
 }
 @keyframes flash {

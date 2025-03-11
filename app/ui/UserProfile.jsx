@@ -40,7 +40,7 @@ export default function UserProfile() {
   if (!user) {
     return (
       <Link href={'/signin'}>
-        <span className="bg-blue-500 p-2 rounded text-white font-barlow font-bold text-xs md:text-base">
+        <span className="blue-button p-2 rounded text-white font-barlow font-bold text-sm md:text-base">
           Sign In
         </span>
       </Link>

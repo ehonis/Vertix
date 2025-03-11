@@ -10,9 +10,6 @@ export default function page() {
         <TrophyIcon />
       </div>
 
-      {/* Blue Fade Background */}
-      <div className="-z-10 fixed bottom-0 left-0 w-full h-[66%] bg-gradient-to-t from-blue-500 to-transparent"></div>
-
       {/* Events Header */}
       <h1 className="font-barlow font-bold text-white text-3xl flex justify-center mt-16 relative">
         Competitions
