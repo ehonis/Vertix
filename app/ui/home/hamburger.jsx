@@ -181,12 +181,14 @@ export default function HamburgerMenu() {
                 <Link
                   className="blue-button rounded-sm px-5 py-3"
                   href={'/signin'}
+                  onClick={closeMenu}
                 >
-                  Sign In
+                  Login
                 </Link>
                 <Link
                   className="bg-purple-600/15 outline-purple-400 outline outline-1 rounded-sm px-5 py-3"
                   href={'/signin'}
+                  onClick={closeMenu}
                 >
                   Sign Up
                 </Link>
