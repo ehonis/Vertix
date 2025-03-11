@@ -20,14 +20,14 @@ export default function RouteImage() {
     },
   ];
   return (
-    <div className="mt-20 flex flex-col gap-3 md:flex-row md:gap-5 md:mt-28 w-screen items-center md:justify-center">
+    <div className="mt-10 flex flex-col gap-3 md:flex-row md:gap-5 md:mt-10 w-screen items-center md:justify-center">
       {content.map((content, index) => (
         <motion.div
           key={index}
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{
-            delay: baseDelay + index * 0.3 + 1.1,
+            delay: 0.15,
             duration: 0.3,
             ease: 'easeIn',
           }}

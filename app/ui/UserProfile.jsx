@@ -40,7 +40,7 @@ export default function UserProfile() {
   if (!user) {
     return (
       <Link href={'/signin'}>
-        <span className="blue-button p-2 rounded text-white font-barlow font-bold text-sm md:text-base">
+        <span className="bg-purple-400/20 outline outline-purple-400 outline-1 p-2 rounded text-white font-barlow font-bold text-sm md:text-base">
           Sign In
         </span>
       </Link>
@@ -80,7 +80,7 @@ export default function UserProfile() {
         <div
           ref={profileRef}
           className={clsx(
-            'z-50 fixed flex flex-col  h-max w-56 bg-bg1 top-[4.5rem] justify-start transition-all p-3 duration-700 transform gap-2 right-0 rounded',
+            'z-50 fixed flex flex-col  h-max w-56 bg-bg1 top-[5.5rem] justify-start transition-all p-3 duration-700 transform gap-2 right-[12.5rem] rounded',
             isProfilePopUp
               ? 'opacity-100 -translate-x-2'
               : 'opacity-0 translate-x-full'

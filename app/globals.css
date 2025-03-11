@@ -185,8 +185,17 @@ body {
     background-color: rgba(59, 130, 246, 0.25);
     /* Tailwind's default outline uses a 1px solid border */
     outline: 1px solid #3b82f6;
+    border-radius: 0.125rem;
+    padding-left: 0.5rem /* 8px */;
+    padding-right: 0.5rem;
+  }
+  .purple-button {
+    background-color: rgba(124, 58, 237, 0.15);
+    outline: 1px solid #a78bfa;
+    border-radius: 0.125rem;
   }
 }
+
 @keyframes flash {
   0% {
     opacity: 1;
@@ -201,6 +210,9 @@ body {
 
 .animate-flash-slow {
   animation: flash 3s infinite ease-in-out; /* Change duration to adjust the speed */
+}
+.animate-flash-fast {
+  animation: flash 1s infinite ease-in-out; /* Change duration to adjust the speed */
 }
 
 .scrollbar-hide::-webkit-scrollbar {
