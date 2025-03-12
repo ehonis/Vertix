@@ -124,7 +124,7 @@ export default function StarRatingMenu({ route, userId, onCancel, rating }) {
             value={comment}
             onChange={handleCommentChange}
             placeholder="Optional Comment"
-            className="bg-bg2 rounded w-full text-sm h-16 p-2 max-h-40 min-h-10"
+            className="bg-bg2 rounded-sm w-full text-sm h-16 p-2 max-h-40 min-h-10"
           ></textarea>
           <p className="font-barlow font-bold text-xs text-slate-500 italic">
             Only the routesetter can see what you write
@@ -134,7 +134,7 @@ export default function StarRatingMenu({ route, userId, onCancel, rating }) {
 
       <div className="flex justify-end p-2">
         <button
-          className="text-white bg-blue-400 p-2 rounded "
+          className="text-white bg-blue-400 p-2 rounded-sm "
           onClick={handleConfirmation}
         >
           {rating?.stars ? 'Update' : 'Submit'}

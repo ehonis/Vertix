@@ -57,14 +57,14 @@ export default function RoutesComponent({ routes }) {
       )}
       <div>
         <h3 className="text-3xl mt-3">Routes</h3>
-        <div className="bg-bg2 flex-col gap-2 flex p-3 rounded w-full">
+        <div className="bg-bg2 flex-col gap-2 flex p-3 rounded-sm w-full">
           {compRoutes.length > 0 ? (
             <div className="w-full flex-col flex gap-2">
               {compRoutes.map((route) => (
                 <button
                   key={route.id}
                   className={clsx(
-                    ' flex p-1 rounded',
+                    ' flex p-1 rounded-sm',
                     route.color === 'red' && 'bg-red-500',
                     route.color === 'blue' && 'bg-blue-500',
                     route.color === 'green' && 'bg-green-400',
@@ -73,7 +73,7 @@ export default function RoutesComponent({ routes }) {
                   )}
                   onClick={() => handleEditRoutePopUp(route.id)}
                 >
-                  <div className="grid bg-bg1 grid-cols-2 items-center p-1 px-2 w-full rounded">
+                  <div className="grid bg-bg1 grid-cols-2 items-center p-1 px-2 w-full rounded-sm">
                     <p className="text-xl place-self-start">{route.name}</p>
                     <p className="text-xl place-self-end">
                       Holds: {route.holds.length}

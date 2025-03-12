@@ -89,7 +89,7 @@ export default function ProfileSettingsPane({ userData }) {
         <input
           type="text"
           value={name}
-          className="p-1 rounded font-barlow font-bold focus:outline-none"
+          className="p-1 rounded-sm font-barlow font-bold focus:outline-hidden"
           onChange={handleNameChange}
         />
       </div>
@@ -104,7 +104,7 @@ export default function ProfileSettingsPane({ userData }) {
           <input
             type="text"
             value={id}
-            className="p-1 rounded-r font-barlow font-bold focus:outline-none"
+            className="p-1 rounded-r font-barlow font-bold focus:outline-hidden"
             onChange={handleIdChange}
           />
         </div>
@@ -119,7 +119,7 @@ export default function ProfileSettingsPane({ userData }) {
       </div>
       {isSaveButton ? (
         <div className="flex w-full justify-end">
-          <button className="bg-green-500 text-white w-32 p-1 rounded font-barlow font-bold">
+          <button className="bg-green-500 text-white w-32 p-1 rounded-sm font-barlow font-bold">
             Save Changes?
           </button>
         </div>

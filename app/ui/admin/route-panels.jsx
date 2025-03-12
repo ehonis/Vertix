@@ -90,14 +90,14 @@ export default function RoutePanels({ routes }) {
       )}
       <div className="flex justify-between">
         <button
-          className="rounded bg-slate-500 text-white font-bold p-2"
+          className="rounded-sm bg-slate-500 text-white font-bold p-2"
           onClick={handleEditClick}
         >
           Edit
         </button>
         {isEdit ? (
           <button
-            className="rounded bg-red-500 text-white font-bold p-2 "
+            className="rounded-sm bg-red-500 text-white font-bold p-2 "
             onClick={handleDelete}
           >
             Delete

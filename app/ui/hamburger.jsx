@@ -181,14 +181,14 @@ export default function HamburgerMenu({ user, status }) {
               <p className="text-lg">Not Signed in</p>
               <div className="flex gap-4">
                 <Link
-                  className="blue-button rounded-sm px-5 py-3"
+                  className="blue-button rounded-xs px-5 py-3"
                   href={'/signin'}
                   onClick={closeMenu}
                 >
                   Login
                 </Link>
                 <Link
-                  className="bg-purple-600/15 outline-purple-400 outline outline-1 rounded-sm px-5 py-3"
+                  className="bg-purple-600/15 outline-purple-400 outline outline-1 rounded-xs px-5 py-3"
                   href={'/signin'}
                   onClick={closeMenu}
                 >
@@ -213,7 +213,7 @@ export default function HamburgerMenu({ user, status }) {
                           key={link.name}
                           href={link.url}
                           onClick={closeMenu}
-                          className={`grid grid-cols-3 w-full blue-button rounded p-2 font-semibold text-center ${link.extraStyles}`}
+                          className={`grid grid-cols-3 w-full blue-button rounded-sm p-2 font-semibold text-center ${link.extraStyles}`}
                         >
                           <span>{link.icon}</span>
                           <p

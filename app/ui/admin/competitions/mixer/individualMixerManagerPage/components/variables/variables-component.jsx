@@ -122,13 +122,13 @@ export default function VariablesComponent({
         id=""
         value={compName}
         onChange={(e) => setCompName(e.target.value)}
-        className=" text-4xl mb-3 bg-transparent  max-w-sm focus:outline-none"
+        className=" text-4xl mb-3 bg-transparent  max-w-sm focus:outline-hidden"
       />
 
-      <div className="bg-bg2 flex-col flex p-3 rounded w-full">
+      <div className="bg-bg2 flex-col flex p-3 rounded-sm w-full">
         <div className="flex flex-col  gap-2">
           {/*Comp Image*/}
-          <div className="flex justify-between gap-2 bg-bg1 rounded p-2 pr-3 items-center">
+          <div className="flex justify-between gap-2 bg-bg1 rounded-sm p-2 pr-3 items-center">
             <div className="flex flex-col">
               <label htmlFor="" className="text-xl">
                 Comp Image
@@ -162,7 +162,7 @@ export default function VariablesComponent({
             </button>
           </div>
           {/* areScoresAvailable */}
-          <div className="flex gap-2 bg-bg1 rounded p-2 justify-between items-center">
+          <div className="flex gap-2 bg-bg1 rounded-sm p-2 justify-between items-center">
             <div className="flex items-center">
               <label htmlFor="" className="text-xl">
                 Scores:
@@ -202,7 +202,7 @@ export default function VariablesComponent({
             </select>
           </div>
           {/* status */}
-          <div className="flex gap-2 bg-bg1 rounded p-2 justify-between items-center">
+          <div className="flex gap-2 bg-bg1 rounded-sm p-2 justify-between items-center">
             <div className="flex items-center">
               <label htmlFor="" className="text-xl">
                 Status
@@ -246,7 +246,7 @@ export default function VariablesComponent({
             </select>
           </div>
           {/* time alloted */}
-          <div className="flex gap-2 bg-bg1 rounded p-2 justify-between items-center">
+          <div className="flex gap-2 bg-bg1 rounded-sm p-2 justify-between items-center">
             <label htmlFor="" className="text-lg">
               Time Allotted
             </label>
@@ -259,13 +259,13 @@ export default function VariablesComponent({
                 pattern="[0-9]*"
                 onChange={handleAlottedTimeChange}
                 placeholder="#"
-                className="bg-bg2 rounded p-1 w-10 text-center hide-spinners focus:outline-none"
+                className="bg-bg2 rounded-sm p-1 w-10 text-center hide-spinners focus:outline-hidden"
               />
               <label htmlFor="">Min</label>
             </div>
           </div>
           {/* comp day */}
-          <div className="flex gap-2 bg-bg1 rounded p-2 justify-between items-center">
+          <div className="flex gap-2 bg-bg1 rounded-sm p-2 justify-between items-center">
             <label htmlFor="" className="text-lg">
               Comp Day
             </label>
@@ -275,7 +275,7 @@ export default function VariablesComponent({
               name="date"
               value={selectedDate} // Controlled value
               onChange={(e) => setSelectedDate(e.target.value)} // Update state on change
-              className="p-1 rounded-lg bg-bg2 text-white cursor-pointer font-barlow font-bold focus:outline-none"
+              className="p-1 rounded-lg bg-bg2 text-white cursor-pointer font-barlow font-bold focus:outline-hidden"
             />
           </div>
         </div>

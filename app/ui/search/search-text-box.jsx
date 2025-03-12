@@ -47,7 +47,7 @@ export default function SearchTextBox({ onDataFetch }) {
           <button
             className={clsx(
               'bg-bg2 outline outline-1 outline-gray-400 px-2 py-1 rounded-full ',
-              routesBool ? 'bg-green-400 outline-none' : null
+              routesBool ? 'bg-green-400 outline-hidden' : null
             )}
             onClick={handleRoutesButtonChange}
           >
@@ -58,7 +58,7 @@ export default function SearchTextBox({ onDataFetch }) {
           <button
             className={clsx(
               'bg-bg2 outline outline-1 outline-gray-400 px-2 py-1 rounded-full text-white font-barlow font-bold drop-shadow-customBlack',
-              profilesBool ? 'bg-green-400 outline-none' : null
+              profilesBool ? 'bg-green-400 outline-hidden' : null
             )}
             onClick={handleProfilesButtonChange}
           >
@@ -72,7 +72,7 @@ export default function SearchTextBox({ onDataFetch }) {
         <div className="bg-bg2 outline outline-1 outline-gray-400 rounded-l-full w-9/12 md:w-1/2 h-12 flex items-center justify-between px-5 text-white font-barlow font-bold drop-shadow-customBlack">
           <input
             type="text"
-            className="bg-transparent w-full font-barlow font-bold text-white focus:outline-none"
+            className="bg-transparent w-full font-barlow font-bold text-white focus:outline-hidden"
             placeholder="Search..."
             value={searchText}
             onChange={handleTextChange}

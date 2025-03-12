@@ -79,13 +79,13 @@ export default async function Page() {
               </svg>
             </Link>
           </div>
-          <div className="bg-bg1 mx-5 rounded md:p-5 p-0 py-3">
+          <div className="bg-bg1 mx-5 rounded-sm md:p-5 p-0 py-3">
             <h2 className="text-white text-2xl font-extrabold px-5">Ropes</h2>
             <div className="flex p-5">
               <RoutePanels routes={ropeRoutes} />
             </div>
           </div>
-          <div className="bg-bg1 m-5 rounded md:p-5 p-0 py-3">
+          <div className="bg-bg1 m-5 rounded-sm md:p-5 p-0 py-3">
             <h2 className="text-white text-2xl font-extrabold px-5">
               Boulders
             </h2>

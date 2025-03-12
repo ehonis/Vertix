@@ -1,7 +1,4 @@
-/** @type {import('tailwindcss').Config} */
-const { withUt } = require('uploadthing/tw');
-
-module.exports = withUt({
+module.exports = {
   content: [
     './pages/**/*.{js,ts,jsx,tsx,mdx}',
     './components/**/*.{js,ts,jsx,tsx,mdx}',
@@ -67,4 +64,4 @@ module.exports = withUt({
     'bg-black',
   ],
   plugins: [],
-});
+};

@@ -146,7 +146,7 @@ export default function EditRoute({ route, images, daysOld, totalSends }) {
           <input
             type="text"
             defaultValue={route.title}
-            className="text-black font-barlow font-bold text-center p-2 rounded text-xl focus:outline-none"
+            className="text-black font-barlow font-bold text-center p-2 rounded-sm text-xl focus:outline-hidden"
             onChange={handleTitleChange}
           />
           <button className="flex flex-col items-center">
@@ -200,7 +200,7 @@ export default function EditRoute({ route, images, daysOld, totalSends }) {
                 <select
                   name="type"
                   id="type"
-                  className="font-barlow font-bold rounded"
+                  className="font-barlow font-bold rounded-sm"
                   value={type}
                   onChange={handleTypeChange}
                 >
@@ -218,7 +218,7 @@ export default function EditRoute({ route, images, daysOld, totalSends }) {
                     <select
                       name="type"
                       id="type"
-                      className="font-barlow font-bold rounded"
+                      className="font-barlow font-bold rounded-sm"
                       value={grade}
                       onChange={handleRopeGradeChange}
                     >
@@ -235,7 +235,7 @@ export default function EditRoute({ route, images, daysOld, totalSends }) {
                       <select
                         name="type"
                         id="type"
-                        className="font-barlow font-bold rounded w-10"
+                        className="font-barlow font-bold rounded-sm w-10"
                         value={modifier}
                         onChange={handleRopeModifierChange}
                       >
@@ -249,7 +249,7 @@ export default function EditRoute({ route, images, daysOld, totalSends }) {
                   <select
                     name="type"
                     id="type"
-                    className="font-barlow font-bold rounded"
+                    className="font-barlow font-bold rounded-sm"
                     value={grade}
                     onChange={handleBoulderGradeChange}
                   >
@@ -273,7 +273,7 @@ export default function EditRoute({ route, images, daysOld, totalSends }) {
                 <input
                   type="date"
                   value={date}
-                  className="font-barlow font-bold rounded w-32 focus:outline-none"
+                  className="font-barlow font-bold rounded-sm w-32 focus:outline-hidden"
                   onChange={handleDateChange}
                 />
               </div>
@@ -285,7 +285,7 @@ export default function EditRoute({ route, images, daysOld, totalSends }) {
                 <select
                   name=""
                   id=""
-                  className="font-barlow font-bold rounded"
+                  className="font-barlow font-bold rounded-sm"
                   value={location}
                   onChange={handleLocationChange}
                 >
@@ -323,7 +323,7 @@ export default function EditRoute({ route, images, daysOld, totalSends }) {
         <div className="flex justify-end mt-3 w-11/12 md:w-3/5">
           {isSubmit ? (
             <button
-              className="bg-green-400 rounded font-barlow font-bold text-white p-2"
+              className="bg-green-400 rounded-sm font-barlow font-bold text-white p-2"
               onClick={handleSubmit}
             >
               Submit Changes

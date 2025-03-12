@@ -210,7 +210,7 @@ export default function MixerScoreScroller({ mixerRoutes, StartTime }) {
             step="1"
             value={rangeValue}
             onChange={(e) => handleRangeChange(Number(e.target.value))}
-            className="w-3/4 mb-2 appearance-none bg-gray-300 rounded h-2"
+            className="w-3/4 mb-2 appearance-none bg-gray-300 rounded-sm h-2"
           />
 
           {/* Slider Labels */}
@@ -237,7 +237,7 @@ export default function MixerScoreScroller({ mixerRoutes, StartTime }) {
         slidesPerView={1}
         onSwiper={(swiper) => (swiperRef.current = swiper)} // Get Swiper instance
         onSlideChange={(swiper) => setRangeValue(swiper.activeIndex)} // Sync slider with Swiper
-        className="h-[calc(100vh-15rem)] rounded"
+        className="h-[calc(100vh-15rem)] rounded-sm"
       >
         {isInfoPopup ? (
           <MixerInfoPopup
@@ -341,7 +341,7 @@ export default function MixerScoreScroller({ mixerRoutes, StartTime }) {
                         type="text"
                         value={hold[panel.id]}
                         onChange={(e) => handleChange(panel.id, e)}
-                        className="border p-2 text-black font-barlow font-bold size-10 text-2xl rounded text-center focus:outline-none"
+                        className="border p-2 text-black font-barlow font-bold size-10 text-2xl rounded-sm text-center focus:outline-hidden"
                         placeholder="#"
                       />
                       <button
@@ -415,7 +415,7 @@ export default function MixerScoreScroller({ mixerRoutes, StartTime }) {
                         type="text"
                         value={attempts[panel.id]}
                         onChange={(e) => handleChange(panel.id, e)}
-                        className="border p-2 text-black font-barlow font-bold size-10 text-2xl rounded text-center focus:outline-none"
+                        className="border p-2 text-black font-barlow font-bold size-10 text-2xl rounded-sm text-center focus:outline-hidden"
                         placeholder="#"
                       />
                       <button

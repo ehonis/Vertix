@@ -202,7 +202,7 @@ export default function Routes({ ropes, boulders, user, completions }) {
         <div className="flex flex-col">
           <div
             className={clsx(
-              'bg-bg1 mx-5 mt-5 rounded-xl p-3 flex h-12 lg:w-96 md:flex-grow-0 flex-grow items-center justify-between cursor-pointer',
+              'bg-bg1 mx-5 mt-5 rounded-xl p-3 flex h-12 lg:w-96 md:grow-0 grow items-center justify-between cursor-pointer',
               !isFilterMenu ? 'mb-3' : ''
             )}
             onClick={handleFilterMenu}
@@ -244,7 +244,7 @@ export default function Routes({ ropes, boulders, user, completions }) {
             <div className="mb-3">
               <div
                 className={clsx(
-                  'bg-bg1 mx-8 mt-1 rounded-xl p-3 flex flex-grow items-center justify-between cursor-pointer',
+                  'bg-bg1 mx-8 mt-1 rounded-xl p-3 flex grow items-center justify-between cursor-pointer',
                   isFilterQaulity ? 'rounded-b-none' : ''
                 )}
                 onClick={handleFilterQaulity}
@@ -284,7 +284,7 @@ export default function Routes({ ropes, boulders, user, completions }) {
               </div>
               {isFilterQaulity ? (
                 <div className="flex justify-evenly">
-                  <div className="ml-8 bg-bg1 px-5 pb-5 rounded-bl-xl flex-grow justify-center flex flex-col items-center">
+                  <div className="ml-8 bg-bg1 px-5 pb-5 rounded-bl-xl grow justify-center flex flex-col items-center">
                     <h3 className="text-white text-lg">Color</h3>
                     <div className="grid grid-cols-2 gap-2">
                       {Object.keys(checkedColors).map((color) => (
@@ -310,12 +310,12 @@ export default function Routes({ ropes, boulders, user, completions }) {
                     </div>
                   </div>
 
-                  <div className="mr-8 bg-bg1 px-5 pb-5 rounded-br-xl flex-grow justify-center flex flex-col items-center">
+                  <div className="mr-8 bg-bg1 px-5 pb-5 rounded-br-xl grow justify-center flex flex-col items-center">
                     <h3 className="text-white text-lg">Grade</h3>
                     <select
                       name="gradeType"
                       id="gradeType"
-                      className="bg-bg2 rounded text-white p-1 mb-2"
+                      className="bg-bg2 rounded-sm text-white p-1 mb-2"
                       onChange={handleTypeChange}
                     >
                       <option value="boulder">Boulders</option>
@@ -364,7 +364,7 @@ export default function Routes({ ropes, boulders, user, completions }) {
 
               <div
                 className={clsx(
-                  'bg-bg1 mx-8 mt-1 rounded-xl p-3 flex flex-grow items-center justify-between cursor-pointer',
+                  'bg-bg1 mx-8 mt-1 rounded-xl p-3 flex grow items-center justify-between cursor-pointer',
                   isFilterMap ? 'rounded-b-none' : ''
                 )}
                 onClick={handleFilterMap}
@@ -429,7 +429,7 @@ export default function Routes({ ropes, boulders, user, completions }) {
               {header}
             </h1>
             {header === 'Filtered Routes' ? (
-              <button className="bg-red-500 p-2 rounded" onClick={resetFilters}>
+              <button className="bg-red-500 p-2 rounded-sm" onClick={resetFilters}>
                 Reset Filters
               </button>
             ) : (

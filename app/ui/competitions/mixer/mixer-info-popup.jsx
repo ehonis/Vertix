@@ -82,7 +82,7 @@ export default function MixerInfoPopup({
                 const color = mixerRoutes[info.id].color;
                 return (
                   <div
-                    className="flex flex-col bg-bg1 p-2 rounded"
+                    className="flex flex-col bg-bg1 p-2 rounded-sm"
                     key={info.id}
                   >
                     <p className="text-white font-barlow font-bold">

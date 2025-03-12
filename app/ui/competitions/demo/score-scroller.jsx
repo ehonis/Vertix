@@ -115,7 +115,7 @@ export default function CompetitionScoreTraker() {
           step="1"
           value={rangeValue}
           onChange={(e) => handleRangeChange(Number(e.target.value))}
-          className="w-3/4 mb-2 appearance-none bg-gray-300 rounded h-2"
+          className="w-3/4 mb-2 appearance-none bg-gray-300 rounded-sm h-2"
         />
 
         {/* Slider Labels */}
@@ -141,7 +141,7 @@ export default function CompetitionScoreTraker() {
         slidesPerView={1}
         onSwiper={(swiper) => (swiperRef.current = swiper)} // Get Swiper instance
         onSlideChange={(swiper) => setRangeValue(swiper.activeIndex)} // Sync slider with Swiper
-        className="h-[calc(100vh-15rem)] rounded"
+        className="h-[calc(100vh-15rem)] rounded-sm"
       >
         {panels.map((panel) => (
           <SwiperSlide key={panel.id} className="p-8 pt-6 rounded-lg">
@@ -203,7 +203,7 @@ export default function CompetitionScoreTraker() {
                         type="number"
                         value={attempts[panel.id]}
                         onChange={(e) => handleChange(panel.id, e)}
-                        className="border p-2 text-black font-barlow font-bold w-14 h-14 text-3xl rounded text-center focus:outline-none"
+                        className="border p-2 text-black font-barlow font-bold w-14 h-14 text-3xl rounded-sm text-center focus:outline-hidden"
                         placeholder="#"
                       />
                       <button

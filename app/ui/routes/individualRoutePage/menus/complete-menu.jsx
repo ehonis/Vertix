@@ -95,7 +95,7 @@ export default function CompleteMenu({
             <select
               value={selectedGrade}
               onChange={handleSelectGradeChange}
-              className="w-12 rounded bg-bg2"
+              className="w-12 rounded-sm bg-bg2"
             >
               {gradeOptions.map((grade, idx) => (
                 <option key={idx} value={grade}>
@@ -120,7 +120,7 @@ export default function CompleteMenu({
           <select
             value={selectedGrade}
             onChange={handleSelectGradeChange}
-            className="w-12 rounded bg-bg2"
+            className="w-12 rounded-sm bg-bg2"
           >
             {gradeOptions.map((grade, idx) => (
               <option key={idx} value={grade}>
@@ -146,7 +146,7 @@ export default function CompleteMenu({
           <select
             value={selectedSends}
             onChange={handleSelectSendsChange}
-            className="w-8 rounded bg-bg2"
+            className="w-8 rounded-sm bg-bg2"
           >
             <option value=""></option>
             <option value="1">1</option>
@@ -161,7 +161,7 @@ export default function CompleteMenu({
             <option value="10">10</option>
           </select>
         </label>
-        <button type="submit" className="bg-green-500 p-1 rounded m-3">
+        <button type="submit" className="bg-green-500 p-1 rounded-sm m-3">
           Submit
         </button>
       </form>

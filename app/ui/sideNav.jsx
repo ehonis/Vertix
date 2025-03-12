@@ -123,7 +123,7 @@ export default function SideNav() {
             key={index}
             href={item.href}
             className={clsx(
-              'flex gap-3 z-[100] items-center group transition-all duration-700 rounded-md',
+              'flex gap-3 z-100 items-center group transition-all duration-700 rounded-md',
               isNavbar ? 'p-0' : 'p-4',
               item.extraClasses,
               'blue-button outline-1 md:hover:bg-white md:bg-bg2'

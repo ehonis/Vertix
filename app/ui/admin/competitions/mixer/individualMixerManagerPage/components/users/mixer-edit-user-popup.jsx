@@ -346,7 +346,7 @@ export default function EditUserPopUp({
               name=""
               id=""
               onChange={handleNameChange}
-              className="text-white rounded-l bg-bg0 px-2 py-1 w-48 focus:outline-none"
+              className="text-white rounded-l bg-bg0 px-2 py-1 w-48 focus:outline-hidden"
               placeholder="Climber Name"
             />
             <select
@@ -367,7 +367,7 @@ export default function EditUserPopUp({
           {connectedUser === null && entryMethod === 'APP' ? (
             <div className="flex justify-center">
               <button
-                className="px-2 py-1 bg-blue-500 rounded w-72 "
+                className="px-2 py-1 bg-blue-500 rounded-sm w-72 "
                 onClick={() => setIsUserSearchPopUp(true)}
               >
                 Connect to a User
@@ -376,7 +376,7 @@ export default function EditUserPopUp({
           ) : null}
           {connectedUser !== null && entryMethod === 'APP' ? (
             <div className="flex justify-center">
-              <div className="flex bg-bg1 items-center p-2 rounded w-72 justify-between">
+              <div className="flex bg-bg1 items-center p-2 rounded-sm w-72 justify-between">
                 {/* user image */}
                 <div className="flex justify-between w-full gap-2">
                   <div className="flex gap-2">
@@ -446,7 +446,7 @@ export default function EditUserPopUp({
           )}
 
           {/* boulder scores */}
-          <div className="flex flex-col bg-bg1 rounded p-2 gap-2 w-72 place-self-center">
+          <div className="flex flex-col bg-bg1 rounded-sm p-2 gap-2 w-72 place-self-center">
             <p>Boulder Scores Combined</p>
             <div className="flex gap-2 items-center">
               <label htmlFor="" className="text-sm">
@@ -458,7 +458,7 @@ export default function EditUserPopUp({
                 id=""
                 value={tempBoulderScore}
                 onChange={handleBoulderScoreChange}
-                className="w-16 bg-white text-bg1 rounded px-2  text-sm focus:outline-none"
+                className="w-16 bg-white text-bg1 rounded-sm px-2  text-sm focus:outline-hidden"
                 inputMode="numeric" // Show numeric keyboard on mobile
                 pattern="[0-9]*" // Optional: For better mobile support
               />
@@ -471,14 +471,14 @@ export default function EditUserPopUp({
                 id=""
                 value={tempBoulderAttempts}
                 onChange={handleBoulderAttemptsChange}
-                className="w-10 bg-white text-bg1 rounded px-2 text-sm focus:outline-none"
+                className="w-10 bg-white text-bg1 rounded-sm px-2 text-sm focus:outline-hidden"
                 inputMode="numeric" // Show numeric keyboard on mobile
                 pattern="[0-9]*" // Optional: For better mobile support
               />
             </div>
           </div>
           {/* rope scores */}
-          <div className="flex flex-col bg-bg1 rounded p-2 gap-2 w-72 place-self-center">
+          <div className="flex flex-col bg-bg1 rounded-sm p-2 gap-2 w-72 place-self-center">
             <p>Ropes Scores Combined</p>
             <div className="flex gap-2 items-center">
               <label htmlFor="" className="text-sm">
@@ -490,7 +490,7 @@ export default function EditUserPopUp({
                 id=""
                 value={tempRopeScore}
                 onChange={handleRopeScoreChange}
-                className="w-16 bg-white text-bg1 rounded px-2 text-sm focus:outline-none"
+                className="w-16 bg-white text-bg1 rounded-sm px-2 text-sm focus:outline-hidden"
                 inputMode="numeric" // Show numeric keyboard on mobile
                 pattern="[0-9]*" // Optional: For better mobile support
               />
@@ -503,7 +503,7 @@ export default function EditUserPopUp({
                 id=""
                 value={tempRopeAttempts}
                 onChange={handleRopeAttemptsChange}
-                className="w-10 bg-white text-bg1 rounded px-2 text-sm focus:outline-none "
+                className="w-10 bg-white text-bg1 rounded-sm px-2 text-sm focus:outline-hidden "
                 inputMode="numeric" // Show numeric keyboard on mobile
                 pattern="[0-9]*" // Optional: For better mobile support
               />
@@ -512,7 +512,7 @@ export default function EditUserPopUp({
           <div className="flex justify-between">
             {type === 'EDIT' && (
               <button
-                className="px-2 py-1 ml-1 bg-red-500 rounded justify-end-start font-normal"
+                className="px-2 py-1 ml-1 bg-red-500 rounded-sm justify-end-start font-normal"
                 onClick={() => setIsConfirmationPopUp(true)}
               >
                 Delete
@@ -520,7 +520,7 @@ export default function EditUserPopUp({
             )}
             {isSaveButton && (
               <button
-                className="px-2 py-1 mr-1 bg-green-500 rounded justify-self-end font-normal"
+                className="px-2 py-1 mr-1 bg-green-500 rounded-sm justify-self-end font-normal"
                 onClick={handleSubmit}
               >
                 Update Changes
@@ -528,7 +528,7 @@ export default function EditUserPopUp({
             )}
             {type === 'NEW' && (
               <button
-                className="px-2 py-1 mr-1 bg-green-500 rounded justify-self-end font-normal"
+                className="px-2 py-1 mr-1 bg-green-500 rounded-sm justify-self-end font-normal"
                 onClick={handleNewUserSubmit}
               >
                 Add New User

@@ -141,7 +141,7 @@ export default function NewWrapper() {
           </div>
 
           {table.length > 0 && (
-            <button className="px-4 py-1 bg-slate-400 text-white font-barlow font-bold rounded">
+            <button className="px-4 py-1 bg-slate-400 text-white font-barlow font-bold rounded-sm">
               Edit
             </button>
           )}
@@ -158,7 +158,7 @@ export default function NewWrapper() {
             <div className="h-1 w-full bg-white rounded-full"></div>
             <div className="flex justify-end">
               <button
-                className="p-2 bg-blue-500 text-white font-barlow font-bold rounded"
+                className="p-2 bg-blue-500 text-white font-barlow font-bold rounded-sm"
                 onClick={handleSubmit}
               >
                 Submit

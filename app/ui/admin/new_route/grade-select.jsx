@@ -22,7 +22,7 @@ export default function GradeSelect({ onGradeChange }) {
           name="type"
           id=""
           onChange={handleTypeChange}
-          className="bg-[#181a1c] rounded text-white p-1 font-barlow font-bold"
+          className="bg-[#181a1c] rounded-sm text-white p-1 font-barlow font-bold"
         >
           <option value="none"></option>
           <option value="rope">Rope</option>

@@ -118,7 +118,7 @@ export default function DivisionsComponent({ divisions, compId }) {
             </div>
           )}
         </div>
-        <div className="bg-bg2 flex-col gap-2 flex p-3 rounded w-full">
+        <div className="bg-bg2 flex-col gap-2 flex p-3 rounded-sm w-full">
           {compDivisions.length > 0 ? (
             <div className="flex flex-col gap-2">
               {compDivisions.map((division) => (
@@ -136,7 +136,7 @@ export default function DivisionsComponent({ divisions, compId }) {
                   )}
                   <button
                     key={division.id}
-                    className="bg-bg1 w-full gap-3 rounded flex p-2 justify-center items-center"
+                    className="bg-bg1 w-full gap-3 rounded-sm flex p-2 justify-center items-center"
                     onClick={() => handleEditDivisionPopup(division.id)}
                   >
                     <p className="text-white font-barlow font-semibold text-xl">

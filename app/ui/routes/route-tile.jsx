@@ -3,7 +3,7 @@ import clsx from 'clsx';
 export default function RouteTile({ color, name, grade }) {
   return (
     <>
-      <div className="bg-bg2 md:w-80 flex-grow rounded-xl flex">
+      <div className="bg-bg2 md:w-80 grow rounded-xl flex">
         <div
           className={clsx(
             ' w-12 rounded-l-xl',

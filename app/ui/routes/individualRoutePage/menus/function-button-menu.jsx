@@ -75,7 +75,7 @@ export default function FunctionButtonMenu({
             <div className="flex flex-col items-center mb-3 gap-3">
               <div className="flex gap-3 ">
                 <button
-                  className="bg-bg2 flex  p-1 rounded w-32 justify-between group hover:bg-white"
+                  className="bg-bg2 flex  p-1 rounded-sm w-32 justify-between group hover:bg-white"
                   onClick={() => handleMenuChange('Complete Menu')}
                 >
                   <p className="group-hover:text-black">Complete</p>
@@ -94,7 +94,7 @@ export default function FunctionButtonMenu({
                   </svg>
                 </button>
                 <button
-                  className="bg-bg2 flex  p-1 rounded w-32 justify-between hover:bg-white group"
+                  className="bg-bg2 flex  p-1 rounded-sm w-32 justify-between hover:bg-white group"
                   onClick={() => handleMenuChange('Attempt Menu')}
                 >
                   <p className="group-hover:text-black">Attempt</p>
@@ -115,7 +115,7 @@ export default function FunctionButtonMenu({
               </div>
               <div className="flex gap-3 ">
                 <button
-                  className="bg-bg2 flex  p-1 rounded w-32 justify-between group hover:bg-white"
+                  className="bg-bg2 flex  p-1 rounded-sm w-32 justify-between group hover:bg-white"
                   onClick={() => handleMenuChange('Grade Menu')}
                 >
                   <p className="group-hover:text-black">Grade</p>
@@ -134,7 +134,7 @@ export default function FunctionButtonMenu({
                   </svg>
                 </button>
                 <button
-                  className="bg-bg2 flex p-1 rounded w-32 justify-between group hover:bg-white"
+                  className="bg-bg2 flex p-1 rounded-sm w-32 justify-between group hover:bg-white"
                   onClick={() => handleMenuChange('Upload Photo Menu')}
                 >
                   <p className="group-hover:text-black">Add Photo</p>
@@ -159,7 +159,7 @@ export default function FunctionButtonMenu({
                 </button>
               </div>
               <button
-                className="bg-bg2 flex p-1 rounded w-32 justify-between group hover:bg-white"
+                className="bg-bg2 flex p-1 rounded-sm w-32 justify-between group hover:bg-white"
                 onClick={() => handleMenuChange('Star Rating Menu')}
               >
                 <p className="group-hover:text-black">Rate</p>

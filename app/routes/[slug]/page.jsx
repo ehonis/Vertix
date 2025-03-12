@@ -153,7 +153,7 @@ function RouteInfo({
               />
             ) : (
               <Link href={'/signin'}>
-                <span className="text-white bg-blue-500 p-2 rounded font-barlow font-bold">
+                <span className="text-white bg-blue-500 p-2 rounded-sm font-barlow font-bold">
                   Sign In
                 </span>
               </Link>

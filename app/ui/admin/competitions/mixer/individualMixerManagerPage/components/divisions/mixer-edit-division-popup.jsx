@@ -148,21 +148,21 @@ export default function EditDivisionPopUp({
                 type="text"
                 value={tempDivision}
                 onChange={handleDivisionTextChange}
-                className="bg-bg1 text-white rounded px-2 py-1 focus:outline-none"
+                className="bg-bg1 text-white rounded-sm px-2 py-1 focus:outline-hidden"
                 placeholder="V# - V# / 5.# - 5.# or >V# / >5.#"
               />
               {isSaveButton ? (
                 <div className="w-full flex justify-end">
                   {type === 'NEW' ? (
                     <button
-                      className="px-2 py-1 bg-green-500/35 outline outline-green-500 outline-1 rounded text-white font-barlow"
+                      className="px-2 py-1 bg-green-500/35 outline outline-green-500 outline-1 rounded-sm text-white font-barlow"
                       onClick={handleNewDivision}
                     >
                       Submit
                     </button>
                   ) : (
                     <button
-                      className="px-2 py-1 bg-green-500/35 outline outline-green-500 outline-1 rounded text-white font-barlow"
+                      className="px-2 py-1 bg-green-500/35 outline outline-green-500 outline-1 rounded-sm text-white font-barlow"
                       onClick={handleUpdateDivision}
                     >
                       Update Division

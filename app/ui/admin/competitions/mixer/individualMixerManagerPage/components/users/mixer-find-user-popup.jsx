@@ -104,7 +104,7 @@ export default function FindUserPopUp({ onConnectUser, onCancel }) {
           <div className="flex justify-center items-center">
             <input
               type="text"
-              className="bg-bg1 rounded-l py-1 px-2 w- focus:outline-none"
+              className="bg-bg1 rounded-l py-1 px-2 w- focus:outline-hidden"
               placeholder="User Search"
               value={searchText}
               onChange={handleSearchTextChange}
@@ -138,7 +138,7 @@ export default function FindUserPopUp({ onConnectUser, onCancel }) {
                     <div key={user.id} className="">
                       <button
                         className={clsx(
-                          'bg-bg1 p-1 w-full rounded',
+                          'bg-bg1 p-1 w-full rounded-sm',
                           user === selectedUser &&
                             'outline outline-blue-500 outline-1 shadow-md shadow-blue-500'
                         )}
@@ -155,7 +155,7 @@ export default function FindUserPopUp({ onConnectUser, onCancel }) {
           {isConnectButton && (
             <div className="flex justify-end">
               <button
-                className="bg-blue-500 px-2 py-1 rounded"
+                className="bg-blue-500 px-2 py-1 rounded-sm"
                 onClick={() => handleConnect(selectedUser)}
               >
                 Connect

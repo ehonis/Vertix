@@ -17,7 +17,7 @@ const COLORS = ['#0088FE', '#00C49F'];
 function CustomTooltip({ active, payload }) {
   if (active && payload && payload.length) {
     return (
-      <div className="bg-gray-800 p-2 rounded text-xs text-white">
+      <div className="bg-gray-800 p-2 rounded-sm text-xs text-white">
         <p className="font-semibold">{payload[0].name}</p>
         <p>{`Completions: ${payload[0].value}`}</p>
       </div>

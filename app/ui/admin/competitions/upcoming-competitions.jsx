@@ -12,11 +12,11 @@ export default async function UpComingCompetitions() {
   });
 
   return (
-    <div className="flex flex-col bg-bg2 gap-2 p-2 rounded">
+    <div className="flex flex-col bg-bg2 gap-2 p-2 rounded-sm">
       {UpComingCompetitions.map((comp) => (
         <Link
           key={comp.id}
-          className="bg-bg1 max-w-md grid-cols-3 grid font-barlow font-bold text-white p-3 rounded outline outline-white outline-1"
+          className="bg-bg1 max-w-md grid-cols-3 grid font-barlow font-bold text-white p-3 rounded-sm outline outline-white outline-1"
           href={`/admin/manager/competitions/mixer/${comp.id}`}
         >
           {comp.imageUrl === null ? (

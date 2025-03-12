@@ -99,7 +99,7 @@ export default function SignInForm() {
             )}
           </button>
         </div>
-        <div className="h-1 w-full bg-white rounded" />
+        <div className="h-1 w-full bg-white rounded-sm" />
         <div className="flex flex-col gap-3 w-full">
           <input
             type="text"
@@ -107,11 +107,11 @@ export default function SignInForm() {
             placeholder="Email"
             value={emailString}
             onChange={(e) => setEmailString(e.target.value)}
-            className="text-white bg-bg1 rounded px-2 py-1 font-barlow text-lg focus:outline-none"
+            className="text-white bg-bg1 rounded-sm px-2 py-1 font-barlow text-lg focus:outline-hidden"
           />
           <button
             onClick={() => handleSignIn('resend')}
-            className="bg-gradient-to-l from-purple-500/35 to-purple-700/35 outline-purple-600 outline px-4 py-1 text-white font-barlow font-semibold rounded-full"
+            className="bg-linear-to-l from-purple-500/35 to-purple-700/35 outline-purple-600 outline px-4 py-1 text-white font-barlow font-semibold rounded-full"
           >
             {!isMagicLinkLoading ? (
               <div className="rounded-full flex justify-between">

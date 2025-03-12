@@ -78,26 +78,26 @@ export default function EditRoutePopUp({
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="bg-bg1 p-2 rounded w-full focus:outline-none"
+            className="bg-bg1 p-2 rounded-sm w-full focus:outline-hidden"
             placeholder="Route Name"
           />
 
           <div>
-            <div className="grid grid-cols-3 bg-bg1 rounded px-1 mb-1">
+            <div className="grid grid-cols-3 bg-bg1 rounded-sm px-1 mb-1">
               <p className="place-self-start">Hold #</p>
               <p className="place-self-center">TR Pts</p>
               <p className="place-self-end">Lead Pts</p>
             </div>
 
             {/* Holds List */}
-            <div className="max-h-80 overflow-y-auto rounded w-full p-1">
+            <div className="max-h-80 overflow-y-auto rounded-sm w-full p-1">
               {tempHolds.length > 0 ? (
                 <div className="flex flex-col gap-1 w-full">
                   {tempHolds.map((hold, index) => (
                     <div
                       key={index}
                       className={clsx(
-                        'bg-bg1 p-1 rounded w-full grid grid-cols-3 gap-2 items-center',
+                        'bg-bg1 p-1 rounded-sm w-full grid grid-cols-3 gap-2 items-center',
                         index > 0 &&
                           tempHolds[index - 1]?.topRopePoints >
                             hold.topRopePoints &&
@@ -119,7 +119,7 @@ export default function EditRoutePopUp({
                             e.target.value
                           )
                         }
-                        className="bg-bg2 p-1 rounded w-3/4 text-center place-self-center focus:outline-none"
+                        className="bg-bg2 p-1 rounded-sm w-3/4 text-center place-self-center focus:outline-hidden"
                       />
 
                       <input
@@ -128,7 +128,7 @@ export default function EditRoutePopUp({
                         onChange={(e) =>
                           handleHoldChange(index, 'leadPoints', e.target.value)
                         }
-                        className="bg-bg2 p-1 rounded w-3/4 text-center place-self-end focus:outline-none"
+                        className="bg-bg2 p-1 rounded-sm w-3/4 text-center place-self-end focus:outline-hidden"
                       />
                     </div>
                   ))}

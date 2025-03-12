@@ -95,7 +95,7 @@ export default function UserProfile({ user, status }) {
   if (!user) {
     return (
       <Link href={'/signin'}>
-        <span className="bg-purple-400/20 outline outline-purple-400 outline-1 p-2 rounded text-white font-barlow font-bold text-sm md:text-base">
+        <span className="bg-purple-400/20 outline outline-purple-400 outline-1 p-2 rounded-sm text-white font-barlow font-bold text-sm md:text-base">
           Sign In
         </span>
       </Link>
@@ -135,7 +135,7 @@ export default function UserProfile({ user, status }) {
         <div
           ref={profileRef}
           className={clsx(
-            'z-50 fixed flex flex-col  h-max w-56  bg-black top-[5.2rem] justify-start transition-all p-3 duration-700 transform gap-3 right-0 button-container rounded cursor-default',
+            'z-50 fixed flex flex-col  h-max w-56  bg-black top-[5.2rem] justify-start transition-all p-3 duration-700 transform gap-3 right-0 button-container rounded-sm cursor-default',
             isProfilePopUp
               ? 'opacity-100 -translate-x-2'
               : 'opacity-0 translate-x-full'
@@ -150,7 +150,7 @@ export default function UserProfile({ user, status }) {
               key={index}
               href={item.href}
               className={clsx(
-                'flex blue-button rounded p-1 gap-2 group hover:bg-white transition-all duration-200',
+                'flex blue-button rounded-sm p-1 gap-2 group hover:bg-white transition-all duration-200',
                 item.text === 'Admin Center' && 'purple-button'
               )}
               onClick={handleClick}

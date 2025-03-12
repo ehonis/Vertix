@@ -20,7 +20,7 @@ const COLORS = ['#0088FE', '#00C49F'];
 function CustomTooltip({ active, payload }) {
   if (active && payload && payload.length) {
     return (
-      <div className="bg-gray-800 p-2 rounded text-xs text-white">
+      <div className="bg-gray-800 p-2 rounded-sm text-xs text-white">
         <p className="font-semibold">{payload[0].name}</p>
         <p>{`Completions: ${payload[0].value}`}</p>
       </div>
@@ -52,7 +52,7 @@ export default function RouteLineChart({ completedRoutes }) {
   useEffect;
   if (lineCompletion.length > 0) {
     return (
-      <div className="flex-grow bg-bg1 rounded-lg py-4 flex flex-col gap-3 justify-between items-center md:h-auto h-72">
+      <div className="grow bg-bg1 rounded-lg py-4 flex flex-col gap-3 justify-between items-center md:h-auto h-72">
         <div className="flex justify-between items-center w-full px-7">
           <h2 className="text-white font-bold text-xl">
             Total Completed Routes By{' '}
@@ -112,7 +112,7 @@ export default function RouteLineChart({ completedRoutes }) {
     );
   } else {
     return (
-      <div className="flex-grow bg-bg1 rounded-lg p-4 flex flex-col justify-between items-center">
+      <div className="grow bg-bg1 rounded-lg p-4 flex flex-col justify-between items-center">
         <h2 className="text-white font-bold text-xl">
           Total Completed Routes Over Time
         </h2>

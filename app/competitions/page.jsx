@@ -16,7 +16,7 @@ export default function page() {
       </h1>
 
       {/* Event List */}
-      <div className="m-2 rounded flex justify-center ">
+      <div className="m-2 rounded-sm flex justify-center ">
         <div className="flex flex-col gap-3 p-3 w-96">
           <Link
             href={'/competitions/competition/mixer_demo'}

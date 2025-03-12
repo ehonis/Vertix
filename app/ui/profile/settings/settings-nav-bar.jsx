@@ -18,7 +18,7 @@ export default function SettingsNavBar({ userData }) {
     <div className="flex md:flex-row flex-col gap-5 w-full ">
       <nav className="bg-bg1 w-48 h-max rounded-lg p-5 flex flex-col gap-3">
         <button
-          className="flex items-center justify-between bg-bg2 rounded p-1 group hover:bg-white transition-all duration-300"
+          className="flex items-center justify-between bg-bg2 rounded-sm p-1 group hover:bg-white transition-all duration-300"
           onClick={handleProfileClick}
         >
           <p className="text-white group-hover:text-black">Profile Settings</p>
@@ -37,7 +37,7 @@ export default function SettingsNavBar({ userData }) {
           </svg>
         </button>
         <button
-          className="flex items-center justify-between bg-bg2 rounded p-1 group hover:bg-white transition-all duration-300"
+          className="flex items-center justify-between bg-bg2 rounded-sm p-1 group hover:bg-white transition-all duration-300"
           onClick={handlePrivacyClick}
         >
           <p className="text-white group-hover:text-black">Privacy Settings</p>

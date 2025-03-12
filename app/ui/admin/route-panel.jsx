@@ -17,12 +17,12 @@ export default function RoutePanel({ id, name, grade, date, color }) {
       key={id}
       ref={elementRef}
       className={clsx(
-        'h-16 w-full bg-bg2 rounded flex justify-between items-center pr-4 py-2 space-x-4 transition-all duration-500 transform',
+        'h-16 w-full bg-bg2 rounded-sm flex justify-between items-center pr-4 py-2 space-x-4 transition-all duration-500 transform',
         isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
       )}
     >
       {/* Color block and name */}
-      <div className="flex items-center space-x-4 w-56 md:flex-grow">
+      <div className="flex items-center space-x-4 w-56 md:grow">
         {/* Color block */}
         <div
           className={clsx(

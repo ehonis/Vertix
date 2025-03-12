@@ -127,8 +127,8 @@ export default function FilteredRoutes({
     : [];
 
   return (
-    <div className="flex md:flex-grow flex-col gap-5 p-5">
-      <div className="bg-bg1 h-full flex-grow rounded-xl">
+    <div className="flex md:grow flex-col gap-5 p-5">
+      <div className="bg-bg1 h-full grow rounded-xl">
         <div className="p-3 flex flex-col md:grid md:grid-cols-2 md:items-start items-center gap-2">
           {filteredRoutes.map((route) => (
             <div className="flex items-center gap-2" key={route.id}>
@@ -144,7 +144,7 @@ export default function FilteredRoutes({
                   onClick={() => handleQuickCompletion(route.id, route.title)}
                   className="bg-slate-500 size-10 flex items-center justify-center rounded-full group hover:bg-green-400 transition-all duration-300 relative"
                 >
-                  <span className="absolute left-full ml-2 px-2 py-1 text-xs text-white bg-black rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap">
+                  <span className="absolute left-full ml-2 px-2 py-1 text-xs text-white bg-black rounded-sm opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap">
                     Quick Complete
                   </span>
                   <svg
@@ -167,7 +167,7 @@ export default function FilteredRoutes({
                   onClick={() => handleQuickUncomplete(route.id, route.title)}
                   className="bg-green-500 size-10 flex items-center justify-center rounded-full group hover:bg-red-400 transition-all duration-300 relative"
                 >
-                  <span className="absolute left-full ml-2 px-2 py-1 text-xs text-white bg-black rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap">
+                  <span className="absolute left-full ml-2 px-2 py-1 text-xs text-white bg-black rounded-sm opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap">
                     Uncomplete
                   </span>
                   <svg

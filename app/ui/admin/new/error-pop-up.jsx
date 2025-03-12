@@ -19,7 +19,7 @@ export default function ErrorPopUp({ onCancel, message }) {
       />
       {/* Popup */}
       <div
-        className={`fixed z-[100] bg-[#181a1c] text-white top-1/2 left-1/2 transform rounded-lg w-2/3 -translate-x-1/2 ${
+        className={`fixed z-100 bg-[#181a1c] text-white top-1/2 left-1/2 transform rounded-lg w-2/3 -translate-x-1/2 ${
           isVisible
             ? '-translate-y-1/2 opacity-100'
             : 'translate-y-full opacity-0'

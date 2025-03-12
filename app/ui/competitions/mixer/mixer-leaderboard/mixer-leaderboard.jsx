@@ -58,7 +58,7 @@ export default function MixerLeaderBoard({
             </p>
             <button
               onClick={handleViewScores}
-              className="text-white bg-green-500 px-3 py-2 rounded font-barlow font-bold w-44 text-2xl shadow-lg shadow-green-500 outline outline-2 outline-white"
+              className="text-white bg-green-500 px-3 py-2 rounded-sm font-barlow font-bold w-44 text-2xl shadow-lg shadow-green-500 outline outline-2 outline-white"
             >
               View Scores
             </button>
@@ -108,7 +108,7 @@ export default function MixerLeaderBoard({
                   {/* Division Button */}
                   <button
                     className={clsx(
-                      'bg-bg1 flex w-full rounded justify-center p-2 outline outline-1 outline-white',
+                      'bg-bg1 flex w-full rounded-sm justify-center p-2 outline outline-1 outline-white',
                       openDivisions[divisionName] && 'bg-bg2' // Change color when open
                     )}
                     onClick={() => handleToggleDivision(divisionName)}
@@ -122,14 +122,14 @@ export default function MixerLeaderBoard({
                   <AnimatePresence>
                     {openDivisions[divisionName] && (
                       <motion.div
-                        className="flex flex-col w-[95%] max-w-lg gap-1 justify-center items-center bg-bg2 outline outline-white outline-1 p-3 self-center rounded"
+                        className="flex flex-col w-[95%] max-w-lg gap-1 justify-center items-center bg-bg2 outline outline-white outline-1 p-3 self-center rounded-sm"
                         initial={{ opacity: 0, y: -10, scale: 0.95 }}
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: -10, scale: 0.95 }}
                         transition={{ duration: 0.3, ease: 'easeInOut' }}
                       >
                         <motion.div
-                          className="w-full max-w-md rounded flex justify-between px-1 py-1"
+                          className="w-full max-w-md rounded-sm flex justify-between px-1 py-1"
                           initial={{ opacity: 0, y: -5 }}
                           animate={{ opacity: 1, y: 0 }}
                           transition={{ duration: 0.2 }}
@@ -151,7 +151,7 @@ export default function MixerLeaderBoard({
                           <motion.div
                             key={climber.name}
                             className={clsx(
-                              'w-full max-w-md rounded flex justify-between px-4 py-1',
+                              'w-full max-w-md rounded-sm flex justify-between px-4 py-1',
                               climber.userId === user?.id && 'bg-blue-500',
                               index === 0 &&
                                 'bg-amber-500 shadow-lg shadow-amber-500',
@@ -194,7 +194,7 @@ export default function MixerLeaderBoard({
               {/* Ropes Button */}
               <button
                 className={clsx(
-                  'bg-bg1 flex w-full rounded justify-center p-2 outline outline-1 outline-white',
+                  'bg-bg1 flex w-full rounded-sm justify-center p-2 outline outline-1 outline-white',
                   isRopes && 'bg-bg2'
                 )}
                 onClick={handleRopeScores}
@@ -208,14 +208,14 @@ export default function MixerLeaderBoard({
               <AnimatePresence>
                 {isRopes && (
                   <motion.div
-                    className="flex flex-col w-[95%] max-w-lg gap-1 justify-center items-center bg-bg2 outline outline-white outline-1 p-3 self-center rounded"
+                    className="flex flex-col w-[95%] max-w-lg gap-1 justify-center items-center bg-bg2 outline outline-white outline-1 p-3 self-center rounded-sm"
                     initial={{ opacity: 0, y: -10, scale: 0.95 }}
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: -10, scale: 0.95 }}
                     transition={{ duration: 0.3, ease: 'easeInOut' }}
                   >
                     <motion.div
-                      className="w-full max-w-md rounded grid grid-cols-4 px-1 py-1 text-center"
+                      className="w-full max-w-md rounded-sm grid grid-cols-4 px-1 py-1 text-center"
                       initial={{ opacity: 0, y: -5 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.2 }}
@@ -231,7 +231,7 @@ export default function MixerLeaderBoard({
                       <motion.div
                         key={climber.name}
                         className={clsx(
-                          'w-full max-w-md rounded grid grid-cols-4 px-1 py-1 text-center place-items-center',
+                          'w-full max-w-md rounded-sm grid grid-cols-4 px-1 py-1 text-center place-items-center',
                           climber.userId === user?.id && 'bg-blue-500',
                           climber.rank === 1 &&
                             'bg-amber-500 shadow-lg shadow-amber-500',
@@ -269,7 +269,7 @@ export default function MixerLeaderBoard({
               {/* Boulders Button */}
               <button
                 className={clsx(
-                  'bg-bg1 flex w-full rounded justify-center p-2 outline outline-1 outline-white',
+                  'bg-bg1 flex w-full rounded-sm justify-center p-2 outline outline-1 outline-white',
                   isBoulders && 'bg-bg2'
                 )}
                 onClick={handleBoulderScores}
@@ -283,14 +283,14 @@ export default function MixerLeaderBoard({
               <AnimatePresence>
                 {isBoulders && (
                   <motion.div
-                    className="flex flex-col w-[95%] max-w-lg gap-1 justify-center items-center bg-bg2 outline outline-white outline-1 p-3 self-center rounded"
+                    className="flex flex-col w-[95%] max-w-lg gap-1 justify-center items-center bg-bg2 outline outline-white outline-1 p-3 self-center rounded-sm"
                     initial={{ opacity: 0, y: -10, scale: 0.95 }}
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: -10, scale: 0.95 }}
                     transition={{ duration: 0.3, ease: 'easeInOut' }}
                   >
                     <motion.div
-                      className="w-full max-w-md rounded grid grid-cols-4 px-1 py-1 text-center"
+                      className="w-full max-w-md rounded-sm grid grid-cols-4 px-1 py-1 text-center"
                       initial={{ opacity: 0, y: -5 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.2 }}
@@ -306,7 +306,7 @@ export default function MixerLeaderBoard({
                       <motion.div
                         key={climber.name}
                         className={clsx(
-                          'w-full max-w-md rounded grid grid-cols-4 px-1 py-1 text-center place-items-center',
+                          'w-full max-w-md rounded-sm grid grid-cols-4 px-1 py-1 text-center place-items-center',
                           climber.userId === user?.id && 'bg-blue-500',
                           climber.rank === 1 &&
                             'bg-amber-500 shadow-lg shadow-amber-500',
@@ -348,7 +348,7 @@ export default function MixerLeaderBoard({
             <div className="flex flex-col gap-2">
               <button
                 className={clsx(
-                  'bg-bg1 flex w-full rounded justify-center p-2 outline outline-1 outline-white',
+                  'bg-bg1 flex w-full rounded-sm justify-center p-2 outline outline-1 outline-white',
                   isRopes && 'bg-bg2'
                 )}
                 onClick={handleCombinedScores}
@@ -362,14 +362,14 @@ export default function MixerLeaderBoard({
               <AnimatePresence>
                 {isTotalCombinedScores && (
                   <motion.div
-                    className="flex flex-col w-[95%] max-w-lg gap-1 justify-center items-center bg-bg2 outline outline-white outline-1 p-3 self-center rounded"
+                    className="flex flex-col w-[95%] max-w-lg gap-1 justify-center items-center bg-bg2 outline outline-white outline-1 p-3 self-center rounded-sm"
                     initial={{ opacity: 0, y: -10, scale: 0.95 }}
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: -10, scale: 0.95 }}
                     transition={{ duration: 0.3, ease: 'easeInOut' }}
                   >
                     <motion.div
-                      className="w-full max-w-md rounded grid grid-cols-5 px-1 py-1 text-center"
+                      className="w-full max-w-md rounded-sm grid grid-cols-5 px-1 py-1 text-center"
                       initial={{ opacity: 0, y: -5 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.2 }}
@@ -394,7 +394,7 @@ export default function MixerLeaderBoard({
                       <motion.div
                         key={climber.name}
                         className={clsx(
-                          'w-full max-w-md rounded grid grid-cols-5 px-1 py-1 text-center place-items-center',
+                          'w-full max-w-md rounded-sm grid grid-cols-5 px-1 py-1 text-center place-items-center',
                           climber.userId === user?.id && 'bg-blue-500',
                           index === 0 &&
                             'bg-amber-500 shadow-lg shadow-amber-500',

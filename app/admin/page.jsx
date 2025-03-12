@@ -80,7 +80,7 @@ export default async function AdminCenter() {
           </h1>
           <div className="flex flex-col bg-bg2 gap-3 rounded-md p-5 mb-10">
             <Link
-              className="bg-bg1 flex p-2 items-center w-full rounded outline outline-white"
+              className="bg-bg1 flex p-2 items-center w-full rounded-sm outline outline-white"
               href={'/admin/create'}
             >
               <svg
@@ -110,7 +110,7 @@ export default async function AdminCenter() {
               <Link
                 key={index}
                 href={panel.url}
-                className="bg-bg1 flex p-2 items-center w-full rounded outline outline-white"
+                className="bg-bg1 flex p-2 items-center w-full rounded-sm outline outline-white"
               >
                 <span>{panel.svg}</span>
                 <h3 className="text-white font-barlow font-bold text-2xl flex-1 text-center">

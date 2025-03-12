@@ -29,13 +29,13 @@ export default function page() {
           </p>
           <Link
             href={'/competitions/competition/mixer_demo/scroller_demo'}
-            className="px-2 py-1 text-white bg-green-500 rounded font-barlow font-bold text-center"
+            className="px-2 py-1 text-white bg-green-500 rounded-sm font-barlow font-bold text-center"
           >
             Start Demo
           </Link>
           <Link
             href={'/competitions/competition/mixer_demo/leaderboard'}
-            className="px-2 py-1 text-white bg-yellow-500 rounded font-barlow font-bold text-center shadow-yellow-400 shadow-lg outline outline-2 outline-black"
+            className="px-2 py-1 text-white bg-yellow-500 rounded-sm font-barlow font-bold text-center shadow-yellow-400 shadow-lg outline outline-2 outline-black"
           >
             Leaderboard
           </Link>

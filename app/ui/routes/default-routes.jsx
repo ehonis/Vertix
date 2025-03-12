@@ -106,7 +106,7 @@ export default function DefaultRoutes({
   }
   return (
     <div className="flex md:flex-row flex-col gap-5 p-5">
-      <div className="bg-bg1 flex-grow rounded-xl">
+      <div className="bg-bg1 grow rounded-xl">
         <div className="p-3">
           <h2 className="text-white font-bold text-3xl">All Ropes</h2>
         </div>
@@ -125,7 +125,7 @@ export default function DefaultRoutes({
                   onClick={() => handleQuickCompletion(route.id, route.title)}
                   className="bg-slate-500 size-10 flex items-center justify-center rounded-full group hover:bg-green-400 transition-all duration-300 relative"
                 >
-                  <span className="absolute right-full mr-2 px-2 py-1 text-xs text-white bg-black rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap">
+                  <span className="absolute right-full mr-2 px-2 py-1 text-xs text-white bg-black rounded-sm opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap">
                     Quick Complete
                   </span>
                   <svg
@@ -148,7 +148,7 @@ export default function DefaultRoutes({
                   onClick={() => handleQuickUncomplete(route.id, route.title)}
                   className="bg-green-500 size-10 flex items-center justify-center rounded-full group hover:bg-red-400 transition-all duration-300 relative"
                 >
-                  <span className="absolute right-full mr-2 px-2 py-1 text-xs text-white bg-black rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap">
+                  <span className="absolute right-full mr-2 px-2 py-1 text-xs text-white bg-black rounded-sm opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap">
                     Uncomplete
                   </span>
                   <svg
@@ -174,7 +174,7 @@ export default function DefaultRoutes({
           <button
             disabled={currentRopePage === 1}
             onClick={() => setCurrentRopePage(currentRopePage - 1)}
-            className="text-white px-2 py-1 rounded bg-gray-700 hover:bg-gray-500 disabled:bg-gray-800"
+            className="text-white px-2 py-1 rounded-sm bg-gray-700 hover:bg-gray-500 disabled:bg-gray-800"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -194,7 +194,7 @@ export default function DefaultRoutes({
           <button
             disabled={currentRopePage === totalRopePages}
             onClick={() => setCurrentRopePage(currentRopePage + 1)}
-            className="text-white px-2 py-1 rounded bg-gray-700 hover:bg-gray-500 disabled:bg-gray-800"
+            className="text-white px-2 py-1 rounded-sm bg-gray-700 hover:bg-gray-500 disabled:bg-gray-800"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -212,7 +212,7 @@ export default function DefaultRoutes({
           </button>
         </div>
       </div>
-      <div className="bg-bg1 flex-grow rounded-xl">
+      <div className="bg-bg1 grow rounded-xl">
         <div className="p-3">
           <h2 className="text-white font-bold text-3xl">All Boulders</h2>
         </div>
@@ -232,7 +232,7 @@ export default function DefaultRoutes({
                     onClick={() => handleQuickCompletion(route.id, route.title)}
                     className="bg-slate-500 size-10 flex items-center justify-center rounded-full group hover:bg-green-400 transition-all duration-300 relative"
                   >
-                    <span className="absolute right-full mr-2 px-2 py-1 text-xs text-white bg-black rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap pointer-events-none">
+                    <span className="absolute right-full mr-2 px-2 py-1 text-xs text-white bg-black rounded-sm opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap pointer-events-none">
                       Quick Complete
                     </span>
                     <svg
@@ -255,7 +255,7 @@ export default function DefaultRoutes({
                     onClick={() => handleQuickUncomplete(route.id, route.title)}
                     className="bg-green-500 size-10 flex items-center justify-center rounded-full group hover:bg-red-400 transition-all duration-300 relative"
                   >
-                    <span className="absolute right-full mr-2 px-2 py-1 text-xs text-white bg-black rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap pointer-events-none">
+                    <span className="absolute right-full mr-2 px-2 py-1 text-xs text-white bg-black rounded-sm opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap pointer-events-none">
                       Uncomplete
                     </span>
                     <svg
@@ -282,7 +282,7 @@ export default function DefaultRoutes({
           <button
             disabled={currentBoulderPage === 1}
             onClick={() => setCurrentBoulderPage(currentBoulderPage - 1)}
-            className="text-white px-2 py-1 rounded bg-gray-700 hover:bg-gray-500 disabled:bg-gray-800"
+            className="text-white px-2 py-1 rounded-sm bg-gray-700 hover:bg-gray-500 disabled:bg-gray-800"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -302,7 +302,7 @@ export default function DefaultRoutes({
           <button
             disabled={currentBoulderPage === totalBoulderPages}
             onClick={() => setCurrentBoulderPage(currentBoulderPage + 1)}
-            className="text-white px-2 py-1 rounded bg-gray-700 hover:bg-gray-500 disabled:bg-gray-800"
+            className="text-white px-2 py-1 rounded-sm bg-gray-700 hover:bg-gray-500 disabled:bg-gray-800"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"

@@ -72,7 +72,7 @@ export default function UsersComponent({
       )}
       <div>
         <h3 className="text-3xl mt-3">Climbers</h3>
-        <div className="bg-bg2 flex-col gap-2 flex p-3 rounded w-full overflow-hidden">
+        <div className="bg-bg2 flex-col gap-2 flex p-3 rounded-sm w-full overflow-hidden">
           {compClimbers.length > 0 && (
             <div className="w-full flex-col flex gap-2 overflow-hidden">
               {displayedClimbers.map((climber) => (
@@ -81,7 +81,7 @@ export default function UsersComponent({
                   className="w-full"
                   onClick={() => handleClimberClick(climber.id)}
                 >
-                  <div className="grid bg-bg1 grid-cols-[1fr,auto] items-center p-1 px-2 w-full max-w-full rounded">
+                  <div className="grid bg-bg1 grid-cols-[1fr_auto] items-center p-1 px-2 w-full max-w-full rounded-sm">
                     <p className="text-xl justify-self-start truncate max-w-[90%]">
                       {climber.name}
                     </p>
@@ -123,7 +123,7 @@ export default function UsersComponent({
                 </div>
                 {compClimbers.length > 10 && (
                   <button
-                    className={'px-2 py-1 bg-blue-500 rounded'}
+                    className={'px-2 py-1 bg-blue-500 rounded-sm'}
                     onClick={() => setShowAllClimbers(!showAllClimbers)}
                   >
                     {showAllClimbers ? 'Show Less' : 'Show More'}

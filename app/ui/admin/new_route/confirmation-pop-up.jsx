@@ -20,7 +20,7 @@ export default function ConfirmationPopUp({
         }`}
       />
       <div
-        className={`z-[100] bg-[#181a1c] text-white w-72 fixed top-1/2 left-[45.25%] transform -translate-x-1/2 ${
+        className={`z-100 bg-[#181a1c] text-white w-72 fixed top-1/2 left-[45.25%] transform -translate-x-1/2 ${
           isVisible
             ? '-translate-y-1/2 opacity-100'
             : 'translate-y-full opacity-0'

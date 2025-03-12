@@ -24,7 +24,7 @@ export default function RouteImage() {
           key={index}
           className="relative  outline-1 w-[70%] h-36 md:w-[28%] lg:h-44 rounded-md overflow-hidden"
         >
-          <div className="absolute inset-0 bg-gradient-to-l from-black/100 to-transparent z-10 min-w-full" />
+          <div className="absolute inset-0 bg-linear-to-l from-black/100 to-transparent z-10 min-w-full" />
 
           <Image
             src={content.imageUrl}
