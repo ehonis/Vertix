@@ -1,6 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
 :root {
   --navbar-width-xs: 96%;
   --navbar-width-md: 86.5%;
