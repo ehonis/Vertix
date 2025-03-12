@@ -3,11 +3,18 @@ import UpComingCompetitions from '@/app/ui/admin/competitions/upcoming-competiti
 import { Suspense } from 'react';
 import ElementLoadingAnimation from '@/app/ui/general/element-loading-animation';
 import { auth } from '@/auth';
+import { redirect } from 'next/navigation';
 
 export default async function Page() {
   const compTypes = [
     { text: 'Mixer', url: '/admin/manager/competitions/mixer' },
   ];
+  const session = await auth();
+  const user = session?.user || null;
+
+  if (!user || !user?.admin) {
+    redirect('/signin');
+  }
 
   return (
     <div className="w-screen p-5 flex flex-col items-center">

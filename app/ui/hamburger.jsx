@@ -7,12 +7,9 @@ import Image from 'next/image';
 import { motion, AnimatePresence } from 'motion/react';
 import clsx from 'clsx';
 
-export default function HamburgerMenu() {
+export default function HamburgerMenu({ user, status }) {
   const [isOpen, setIsOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
-
-  const { data: session, status } = useSession();
-  const user = session?.user || null;
 
   const handleClick = () => {
     setIsOpen(!isOpen);

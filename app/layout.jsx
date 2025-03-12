@@ -6,6 +6,7 @@ import { NotificationProvider } from './contexts/NotificationContext';
 import Notification from './ui/notification';
 import { Analytics } from '@vercel/analytics/react';
 import { Tomorrow, Barlow } from 'next/font/google';
+import { SessionProvider } from 'next-auth/react';
 
 const barlow = Barlow({
   subsets: ['latin'],
@@ -64,7 +65,9 @@ export default function RootLayout({ children }) {
       >
         <NotificationProvider>
           <Notification />
+
           <NavBar />
+
           <SpeedInsights />
           <Analytics />
           <main className="">{children}</main>

@@ -39,22 +39,39 @@ export default function HomeLogoAnimation() {
     <div className="relative flex justify-center mt-5 md:mt-5 w-full text-white">
       {/* Purple glow in top left */}
 
-      <div className="relative flex flex-col justify-center items-center md:w-3/5 w-4/5 h-40 bg-black rounded-md z-10 overflow-hidden">
+      <div className="relative flex flex-col justify-center items-center lg:w-3/5 md:w-[70%] w-4/5 h-40 bg-black rounded-md z-10 overflow-hidden">
         {/* Radial gradient with center at bottom right corner */}
+
         <div
-          className="absolute inset-0 opacity-35"
+          className="absolute inset-0 opacity-50"
           style={{
             background:
-              'radial-gradient(circle at bottom right, #3B82F6 0%, transparent 45%)',
+              'radial-gradient(circle at bottom right, #1d4ed8 0%, transparent 55%)',
           }}
         />
-        <div
-          className="absolute inset-0 opacity-35"
+        {/* blue */}
+        {/* <div
+          className="absolute inset-0 opacity-45"
           style={{
             background:
-              'radial-gradient(circle at top left, #A78BFA 0%, transparent 45%)',
+              'radial-gradient(circle at bottom left, #1d4ed8 0%, transparent 35%)',
+          }}
+        /> */}
+
+        <div
+          className="absolute inset-0 opacity-50"
+          style={{
+            background:
+              'radial-gradient(circle at top left, #6b21a8 0%, transparent 55%)',
           }}
         />
+        {/* <div
+          className="absolute inset-0 opacity-45"
+          style={{
+            background:
+              'radial-gradient(circle at bottom right, #6b21a8 0%, transparent 35%)',
+          }}
+        /> */}
 
         <p className="z-20 text-7xl text-[5rem] md:text-8xl font-bold font-tomorrow italic">
           Vertix

@@ -1,7 +1,27 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+:root {
+  --navbar-width-xs: 96%;
+  --navbar-width-md: 86.5%;
+  --navbar-width-lg: 76%;
+}
 
+.button-container {
+  margin-right: calc((100% - var(--navbar-width-xs)) / 2);
+}
+
+@media (min-width: 768px) {
+  .button-container {
+    margin-right: calc((100% - var(--navbar-width-md)) / 2);
+  }
+}
+
+@media (min-width: 1024px) {
+  .button-container {
+    margin-right: calc((100% - var(--navbar-width-lg)) / 2);
+  }
+}
 body {
   margin: 0;
   padding: 0;
