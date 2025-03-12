@@ -1,14 +1,25 @@
 import { motion } from 'motion/react';
 import { useState } from 'react';
+import ElementLoadingAnimation from '@/app/ui/general/element-loading-animation';
+import { useNotification } from '@/app/contexts/NotificationContext';
+import { useRouter } from 'next/navigation';
 
 export default function EditDivisionPopUp({
   divisionId,
   divisionText,
   onCancel,
-  updateDivision,
+
+  type,
+
+  compId,
 }) {
-  const [tempDivision, setTempDivision] = useState(divisionText);
+  const { showNotification } = useNotification();
+  const router = useRouter();
+  const [tempDivision, setTempDivision] = useState(
+    divisionText ? divisionText : ''
+  );
   const [isSaveButton, setIsSaveButton] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [infoText, setInfoText] = useState(
     'No Changes have been made. Edit the text above to update the division'
   );
@@ -28,9 +39,68 @@ export default function EditDivisionPopUp({
     }
   };
 
-  const handleUpdateDivision = () => {
-    updateDivision(tempDivision, divisionId);
-    onCancel();
+  const handleUpdateDivision = async () => {
+    const data = {
+      divisionName: tempDivision,
+      divisionId: divisionId,
+      compId: compId,
+    };
+    setIsLoading(true);
+    try {
+      const response = await fetch('/api/mixer/manager/updateDivision', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+      if (!response.ok) {
+        console.error(response.message);
+      }
+      showNotification({
+        message: `Updated Division`,
+        color: 'green',
+      });
+      setIsLoading(false);
+      onCancel();
+      router.refresh();
+    } catch (error) {
+      setIsLoading(false);
+      showNotification({
+        message: `Update Failed`,
+        color: 'red',
+      });
+    } finally {
+    }
+  };
+
+  const handleNewDivision = async () => {
+    const data = { divisionName: tempDivision, compId: compId };
+
+    setIsLoading(true);
+    try {
+      const response = await fetch('/api/mixer/manager/newDivision', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+      if (!response.ok) {
+        console.error(response.message);
+      }
+      const responseData = await response.json();
+
+      setIsLoading(false);
+      showNotification({
+        message: `Added Division`,
+        color: 'green',
+      });
+      router.refresh();
+      onCancel();
+    } catch (error) {
+      setIsLoading(false);
+      showNotification({
+        message: `New Division Failed ${error}`,
+        color: 'red',
+      });
+    }
   };
   return (
     <div>
@@ -39,14 +109,14 @@ export default function EditDivisionPopUp({
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: -20 }}
         transition={{ duration: 0.3 }}
-        className="fixed inset-0 flex items-center justify-center bg-black/50 z-20"
+        className="fixed inset-0 flex items-center justify-center bg-black/50 z-20 "
       >
         <motion.div
           initial={{ scale: 0.8 }}
           animate={{ scale: 1 }}
           exit={{ scale: 0.8 }}
           transition={{ duration: 0.3 }}
-          className="bg-bg2 p-3 rounded-lg shadow-lg text-white max-w-xs w-full relative flex flex-col gap-2"
+          className="bg-bg2 p-3 rounded-lg shadow-lg text-white max-w-sm w-full relative flex flex-col gap-2 z-30"
         >
           <button className="absolute top-2 right-2" onClick={onCancel}>
             <svg
@@ -64,28 +134,45 @@ export default function EditDivisionPopUp({
               />
             </svg>
           </button>
-          <h2 className="text-xl">Division Editor</h2>
-          <input
-            type="text"
-            value={tempDivision}
-            onChange={handleDivisionTextChange}
-            className="bg-bg1 text-white rounded px-2 py-1"
-            placeholder="V# - V# / 5.# - 5.# or >V# / >5.#"
-          />
-          {isSaveButton ? (
-            <div className="w-full flex justify-end">
-              <button
-                className="px-2 py-1 bg-green-500 rounded text-white font-barlow"
-                onClick={handleUpdateDivision}
-              >
-                Update Division
-              </button>
-            </div>
+          {isLoading ? (
+            <ElementLoadingAnimation />
           ) : (
-            <div>
-              <p className="text-gray-300 font-barlow font-light italic text-sm">
-                {infoText}
-              </p>
+            <div className="flex flex-col gap-2 w-full">
+              <h2 className="text-xl">
+                {type === 'NEW' && 'New '}Division {type === 'EDIT' && 'Editor'}
+              </h2>
+              <input
+                type="text"
+                value={tempDivision}
+                onChange={handleDivisionTextChange}
+                className="bg-bg1 text-white rounded px-2 py-1"
+                placeholder="V# - V# / 5.# - 5.# or >V# / >5.#"
+              />
+              {isSaveButton ? (
+                <div className="w-full flex justify-end">
+                  {type === 'NEW' ? (
+                    <button
+                      className="px-2 py-1 bg-green-500/35 outline outline-green-500 outline-1 rounded text-white font-barlow"
+                      onClick={handleNewDivision}
+                    >
+                      Submit
+                    </button>
+                  ) : (
+                    <button
+                      className="px-2 py-1 bg-green-500/35 outline outline-green-500 outline-1 rounded text-white font-barlow"
+                      onClick={handleUpdateDivision}
+                    >
+                      Update Division
+                    </button>
+                  )}
+                </div>
+              ) : (
+                <div>
+                  <p className="text-gray-300 font-barlow font-light italic text-sm">
+                    {infoText}
+                  </p>
+                </div>
+              )}
             </div>
           )}
         </motion.div>

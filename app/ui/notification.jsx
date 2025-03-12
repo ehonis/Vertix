@@ -1,6 +1,7 @@
 'use client';
 
 import { useNotification } from '../contexts/NotificationContext';
+import clsx from 'clsx';
 
 export default function Notification() {
   const { notification } = useNotification();
@@ -8,17 +9,17 @@ export default function Notification() {
   if (!notification) return null;
 
   return (
-    <div className="w-72 bg-bg2 rounded-lg z-50 shadow-lg fixed bottom-4 left-4 flex items-center gap-2 h-12">
-      <div
-        className={`${
-          notification.color === 'green'
-            ? 'bg-green-400'
-            : notification.color === 'red'
-            ? 'bg-red-400'
-            : 'bg-gray-400'
-        } rounded-l-lg w-12 h-12`}
-      ></div>
-      <p className="text-white font-barlow font-bold w-48">
+    <div
+      className={clsx(
+        'w-72 rounded-md z-50 shadow-lg fixed bottom-4 left-4 flex items-center gap-2 p-2 ',
+
+        'max-h-16 overflow-y-auto',
+        notification.color === 'green' &&
+          'bg-green-500/90 border border-green-400 ',
+        notification.color === 'red' && 'bg-red-500/90 border border-red-400 '
+      )}
+    >
+      <p className="text-white font-barlow text-sm font-bold w-full">
         {notification.message}
       </p>
     </div>

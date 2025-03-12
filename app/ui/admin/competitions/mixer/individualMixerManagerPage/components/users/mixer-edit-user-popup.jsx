@@ -164,6 +164,7 @@ export default function EditUserPopUp({
         console.error(error);
       }
     }
+    onCancel();
   };
 
   return (

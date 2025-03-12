@@ -1,46 +1,51 @@
+export const dynamic = 'force-dynamic';
+
 import Link from 'next/link';
 import prisma from '@/prisma';
 import IndividualCompPageLoad from '@/app/ui/admin/competitions/mixer/individualMixerManagerPage/individual-comp-page-load';
 import { auth } from '@/auth';
 import { redirect } from 'next/navigation';
-import { EntryMethod } from '@prisma/client';
 
 export default async function page({ params }) {
   const session = await auth();
   const user = session?.user || null;
-  if (!user.admin) {
+  if (!user?.admin) {
     redirect('/');
   }
   const { slug } = await params;
   const compId = slug;
-  const comp = await prisma.MixerCompetition.findFirst({
-    where: { id: compId },
-  });
-  const compRoutes = await prisma.MixerRoute.findMany({
-    where: { competitionId: compId },
-  });
-  const compDivisions = await prisma.MixerDivision.findMany({
-    where: { competitionId: compId },
-    select: { id: true, name: true },
-  });
-  const compClimbers = await prisma.MixerClimber.findMany({
-    where: { competitionId: compId },
-    select: { id: true, name: true, entryMethod: true, userId: true },
-  });
-  const compBoulderScores = await prisma.MixerBoulderScore.findMany({
-    where: { competitionId: compId },
-    select: { id: true, climberId: true, score: true, attempts: true },
-  });
-  const compRopeScores = await prisma.MixerRopeScore.findMany({
-    where: { competitionId: compId },
-  });
+  const [
+    comp,
+    compRoutes,
+    compDivisions,
+    compClimbers,
+    compBoulderScores,
+    compRopeScores,
+  ] = await Promise.all([
+    prisma.MixerCompetition.findFirst({
+      where: { id: compId },
+    }),
+    prisma.MixerRoute.findMany({
+      where: { competitionId: compId },
+    }),
+    prisma.MixerDivision.findMany({
+      where: { competitionId: compId },
+      select: { id: true, name: true },
+      orderBy: { level: 'asc' },
+    }),
+    prisma.MixerClimber.findMany({
+      where: { competitionId: compId },
+      select: { id: true, name: true, entryMethod: true, userId: true },
+    }),
+    prisma.MixerBoulderScore.findMany({
+      where: { competitionId: compId },
+      select: { id: true, climberId: true, score: true, attempts: true },
+    }),
+    prisma.MixerRopeScore.findMany({
+      where: { competitionId: compId },
+    }),
+  ]);
 
-  // console.log(compClimbers);
-  // console.log(compDivisions);
-  // console.log(compRoutes);
-  // console.log(comp);
-  // console.log(comp.areScoresAvailable);
-  // console.log(compRopeScores);
   if (!comp) {
     return (
       <div className="w-screen py-5 flex flex-col items-center font-barlow font-bold text-white">

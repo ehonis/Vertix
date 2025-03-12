@@ -208,6 +208,7 @@ model MixerDivision {
     name          String
     climbers      MixerClimber[]
     competitionId String
+    level         String?
     competition   MixerCompetition @relation(fields: [competitionId], references: [id], onDelete: Cascade)
 }
 

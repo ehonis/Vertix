@@ -148,15 +148,20 @@ export default function HamburgerMenu() {
         <div className="fixed top-0 left-0 -z-10 bg-black h-svh w-screen px-5 pb-5 flex flex-col justify-between">
           <div className="mt-24 flex flex-col gap-12 ">
             {links.map((link) => (
-              <div key={link.name} className="flex flex-col gap-3">
+              <Link
+                key={link.name}
+                href={link.href}
+                onClick={closeMenu}
+                className="flex flex-col gap-3"
+              >
                 <div className="flex">
-                  <Link
+                  <p
                     href={link.href}
                     onClick={closeMenu}
                     className="text-white font-tomorrow text-5xl"
                   >
                     {link.name}
-                  </Link>
+                  </p>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
@@ -171,7 +176,7 @@ export default function HamburgerMenu() {
                     />
                   </svg>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
           {!user ? (

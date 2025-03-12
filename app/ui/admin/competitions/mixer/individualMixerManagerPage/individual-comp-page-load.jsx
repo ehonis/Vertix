@@ -27,7 +27,7 @@ export default function IndividualCompPageLoad({
         time={time}
         imageUrl={imageUrl}
       />
-      <DivisionsComponent divisions={divisions} />
+      <DivisionsComponent divisions={divisions} compId={compId} />
       <RoutesComponent routes={routes} />
       <UsersComponent
         compId={compId}

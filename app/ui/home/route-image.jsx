@@ -20,7 +20,7 @@ export default function RouteImage() {
     },
   ];
   return (
-    <div className="mt-10 flex flex-col gap-3 md:flex-row md:gap-5 md:mt-10 w-screen items-center md:justify-center">
+    <div className="mt-5 flex flex-col gap-3 md:flex-row md:gap-5 md:mt-5 w-screen items-center md:justify-center">
       {content.map((content, index) => (
         <motion.div
           key={index}
@@ -31,7 +31,7 @@ export default function RouteImage() {
             duration: 0.3,
             ease: 'easeIn',
           }}
-          className="relative  outline-1 w-[70%] h-36 md:w-1/3 md:h-48 rounded-md overflow-hidden"
+          className="relative  outline-1 w-[70%] h-36 md:w-1/5 md:h-48 rounded-md overflow-hidden"
         >
           <div className="absolute inset-0 bg-gradient-to-l from-black/100 to-transparent z-10 min-w-full" />
 
@@ -51,7 +51,7 @@ export default function RouteImage() {
             href={content.pageUrl}
             className="absolute flex items-center gap-2 right-6 top-1/2 -translate-y-1/2 z-20 bg-blue-500/65 outline-blue-500 outline outline-1 text-white font-barlow font-bold px-2 py-2 rounded-md "
           >
-            <p className="md:text-3xl">{content.text}</p>
+            <p className="md:text-2xl">{content.text}</p>
 
             <svg
               xmlns="http://www.w3.org/2000/svg"

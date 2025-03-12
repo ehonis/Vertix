@@ -4,7 +4,7 @@ import { motion } from 'motion/react';
 import { useState, useEffect } from 'react';
 
 export default function HomeLogoAnimation() {
-  const words = ['climb', 'track', 'boulder'];
+  const words = ['climb', 'track', 'boulder', 'compete'];
   const [displayText, setDisplayText] = useState('');
   const [wordIndex, setWordIndex] = useState(0);
   const [charIndex, setCharIndex] = useState(0);
@@ -36,7 +36,7 @@ export default function HomeLogoAnimation() {
   }, [charIndex, isDeleting, wordIndex]);
 
   return (
-    <div className="relative flex justify-center mt-8 md:mt-8 w-full text-white">
+    <div className="relative flex justify-center mt-5 md:mt-5 w-full text-white">
       {/* Purple glow in top left */}
 
       <div className="relative flex flex-col justify-center items-center md:w-3/5 w-4/5 h-40 bg-black rounded-md z-10 overflow-hidden">
