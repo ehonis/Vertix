@@ -34,6 +34,7 @@ export default function IndividualCompPageLoad({
         climbers={climbers}
         ropeScores={ropeScores}
         boulderScores={boulderScores}
+        divisions={divisions}
       />
     </div>
   );

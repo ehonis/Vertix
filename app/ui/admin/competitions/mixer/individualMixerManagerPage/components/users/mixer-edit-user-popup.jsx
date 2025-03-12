@@ -4,6 +4,9 @@ import { motion } from 'motion/react';
 import clsx from 'clsx';
 import Image from 'next/image';
 import FindUserPopUp from './mixer-find-user-popup';
+import { useNotification } from '@/app/contexts/NotificationContext';
+import { useRouter } from 'next/navigation';
+import ConfirmationPopUp from '@/app/ui/admin/new_route/confirmation-pop-up';
 
 export default function EditUserPopUp({
   compId,
@@ -12,12 +15,16 @@ export default function EditUserPopUp({
   climber,
   boulderScore,
   ropeScore,
+  divisions,
 }) {
+  const { showNotification } = useNotification();
+  const router = useRouter();
   //user data
   const [climberName, setClimberName] = useState(climber?.name || '');
   const [entryMethod, setEntryMethod] = useState(
     climber?.entryMethod || 'MANUAL'
   );
+  const [divisionId, setDivisionId] = useState(climber?.divisionId || 'none');
   const [connectedUser, setConnectedUser] = useState(null);
 
   //user route data
@@ -33,8 +40,8 @@ export default function EditUserPopUp({
   );
 
   const [isSaveButton, setIsSaveButton] = useState(false);
-  const [isNewUserSaveButton, setIsNewUserSaveButton] = useState(false);
   const [isUserSearchPopUp, setIsUserSearchPopUp] = useState(false);
+  const [isConfirmationPopUp, setIsConfirmationPopUp] = useState(false);
 
   // Fetch connected user if entry method is APP
   useEffect(() => {
@@ -44,7 +51,7 @@ export default function EditUserPopUp({
       });
       try {
         const response = await fetch(
-          `/api/mixer/manager/getMixerUser?${queryData.toString()}`
+          `/api/mixer/manager/user/getMixerUser?${queryData.toString()}`
         );
         if (!response.ok) {
           console.log('error');
@@ -78,7 +85,8 @@ export default function EditUserPopUp({
         tempBoulderScore !== boulderScore.score ||
         tempBoulderAttempts !== boulderScore.attempts ||
         tempRopeScore !== ropeScore.score ||
-        tempRopeAttempts !== ropeScore.attempts;
+        tempRopeAttempts !== ropeScore.attempts ||
+        divisionId !== climber.divisionId;
 
       setIsSaveButton(hasChanges);
     }
@@ -89,6 +97,7 @@ export default function EditUserPopUp({
     tempBoulderAttempts,
     tempRopeScore,
     tempRopeAttempts,
+    divisionId,
   ]);
 
   // Handle form changes
@@ -98,6 +107,9 @@ export default function EditUserPopUp({
 
   const handleEntryMethodChange = (e) => {
     setEntryMethod(e.target.value);
+    if (e.target.value === 'MANUAL') {
+      setConnectedUser(null);
+    }
   };
 
   const handleBoulderScoreChange = (e) => {
@@ -122,25 +134,129 @@ export default function EditUserPopUp({
 
   // Handle form submission
   const handleSubmit = async () => {
-    // Implement your update logic here
-    console.log('Updating changes...');
+    if (climberName === '') {
+      showNotification({ message: 'Cannot Submit: No Name', color: 'red' });
+    } else if (tempBoulderScore === '') {
+      showNotification({
+        message: 'Cannot Submit: No Boulder Score',
+        color: 'red',
+      });
+    } else if (tempBoulderAttempts === '') {
+      showNotification({
+        message: 'Cannot Submit: No boulder attempts',
+        color: 'red',
+      });
+    } else if (tempRopeScore === '') {
+      showNotification({
+        message: 'Cannot Submit: No rope score',
+        color: 'red',
+      });
+    } else if (tempRopeAttempts === '') {
+      showNotification({
+        message: 'Cannot Submit: No rope attempts',
+        color: 'red',
+      });
+    } else if (entryMethod === 'APP' && !connectedUser) {
+      showNotification({
+        message: 'Cannot Submit: No selected user',
+        color: 'red',
+      });
+    } else if (divisionId === 'none') {
+      showNotification({
+        message: 'Cannot Submit: No selected division',
+        color: 'red',
+      });
+    } else {
+      const data = {
+        compId,
+        userId: climber.id,
+        name: climberName,
+        ropeScore: tempRopeScore,
+        boulderScore: tempBoulderScore,
+        boulderAttempts: tempBoulderAttempts,
+        ropeAttempts: tempRopeAttempts,
+        user: connectedUser,
+        divisionId,
+        entryMethod,
+      };
+      try {
+        const response = await fetch('/api/mixer/manager/user/updateUser', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data),
+        });
+        const responseData = await response.json();
+        if (!response.ok) {
+          showNotification({ message: responseData.error, color: 'red' });
+        } else {
+          showNotification({ message: 'Updated User!', color: 'green' });
+          router.refresh();
+          onCancel();
+        }
+      } catch (error) {
+        showNotification({ message: error, color: 'red' });
+      }
+    }
   };
+
   const handleUpdateConnectedUser = (user) => {
     setConnectedUser(user);
   };
+
+  const handleDelete = async () => {
+    setIsConfirmationPopUp(false);
+    const data = { climberId: climber.id };
+    try {
+      const response = await fetch('/api/mixer/manager/user/deleteUser', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+      if (!response.ok) {
+        showNotification({ message: 'Could not delete user', color: 'red' });
+      } else {
+        showNotification({ message: 'Deleted User', color: 'green' });
+        router.refresh();
+        onCancel();
+      }
+    } catch (error) {
+      showNotification({ message: 'Could not delete user', color: 'red' });
+    }
+  };
+
   const handleNewUserSubmit = async () => {
     if (climberName === '') {
-      console.error('no name');
+      showNotification({ message: 'Cannot Submit: No Name', color: 'red' });
     } else if (tempBoulderScore === '') {
-      console.error('no boulder score');
+      showNotification({
+        message: 'Cannot Submit: No Boulder Score',
+        color: 'red',
+      });
     } else if (tempBoulderAttempts === '') {
-      console.error('no boulder attempts');
+      showNotification({
+        message: 'Cannot Submit: No boulder attempts',
+        color: 'red',
+      });
     } else if (tempRopeScore === '') {
-      console.error('no rope score');
+      showNotification({
+        message: 'Cannot Submit: No rope score',
+        color: 'red',
+      });
     } else if (tempRopeAttempts === '') {
-      console.error('no rope attempts');
+      showNotification({
+        message: 'Cannot Submit: No rope attempts',
+        color: 'red',
+      });
     } else if (entryMethod === 'APP' && !connectedUser) {
-      console.error('app with no connected climber');
+      showNotification({
+        message: 'Cannot Submit: No selected user',
+        color: 'red',
+      });
+    } else if (divisionId === 'none') {
+      showNotification({
+        message: 'Cannot Submit: No selected division',
+        color: 'red',
+      });
     } else {
       const data = {
         compId,
@@ -150,25 +266,39 @@ export default function EditUserPopUp({
         boulderAttempts: tempBoulderAttempts,
         ropeAttempts: tempRopeAttempts,
         user: connectedUser,
+        divisionId,
+        entryMethod,
       };
       try {
-        const response = await fetch('/api/mixer/manager/addNewUser', {
+        const response = await fetch('/api/mixer/manager/user/addNewUser', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(data),
         });
+        const responseData = await response.json();
         if (!response.ok) {
-          console.error(response.message);
+          showNotification({ message: responseData.error, color: 'red' });
+        } else {
+          showNotification({ message: 'Created New User!', color: 'green' });
+          router.refresh();
+          onCancel();
         }
       } catch (error) {
-        console.error(error);
+        showNotification({ message: error, color: 'red' });
       }
     }
-    onCancel();
   };
 
   return (
     <div>
+      {isConfirmationPopUp && (
+        <ConfirmationPopUp
+          onConfirmation={handleDelete}
+          onCancel={() => setIsConfirmationPopUp(false)}
+          message={'Caution! This will delete the climber for the comp'}
+          submessage={'this action cannot be undone'}
+        />
+      )}
       {isUserSearchPopUp && (
         <FindUserPopUp
           onCancel={() => setIsUserSearchPopUp(false)}
@@ -295,6 +425,26 @@ export default function EditUserPopUp({
             </div>
           ) : null}
 
+          {divisions.length !== 0 && (
+            <div className="w-full flex flex-col items-center">
+              <p className="place-self-start ml-1">Division</p>
+              <select
+                name=""
+                id=""
+                value={divisionId}
+                onChange={(e) => setDivisionId(e.target.value)}
+                className="bg-bg1 w-72 px-2 py-1 rounded-md text-center"
+              >
+                <option value="none"></option>
+                {divisions.map((division) => (
+                  <option key={division.id} value={division.id}>
+                    {division.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
+
           {/* boulder scores */}
           <div className="flex flex-col bg-bg1 rounded p-2 gap-2 w-72 place-self-center">
             <p>Boulder Scores Combined</p>
@@ -359,22 +509,32 @@ export default function EditUserPopUp({
               />
             </div>
           </div>
-          {isSaveButton && (
-            <button
-              className="px-2 py-1 mr-1 bg-green-500 rounded place-self-end font-normal"
-              onClick={handleSubmit}
-            >
-              Update Changes
-            </button>
-          )}
-          {type === 'NEW' && (
-            <button
-              className="px-2 py-1 mr-1 bg-green-500 rounded place-self-end font-normal"
-              onClick={handleNewUserSubmit}
-            >
-              Add New User
-            </button>
-          )}
+          <div className="flex justify-between">
+            {type === 'EDIT' && (
+              <button
+                className="px-2 py-1 ml-1 bg-red-500 rounded justify-end-start font-normal"
+                onClick={() => setIsConfirmationPopUp(true)}
+              >
+                Delete
+              </button>
+            )}
+            {isSaveButton && (
+              <button
+                className="px-2 py-1 mr-1 bg-green-500 rounded justify-self-end font-normal"
+                onClick={handleSubmit}
+              >
+                Update Changes
+              </button>
+            )}
+            {type === 'NEW' && (
+              <button
+                className="px-2 py-1 mr-1 bg-green-500 rounded justify-self-end font-normal"
+                onClick={handleNewUserSubmit}
+              >
+                Add New User
+              </button>
+            )}
+          </div>
         </motion.div>
       </motion.div>
     </div>

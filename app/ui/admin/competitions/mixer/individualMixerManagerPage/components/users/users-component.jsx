@@ -9,6 +9,7 @@ export default function UsersComponent({
   climbers,
   ropeScores,
   boulderScores,
+  divisions,
 }) {
   const [compClimbers, setCompClimbers] = useState(climbers); //sets users for rendering
   const [showAllClimbers, setShowAllClimbers] = useState(false); //for user rendering
@@ -34,6 +35,7 @@ export default function UsersComponent({
     const tempFoundBoulderScore = boulderScores.find(
       (score) => score.climberId === climberId
     );
+    console.log(tempFoundClimber);
     //set functions
     setFoundRopeScore(tempFoundRopeScore);
     setFoundBoulderScore(tempFoundBoulderScore);
@@ -51,6 +53,10 @@ export default function UsersComponent({
     setEditUserType('NEW');
     setIsEditClimberPopUp(true);
   };
+
+  useEffect(() => {
+    setCompClimbers(climbers);
+  }, [climbers]);
   return (
     <div>
       {isEditClimberPopUp && (
@@ -61,6 +67,7 @@ export default function UsersComponent({
           climber={foundClimber}
           ropeScore={foundRopeScore}
           boulderScore={foundBoulderScore}
+          divisions={divisions}
         />
       )}
       <div>

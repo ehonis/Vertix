@@ -53,11 +53,14 @@ export default function DivisionsComponent({ divisions, compId }) {
       const data = { divisionsToDelete: checkedDivisions };
       console.log(data);
       try {
-        const response = await fetch('/api/mixer/manager/deleteDivision', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(data),
-        });
+        const response = await fetch(
+          '/api/mixer/manager/division/deleteDivision',
+          {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data),
+          }
+        );
         const responseData = await response.json();
         if (!response.ok) {
           showNotification({ message: responseData.message, color: 'red' });

@@ -47,11 +47,14 @@ export default function EditDivisionPopUp({
     };
     setIsLoading(true);
     try {
-      const response = await fetch('/api/mixer/manager/updateDivision', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
-      });
+      const response = await fetch(
+        '/api/mixer/manager/division/updateDivision',
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data),
+        }
+      );
       if (!response.ok) {
         console.error(response.message);
       }
@@ -77,7 +80,7 @@ export default function EditDivisionPopUp({
 
     setIsLoading(true);
     try {
-      const response = await fetch('/api/mixer/manager/newDivision', {
+      const response = await fetch('/api/mixer/manager/division/newDivision', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),

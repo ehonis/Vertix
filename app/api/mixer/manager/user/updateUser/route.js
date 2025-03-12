@@ -5,12 +5,15 @@ export async function POST(request) {
   try {
     const {
       compId,
+      userId,
       name,
       ropeScore,
       boulderScore,
       boulderAttempts,
       ropeAttempts,
       user,
+      divisionId,
+      entryMethod,
     } = await request.json();
 
     // Convert string values to integers
@@ -29,6 +32,12 @@ export async function POST(request) {
           },
         },
         name,
+        division: {
+          connect: {
+            id: divisionId,
+          },
+        },
+        entryMethod,
       };
 
       // Add user connection if a user is provided
@@ -38,70 +47,55 @@ export async function POST(request) {
             id: user.id,
           },
         };
+      } else if (entryMethod === 'MANUAL') {
+        climberData.user = {
+          disconnect: true,
+        };
       }
 
-      const newClimber = await tx.mixerClimber.create({
+      const climber = await tx.mixerClimber.update({
+        where: { id: userId },
         data: climberData,
       });
 
       // Create rope score
       const ropeScoreData = {
-        climber: {
-          connect: {
-            id: newClimber.id,
-          },
-        },
         score: parsedRopeScore,
         attempts: parsedRopeAttempts,
-        competition: {
-          connect: {
-            id: compId,
-          },
-        },
       };
 
-      const createdRopeScore = await tx.mixerRopeScore.create({
+      const updatedRopeScore = await tx.mixerRopeScore.update({
+        where: { climberId: userId },
         data: ropeScoreData,
       });
 
       // Create boulder score
       const boulderScoreData = {
-        climber: {
-          connect: {
-            id: newClimber.id,
-          },
-        },
         score: parsedBoulderScore,
         attempts: parsedBoulderAttempts,
-        competition: {
-          connect: {
-            id: compId,
-          },
-        },
       };
 
-      const createdBoulderScore = await tx.mixerBoulderScore.create({
+      const updatedBoulderScore = await tx.mixerBoulderScore.update({
+        where: { climberId: userId },
         data: boulderScoreData,
       });
 
       return {
-        climber: newClimber,
-        ropeScore: createdRopeScore,
-        boulderScore: createdBoulderScore,
+        climber: climber,
+        ropeScore: updatedRopeScore,
+        boulderScore: updatedBoulderScore,
       };
     });
 
-    return NextResponse.json({
-      status: 200,
-      message: 'Successfully created user',
-      data: result,
-    });
+    return NextResponse.json(
+      { status: 200 },
+      { message: 'Successfully Updated user' }
+    );
   } catch (error) {
-    console.error(error);
+    console.error(JSON.stringify(error, null, 2));
     return NextResponse.json(
       {
-        error: 'Failed to create user',
-        details: error.message,
+        error: 'error in api',
       },
       { status: 500 }
     );

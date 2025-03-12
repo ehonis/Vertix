@@ -35,7 +35,13 @@ export default async function page({ params }) {
     }),
     prisma.MixerClimber.findMany({
       where: { competitionId: compId },
-      select: { id: true, name: true, entryMethod: true, userId: true },
+      select: {
+        id: true,
+        name: true,
+        entryMethod: true,
+        userId: true,
+        divisionId: true,
+      },
     }),
     prisma.MixerBoulderScore.findMany({
       where: { competitionId: compId },

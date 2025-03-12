@@ -39,7 +39,7 @@ export default function FindUserPopUp({ onConnectUser, onCancel }) {
     setIsSearched(true);
     try {
       const response = await fetch(
-        `/api/mixer/manager/findUserSearch?${queryData.toString()}`
+        `/api/mixer/manager/user/findUserSearch?${queryData.toString()}`
       );
       if (!response.ok) {
         console.error(response.message);
