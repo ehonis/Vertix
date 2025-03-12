@@ -1,7 +1,5 @@
-'use client';
-
 import Image from 'next/image';
-import { motion } from 'motion/react';
+
 import Link from 'next/link';
 import clsx from 'clsx';
 
@@ -22,15 +20,8 @@ export default function RouteImage() {
   return (
     <div className="mt-5 flex flex-col gap-3 md:flex-row md:gap-5 md:mt-5 w-screen items-center md:justify-center">
       {content.map((content, index) => (
-        <motion.div
+        <div
           key={index}
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{
-            delay: 0.15,
-            duration: 0.3,
-            ease: 'easeIn',
-          }}
           className="relative  outline-1 w-[70%] h-36 md:w-[28%] lg:h-44 rounded-md overflow-hidden"
         >
           <div className="absolute inset-0 bg-gradient-to-l from-black/100 to-transparent z-10 min-w-full" />
@@ -68,7 +59,7 @@ export default function RouteImage() {
               />
             </svg>
           </Link>
-        </motion.div>
+        </div>
       ))}
     </div>
   );

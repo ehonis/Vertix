@@ -107,7 +107,7 @@ export default function SignInForm() {
             placeholder="Email"
             value={emailString}
             onChange={(e) => setEmailString(e.target.value)}
-            className="text-white bg-bg1 rounded px-2 py-1 font-barlow text-lg"
+            className="text-white bg-bg1 rounded px-2 py-1 font-barlow text-lg focus:outline-none"
           />
           <button
             onClick={() => handleSignIn('resend')}

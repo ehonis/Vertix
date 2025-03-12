@@ -110,7 +110,7 @@ export default function NewRoute({ id, onCommit, onUncommit }) {
               value={name}
               onChange={handleNameChange}
               placeholder="Name"
-              className="rounded-md bg-bg1 text-white py-1 px-2 max-w-min lg:h-14 lg:text-3xl font-barlow font-bold"
+              className="rounded-md bg-bg1 text-white py-1 px-2 max-w-min lg:h-14 lg:text-3xl font-barlow font-bold focus:outline-none"
             />
           </div>
           <div className="flex gap-1 items-center">
@@ -136,7 +136,7 @@ export default function NewRoute({ id, onCommit, onUncommit }) {
               name="date"
               value={selectedDate} // Controlled value
               onChange={handleDateChange} // Update state on change
-              className="p-1 rounded-lg bg-bg1 text-white cursor-pointer font-barlow font-bold"
+              className="p-1 rounded-lg bg-bg1 text-white cursor-pointer font-barlow font-bold focus:outline-none"
             />
           </div>
           <GradeSelect onGradeChange={handleGradeData} />

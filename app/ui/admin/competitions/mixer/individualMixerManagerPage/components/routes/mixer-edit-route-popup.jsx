@@ -78,7 +78,7 @@ export default function EditRoutePopUp({
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="bg-bg1 p-2 rounded w-full"
+            className="bg-bg1 p-2 rounded w-full focus:outline-none"
             placeholder="Route Name"
           />
 
@@ -119,7 +119,7 @@ export default function EditRoutePopUp({
                             e.target.value
                           )
                         }
-                        className="bg-bg2 p-1 rounded w-3/4 text-center place-self-center"
+                        className="bg-bg2 p-1 rounded w-3/4 text-center place-self-center focus:outline-none"
                       />
 
                       <input
@@ -128,7 +128,7 @@ export default function EditRoutePopUp({
                         onChange={(e) =>
                           handleHoldChange(index, 'leadPoints', e.target.value)
                         }
-                        className="bg-bg2 p-1 rounded w-3/4 text-center place-self-end"
+                        className="bg-bg2 p-1 rounded w-3/4 text-center place-self-end focus:outline-none"
                       />
                     </div>
                   ))}

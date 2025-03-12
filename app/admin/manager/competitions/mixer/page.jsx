@@ -3,7 +3,14 @@ import { Suspense } from 'react';
 import ElementLoadingAnimation from '@/app/ui/general/element-loading-animation';
 import UpcomingMixerCompetitions from '@/app/ui/admin/competitions/mixer/upcoming-mixer-competitions';
 import CompletedMixerCompetitions from '@/app/ui/admin/competitions/mixer/completed-mixer-competitions';
+import { auth } from '@/auth';
+import { redirect } from 'next/navigation';
 export default async function MixerManager() {
+  const session = await auth();
+  const user = session?.user;
+  if (!user || !user?.admin) {
+    redirect('/signin');
+  }
   return (
     <div className="w-screen p-5 flex flex-col items-center">
       <div className="max-w-md flex-col flex">

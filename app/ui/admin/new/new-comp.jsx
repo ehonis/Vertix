@@ -124,7 +124,7 @@ export default function NewComp({ id, onCommit, onUncommit }) {
             value={name}
             onChange={handleNameChange}
             placeholder="Name"
-            className="max-w-min bg-bg1 text-white rounded-md px-2 py-1"
+            className="max-w-min bg-bg1 text-white rounded-md px-2 py-1 focus:outline-none"
           />
         </div>
         <div className="flex gap-2">
@@ -154,7 +154,7 @@ export default function NewComp({ id, onCommit, onUncommit }) {
             name="date"
             value={selectedDate} // Controlled value
             onChange={handleDateChange} // Update state on change
-            className="p-1 rounded-lg bg-bg1 text-white cursor-pointer font-barlow font-bold"
+            className="p-1 rounded-lg bg-bg1 text-white cursor-pointer font-barlow font-bold focus:outline-none"
           />
           <p className="text-xs text-white font-barlow font-bold">
             {'(this can be changed later)'}

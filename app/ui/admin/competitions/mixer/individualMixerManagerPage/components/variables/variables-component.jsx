@@ -1,18 +1,22 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { UploadDropzone } from '@/utils/uploadthing';
+
 import InformationalPopUp from '@/app/ui/general/informational-pop-up';
 import { clsx } from 'clsx';
 import Image from 'next/image';
+import ImagePopUp from './image-uploader-popup';
 
 export default function VariablesComponent({
+  compId,
+  name,
   compDay,
   areScoresAvailable,
   status,
   time,
   imageUrl,
 }) {
+  const [compName, setCompName] = useState(name);
   const [selectedDate, setSelectedDate] = useState(
     compDay.toISOString().split('T')[0]
   ); // variable
@@ -24,6 +28,7 @@ export default function VariablesComponent({
   const [infoPopUpHtml, setInfoPopUpHtml] = useState(<div></div>); //variable
   const [statusOption, setStatusOption] = useState(status); //variable
   const [compTime, setCompTime] = useState(time); //variable
+  const [isImagePopUp, setIsImagePopUp] = useState(false);
 
   const handleScoresAvailableButtonClick = () => {
     setIsScoresAvailableInfoPopUp(true);
@@ -98,6 +103,7 @@ export default function VariablesComponent({
   const handleOnCancelClick = () => {
     setIsStatusInfoPopUp(false);
     setIsScoresAvailableInfoPopUp(false);
+    setIsImagePopUp(false);
   }; //variable
   return (
     <div>
@@ -107,6 +113,18 @@ export default function VariablesComponent({
           onCancel={handleOnCancelClick}
         />
       )}
+      {isImagePopUp && (
+        <ImagePopUp compId={compId} onCancel={handleOnCancelClick} />
+      )}
+      <input
+        type="text"
+        name=""
+        id=""
+        value={compName}
+        onChange={(e) => setCompName(e.target.value)}
+        className=" text-4xl mb-3 bg-transparent  max-w-sm focus:outline-none"
+      />
+
       <div className="bg-bg2 flex-col flex p-3 rounded w-full">
         <div className="flex flex-col  gap-2">
           {/*Comp Image*/}
@@ -119,7 +137,10 @@ export default function VariablesComponent({
                 {'(Tap the image to upload new)'}
               </label>
             </div>
-            <button className="bg-bg2 p-5 outline rounded-full my-1">
+            <button
+              className="bg-bg2 p-5 outline rounded-full my-1"
+              onClick={() => setIsImagePopUp(true)}
+            >
               {imageUrl === null ? (
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -238,7 +259,7 @@ export default function VariablesComponent({
                 pattern="[0-9]*"
                 onChange={handleAlottedTimeChange}
                 placeholder="#"
-                className="bg-bg2 rounded p-1 w-10 text-center hide-spinners"
+                className="bg-bg2 rounded p-1 w-10 text-center hide-spinners focus:outline-none"
               />
               <label htmlFor="">Min</label>
             </div>
@@ -254,20 +275,9 @@ export default function VariablesComponent({
               name="date"
               value={selectedDate} // Controlled value
               onChange={(e) => setSelectedDate(e.target.value)} // Update state on change
-              className="p-1 rounded-lg bg-bg2 text-white cursor-pointer font-barlow font-bold"
+              className="p-1 rounded-lg bg-bg2 text-white cursor-pointer font-barlow font-bold focus:outline-none"
             />
           </div>
-          {/* <UploadDropzone
-                  className="ut-button:max-w-xs ut- ut-l"
-                  endpoint="imageUploader"
-                  onClientUploadComplete={(res) => {
-                    console.log('Files:', res);
-                    alert('Upload Completed');
-                  }}
-                  onUploadError={(error) => {
-                    alert(`ERROR! ${error.message}`);
-                  }}
-                /> */}
         </div>
       </div>
     </div>

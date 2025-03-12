@@ -19,8 +19,9 @@ export default function IndividualCompPageLoad({
 }) {
   return (
     <div className="w-full overflow-hidden">
-      <h2 className="text-4xl mb-3 ">{name}</h2>
       <VariablesComponent
+        compId={compId}
+        name={name}
         compDay={compDay}
         areScoresAvailable={areScoresAvailable}
         status={status}

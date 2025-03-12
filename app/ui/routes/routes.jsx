@@ -303,7 +303,7 @@ export default function Routes({ ropes, boulders, user, completions }) {
                             id={color}
                             checked={checkedColors[color]}
                             onChange={handleColorCheckboxChange}
-                            className="form-checkbox size-4"
+                            className="form-checkbox size-4 "
                           />
                         </label>
                       ))}

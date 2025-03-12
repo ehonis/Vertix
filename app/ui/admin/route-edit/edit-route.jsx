@@ -146,7 +146,7 @@ export default function EditRoute({ route, images, daysOld, totalSends }) {
           <input
             type="text"
             defaultValue={route.title}
-            className="text-black font-barlow font-bold text-center p-2 rounded text-xl"
+            className="text-black font-barlow font-bold text-center p-2 rounded text-xl focus:outline-none"
             onChange={handleTitleChange}
           />
           <button className="flex flex-col items-center">
@@ -273,7 +273,7 @@ export default function EditRoute({ route, images, daysOld, totalSends }) {
                 <input
                   type="date"
                   value={date}
-                  className="font-barlow font-bold rounded w-32"
+                  className="font-barlow font-bold rounded w-32 focus:outline-none"
                   onChange={handleDateChange}
                 />
               </div>

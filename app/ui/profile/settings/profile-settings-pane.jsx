@@ -89,7 +89,7 @@ export default function ProfileSettingsPane({ userData }) {
         <input
           type="text"
           value={name}
-          className="p-1 rounded font-barlow font-bold"
+          className="p-1 rounded font-barlow font-bold focus:outline-none"
           onChange={handleNameChange}
         />
       </div>
@@ -104,7 +104,7 @@ export default function ProfileSettingsPane({ userData }) {
           <input
             type="text"
             value={id}
-            className="p-1 rounded-r font-barlow font-bold"
+            className="p-1 rounded-r font-barlow font-bold focus:outline-none"
             onChange={handleIdChange}
           />
         </div>

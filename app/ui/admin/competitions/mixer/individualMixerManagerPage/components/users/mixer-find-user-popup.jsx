@@ -104,7 +104,7 @@ export default function FindUserPopUp({ onConnectUser, onCancel }) {
           <div className="flex justify-center items-center">
             <input
               type="text"
-              className="bg-bg1 rounded-l py-1 px-2 w-"
+              className="bg-bg1 rounded-l py-1 px-2 w- focus:outline-none"
               placeholder="User Search"
               value={searchText}
               onChange={handleSearchTextChange}

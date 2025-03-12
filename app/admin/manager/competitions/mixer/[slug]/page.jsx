@@ -9,8 +9,8 @@ import { redirect } from 'next/navigation';
 export default async function page({ params }) {
   const session = await auth();
   const user = session?.user || null;
-  if (!user?.admin) {
-    redirect('/');
+  if (!user || !user?.admin) {
+    redirect('/signin');
   }
   const { slug } = await params;
   const compId = slug;

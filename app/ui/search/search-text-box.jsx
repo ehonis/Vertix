@@ -72,7 +72,7 @@ export default function SearchTextBox({ onDataFetch }) {
         <div className="bg-bg2 outline outline-1 outline-gray-400 rounded-l-full w-9/12 md:w-1/2 h-12 flex items-center justify-between px-5 text-white font-barlow font-bold drop-shadow-customBlack">
           <input
             type="text"
-            className="bg-transparent w-full font-barlow font-bold text-white"
+            className="bg-transparent w-full font-barlow font-bold text-white focus:outline-none"
             placeholder="Search..."
             value={searchText}
             onChange={handleTextChange}

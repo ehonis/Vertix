@@ -9,7 +9,7 @@ import clsx from 'clsx';
 
 export default function HamburgerMenu({ user, status }) {
   const [isOpen, setIsOpen] = useState(false);
-  const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [isProfileOpen, setIsProfileOpen] = useState(true);
 
   const handleClick = () => {
     setIsOpen(!isOpen);
@@ -228,13 +228,13 @@ export default function HamburgerMenu({ user, status }) {
                 )}
               </AnimatePresence>
               <div className="w-full flex justify-between">
-                <div className="flex items-center gap-1">
+                <div className="flex items-center gap-2">
                   {user.image ? (
                     <Image
                       src={user.image}
                       height={100}
                       width={100}
-                      className="rounded-full size-12"
+                      className="rounded-full size-12 outline outline-2 outline-blue-600"
                       alt="picture of you"
                     />
                   ) : (

@@ -341,7 +341,7 @@ export default function MixerScoreScroller({ mixerRoutes, StartTime }) {
                         type="text"
                         value={hold[panel.id]}
                         onChange={(e) => handleChange(panel.id, e)}
-                        className="border p-2 text-black font-barlow font-bold size-10 text-2xl rounded text-center"
+                        className="border p-2 text-black font-barlow font-bold size-10 text-2xl rounded text-center focus:outline-none"
                         placeholder="#"
                       />
                       <button
@@ -415,7 +415,7 @@ export default function MixerScoreScroller({ mixerRoutes, StartTime }) {
                         type="text"
                         value={attempts[panel.id]}
                         onChange={(e) => handleChange(panel.id, e)}
-                        className="border p-2 text-black font-barlow font-bold size-10 text-2xl rounded text-center"
+                        className="border p-2 text-black font-barlow font-bold size-10 text-2xl rounded text-center focus:outline-none"
                         placeholder="#"
                       />
                       <button

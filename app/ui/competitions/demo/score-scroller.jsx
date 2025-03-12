@@ -203,7 +203,7 @@ export default function CompetitionScoreTraker() {
                         type="number"
                         value={attempts[panel.id]}
                         onChange={(e) => handleChange(panel.id, e)}
-                        className="border p-2 text-black font-barlow font-bold w-14 h-14 text-3xl rounded text-center"
+                        className="border p-2 text-black font-barlow font-bold w-14 h-14 text-3xl rounded text-center focus:outline-none"
                         placeholder="#"
                       />
                       <button

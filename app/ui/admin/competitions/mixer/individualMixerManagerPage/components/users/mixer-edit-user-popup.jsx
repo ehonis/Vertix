@@ -346,7 +346,7 @@ export default function EditUserPopUp({
               name=""
               id=""
               onChange={handleNameChange}
-              className="text-white rounded-l bg-bg0 px-2 py-1 w-48"
+              className="text-white rounded-l bg-bg0 px-2 py-1 w-48 focus:outline-none"
               placeholder="Climber Name"
             />
             <select
@@ -458,7 +458,7 @@ export default function EditUserPopUp({
                 id=""
                 value={tempBoulderScore}
                 onChange={handleBoulderScoreChange}
-                className="w-16 bg-white text-bg1 rounded px-2  text-sm"
+                className="w-16 bg-white text-bg1 rounded px-2  text-sm focus:outline-none"
                 inputMode="numeric" // Show numeric keyboard on mobile
                 pattern="[0-9]*" // Optional: For better mobile support
               />
@@ -471,7 +471,7 @@ export default function EditUserPopUp({
                 id=""
                 value={tempBoulderAttempts}
                 onChange={handleBoulderAttemptsChange}
-                className="w-10 bg-white text-bg1 rounded px-2 text-sm"
+                className="w-10 bg-white text-bg1 rounded px-2 text-sm focus:outline-none"
                 inputMode="numeric" // Show numeric keyboard on mobile
                 pattern="[0-9]*" // Optional: For better mobile support
               />
@@ -490,7 +490,7 @@ export default function EditUserPopUp({
                 id=""
                 value={tempRopeScore}
                 onChange={handleRopeScoreChange}
-                className="w-16 bg-white text-bg1 rounded px-2 text-sm"
+                className="w-16 bg-white text-bg1 rounded px-2 text-sm focus:outline-none"
                 inputMode="numeric" // Show numeric keyboard on mobile
                 pattern="[0-9]*" // Optional: For better mobile support
               />
@@ -503,7 +503,7 @@ export default function EditUserPopUp({
                 id=""
                 value={tempRopeAttempts}
                 onChange={handleRopeAttemptsChange}
-                className="w-10 bg-white text-bg1 rounded px-2 text-sm"
+                className="w-10 bg-white text-bg1 rounded px-2 text-sm focus:outline-none "
                 inputMode="numeric" // Show numeric keyboard on mobile
                 pattern="[0-9]*" // Optional: For better mobile support
               />
