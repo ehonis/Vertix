@@ -141,7 +141,7 @@ export default function CompetitionScoreTraker() {
         slidesPerView={1}
         onSwiper={(swiper) => (swiperRef.current = swiper)} // Get Swiper instance
         onSlideChange={(swiper) => setRangeValue(swiper.activeIndex)} // Sync slider with Swiper
-        className="h-[calc(100vh-15rem)] rounded-sm"
+        className="h-svh rounded-sm"
       >
         {panels.map((panel) => (
           <SwiperSlide key={panel.id} className="p-8 pt-6 rounded-lg">

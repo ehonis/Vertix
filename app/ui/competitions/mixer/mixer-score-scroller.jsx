@@ -1,6 +1,7 @@
 'use client';
 
 import { Swiper, SwiperSlide } from 'swiper/react';
+
 import clsx from 'clsx';
 import { useState, useRef, useEffect } from 'react';
 import 'swiper/css';
@@ -9,6 +10,7 @@ import { useNotification } from '@/app/contexts/NotificationContext';
 import TypeToggleSwitch from './mixer-type-toggle';
 import { getPoints } from '@/lib/mixer';
 import MixerInfoPopup from './mixer-info-popup';
+import SwipeAnimation from '../../general/swipe-animation';
 
 export default function MixerScoreScroller({ mixerRoutes, StartTime }) {
   const [tempRouteId, setTempRouteId] = useState('');
@@ -48,7 +50,49 @@ export default function MixerScoreScroller({ mixerRoutes, StartTime }) {
   const [rangeValue, setRangeValue] = useState(0); // Range slider value
   const swiperRef = useRef(null); // Ref to control Swiper instance
 
-  const handleChange = (panelId, e) => {
+  const [showSwipeAnimation, setShowSwipeAnimation] = useState(true);
+  const [showBlurBackground, setShowBlurBackground] = useState(true);
+
+  useEffect(() => {
+    const animationTimer = setTimeout(() => {
+      setShowSwipeAnimation(false);
+    }, 5000); // Animation disappears after 5 seconds
+
+    const blurTimer = setTimeout(() => {
+      setShowBlurBackground(false);
+    }, 5000); // Blur disappears after 5 seconds
+
+    return () => {
+      clearTimeout(animationTimer);
+      clearTimeout(blurTimer);
+    }; // Clear timeouts on unmount
+  }, []);
+
+  const handleSwiperInteraction = () => {
+    setShowSwipeAnimation(false);
+    setShowBlurBackground(false); // Also hide blur on swipe
+  };
+
+  const handleHoldChange = (panelId, maxHold, e) => {
+    const inputValue = e.target.value;
+    const sanitizedValue = inputValue.replace(/[^0-9]/g, '');
+    const newHoldValue = Math.min(Number(sanitizedValue), maxHold);
+
+    // Update the points for the current hold value
+    const type = typeToggles[panelId] === 'TR' ? 'topRopePoints' : 'leadPoints';
+
+    setHold((prev) => ({
+      ...prev,
+      [panelId]: newHoldValue,
+    }));
+
+    setPoints((prevPoints) => ({
+      ...prevPoints,
+      [panelId]: getPoints(mixerRoutes, panelId, newHoldValue, type),
+    }));
+  };
+
+  const handleAttemptChange = (panelId, e) => {
     const inputValue = e.target.value;
     const sanitizedValue = inputValue.replace(/[^0-9]/g, '');
     setAttempts((prev) => ({
@@ -164,42 +208,26 @@ export default function MixerScoreScroller({ mixerRoutes, StartTime }) {
   const handleCancel = () => {
     setIsInfoPopup(false);
   };
-
   const handleCategoryChange = (value) => {
     setCategory(value);
   };
 
   return (
-    <div>
-      <div className="flex justify-between w-full">
-        <MixerCountdownTimer />
-        <button className=" absolute right-0 text-sm flex items-center justify-center gap-1">
-          <div className="bg-green-500 rounded-bl-lg p-1">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={1.5}
-              stroke="currentColor"
-              className="size-7 stroke-white"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="m4.5 12.75 6 6 9-13.5"
-              />
-            </svg>
-          </div>
-        </button>
-      </div>
-      <div className="flex flex-col px-5 py-5">
-        <div className="mb-3">
+    <div className="w-screen">
+      <div className="flex flex-col p-5 pt-3 pb-1 ">
+        <div className="mb-5 flex justify-between max-w-md gap-5 md:max-w-lg place-self-center">
+          <MixerCountdownTimer />
           <TypeToggleSwitch
             leftLabel={'Boulder'}
             rightLabel={'Rope'}
             value={category}
             onTypeSwitchValue={(value) => handleCategoryChange(value)}
           />
+          <button className="text-sm flex items-center justify-center gap-1 text-white font-barlow font-semibold">
+            <div className="bg-green-500 rounded p-1">
+              <p>Submit Scores</p>
+            </div>
+          </button>
         </div>
         <div className="flex flex-col items-center justify-center">
           {/* Range Slider */}
@@ -210,11 +238,11 @@ export default function MixerScoreScroller({ mixerRoutes, StartTime }) {
             step="1"
             value={rangeValue}
             onChange={(e) => handleRangeChange(Number(e.target.value))}
-            className="w-3/4 mb-2 appearance-none bg-gray-300 rounded-sm h-2"
+            className="w-3/4 md:w-1/5 mb-2 appearance-none bg-gray-300 rounded-sm h-2"
           />
 
           {/* Slider Labels */}
-          <div className="flex justify-between w-3/4 text-sm text-gray-400">
+          <div className="flex justify-between w-3/4 md:w-1/5 text-sm text-gray-400 ">
             <span className="text-left font-barlow font-bold">
               {mixerRoutes[0].routeName}
             </span>{' '}
@@ -232,12 +260,11 @@ export default function MixerScoreScroller({ mixerRoutes, StartTime }) {
       </div>
       {/* Panel Swiper*/}
       <Swiper
-        direction="vertical"
-        spaceBetween={50}
-        slidesPerView={1}
+        grabCursor={true}
         onSwiper={(swiper) => (swiperRef.current = swiper)} // Get Swiper instance
-        onSlideChange={(swiper) => setRangeValue(swiper.activeIndex)} // Sync slider with Swiper
-        className="h-[calc(100vh-15rem)] rounded-sm"
+        onSlideChange={(swiper) => setRangeValue(swiper.activeIndex)}
+        onTap={handleSwiperInteraction} // Sync slider with Swiper
+        className="h-[calc(100vh-18rem)] max-w-sm md:max-w-lg rounded-sm"
       >
         {isInfoPopup ? (
           <MixerInfoPopup
@@ -249,7 +276,18 @@ export default function MixerScoreScroller({ mixerRoutes, StartTime }) {
             routeId={tempRouteId}
           />
         ) : null}
-        {mixerRoutes.map((panel) => (
+        {showBlurBackground && (
+          <div className="absolute top-0 left-0 w-full h-full bg-black-50 backdrop-blur-xs z-20 transition-all"></div>
+        )}
+
+        {showSwipeAnimation && (
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-30 pointer-events-none transition-all">
+            <div className="swipe-animation">
+              <SwipeAnimation />
+            </div>
+          </div>
+        )}
+        {mixerRoutes.map((panel, index) => (
           <SwiperSlide key={panel.id} className="p-8 pt-2 rounded-lg">
             {completions[panel.id] === false ? (
               <div
@@ -314,9 +352,9 @@ export default function MixerScoreScroller({ mixerRoutes, StartTime }) {
                     >
                       Hold {'#'}
                     </label>
-                    <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-5">
                       <button
-                        className="rounded-full size-10 font-barlow font-bold bg-red-500 flex justify-center items-center"
+                        className="rounded-full size-12 font-barlow font-bold bg-red-500/45 border-2 border-red-500 flex justify-center items-center"
                         onClick={() => handleMinusHold(panel.id)}
                       >
                         <svg
@@ -340,12 +378,14 @@ export default function MixerScoreScroller({ mixerRoutes, StartTime }) {
                       <input
                         type="text"
                         value={hold[panel.id]}
-                        onChange={(e) => handleChange(panel.id, e)}
-                        className="border p-2 text-black font-barlow font-bold size-10 text-2xl rounded-sm text-center focus:outline-hidden"
+                        onChange={(e) =>
+                          handleHoldChange(panel.id, panel.holds.length, e)
+                        }
+                        className="p-2 text-white font-barlow font-bold size-10 text-2xl rounded-sm text-center focus:outline-hidden border-none"
                         placeholder="#"
                       />
                       <button
-                        className="rounded-full size-10 font-barlow font-bold bg-green-500  flex justify-center items-center"
+                        className="rounded-full size-12 font-barlow font-bold bg-green-500/45 border-2 border-green-500  flex justify-center items-center"
                         onClick={() =>
                           handlePlusHold(panel.id, panel.holds.length)
                         }
@@ -388,9 +428,9 @@ export default function MixerScoreScroller({ mixerRoutes, StartTime }) {
                     >
                       Attempts
                     </label>
-                    <div className="flex items-center gap-6">
+                    <div className="flex items-center gap-5">
                       <button
-                        className="rounded-full size-10 font-barlow font-bold bg-red-500 flex justify-center items-center"
+                        className="rounded-full size-12 font-barlow font-bold bg-red-500/45 border-2 border-red-500 flex justify-center items-center"
                         onClick={() => handleMinusAttempt(panel.id)}
                       >
                         <svg
@@ -414,12 +454,12 @@ export default function MixerScoreScroller({ mixerRoutes, StartTime }) {
                       <input
                         type="text"
                         value={attempts[panel.id]}
-                        onChange={(e) => handleChange(panel.id, e)}
-                        className="border p-2 text-black font-barlow font-bold size-10 text-2xl rounded-sm text-center focus:outline-hidden"
+                        onChange={(e) => handleAttemptChange(panel.id, e)}
+                        className="p-2 text-white font-barlow font-bold size-10 text-2xl rounded-sm text-center focus:outline-hidden border-none"
                         placeholder="#"
                       />
                       <button
-                        className="rounded-full size-10 font-barlow font-bold bg-green-500  flex justify-center items-center"
+                        className="rounded-full size-12 font-barlow font-bold bg-green-500/45 border-2 border-green-500  flex justify-center items-center"
                         onClick={() => handlePlusAttempt(panel.id)}
                       >
                         <svg
@@ -445,7 +485,7 @@ export default function MixerScoreScroller({ mixerRoutes, StartTime }) {
                   {/* completion */}
                   <div className="flex flex-col gap-3 items-center">
                     <button
-                      className="bg-green-500 rounded-full size-16 flex justify-center items-center"
+                      className="bg-green-500/45 border-2 border-green-500 rounded-full size-16 flex justify-center items-center"
                       onClick={() =>
                         handleCompletion(
                           panel.id,
@@ -458,14 +498,16 @@ export default function MixerScoreScroller({ mixerRoutes, StartTime }) {
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"
                         viewBox="0 0 24 24"
-                        strokeWidth={1.5}
+                        strokeWidth="1.5"
                         stroke="currentColor"
-                        className="size-14"
+                        aria-hidden="true"
+                        data-slot="icon"
+                        className="size-10"
                       >
                         <path
                           strokeLinecap="round"
                           strokeLinejoin="round"
-                          d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                          d="m4.5 12.75 6 6 9-13.5"
                         />
                       </svg>
                     </button>
@@ -475,79 +517,78 @@ export default function MixerScoreScroller({ mixerRoutes, StartTime }) {
             ) : (
               <>
                 {/* complete panel */}
+
                 <div
                   className={clsx(
-                    'flex flex-col p-4 items-center h-full rounded-lg gradient-background-green shadow-xl text-white text-2xl gap-5 justify-between ',
+                    'flex flex-col justify-between p-3 bg-green-500/20 border-2 border-green-500 h-full w-full text-white text-2xl shadow-xl rounded-lg z-20',
                     panel.color === 'blue' ? 'shadow-blue-500' : null,
                     panel.color === 'red' ? 'shadow-red-500' : null,
                     panel.color === 'orange' ? 'shadow-orange-500' : null,
                     panel.color === 'yellow' ? 'shadow-yellow-400' : null
                   )}
                 >
-                  <div className="flex flex-col justify-between p-3 bg-bg1 rounded-lg h-full w-full">
-                    <div>
-                      <h1
-                        className={clsx(
-                          'font-orbitron font-bold text-6xl text-center mb-2 drop-shadow-customBlack',
-                          panel.color === 'blue' ? 'text-blue-500' : null,
-                          panel.color === 'orange' ? 'text-orange-500' : null,
-                          panel.color === 'yellow' ? 'text-yellow-300' : null,
-                          panel.color === 'red' ? 'text-red-500' : null
-                        )}
-                      >
-                        {panel.routeName}
-                      </h1>
-                      <p className="font-orbitron font-bold gradient-text-green-lime text-center">
-                        Completed
-                      </p>
-                    </div>
-                    <p className="font-barlow font-bold text-center text-4xl">
-                      {typeToggles[panel.id] === 'TR' ? 'Top Rope' : 'Lead'}
-                    </p>
-                    <div className="flex flex-col gap-2">
-                      <p className="font-stalinist gradient-text-yellow-red text-6xl text-center drop-shadow-customBlack">
-                        {points[panel.id]}
-                      </p>
-                      <p className="font-stalinist gradient-text-yellow-red text-xl text-center drop-shadow-customBlack">
-                        Points
-                      </p>
-                    </div>
-                    <div className="flex flex-col gap-5">
-                      {attempts[panel.id] !== 1 ? (
-                        <p className="font-barlow font-bold text-white text-2xl text-center drop-shadow-customBlack">
-                          {attempts[panel.id]} attempts
-                        </p>
-                      ) : (
-                        <p className="font-barlow font-bold text-white text-4xl text-center drop-shadow-customBlack">
-                          Flash!
-                        </p>
+                  <div className="z-30">
+                    <h1
+                      className={clsx(
+                        'font-orbitron font-bold text-6xl text-center mb-2 drop-shadow-customBlack',
+                        panel.color === 'blue' ? 'text-blue-600' : null,
+                        panel.color === 'orange' ? 'text-orange-600' : null,
+                        panel.color === 'yellow' ? 'text-yellow-400' : null,
+                        panel.color === 'red' ? 'text-red-600' : null
                       )}
-                    </div>
+                    >
+                      {panel.routeName}
+                    </h1>
+                    <p className="font-orbitron font-bold gradient-text-green-lime text-center">
+                      Completed
+                    </p>
+                  </div>
+                  <p className="font-barlow font-bold text-center text-4xl">
+                    {typeToggles[panel.id] === 'TR' ? 'Top Rope' : 'Lead'}
+                  </p>
+                  <div className="flex flex-col gap-2">
+                    <p className="font-stalinist gradient-text-yellow-red text-6xl text-center drop-shadow-customBlack">
+                      {points[panel.id]}
+                    </p>
+                    <p className="font-stalinist gradient-text-yellow-red text-xl text-center drop-shadow-customBlack">
+                      Points
+                    </p>
+                  </div>
+                  <div className="flex flex-col gap-5">
+                    {attempts[panel.id] !== 1 ? (
+                      <p className="font-barlow font-bold text-white text-2xl text-center drop-shadow-customBlack">
+                        {attempts[panel.id]} attempts
+                      </p>
+                    ) : (
+                      <p className="font-barlow font-bold text-white text-4xl text-center drop-shadow-customBlack">
+                        Flash!
+                      </p>
+                    )}
+                  </div>
 
-                    <div className="flex flex-col items-center gap-3">
-                      <h2 className="text-2xl font-barlow font-bold text-white text-center drop-shadow-customBlack">
-                        Uncomplete?
-                      </h2>
-                      <button
-                        className="rounded-full size-14 font-barlow font-bold bg-red-500 flex justify-center items-center shadow-lg drop-shadow-customBlack"
-                        onClick={() => handleUncompletion(panel.id)}
+                  <div className="flex flex-col items-center gap-3">
+                    <h2 className="text-2xl font-barlow font-bold text-white text-center drop-shadow-customBlack">
+                      Uncomplete?
+                    </h2>
+                    <button
+                      className="rounded-full size-14 font-barlow font-bold bg-red-500 flex justify-center items-center shadow-lg drop-shadow-customBlack"
+                      onClick={() => handleUncompletion(panel.id)}
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="size-10 "
                       >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          strokeWidth={1.5}
-                          stroke="currentColor"
-                          className="size-10 "
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
-                          />
-                        </svg>
-                      </button>
-                    </div>
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                        />
+                      </svg>
+                    </button>
                   </div>
                 </div>
               </>

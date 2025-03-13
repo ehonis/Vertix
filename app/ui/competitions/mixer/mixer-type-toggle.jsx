@@ -21,7 +21,7 @@ export default function TypeToggleSwitch({
   };
 
   return (
-    <div className="flex items-center justify-center space-x-4">
+    <div className="flex items-center justify-center space-x-2">
       {/* Left Label */}
       <span
         className={`font-barlow font-bold ${

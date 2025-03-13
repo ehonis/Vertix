@@ -1,6 +1,5 @@
 import Link from 'next/link';
 import UserProfile from './UserProfile';
-
 import HamburgerMenu from './hamburger';
 import { auth } from '@/auth';
 
