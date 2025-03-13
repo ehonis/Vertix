@@ -300,7 +300,7 @@ export default function MixerScoreScroller({
           onSwiper={(swiper) => (swiperRef.current = swiper)} // Get Swiper instance
           onSlideChange={(swiper) => setRangeValue(swiper.activeIndex)}
           onTap={handleSwiperInteraction} // Sync slider with Swiper
-          className="rope-swiper h-[calc(100vh-20rem)] max-w-sm md:max-w-lg rounded-sm"
+          className="rope-swiper h-[calc(100vh-15rem)] max-w-sm md:max-w-lg rounded-sm"
           modules={[Virtual]}
           virtual
           allowTouchMove={true}
