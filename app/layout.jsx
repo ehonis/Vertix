@@ -38,13 +38,6 @@ const jerseyFont = localFont({
   weight: '400', // Specify weight if applicable
   style: 'normal', // Specify style if applicable
 });
-
-const icelandFont = localFont({
-  src: '/fonts/Iceland-Regular.ttf',
-  variable: '--font-iceland',
-  weight: '400',
-  style: 'normal',
-});
 const stalinistFont = localFont({
   src: '/fonts/StalinistOne-Regular.ttf',
   variable: '--font-stalinist',
@@ -64,7 +57,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" className={`${tomorrow.variable} ${barlow.variable}`}>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${jerseyFont.variable} ${icelandFont.variable} ${stalinistFont.variable} ${orbitronFont.variable} ${tomorrow.variable} ${barlow.variable}antialiased bg-bg0`}
+        className={`${geistSans.variable} ${geistMono.variable} ${jerseyFont.variable} ${stalinistFont.variable} ${orbitronFont.variable} ${tomorrow.variable} ${barlow.variable}antialiased bg-bg0`}
       >
         <NotificationProvider>
           <NextSSRPlugin

@@ -164,6 +164,7 @@ model MixerCompetition {
     time               Int                 @default(180)
     compDay            DateTime?
     mixerRoutes        MixerRoute[]
+    boulder            MixerBoulder[]
     climbers           MixerClimber[]
     divisions          MixerDivision[]
     boulderScores      MixerBoulderScore[]
@@ -178,6 +179,14 @@ model MixerRoute {
     name          String
     color         String
     holds         Json // Store hold data as JSON (Array of { holdNumber, topRopePoints, leadPoints })
+    competitionId String
+    competition   MixerCompetition @relation(fields: [competitionId], references: [id], onDelete: Cascade)
+}
+
+model MixerBoulder {
+    id            String           @id @default(cuid())
+    points        Int
+    color         String
     competitionId String
     competition   MixerCompetition @relation(fields: [competitionId], references: [id], onDelete: Cascade)
 }

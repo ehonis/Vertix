@@ -19,7 +19,7 @@ export default function page() {
       <div className="m-2 rounded-sm flex justify-center ">
         <div className="flex flex-col gap-3 p-3 w-96">
           <Link
-            href={'/competitions/competition/mixer_demo'}
+            href={'/competitions/competition/mixer/cm6ztnujb000019usu98gepuf'}
             className="flex bg-bg2 rounded-lg h-24 p-2 gap-3 items-center outline outline-white "
           >
             <svg

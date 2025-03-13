@@ -10,8 +10,8 @@ import { useEffect, useState } from 'react';
 import clsx from 'clsx';
 export default function MixerInfoPopup({
   mixerRoutes,
+  mixerBoulders,
   completions,
-  holds,
   points,
   routeId,
   onCancel,
@@ -79,7 +79,11 @@ export default function MixerInfoPopup({
           {topScores.length > 0 ? (
             <div className="flex flex-col gap-2">
               {predictedHoldsAndPoints.map((info) => {
-                const color = mixerRoutes[info.id].color;
+                const foundRoute = mixerRoutes.find(
+                  (route) => route.id === info.id
+                );
+
+                const color = foundRoute ? foundRoute.color : null;
                 return (
                   <div
                     className="flex flex-col bg-bg1 p-2 rounded-sm"
@@ -117,7 +121,7 @@ export default function MixerInfoPopup({
                           color === 'red' ? 'text-red-500' : null
                         )}
                       >
-                        {mixerRoutes[info.id].routeName}
+                        {foundRoute.name}
                       </span>
                     </p>
                   </div>

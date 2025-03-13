@@ -192,9 +192,7 @@
   .font-jersey {
     font-family: var(--font-jersey), Arial, sans-serif; /* Fallback fonts */
   }
-  .font-iceland {
-    font-family: var(--font-iceland), Arial, Helvetica, sans-serif;
-  }
+
   .font-stalinist {
     font-family: var(--font-stalinist), Arial, Helvetica, sans-serif;
   }

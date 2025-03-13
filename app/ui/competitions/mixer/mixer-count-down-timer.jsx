@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 
-export default function MixerCountdownTimer() {
+export default function MixerCountdownTimer({ startTime, timeAllotted }) {
   const [timeLeft, setTimeLeft] = useState(3 * 60 * 60); // Initialize with 3 hours in seconds
 
   useEffect(() => {

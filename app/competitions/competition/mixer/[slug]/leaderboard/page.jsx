@@ -4,7 +4,6 @@ import { unstable_cache } from 'next/cache';
 import MixerLeaderBoard from '@/app/ui/competitions/mixer/mixer-leaderboard/mixer-leaderboard';
 import { auth } from '@/auth';
 
-const Mixer2024Id = 'cm6ztnujb000019usu98gepuf';
 const getBoulderScores = async () => {
   return await prisma.MixerBoulderScore.findMany({
     where: { competitionId: Mixer2024Id },
@@ -49,9 +48,11 @@ const getCachedDivisions = unstable_cache(getDivisions, ['divisions-cache'], {
   revalidate: 300,
 });
 
-export default async function MixerDemoLeaderboard() {
+export default async function MixerDemoLeaderboard({ params }) {
+  const id = await params.slug;
+
   const isScoresAvailable = await prisma.MixerCompetition.findFirst({
-    where: { id: Mixer2024Id },
+    where: { id },
     select: { areScoresAvailable: true },
   });
   if (!isScoresAvailable.areScoresAvailable) {
