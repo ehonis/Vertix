@@ -337,7 +337,7 @@ export default function MixerScoreScroller({
               {completions[panel.id] === false ? (
                 <div
                   className={clsx(
-                    'relative flex flex-col p-5 pt-6 items-center h-full rounded-lg bg-black shadow-blue-500 shadow-xl text-white text-2xl gap-3 justify-between',
+                    'relative flex flex-col p-5 pt-3 items-center h-full rounded-lg bg-black shadow-blue-500 shadow-xl text-white text-2xl gap-3 justify-between',
                     panel.color === 'blue' ? 'shadow-blue-500' : null,
                     panel.color === 'red' ? 'shadow-red-500' : null,
                     panel.color === 'green' ? 'shadow-green-400' : null,
