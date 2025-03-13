@@ -3,23 +3,27 @@ import { NextResponse } from 'next/server';
 
 export async function POST(req) {
   try {
-    const { newImage, compId } = await req.json();
+    const { compId, dateObject } = await req.json();
+    console.log(typeof dateObject);
+    const parsedDate = new Date(dateObject);
+    console.log();
+
     await prisma.MixerCompetition.update({
       where: { id: compId },
       data: {
-        imageUrl: newImage,
+        compDay: parsedDate,
       },
     });
 
     return NextResponse.json(
-      { message: 'Successfully added Image' },
+      { message: 'Successfully updated time allotted' },
       { status: 200 }
     );
   } catch (error) {
     console.error(error);
     return NextResponse.json(
       { status: 500 },
-      { message: 'error adding/updating image in api' }
+      { message: 'error updating tiem allotted in api' }
     );
   }
 }

@@ -6,6 +6,8 @@ import InformationalPopUp from '@/app/ui/general/informational-pop-up';
 import { clsx } from 'clsx';
 import Image from 'next/image';
 import ImagePopUp from './image-uploader-popup';
+import { useNotification } from '@/app/contexts/NotificationContext';
+import { useRouter } from 'next/navigation';
 export default function VariablesComponent({
   compId,
   name,
@@ -15,19 +17,29 @@ export default function VariablesComponent({
   time,
   imageUrl,
 }) {
+  const { showNotification } = useNotification();
+  const router = useRouter();
+
   const [compName, setCompName] = useState(name);
   const [selectedDate, setSelectedDate] = useState(
     compDay.toISOString().split('T')[0]
   );
   const [isScoresAvailable, setIsScoresAvailable] =
     useState(areScoresAvailable);
-  const [isStatusInfoPopUp, setIsStatusInfoPopUp] = useState(false);
+  const [compTime, setCompTime] = useState(time);
+  const [statusOption, setStatusOption] = useState(status);
+
+  const [infoPopUpHtml, setInfoPopUpHtml] = useState(<div></div>);
   const [isScoresAvailableInfoPopUp, setIsScoresAvailableInfoPopUp] =
     useState(false);
-  const [infoPopUpHtml, setInfoPopUpHtml] = useState(<div></div>);
-  const [statusOption, setStatusOption] = useState(status);
-  const [compTime, setCompTime] = useState(time);
   const [isImagePopUp, setIsImagePopUp] = useState(false);
+  const [isStatusInfoPopUp, setIsStatusInfoPopUp] = useState(false);
+
+  const [isNameSave, setIsNameSave] = useState(false);
+  const [isScoresAvailableSave, setIsScoresAvailableSave] = useState(false);
+  const [isStatusSave, setIsStatusSave] = useState(false);
+  const [isTimeAllottedSave, setIsTimeAllottedSave] = useState(false);
+  const [isDaySave, setIsDaySave] = useState(false);
 
   useEffect(() => {
     setCompName(name);
@@ -96,6 +108,124 @@ export default function VariablesComponent({
     );
   };
 
+  const handleOnCancelClick = () => {
+    setIsStatusInfoPopUp(false);
+    setIsScoresAvailableInfoPopUp(false);
+    setIsImagePopUp(false);
+  };
+  const handleNameChange = (e) => {
+    const tempName = e.target.value;
+    setCompName(tempName);
+
+    if (tempName !== name) {
+      setIsNameSave(true);
+    } else {
+      setIsNameSave(false);
+    }
+  };
+  const handleNameSubmit = async () => {
+    const data = { compId, compName };
+    try {
+      const response = await fetch('/api/mixer/manager/variables/nameUpdate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+      if (!response.ok) {
+        showNotification({ message: 'Could not update name', color: 'red' });
+      } else {
+        showNotification({
+          message: 'Successfully Changed Title',
+          color: 'green',
+        });
+        setIsNameSave(false);
+        router.refresh();
+      }
+    } catch (error) {
+      showNotification({ message: 'Could not update name', color: 'red' });
+    }
+  };
+  const handleAreScoresAvailableChange = (e) => {
+    setIsScoresAvailable(e.target.value === 'true');
+    if ((e.target.value === 'true') !== areScoresAvailable) {
+      setIsScoresAvailableSave(true);
+    } else {
+      setIsScoresAvailableSave(false);
+    }
+  };
+  const handleAreScoresAvailableSave = async () => {
+    const data = { compId, isScoresAvailable };
+
+    try {
+      const response = await fetch(
+        '/api/mixer/manager/variables/areScoresAvailableUpdate',
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data),
+        }
+      );
+      if (!response.ok) {
+        showNotification({
+          message: 'Could not update areScoresAvailable',
+          color: 'red',
+        });
+      } else {
+        showNotification({
+          message: 'Successfully updated areScoresAvailable',
+          color: 'green',
+        });
+        setIsScoresAvailableSave(false);
+        router.refresh();
+      }
+    } catch (error) {
+      showNotification({
+        message: 'Could not update areScoresAvailable',
+        color: 'red',
+      });
+    }
+  };
+  const handleStatusChange = (e) => {
+    setStatusOption(e.target.value);
+
+    if (e.target.value !== status) {
+      setIsStatusSave(true);
+    } else {
+      setIsStatusSave(false);
+    }
+  };
+  const handleStatusSave = async () => {
+    const data = { compId, statusOption };
+
+    try {
+      const response = await fetch(
+        '/api/mixer/manager/variables/statusUpdate',
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data),
+        }
+      );
+      if (!response.ok) {
+        showNotification({
+          message: 'Could not update status',
+          color: 'red',
+        });
+      } else {
+        showNotification({
+          message: 'Successfully updated status',
+          color: 'green',
+        });
+        setIsStatusSave(false);
+        router.refresh();
+      }
+    } catch (error) {
+      showNotification({
+        message: 'Could not update status',
+        color: 'red',
+      });
+    }
+  };
   const handleAlottedTimeChange = (e) => {
     // Allow only digits
     const value = e.target.value;
@@ -107,13 +237,93 @@ export default function VariablesComponent({
         setCompTime(value);
       }
     }
+
+    if (value !== time) {
+      setIsTimeAllottedSave(true);
+    } else {
+      setIsTimeAllottedSave(false);
+    }
+  };
+  const handleTimeAllottedSave = async () => {
+    const data = { compId, compTime };
+
+    if (compTime === time) {
+      showNotification({
+        message: 'Cannot change time to already set time',
+        color: 'red',
+      });
+    } else {
+      try {
+        const response = await fetch(
+          '/api/mixer/manager/variables/timeAllottedUpdate',
+          {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data),
+          }
+        );
+        if (!response.ok) {
+          showNotification({
+            message: 'Could not update timeAllotted',
+            color: 'red',
+          });
+        } else {
+          showNotification({
+            message: 'Successfully updated timeAllotted',
+            color: 'green',
+          });
+          setIsTimeAllottedSave(false);
+          router.refresh();
+        }
+      } catch (error) {
+        showNotification({
+          message: 'Could not update timeAllotted',
+          color: 'red',
+        });
+      }
+    }
+  };
+  const handleDayChange = (e) => {
+    setSelectedDate(e.target.value);
+
+    if (e.target.value !== compDay.toISOString().split('T')[0]) {
+      setIsDaySave(true);
+    } else {
+      setIsDaySave(false);
+    }
+  };
+  const handleDaySave = async () => {
+    const dateObject = new Date(selectedDate);
+
+    const data = { compId, dateObject };
+
+    try {
+      const response = await fetch('/api/mixer/manager/variables/dateUpdate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+      if (!response.ok) {
+        showNotification({
+          message: 'Could not update comp date',
+          color: 'red',
+        });
+      } else {
+        showNotification({
+          message: 'Successfully updated comp date',
+          color: 'green',
+        });
+        setIsDaySave(false);
+        router.refresh();
+      }
+    } catch (error) {
+      showNotification({
+        message: 'Could not update comp date',
+        color: 'red',
+      });
+    }
   };
 
-  const handleOnCancelClick = () => {
-    setIsStatusInfoPopUp(false);
-    setIsScoresAvailableInfoPopUp(false);
-    setIsImagePopUp(false);
-  };
   return (
     <div>
       {(isStatusInfoPopUp || isScoresAvailableInfoPopUp) && (
@@ -129,14 +339,27 @@ export default function VariablesComponent({
           imageUrl={imageUrl}
         />
       )}
-      <input
-        type="text"
-        name=""
-        id=""
-        value={compName}
-        onChange={(e) => setCompName(e.target.value)}
-        className=" text-4xl mb-3 bg-transparent  max-w-sm focus:outline-hidden"
-      />
+      {/* name */}
+      <div className="flex justify-between max-w-sm">
+        <div className="w-full flex justify-between items-center">
+          <input
+            type="text"
+            name=""
+            id=""
+            value={compName}
+            onChange={handleNameChange}
+            className=" text-3xl mb-2 bg-transparent focus:outline-hidden w-64"
+          />
+          {isNameSave && (
+            <button
+              className="bg-green-500 px-2 py-1 rounded-md -mt-2 font-normal"
+              onClick={handleNameSubmit}
+            >
+              Save
+            </button>
+          )}
+        </div>
+      </div>
 
       <div className="bg-bg2 flex-col flex p-3 rounded-sm w-full">
         <div className="flex flex-col  gap-2">
@@ -151,7 +374,7 @@ export default function VariablesComponent({
               </label>
             </div>
             <button
-              className="bg-bg2 outline-2 rounded-full my-1 overflow-hidden size-32"
+              className="bg-bg2 outline-2 rounded-full my-1 overflow-hidden size-28"
               onClick={() => setIsImagePopUp(true)}
             >
               {imageUrl === null ? (
@@ -203,28 +426,38 @@ export default function VariablesComponent({
                 </svg>
               </button>
             </div>
-            <select
-              name=""
-              id=""
-              value={isScoresAvailable}
-              onChange={(e) => setIsScoresAvailable(e.target.value === 'true')}
-              className={clsx(
-                'px-1 py-1 bg-bg1 rounded-md text-center',
+            <div className="flex gap-3">
+              <select
+                name=""
+                id=""
+                value={isScoresAvailable}
+                onChange={handleAreScoresAvailableChange}
+                className={clsx(
+                  'px-1 py-1 bg-bg1 rounded-md text-center',
 
-                isScoresAvailable === false && 'bg-red-500',
+                  isScoresAvailable === false && 'bg-red-500',
 
-                isScoresAvailable === true && 'bg-green-500'
+                  isScoresAvailable === true && 'bg-green-500'
+                )}
+              >
+                <option value={'true'}>AreAvailable</option>
+                <option value={'false'}>AreNotAvailable</option>
+              </select>
+              {isScoresAvailableSave && (
+                <button
+                  className="bg-green-500 px-2 py-1 rounded-md font-normal"
+                  onClick={handleAreScoresAvailableSave}
+                >
+                  Save
+                </button>
               )}
-            >
-              <option value={'true'}>AreAvailable</option>
-              <option value={'false'}>AreNotAvailable</option>
-            </select>
+            </div>
           </div>
           {/* status */}
           <div className="flex gap-2 bg-bg1 rounded-sm p-2 justify-between items-center">
             <div className="flex items-center">
               <label htmlFor="" className="text-xl">
-                Status
+                Status:
               </label>
               <button onClick={handleInfoStatusButtonClick}>
                 <svg
@@ -243,44 +476,64 @@ export default function VariablesComponent({
                 </svg>
               </button>
             </div>
-            <select
-              name=""
-              id=""
-              value={statusOption}
-              onChange={(e) => setStatusOption(e.target.value)}
-              className={clsx(
-                'px-1 py-1 bg-bg1 rounded-md',
-                statusOption === 'upcoming' && 'bg-orange-400',
-                statusOption === 'unavailable' && 'bg-red-500',
-                statusOption === 'inprogress' && 'bg-blue-500',
-                statusOption === 'completed' && 'bg-green-500',
-                statusOption === 'archived' && 'bg-yellow-400'
+            <div className="flex gap-2">
+              <select
+                name=""
+                id=""
+                value={statusOption}
+                onChange={handleStatusChange}
+                className={clsx(
+                  'px-1 py-1 bg-bg1 rounded-md',
+                  statusOption === 'upcoming' && 'bg-orange-400',
+                  statusOption === 'unavailable' && 'bg-red-500',
+                  statusOption === 'inprogress' && 'bg-blue-500',
+                  statusOption === 'completed' && 'bg-green-500',
+                  statusOption === 'archived' && 'bg-yellow-400'
+                )}
+              >
+                <option value="upcoming">Upcoming</option>
+                <option value="unavailable">Unavailable</option>
+                <option value="inprogress">In Progress</option>
+                <option value="completed">Completed</option>
+                <option value="archived">Archived</option>
+              </select>
+              {isStatusSave && (
+                <button
+                  className="bg-green-500 px-2 py-1 rounded-md font-normal"
+                  onClick={handleStatusSave}
+                >
+                  Save
+                </button>
               )}
-            >
-              <option value="upcoming">Upcoming</option>
-              <option value="unavailable">Unavailable</option>
-              <option value="inprogress">In Progress</option>
-              <option value="completed">Completed</option>
-              <option value="archived">Archived</option>
-            </select>
+            </div>
           </div>
           {/* time alloted */}
           <div className="flex gap-2 bg-bg1 rounded-sm p-2 justify-between items-center">
             <label htmlFor="" className="text-lg">
               Time Allotted
             </label>
-            <div className="flex gap-1 items-center">
-              <input
-                type="text"
-                name=""
-                inputMode="numeric"
-                value={compTime}
-                pattern="[0-9]*"
-                onChange={handleAlottedTimeChange}
-                placeholder="#"
-                className="bg-bg2 rounded-sm p-1 w-10 text-center hide-spinners focus:outline-hidden"
-              />
-              <label htmlFor="">Min</label>
+            <div className="flex gap-2">
+              <div className="flex gap-1 items-center">
+                <input
+                  type="text"
+                  name=""
+                  inputMode="numeric"
+                  value={compTime}
+                  pattern="[0-9]*"
+                  onChange={handleAlottedTimeChange}
+                  placeholder="#"
+                  className="bg-bg2 rounded-sm p-1 w-10 text-center hide-spinners focus:outline-hidden"
+                />
+                <label htmlFor="">Min</label>
+              </div>
+              {isTimeAllottedSave && (
+                <button
+                  className="bg-green-500 px-2 py-1 rounded-md font-normal"
+                  onClick={handleTimeAllottedSave}
+                >
+                  Save
+                </button>
+              )}
             </div>
           </div>
           {/* comp day */}
@@ -288,14 +541,24 @@ export default function VariablesComponent({
             <label htmlFor="" className="text-lg">
               Comp Day
             </label>
-            <input
-              type="date"
-              id="date"
-              name="date"
-              value={selectedDate} // Controlled value
-              onChange={(e) => setSelectedDate(e.target.value)} // Update state on change
-              className="p-1 rounded-lg bg-bg2 text-white cursor-pointer font-barlow font-bold focus:outline-hidden"
-            />
+            <div className="flex gap-2">
+              <input
+                type="date"
+                id="date"
+                name="date"
+                value={selectedDate} // Controlled value
+                onChange={handleDayChange} // Update state on change
+                className="p-1 rounded-lg bg-bg2 text-white cursor-pointer font-barlow font-bold focus:outline-hidden"
+              />
+              {isDaySave && (
+                <button
+                  className="bg-green-500 px-2 py-1 rounded-md font-normal"
+                  onClick={handleDaySave}
+                >
+                  Save
+                </button>
+              )}
+            </div>
           </div>
         </div>
       </div>

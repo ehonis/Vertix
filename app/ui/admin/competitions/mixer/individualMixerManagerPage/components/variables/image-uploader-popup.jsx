@@ -19,7 +19,7 @@ export default function EditRoutePopUp({ compId, onCancel, imageUrl }) {
   const handleImageUpload = async (url) => {
     if (url) {
       const data = { newImage: url, compId };
-      console.log(data);
+
       try {
         const response = await fetch(
           '/api/mixer/manager/variables/imageUpload',
@@ -93,7 +93,6 @@ export default function EditRoutePopUp({ compId, onCancel, imageUrl }) {
               }}
               endpoint="imageUploader"
               onClientUploadComplete={(res) => {
-                console.log('Files:', res);
                 handleImageUpload(res[0].ufsUrl);
               }}
               onUploadError={(error) => {
