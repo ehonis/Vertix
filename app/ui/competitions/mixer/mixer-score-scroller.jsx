@@ -1,7 +1,7 @@
 'use client';
 
 import { Swiper, SwiperSlide } from 'swiper/react';
-
+import { Virtual } from 'swiper/modules';
 import clsx from 'clsx';
 import { useState, useRef, useEffect } from 'react';
 import 'swiper/css';
@@ -63,8 +63,10 @@ export default function MixerScoreScroller({
       return acc;
     }, {})
   );
-  const [rangeValue, setRangeValue] = useState(0); // Range slider value
-  const swiperRef = useRef(null); // Ref to control Swiper instance
+  const [rangeValue, setRangeValue] = useState(0);
+  const [boulderRangeValue, setBoulderRangeValue] = useState(0); // Range slider value
+  const swiperRef = useRef(null);
+  const swiperBoulderRef = useRef(null); // Ref to control Swiper instance
 
   const [showSwipeAnimation, setShowSwipeAnimation] = useState(true);
   const [showBlurBackground, setShowBlurBackground] = useState(true);
@@ -211,6 +213,12 @@ export default function MixerScoreScroller({
       swiperRef.current.slideTo(value);
     }
   };
+  const handleBoulderRangeChange = (value) => {
+    setBoulderRangeValue(value);
+    if (swiperBoulderRef.current) {
+      swiperBoulderRef.current.slideTo(value);
+    }
+  };
 
   const handleCompletion = (panelId, attempts, points) => {
     if (attempts < 1) {
@@ -292,7 +300,12 @@ export default function MixerScoreScroller({
           onSwiper={(swiper) => (swiperRef.current = swiper)} // Get Swiper instance
           onSlideChange={(swiper) => setRangeValue(swiper.activeIndex)}
           onTap={handleSwiperInteraction} // Sync slider with Swiper
-          className="h-[calc(100vh-20rem)] max-w-sm md:max-w-lg rounded-sm"
+          className="rope-swiper h-[calc(100vh-20rem)] max-w-sm md:max-w-lg rounded-sm"
+          modules={[Virtual]}
+          virtual
+          allowTouchMove={true}
+          resistance={true}
+          resistanceRatio={0.85}
         >
           {isInfoPopup ? (
             <MixerInfoPopup
@@ -316,7 +329,11 @@ export default function MixerScoreScroller({
             </div>
           )}
           {mixerRoutes.map((panel, index) => (
-            <SwiperSlide key={panel.id} className="p-8 pt-2 rounded-lg">
+            <SwiperSlide
+              key={panel.id}
+              virtualIndex={index}
+              className="p-8 pt-2 rounded-lg"
+            >
               {completions[panel.id] === false ? (
                 <div
                   className={clsx(
@@ -641,24 +658,22 @@ export default function MixerScoreScroller({
       ) : (
         <Swiper
           grabCursor={true}
-          onSwiper={(swiper) => (swiperRef.current = swiper)} // Get Swiper instance
-          onSlideChange={(swiper) => setRangeValue(swiper.activeIndex)}
+          onSwiper={(swiper) => (swiperBoulderRef.current = swiper)} // Get Swiper instance
+          onSlideChange={(swiper) => setBoulderRangeValue(swiper.activeIndex)}
           onTap={handleSwiperInteraction} // Sync slider with Swiper
-          className="h-[calc(100vh-20rem)] max-w-sm md:max-w-lg rounded-sm"
+          className="boulder-swiper h-[calc(100vh-20rem)] max-w-sm md:max-w-lg rounded-sm"
+          modules={[Virtual]}
+          virtual
+          allowTouchMove={true}
+          resistance={true}
+          resistanceRatio={0.85}
         >
-          {/* {showBlurBackground && (
-            <div className="absolute top-0 left-0 w-full h-full bg-black-50 backdrop-blur-xs z-20 transition-all"></div>
-          )}
-
-          {showSwipeAnimation && (
-            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-30 pointer-events-none transition-all">
-              <div className="swipe-animation">
-                <SwipeAnimation />
-              </div>
-            </div>
-          )} */}
           {mixerBoulders.map((panel, index) => (
-            <SwiperSlide key={panel.id} className="p-8 pt-2 rounded-lg">
+            <SwiperSlide
+              key={panel.id}
+              virtualIndex={index}
+              className="p-8 pt-2 rounded-lg"
+            >
               {boulderCompletions[panel.id] === false ? (
                 <div
                   className={clsx(
@@ -888,8 +903,8 @@ export default function MixerScoreScroller({
               min="0"
               max={mixerBoulders.length - 1}
               step="1"
-              value={rangeValue}
-              onChange={(e) => handleRangeChange(Number(e.target.value))}
+              value={boulderRangeValue}
+              onChange={(e) => handleBoulderRangeChange(Number(e.target.value))}
               className="w-3/4 md:w-1/5 mb-2 appearance-none bg-gray-300 rounded-sm h-2"
             />
 
