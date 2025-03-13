@@ -188,7 +188,7 @@ export default function HamburgerMenu({ user, status }) {
                   Login
                 </Link>
                 <Link
-                  className="bg-purple-600/15 outline-purple-400 outline outline-1 rounded-xs px-5 py-3"
+                  className="bg-purple-600/15 outline-purple-400 outline-1 rounded-xs px-5 py-3"
                   href={'/signin'}
                   onClick={closeMenu}
                 >
@@ -234,7 +234,7 @@ export default function HamburgerMenu({ user, status }) {
                       src={user.image}
                       height={100}
                       width={100}
-                      className="rounded-full size-12 outline outline-2 outline-blue-600"
+                      className="rounded-full size-12  outline-2 outline-blue-600"
                       alt="picture of you"
                     />
                   ) : (

@@ -6,7 +6,6 @@ import InformationalPopUp from '@/app/ui/general/informational-pop-up';
 import { clsx } from 'clsx';
 import Image from 'next/image';
 import ImagePopUp from './image-uploader-popup';
-
 export default function VariablesComponent({
   compId,
   name,
@@ -19,16 +18,24 @@ export default function VariablesComponent({
   const [compName, setCompName] = useState(name);
   const [selectedDate, setSelectedDate] = useState(
     compDay.toISOString().split('T')[0]
-  ); // variable
+  );
   const [isScoresAvailable, setIsScoresAvailable] =
-    useState(areScoresAvailable); // variable
-  const [isStatusInfoPopUp, setIsStatusInfoPopUp] = useState(false); //variable
+    useState(areScoresAvailable);
+  const [isStatusInfoPopUp, setIsStatusInfoPopUp] = useState(false);
   const [isScoresAvailableInfoPopUp, setIsScoresAvailableInfoPopUp] =
-    useState(false); //variable
-  const [infoPopUpHtml, setInfoPopUpHtml] = useState(<div></div>); //variable
-  const [statusOption, setStatusOption] = useState(status); //variable
-  const [compTime, setCompTime] = useState(time); //variable
+    useState(false);
+  const [infoPopUpHtml, setInfoPopUpHtml] = useState(<div></div>);
+  const [statusOption, setStatusOption] = useState(status);
+  const [compTime, setCompTime] = useState(time);
   const [isImagePopUp, setIsImagePopUp] = useState(false);
+
+  useEffect(() => {
+    setCompName(name);
+    setSelectedDate(compDay.toISOString().split('T')[0]);
+    setIsScoresAvailable(areScoresAvailable);
+    setStatusOption(status);
+    setCompTime(time);
+  }, [name, compDay, areScoresAvailable, status, time]);
 
   const handleScoresAvailableButtonClick = () => {
     setIsScoresAvailableInfoPopUp(true);
@@ -52,7 +59,7 @@ export default function VariablesComponent({
         </p>
       </div>
     );
-  }; //variable
+  };
 
   const handleInfoStatusButtonClick = () => {
     setIsStatusInfoPopUp(true);
@@ -87,7 +94,8 @@ export default function VariablesComponent({
         </p>
       </div>
     );
-  }; // variable
+  };
+
   const handleAlottedTimeChange = (e) => {
     // Allow only digits
     const value = e.target.value;
@@ -100,11 +108,12 @@ export default function VariablesComponent({
       }
     }
   };
+
   const handleOnCancelClick = () => {
     setIsStatusInfoPopUp(false);
     setIsScoresAvailableInfoPopUp(false);
     setIsImagePopUp(false);
-  }; //variable
+  };
   return (
     <div>
       {(isStatusInfoPopUp || isScoresAvailableInfoPopUp) && (
@@ -114,7 +123,11 @@ export default function VariablesComponent({
         />
       )}
       {isImagePopUp && (
-        <ImagePopUp compId={compId} onCancel={handleOnCancelClick} />
+        <ImagePopUp
+          compId={compId}
+          onCancel={handleOnCancelClick}
+          imageUrl={imageUrl}
+        />
       )}
       <input
         type="text"
@@ -138,7 +151,7 @@ export default function VariablesComponent({
               </label>
             </div>
             <button
-              className="bg-bg2 p-5 outline rounded-full my-1"
+              className="bg-bg2 outline-2 rounded-full my-1 overflow-hidden size-32"
               onClick={() => setIsImagePopUp(true)}
             >
               {imageUrl === null ? (
@@ -157,7 +170,13 @@ export default function VariablesComponent({
                   />
                 </svg>
               ) : (
-                <Image src={imageUrl} />
+                <Image
+                  src={imageUrl}
+                  width={200}
+                  height={200}
+                  className="size-full object-cover rounded-full"
+                  alt="Comp Image"
+                />
               )}
             </button>
           </div>

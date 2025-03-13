@@ -3,8 +3,52 @@
 import { motion } from 'framer-motion';
 import { useState } from 'react';
 import { UploadDropzone } from '@/utils/uploadthing';
+import { useNotification } from '@/app/contexts/NotificationContext';
+import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 
-export default function EditRoutePopUp({ compId, onCancel }) {
+export default function EditRoutePopUp({ compId, onCancel, imageUrl }) {
+  const { showNotification } = useNotification();
+
+  const [isImageUploader, setIsImageUploader] = useState(
+    imageUrl ? false : true
+  );
+
+  const router = useRouter();
+
+  const handleImageUpload = async (url) => {
+    if (url) {
+      const data = { newImage: url, compId };
+      console.log(data);
+      try {
+        const response = await fetch(
+          '/api/mixer/manager/variables/imageUpload',
+          {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data),
+          }
+        );
+
+        if (!response.ok) {
+          showNotification({ message: 'Could not upload image', color: 'red' });
+        } else {
+          showNotification({
+            message: 'Successfully Uploaded Image',
+            color: 'green',
+          });
+
+          router.refresh();
+          onCancel();
+        }
+      } catch (error) {
+        showNotification({ message: 'Could not upload image', color: 'red' });
+      }
+    } else {
+      showNotification({ message: 'could not find image on client' });
+    }
+  };
+
   return (
     <div>
       <motion.div
@@ -38,18 +82,55 @@ export default function EditRoutePopUp({ compId, onCancel }) {
             </svg>
           </button>
           <h2 className="text-xl">Upload Image</h2>
-
-          <UploadDropzone
-            className="ut-button:max-w-xs ut- ut-l"
-            endpoint="imageUploader"
-            onClientUploadComplete={(res) => {
-              console.log('Files:', res);
-              alert('Upload Completed');
-            }}
-            onUploadError={(error) => {
-              alert(`ERROR! ${error.message}`);
-            }}
-          />
+          {isImageUploader ? (
+            <UploadDropzone
+              appearance={{
+                button:
+                  'ut-ready:bg-green-500 ut-uploading:cursor-not-allowed p-2 bg-red-500 bg-none after:bg-orange-400',
+                container: 'flex-col rounded-md border-cyan-300 bg-slate-800',
+                allowedContent:
+                  'flex h-8 flex-col items-center justify-center px-2 text-white',
+              }}
+              endpoint="imageUploader"
+              onClientUploadComplete={(res) => {
+                console.log('Files:', res);
+                handleImageUpload(res[0].ufsUrl);
+              }}
+              onUploadError={(error) => {
+                console.log(error);
+                showNotification({
+                  message: 'Could not uploaded image',
+                  color: 'red',
+                });
+              }}
+            />
+          ) : (
+            <div className="flex flex-col items-center gap-4">
+              <div className="bg-bg2 outline-2 rounded-full my-1 overflow-hidden size-32">
+                {' '}
+                <Image
+                  src={imageUrl}
+                  width={200}
+                  height={200}
+                  className="size-full object-cover rounded-full"
+                  alt="Comp Image"
+                />
+              </div>
+              <div>
+                <p className="text-center">This is the image you uploaded</p>
+                <p className="text-xs font-thin italic text-center">
+                  At this time, image cropping is not available. Please keep the
+                  image centered before uploading
+                </p>
+              </div>
+              <button
+                className="bg-blue-500 rounded-md px-2 py-1 "
+                onClick={() => setIsImageUploader(true)}
+              >
+                Upload New Image
+              </button>
+            </div>
+          )}
         </motion.div>
       </motion.div>
     </div>

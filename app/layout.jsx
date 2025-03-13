@@ -1,6 +1,6 @@
 import localFont from 'next/font/local';
 import './globals.css';
-import NavBar from './ui/navbar';
+import NavBar from './ui/navbar/navbar';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { NotificationProvider } from './contexts/NotificationContext';
 import Notification from './ui/notification';

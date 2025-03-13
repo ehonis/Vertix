@@ -293,7 +293,7 @@ export default function Routes({ ropes, boulders, user, completions }) {
                             className={clsx(
                               `size-3 rounded-full bg-${color}-500`,
                               color === 'black' &&
-                                'bg-black outline outline-1 outline-white',
+                                'bg-black outline-1 outline-white',
                               color === 'white' && 'bg-white',
                               color === 'brown' && 'bg-yellow-950'
                             )}
@@ -425,11 +425,14 @@ export default function Routes({ ropes, boulders, user, completions }) {
 
         <div className="flex flex-col h-screen py-5">
           <div className="flex justify-between items-center px-5 pb-1">
-            <h1 className="text-white  text-4xl drop-shadow-customBlack font-barlow font-bold font-bold">
+            <h1 className="text-white  text-4xl drop-shadow-customBlack font-barlow font-bold">
               {header}
             </h1>
             {header === 'Filtered Routes' ? (
-              <button className="bg-red-500 p-2 rounded-sm" onClick={resetFilters}>
+              <button
+                className="bg-red-500 p-2 rounded-sm"
+                onClick={resetFilters}
+              >
                 Reset Filters
               </button>
             ) : (

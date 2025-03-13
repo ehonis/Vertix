@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from 'react';
 import clsx from 'clsx';
 import Link from 'next/link';
 
-import SignOut from './general/sign-out-button';
+import SignOut from '../general/sign-out-button';
 
 export default function UserProfile({ user, status }) {
   const [isProfilePopUp, setIsProfilePopUp] = useState(false);
@@ -95,7 +95,7 @@ export default function UserProfile({ user, status }) {
   if (!user) {
     return (
       <Link href={'/signin'}>
-        <span className="bg-purple-400/20 outline outline-purple-400 outline-1 p-2 rounded-sm text-white font-barlow font-bold text-sm md:text-base">
+        <span className="bg-purple-400/20  outline-purple-400 outline-1 p-2 rounded-sm text-white font-barlow font-bold text-sm md:text-base">
           Sign In
         </span>
       </Link>
