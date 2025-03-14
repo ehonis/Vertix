@@ -69,7 +69,7 @@ export default function SignInForm() {
                 <p className="font-barlow font-bold text-lg">Google</p>
               </div>
             ) : (
-              <div className="bg-white rounded-full w-20 flex justify-center py-2">
+              <div className="bg-white rounded-full w-full flex justify-center py-2">
                 <ElementLoadingAnimation size={7} />
               </div>
             )}
@@ -93,7 +93,7 @@ export default function SignInForm() {
                 <p className="font-barlow font-bold text-lg">GitHub</p>
               </div>
             ) : (
-              <div className="bg-bg1 rounded-full w-20 flex justify-center py-2">
+              <div className="bg-bg1 rounded-full w-full flex justify-center py-2">
                 <ElementLoadingAnimation size={7} />
               </div>
             )}

@@ -488,7 +488,8 @@ export default function VariablesComponent({
                   statusOption === 'unavailable' && 'bg-red-500',
                   statusOption === 'inprogress' && 'bg-blue-500',
                   statusOption === 'completed' && 'bg-green-500',
-                  statusOption === 'archived' && 'bg-yellow-400'
+                  statusOption === 'archived' && 'bg-yellow-400',
+                  statusOption === 'demo' && 'bg-purple-400'
                 )}
               >
                 <option value="upcoming">Upcoming</option>
@@ -496,6 +497,7 @@ export default function VariablesComponent({
                 <option value="inprogress">In Progress</option>
                 <option value="completed">Completed</option>
                 <option value="archived">Archived</option>
+                <option value="demo">Demo</option>
               </select>
               {isStatusSave && (
                 <button

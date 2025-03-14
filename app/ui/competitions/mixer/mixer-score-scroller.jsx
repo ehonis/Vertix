@@ -73,11 +73,11 @@ export default function MixerScoreScroller({
   useEffect(() => {
     const animationTimer = setTimeout(() => {
       setShowSwipeAnimation(false);
-    }, 5000); // Animation disappears after 5 seconds
+    }, 3400); // Animation disappears after 5 seconds
 
     const blurTimer = setTimeout(() => {
       setShowBlurBackground(false);
-    }, 5000); // Blur disappears after 5 seconds
+    }, 3400); // Blur disappears after 5 seconds
 
     return () => {
       clearTimeout(animationTimer);
@@ -931,7 +931,7 @@ export default function MixerScoreScroller({
               min="0"
               max={mixerBoulders.length - 1}
               step="1"
-              value={rangeValue}
+              value={boulderRangeValue}
               onChange={(e) => handleRangeChange(Number(e.target.value))}
               className="w-3/4 md:w-1/5 mb-2 appearance-none bg-gray-300 rounded-sm h-2"
             />

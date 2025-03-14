@@ -27,15 +27,17 @@ export default async function page({ params }) {
         </svg>
 
         <div className="flex flex-col gap-5">
-          <div className="flex flex-col gap-1">
-            <p className="text-white font-barlow font-bold text-xs bg-blue-500/25 border-blue-500 border rounded-md p-2">
-              this uses previous year{"'"}s data.
-            </p>{' '}
-            <p className="text-white font-barlow font-bold text-xs bg-blue-500/25 border-blue-500 border rounded-md p-2">
-              This is just a demo for you to see how comp day will work. No
-              points, attempts, or completions will be counted
-            </p>
-          </div>
+          {competition.status === 'demo' && (
+            <div className="flex flex-col gap-1">
+              <p className="text-white font-barlow font-bold text-xs bg-blue-500/25 border-blue-500 border rounded-md p-2">
+                this uses previous year{"'"}s data.
+              </p>{' '}
+              <p className="text-white font-barlow font-bold text-xs bg-blue-500/25 border-blue-500 border rounded-md p-2">
+                This is just a demo for you to see how comp day will work. No
+                points, attempts, or completions will be counted
+              </p>
+            </div>
+          )}
           <Link
             href={`/competitions/competition/mixer/${compId}/scroller`}
             className="px-2 py-1 text-white bg-green-500 rounded-sm font-barlow font-bold text-center shadow-xl"

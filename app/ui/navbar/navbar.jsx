@@ -2,11 +2,25 @@ import Link from 'next/link';
 import UserProfile from './UserProfile';
 import HamburgerMenu from './hamburger';
 import { auth } from '@/auth';
+import { Suspense } from 'react';
+import ElementLoadingAnimation from '../general/element-loading-animation';
 
-export default async function NavBar() {
+async function UserStuff() {
   const session = await auth();
   const user = session?.user || null;
+  return (
+    <div className="justify-self-end">
+      <div className="self-center hidden md:block cursor-pointer">
+        <UserProfile user={user} />
+      </div>
+      <div className="md:hidden">
+        <HamburgerMenu user={user} />
+      </div>
+    </div>
+  );
+}
 
+export default function NavBar() {
   return (
     <>
       <nav className="sticky top-3 h-12 md:h-16 w-[95%] md:w-[85%] lg:w-[75%] z-50 shadow-md bg-black grid md:px-5 px-3 md:grid-cols-3 grid-cols-2 items-center mt-3 rounded-md mx-auto">
@@ -38,12 +52,9 @@ export default async function NavBar() {
             Search
           </Link>
         </div>
-        <div className="justify-self-end self-center hidden md:block cursor-pointer">
-          <UserProfile user={user} />
-        </div>
-        <div className="md:hidden justify-self-end">
-          <HamburgerMenu user={user} />
-        </div>
+        <Suspense fallback={<ElementLoadingAnimation />}>
+          <UserStuff />
+        </Suspense>
       </nav>
     </>
   );

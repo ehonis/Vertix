@@ -1,12 +1,19 @@
 import Link from 'next/link';
 import TrophyIcon from '../ui/competitions/trophy-icon';
 import Image from 'next/image';
+import prisma from '@/prisma';
+
+async function Comps() {
+  const competitions = prisma.MixerCompetitions.findMany({
+    where: { status: 'demo' || 'upcoming' || 'unavailable' },
+  });
+  return <div></div>;
+}
 
 export default function page() {
   return (
     <>
       <div className="relative flex justify-center items-center pt-20">
-        {/* Circular Gradient Background */}
         <TrophyIcon />
       </div>
 
