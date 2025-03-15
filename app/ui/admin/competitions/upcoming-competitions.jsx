@@ -5,7 +5,7 @@ import Image from 'next/image';
 export default async function UpComingCompetitions() {
   const UpComingCompetitions = await prisma.MixerCompetition.findMany({
     where: {
-      status: 'unavailable' || 'upcoming',
+      status: { in: ['unavailable', 'upcoming'] },
     },
     take: 3,
     select: { id: true, name: true, compDay: true, imageUrl: true },
@@ -16,7 +16,7 @@ export default async function UpComingCompetitions() {
       {UpComingCompetitions.map((comp) => (
         <Link
           key={comp.id}
-          className="bg-bg1 max-w-md grid-cols-3 grid font-barlow font-bold text-white p-3 rounded-sm outline outline-white outline-1"
+          className="bg-bg1 max-w-md grid-cols-3 grid font-barlow font-bold text-white p-3 rounded-sm outline outline-white "
           href={`/admin/manager/competitions/mixer/${comp.id}`}
         >
           {comp.imageUrl === null ? (

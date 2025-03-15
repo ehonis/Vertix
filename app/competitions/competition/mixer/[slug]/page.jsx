@@ -11,6 +11,17 @@ export default async function page({ params }) {
   const session = await auth();
   const user = session?.user || null;
 
+  let climberExists = null;
+
+  if (user) {
+    climberExists = await prisma.MixerClimber.findFirst({
+      where: {
+        competitionId: compId,
+        userId: user.id,
+      },
+    });
+  }
+
   return (
     <div className="flex flex-col justify-center items-center pt-5 gap-2 w-screen">
       <div className="flex flex-col justify-center items-center gap-2 w-screen">
@@ -41,6 +52,45 @@ export default async function page({ params }) {
         </svg>
 
         <div className="flex flex-col gap-5">
+          {competition.status === 'upcoming' && climberExists !== null && (
+            <div className="flex flex-col gap-1">
+              <p className="text-white font-barlow font-bold text-xs bg-green-500/25 border-green-500 border rounded-md p-2">
+                You are already signed up for this competition!
+              </p>
+              <p className="text-white font-barlow font-bold text-xs bg-green-500/25 border-green-500 border rounded-md p-2">
+                Come back to this page on{' '}
+                {competition.compDay.toLocaleDateString('en-US')} to start the
+                competition!
+              </p>
+            </div>
+          )}
+          {competition.status === 'upcoming' && climberExists === null && (
+            <div className="flex flex-col gap-1">
+              <p className="text-white font-barlow font-bold text-xs bg-green-500/25 border-green-500 border rounded-md p-2">
+                Sign up For the competition now!
+              </p>
+              {!user ? (
+                <div className="flex flex-col gap-1 mt-5">
+                  <p className="text-white font-barlow font-bold text-xs text-center">
+                    Create an account with Vertix First
+                  </p>
+                  <Link
+                    href={`/signup`}
+                    className="px-2 py-1 text-white bg-green-500 rounded-sm font-barlow font-bold text-center shadow-xl"
+                  >
+                    Create an Account with Vertix
+                  </Link>
+                </div>
+              ) : (
+                <Link
+                  href={`/competitions/competition/mixer/${compId}/signup`}
+                  className="px-2 py-1 text-white bg-green-500 rounded-sm font-barlow font-bold text-center shadow-xl"
+                >
+                  Sign up
+                </Link>
+              )}
+            </div>
+          )}
           {competition.status === 'unavailable' && (
             <div className="flex flex-col gap-1">
               <p className="text-white font-barlow font-bold text-xs bg-red-500/25 border-red-500 border rounded-md p-2">
