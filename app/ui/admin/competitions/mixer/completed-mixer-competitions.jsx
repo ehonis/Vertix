@@ -4,7 +4,7 @@ import Image from 'next/image';
 export default async function CompletedMixerCompetitions() {
   const competitions = await prisma.MixerCompetition.findMany({
     where: {
-      status: 'completed',
+      status: { in: ['completed', 'demo'] },
     },
     orderBy: { compDay: 'asc' },
     take: 3,
@@ -39,6 +39,7 @@ export default async function CompletedMixerCompetitions() {
               width={100}
               height={100}
               className="object-cover rounded-full size-12"
+              alt="comp image"
             />
           )}
           <p className=" text-center self-center">{comp.name}</p>

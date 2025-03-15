@@ -2,52 +2,183 @@ import Link from 'next/link';
 import TrophyIcon from '../ui/competitions/trophy-icon';
 import Image from 'next/image';
 import prisma from '@/prisma';
+import { Suspense } from 'react';
+import clsx from 'clsx';
+import ElementLoadingAnimation from '../ui/general/element-loading-animation';
 
-async function Comps() {
-  const competitions = prisma.MixerCompetitions.findMany({
-    where: { status: 'demo' || 'upcoming' || 'unavailable' },
+async function DemoComps() {
+  const demoCompetitions = await prisma.MixerCompetition.findMany({
+    where: {
+      status: 'demo',
+    },
   });
-  return <div></div>;
+  return (
+    <div className="flex justify-center ">
+      <div className="flex flex-col gap-3 w-full">
+        {demoCompetitions.map((comp) => (
+          <Link
+            key={comp.id}
+            href={`/competitions/competition/mixer/${comp.id}`}
+            className=" bg-black rounded-lg  p-2 flex justify-between outline outline-yellow-400 place-items-center"
+          >
+            <div className="flex flex-col">
+              <p className="font-barlow font-bold text-white text-xl text-center whitespace-nowrap">
+                {comp.name}
+              </p>
+
+              <p className="text-yellow-400 text-sm italic ">Demo</p>
+            </div>
+            {comp.status === 'demo' && (
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="#000000"
+                viewBox="0 0 256 256"
+                className="size-12 stroke-white fill-white relative z-10 self-center place-self-start"
+              >
+                <path d="M221.69,199.77,160,96.92V40h8a8,8,0,0,0,0-16H88a8,8,0,0,0,0,16h8V96.92L34.31,199.77A16,16,0,0,0,48,224H208a16,16,0,0,0,13.72-24.23ZM110.86,103.25A7.93,7.93,0,0,0,112,99.14V40h32V99.14a7.93,7.93,0,0,0,1.14,4.11L183.36,167c-12,2.37-29.07,1.37-51.75-10.11-15.91-8.05-31.05-12.32-45.22-12.81ZM48,208l28.54-47.58c14.25-1.74,30.31,1.85,47.82,10.72,19,9.61,35,12.88,48,12.88a69.89,69.89,0,0,0,19.55-2.7L208,208Z"></path>
+              </svg>
+            )}
+          </Link>
+        ))}
+      </div>
+    </div>
+  );
+}
+async function UpComingComps() {
+  const mixerCompetitions = await prisma.MixerCompetition.findMany({
+    where: {
+      status: {
+        in: ['upcoming', 'unavailable'],
+      },
+    },
+  });
+
+  return (
+    <div className="flex justify-center ">
+      <div className="flex flex-col gap-3 w-full">
+        {mixerCompetitions.map((comp) => (
+          <Link
+            key={comp.id}
+            href={`/competitions/competition/mixer/${comp.id}`}
+            className={clsx(
+              ' bg-black rounded-lg  p-2 flex justify-between outline  place-items-center',
+              comp.status === 'unavailable' && 'outline-red-500',
+              comp.status === 'upcoming' && 'outline-blue-500',
+              comp.status === 'inprogress' && 'outline-green-500'
+            )}
+          >
+            <div className="flex flex-col">
+              <p className="font-barlow font-bold text-white text-xl text-center whitespace-nowrap">
+                {comp.name}
+              </p>
+              {comp.status === 'upcoming' && (
+                <p className="text-blue-500 text-sm italic ">
+                  Sign Ups are Active!
+                </p>
+              )}
+              {comp.status === 'unavailable' && (
+                <p className="text-red-500 text-sm italic ">
+                  Currently Unavailable
+                </p>
+              )}
+              {comp.status === 'inprogress' && (
+                <p className="text-green-500 text-sm italic ">In Progress</p>
+              )}
+            </div>
+            {!comp.imageUrl ? (
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                className="size-12 fill-white relative z-10 self-center place-self-start"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M5.166 2.621v.858c-1.035.148-2.059.33-3.071.543a.75.75 0 0 0-.584.859 6.753 6.753 0 0 0 6.138 5.6 6.73 6.73 0 0 0 2.743 1.346A6.707 6.707 0 0 1 9.279 15H8.54c-1.036 0-1.875.84-1.875 1.875V19.5h-.75a2.25 2.25 0 0 0-2.25 2.25c0 .414.336.75.75.75h15a.75.75 0 0 0 .75-.75 2.25 2.25 0 0 0-2.25-2.25h-.75v-2.625c0-1.036-.84-1.875-1.875-1.875h-.739a6.706 6.706 0 0 1-1.112-3.173 6.73 6.73 0 0 0 2.743-1.347 6.753 6.753 0 0 0 6.139-5.6.75.75 0 0 0-.585-.858 47.077 47.077 0 0 0-3.07-.543V2.62a.75.75 0 0 0-.658-.744 49.22 49.22 0 0 0-6.093-.377c-2.063 0-4.096.128-6.093.377a.75.75 0 0 0-.657.744Zm0 2.629c0 1.196.312 2.32.857 3.294A5.266 5.266 0 0 1 3.16 5.337a45.6 45.6 0 0 1 2.006-.343v.256Zm13.5 0v-.256c.674.1 1.343.214 2.006.343a5.265 5.265 0 0 1-2.863 3.207 6.72 6.72 0 0 0 .857-3.294Z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            ) : (
+              <Image
+                src={comp.imageUrl}
+                width={100}
+                height={100}
+                className="size-12 rounded-full object-cover  self-center place-self-start"
+                alt="comp icon"
+              />
+            )}
+          </Link>
+        ))}
+      </div>
+    </div>
+  );
 }
 
 export default function page() {
   return (
-    <>
-      <div className="relative flex justify-center items-center pt-20">
-        <TrophyIcon />
-      </div>
+    <div className="w-screen">
+      <div className="px-4 py-3 flex flex-col gap-4 items-center w-full">
+        <div className="relative bg-black rounded-md p-3 px-2 overflow-hidden flex justify-between items-center outline outline-red-500 md:w-lg w-xs">
+          <h1 className="relative font-barlow italic font-bold text-white text-4xl z-10">
+            Competitions
+          </h1>
 
-      {/* Events Header */}
-      <h1 className="font-barlow font-bold text-white text-3xl flex justify-center mt-16 relative">
-        Competitions
-      </h1>
-
-      {/* Event List */}
-      <div className="m-2 rounded-sm flex justify-center ">
-        <div className="flex flex-col gap-3 p-3 w-96">
-          <Link
-            href={'/competitions/competition/mixer/cm6ztnujb000019usu98gepuf'}
-            className="flex bg-bg2 rounded-lg h-24 p-2 gap-3 items-center outline outline-white "
+          <div
+            className="absolute inset-0 opacity-60"
+            style={{
+              background:
+                'radial-gradient(circle at right, #ef4444 0%, transparent 85%)',
+            }}
+          />
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            className="size-12 fill-white relative z-10"
           >
-            <svg
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-              version="1.1"
-              stroke="currentColor"
-              strokeWidth={1.25}
-              className="size-16 stroke-white fill-none mr-5"
-              style={{
-                filter: 'drop-shadow(0px 4px 6px rgba(0, 0, 0, 1))',
-              }}
-            >
-              <path d="M3,13A9,9 0 0,0 12,22A9,9 0 0,0 3,13M12,22A9,9 0 0,0 21,13A9,9 0 0,0 12,22M18,3V8A6,6 0 0,1 12,14A6,6 0 0,1 6,8V3C6.74,3 7.47,3.12 8.16,3.39C8.71,3.62 9.2,3.96 9.61,4.39L12,2L14.39,4.39C14.8,3.96 15.29,3.62 15.84,3.39C16.53,3.12 17.26,3 18,3Z" />
-            </svg>
-            <p className="font-barlow font-bold text-white text-xl text-center">
-              Spring Mixer Demo
-            </p>
-          </Link>
+            <path
+              fillRule="evenodd"
+              d="M5.166 2.621v.858c-1.035.148-2.059.33-3.071.543a.75.75 0 0 0-.584.859 6.753 6.753 0 0 0 6.138 5.6 6.73 6.73 0 0 0 2.743 1.346A6.707 6.707 0 0 1 9.279 15H8.54c-1.036 0-1.875.84-1.875 1.875V19.5h-.75a2.25 2.25 0 0 0-2.25 2.25c0 .414.336.75.75.75h15a.75.75 0 0 0 .75-.75 2.25 2.25 0 0 0-2.25-2.25h-.75v-2.625c0-1.036-.84-1.875-1.875-1.875h-.739a6.706 6.706 0 0 1-1.112-3.173 6.73 6.73 0 0 0 2.743-1.347 6.753 6.753 0 0 0 6.139-5.6.75.75 0 0 0-.585-.858 47.077 47.077 0 0 0-3.07-.543V2.62a.75.75 0 0 0-.658-.744 49.22 49.22 0 0 0-6.093-.377c-2.063 0-4.096.128-6.093.377a.75.75 0 0 0-.657.744Zm0 2.629c0 1.196.312 2.32.857 3.294A5.266 5.266 0 0 1 3.16 5.337a45.6 45.6 0 0 1 2.006-.343v.256Zm13.5 0v-.256c.674.1 1.343.214 2.006.343a5.265 5.265 0 0 1-2.863 3.207 6.72 6.72 0 0 0 .857-3.294Z"
+              clipRule="evenodd"
+            />
+          </svg>
         </div>
+        <div className="w-xs md:w-lg">
+          <h1 className="font-barlow text-3xl text-white font-semibold mb-1">
+            Active or Upcoming
+          </h1>
+          <Suspense
+            fallback={
+              <div className="flex justify-center mt-2">
+                <ElementLoadingAnimation />
+              </div>
+            }
+          >
+            <UpComingComps />
+          </Suspense>
+        </div>
+        <div className="w-xs md:w-lg">
+          <h1 className="font-barlow text-3xl text-white font-semibold mb-1">
+            Demo
+          </h1>
+          <Suspense
+            fallback={
+              <div className="flex justify-center mt-2">
+                <ElementLoadingAnimation />
+              </div>
+            }
+          >
+            <DemoComps />
+          </Suspense>
+        </div>
+        <div
+          className="absolute inset-0 opacity-40 -z-20"
+          style={{
+            background:
+              'radial-gradient(circle at bottom right, #ef4444 0%, transparent 65%)',
+          }}
+        />
       </div>
-    </>
+    </div>
   );
 }

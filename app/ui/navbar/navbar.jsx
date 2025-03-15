@@ -52,7 +52,13 @@ export default function NavBar() {
             Search
           </Link>
         </div>
-        <Suspense fallback={<ElementLoadingAnimation />}>
+        <Suspense
+          fallback={
+            <div className="justify-self-end">
+              <ElementLoadingAnimation size={4} />
+            </div>
+          }
+        >
           <UserStuff />
         </Suspense>
       </nav>

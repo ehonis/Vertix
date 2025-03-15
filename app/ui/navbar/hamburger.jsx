@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { useSession } from 'next-auth/react';
+
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'motion/react';
 import clsx from 'clsx';
@@ -117,29 +117,28 @@ export default function HamburgerMenu({ user, status }) {
     });
   }
   return (
-    <div>
+    <>
       <button
         onClick={handleClick}
-        className="relative flex flex-col justify-center items-center"
+        className="relative flex flex-col justify-center items-center w-8 h-8"
       >
-        <span
-          className={`bg-white block transition-all duration-300 ease-out 
-                    h-0.5 w-6 rounded-sm ${
-                      isOpen ? 'rotate-45 translate-y-1' : '-translate-y-0.5'
-                    }`}
-        ></span>
-        <span
-          className={`bg-white block transition-all duration-300 ease-out 
-                    h-0.5 w-6 rounded-sm my-0.5 ${
-                      isOpen ? 'opacity-0' : 'opacity-100'
-                    }`}
-        ></span>
-        <span
-          className={`bg-white block transition-all duration-300 ease-out 
-                    h-0.5 w-6 rounded-sm ${
-                      isOpen ? '-rotate-45 -translate-y-1' : 'translate-y-0.5'
-                    }`}
-        ></span>
+        <div className="absolute w-7 h-3.5 flex flex-col justify-between">
+          <div
+            className={`w-full h-0.5 bg-white rounded-sm transform transition-all duration-300 ease-out ${
+              isOpen ? 'rotate-45 translate-y-1.5' : ''
+            }`}
+          />
+          <div
+            className={`w-full h-0.5 bg-white rounded-sm transform transition-all duration-300 ease-out ${
+              isOpen ? 'opacity-0' : ''
+            }`}
+          />
+          <div
+            className={`w-full h-0.5 bg-white rounded-sm transform transition-all duration-300 ease-out ${
+              isOpen ? '-rotate-45 -translate-y-1.5' : ''
+            }`}
+          />
+        </div>
       </button>
       {isOpen && (
         <div className="fixed top-0 left-0 -z-10 bg-black h-svh w-screen px-5 pb-5 flex flex-col justify-between">
@@ -299,6 +298,6 @@ export default function HamburgerMenu({ user, status }) {
           )}
         </div>
       )}
-    </div>
+    </>
   );
 }

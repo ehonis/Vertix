@@ -11,6 +11,8 @@ export default function ElementLoadingAnimation({ size }) {
       className={clsx(
         'size-10 border-4 border-gray-300 border-t-blue-500 rounded-full self-center place-self-center',
         size === 5 && 'size-5',
+        size === 4 && 'size-4',
+        size === 6 && 'size-6',
         size === 8 && 'size-8',
         size === 7 && 'size-7'
       )}
