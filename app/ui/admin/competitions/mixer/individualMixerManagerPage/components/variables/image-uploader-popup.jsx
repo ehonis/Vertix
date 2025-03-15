@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion';
 import { useState } from 'react';
 import { UploadDropzone } from '@/utils/uploadthing';
+import CustomUploadDropzoneComponent from '@/utils/uploadthing';
 import { useNotification } from '@/app/contexts/NotificationContext';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
@@ -83,7 +84,7 @@ export default function EditRoutePopUp({ compId, onCancel, imageUrl }) {
           </button>
           <h2 className="text-xl">Upload Image</h2>
           {isImageUploader ? (
-            <UploadDropzone
+            <CustomUploadDropzoneComponent
               appearance={{
                 button:
                   'ut-ready:bg-green-500 ut-uploading:cursor-not-allowed p-2 bg-red-500 bg-none after:bg-orange-400',

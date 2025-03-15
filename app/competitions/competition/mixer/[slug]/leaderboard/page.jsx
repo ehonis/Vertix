@@ -4,9 +4,9 @@ import { unstable_cache } from 'next/cache';
 import MixerLeaderBoard from '@/app/ui/competitions/mixer/mixer-leaderboard/mixer-leaderboard';
 import { auth } from '@/auth';
 
-const getBoulderScores = async () => {
+const getBoulderScores = async (id) => {
   return await prisma.MixerBoulderScore.findMany({
-    where: { competitionId: Mixer2024Id },
+    where: { competitionId: id },
     select: {
       climber: { select: { name: true, id: true, userId: true } },
       score: true,
@@ -14,9 +14,9 @@ const getBoulderScores = async () => {
     },
   });
 };
-const getRopeScores = async () => {
+const getRopeScores = async (id) => {
   return await prisma.MixerRopeScore.findMany({
-    where: { competitionId: Mixer2024Id },
+    where: { competitionId: id },
     select: {
       climber: { select: { name: true, id: true, userId: true } },
       score: true,
@@ -24,9 +24,9 @@ const getRopeScores = async () => {
     },
   });
 };
-const getDivisions = async () => {
+const getDivisions = async (id) => {
   return await prisma.MixerDivision.findMany({
-    where: { competitionId: Mixer2024Id },
+    where: { competitionId: id },
     select: {
       name: true,
       climbers: { select: { name: true, id: true, userId: true } },
@@ -49,10 +49,10 @@ const getCachedDivisions = unstable_cache(getDivisions, ['divisions-cache'], {
 });
 
 export default async function MixerDemoLeaderboard({ params }) {
-  const id = await params.slug;
+  const { slug } = await params;
 
   const isScoresAvailable = await prisma.MixerCompetition.findFirst({
-    where: { id },
+    where: { id: slug },
     select: { areScoresAvailable: true },
   });
   if (!isScoresAvailable.areScoresAvailable) {
@@ -67,9 +67,9 @@ export default async function MixerDemoLeaderboard({ params }) {
       </div>
     );
   }
-  const boulderScores = await getCachedBoulderScores();
-  const ropeScores = await getCachedRopeScores();
-  const divisions = await getCachedDivisions();
+  const boulderScores = await getCachedBoulderScores(slug);
+  const ropeScores = await getCachedRopeScores(slug);
+  const divisions = await getCachedDivisions(slug);
 
   const { formattedDivisions, formattedBoulderScores, formattedRopeScores } =
     formatMixerDataFromDatabase(divisions, boulderScores, ropeScores);

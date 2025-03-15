@@ -374,7 +374,7 @@ export default function VariablesComponent({
               </label>
             </div>
             <button
-              className="bg-bg2 outline-2 rounded-full my-1 overflow-hidden size-28"
+              className="bg-bg2 outline-2 rounded-full my-1 overflow-hidden size-28 flex justify-center items-center"
               onClick={() => setIsImagePopUp(true)}
             >
               {imageUrl === null ? (
@@ -384,7 +384,7 @@ export default function VariablesComponent({
                   viewBox="0 0 24 24"
                   strokeWidth={1.5}
                   stroke="currentColor"
-                  className="size-12"
+                  className="size-20 justify-self-center"
                 >
                   <path
                     strokeLinecap="round"
