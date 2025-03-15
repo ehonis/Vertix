@@ -22,7 +22,11 @@ const CustomUploadDropzoneComponent = ({ ...props }) => {
           onBeforeUploadBegin={async (files) => {
             const convertedFiles = await Promise.all(
               files.map(async (file) => {
-                if (file.name.toLowerCase().endsWith('.heic')) {
+                // Check if the file is HEIC or HEIF
+                if (
+                  file.name.toLowerCase().endsWith('.heic') ||
+                  file.name.toLowerCase().endsWith('.heif')
+                ) {
                   try {
                     const convertedBlob = await heic2any({
                       blob: file,
@@ -30,13 +34,17 @@ const CustomUploadDropzoneComponent = ({ ...props }) => {
                       quality: 0.8,
                     });
 
-                    return new File(
-                      [convertedBlob],
-                      file.name.replace('.heic', '.jpg'),
-                      { type: 'image/jpeg' }
+                    // Create a new file name with .jpg extension
+                    const newName = file.name.replace(
+                      /\.(heic|heif)$/i,
+                      '.jpg'
                     );
+
+                    return new File([convertedBlob], newName, {
+                      type: 'image/jpeg',
+                    });
                   } catch (error) {
-                    console.error('Error converting HEIC:', error);
+                    console.error('Error converting HEIC/HEIF:', error);
                     return file;
                   }
                 }
