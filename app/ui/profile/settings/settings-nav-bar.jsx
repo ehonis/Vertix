@@ -1,62 +1,54 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import ProfileSettingsPane from './profile-settings-pane';
-
+import clsx from 'clsx';
+import Onboarding from './onboarding';
+import SignOut from '@/app/ui/general/sign-out-button';
 export default function SettingsNavBar({ userData }) {
-  const [isPrivacy, setIsPrivacy] = useState(false);
-  const [isProfile, setIsProfile] = useState(false);
+  const [activeTab, setActiveTab] = useState(
+    userData.isOnboarded ? 'profile-settings' : 'finish-onboarding'
+  );
 
-  const handleProfileClick = () => {
-    setIsProfile(!isProfile);
-  };
-  const handlePrivacyClick = () => {
-    setIsPrivacy(!isPrivacy);
-  };
+  useEffect(() => {
+    if (userData.isOnboarded) {
+      setActiveTab('profile-settings');
+    }
+  }, [userData.isOnboarded]);
 
   return (
-    <div className="flex md:flex-row flex-col gap-5 w-full ">
-      <nav className="bg-bg1 w-48 h-max rounded-lg p-5 flex flex-col gap-3">
-        <button
-          className="flex items-center justify-between bg-bg2 rounded-sm p-1 group hover:bg-white transition-all duration-300"
-          onClick={handleProfileClick}
-        >
-          <p className="text-white group-hover:text-black">Profile Settings</p>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={1.5}
-            className="size-4 stroke-white group-hover:stroke-black"
+    <div className="w-full">
+      <div className="flex gap-2 w-full">
+        {!userData.isOnboarded && (
+          <button
+            onClick={() => setActiveTab('finish-onboarding')}
+            className={clsx(
+              'font-barlow font-bold text-white text-sm flex gap-2 items-center',
+              activeTab === 'finish-onboarding' && 'bg-black p-2 rounded-t-md'
+            )}
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="m8.25 4.5 7.5 7.5-7.5 7.5"
-            />
-          </svg>
-        </button>
+            <div className="h-2 w-2 bg-green-500 rounded-full" />
+            <p>Finish Onboarding</p>
+          </button>
+        )}
         <button
-          className="flex items-center justify-between bg-bg2 rounded-sm p-1 group hover:bg-white transition-all duration-300"
-          onClick={handlePrivacyClick}
+          onClick={() => setActiveTab('profile-settings')}
+          className={clsx(
+            'font-barlow font-bold text-white text-sm',
+            activeTab === 'profile-settings' && 'bg-black p-2 rounded-t-md'
+          )}
         >
-          <p className="text-white group-hover:text-black">Privacy Settings</p>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={1.5}
-            className="size-4 stroke-white group-hover:stroke-black"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="m8.25 4.5 7.5 7.5-7.5 7.5"
-            />
-          </svg>
+          Profile Settings
         </button>
-      </nav>
-      {isProfile ? <ProfileSettingsPane userData={userData} /> : null}
+        <div className="flex justify-end">
+          <SignOut />
+        </div>
+      </div>
+      <div className="flex flex-col gap-2 w-full">
+        {activeTab === 'finish-onboarding' && (
+          <Onboarding userData={userData} />
+        )}
+      </div>
     </div>
   );
 }

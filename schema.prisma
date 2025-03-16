@@ -48,6 +48,7 @@ model CommunityGrade {
 
 model User {
     id              String            @id @default(cuid())
+    username        String?
     name            String?
     email           String            @unique
     emailVerified   DateTime?
@@ -67,6 +68,8 @@ model User {
     Session         Session[]
     private         Boolean           @default(false)
     mixerClimber    MixerClimber[]
+    isOnboarded     Boolean           @default(false)
+    tag             String?
 }
 
 model Badge {

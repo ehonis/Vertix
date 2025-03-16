@@ -4,7 +4,7 @@ import Image from 'next/image';
 export default async function UpcomingMixerCompetitions() {
   const competitions = await prisma.MixerCompetition.findMany({
     where: {
-      status: { in: ['unavailable', 'upcoming', 'inprogress'] },
+      status: { in: ['unavailable', 'upcoming'] },
     },
     orderBy: { compDay: 'asc' },
     take: 3,

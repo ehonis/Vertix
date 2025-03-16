@@ -21,8 +21,8 @@ export default async function ProfilePage({ params }) {
   });
   const totalCompletionsInt = (await getRouteCompletions(userId)).length;
   return (
-    <>
-      <div>
+    <div className="w-screen">
+      <div className="w-full flex flex-col items-center ">
         <ImageNamePlate
           image={user.image}
           name={user.name}
@@ -31,6 +31,6 @@ export default async function ProfilePage({ params }) {
         />
         <SendsPlate completions={totalCompletionsInt} highlightedBadge={null} />
       </div>
-    </>
+    </div>
   );
 }
