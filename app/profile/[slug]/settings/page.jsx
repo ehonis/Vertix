@@ -17,7 +17,7 @@ export default async function Settings({ params }) {
     return (
       <div className="w-screen flex flex-col items-center px-5">
         <div className="px-4 py-3 flex flex-col gap-4 items-center w-full">
-          <div className="relative bg-black rounded-md p-2 px-1 overflow-hidden flex justify-between items-center outline outline-white md:w-lg w-xs">
+          <div className="relative bg-black rounded-md p-2 px-2 overflow-hidden flex justify-between items-center outline outline-white md:w-lg w-xs">
             <h1 className="relative font-barlow italic font-bold text-white text-3xl z-10">
               Settings
             </h1>

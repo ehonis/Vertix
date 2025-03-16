@@ -18,7 +18,7 @@ export default function SettingsNavBar({ userData }) {
 
   return (
     <div className="w-full">
-      <div className="flex gap-2 w-full">
+      <div className="flex gap-2  items-center w-sm">
         {!userData.isOnboarded && (
           <button
             onClick={() => setActiveTab('finish-onboarding')}
@@ -47,6 +47,9 @@ export default function SettingsNavBar({ userData }) {
       <div className="flex flex-col gap-2 w-full">
         {activeTab === 'finish-onboarding' && (
           <Onboarding userData={userData} />
+        )}
+        {activeTab === 'profile-settings' && (
+          <ProfileSettingsPane userData={userData} />
         )}
       </div>
     </div>
