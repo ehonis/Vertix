@@ -18,7 +18,7 @@ export default function SettingsNavBar({ userData }) {
 
   return (
     <div className="w-full">
-      <div className="flex gap-2  items-center w-sm">
+      <div className="flex gap-2 items-center">
         {!userData.isOnboarded && (
           <button
             onClick={() => setActiveTab('finish-onboarding')}

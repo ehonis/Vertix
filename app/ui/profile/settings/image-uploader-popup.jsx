@@ -8,18 +8,14 @@ import { useNotification } from '@/app/contexts/NotificationContext';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 
-export default function ImageUploaderPopUp({ onCancel, imageUrl }) {
+export default function ImageUploaderPopUp({ onCancel, userId }) {
   const { showNotification } = useNotification();
-
-  const [isImageUploader, setIsImageUploader] = useState(
-    imageUrl ? false : true
-  );
 
   const router = useRouter();
 
   const handleImageUpload = async (url) => {
     if (url) {
-      const data = { newImage: url, userId: userData.id };
+      const data = { newImage: url, userId: userId };
 
       try {
         const response = await fetch('/api/user/settings/imageUpload', {
@@ -50,6 +46,34 @@ export default function ImageUploaderPopUp({ onCancel, imageUrl }) {
       }
     } else {
       showNotification({ message: 'could not find image on client' });
+    }
+  };
+  const handleRemoveImage = async () => {
+    const data = { userId: userId };
+    try {
+      const response = await fetch('/api/user/settings/removeImage', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+      if (!response.ok) {
+        showNotification({
+          message: 'Error removing image, try again later',
+          color: 'red',
+        });
+      } else {
+        showNotification({
+          message: 'Image removed successfully',
+          color: 'green',
+        });
+        router.refresh();
+        onCancel();
+      }
+    } catch (error) {
+      showNotification({
+        message: 'Error removing image, try again later',
+        color: 'red',
+      });
     }
   };
 
@@ -107,6 +131,12 @@ export default function ImageUploaderPopUp({ onCancel, imageUrl }) {
               });
             }}
           />
+          <button
+            className="bg-red-500 text-white p-2 rounded-md font-bold"
+            onClick={handleRemoveImage}
+          >
+            Remove Image
+          </button>
         </motion.div>
       </motion.div>
     </div>

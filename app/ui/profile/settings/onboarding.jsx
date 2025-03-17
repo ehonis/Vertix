@@ -221,9 +221,9 @@ export default function Onboarding({ userData }) {
               value={tag}
               onChange={(e) => setTag(e.target.value)}
             >
-              <option value="boulder">Boulders</option>
-              <option value="lead">Ropes</option>
-              <option value="toprope">All Round</option>
+              <option value="Boulderer">Boulders</option>
+              <option value="Rope Climber">Ropes</option>
+              <option value="All Around">All Around</option>
               <option value="none">Prefer not to say</option>
             </select>
           </div>

@@ -53,14 +53,6 @@ export default async function Settings({ params }) {
         <div className="place-self-start w-full">
           <SettingsNavBar userData={user} />
         </div>
-
-        <div
-          className="absolute inset-0 opacity-40 -z-20"
-          style={{
-            background:
-              'radial-gradient(circle at bottom right, #FFFFFF 0%, transparent 65%)',
-          }}
-        />
       </div>
     );
   } else {
