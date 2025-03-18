@@ -1,7 +1,13 @@
 import prisma from '@/prisma';
 import { NextResponse } from 'next/server';
-
-export async function POST(req) {
+import { auth } from '@/auth';
+export const POST = auth(async function POST(req) {
+  if (!req.auth) {
+    return NextResponse.json({ success: false, error: 'Unauthorized' });
+  }
+  if (!req.auth.user.admin) {
+    return NextResponse.json({ success: false, error: 'Unauthorized' });
+  }
   try {
     const { compId, statusOption } = await req.json();
     await prisma.MixerCompetition.update({
@@ -22,4 +28,4 @@ export async function POST(req) {
       { message: 'error updating status in api' }
     );
   }
-}
+});

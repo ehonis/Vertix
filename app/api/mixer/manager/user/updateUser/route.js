@@ -1,7 +1,13 @@
 import { NextResponse } from 'next/server';
 import prisma from '@/prisma';
-
-export async function POST(request) {
+import { auth } from '@/auth';
+export const POST = auth(async function POST(req) {
+  if (!req.auth) {
+    return NextResponse.json({ success: false, error: 'Unauthorized' });
+  }
+  if (!req.auth.user.admin) {
+    return NextResponse.json({ success: false, error: 'Unauthorized' });
+  }
   try {
     const {
       compId,
@@ -14,7 +20,7 @@ export async function POST(request) {
       user,
       divisionId,
       entryMethod,
-    } = await request.json();
+    } = await req.json();
 
     // Convert string values to integers
     const parsedRopeScore = parseInt(ropeScore, 10);
@@ -100,4 +106,4 @@ export async function POST(request) {
       { status: 500 }
     );
   }
-}
+});

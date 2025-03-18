@@ -2,7 +2,6 @@ import prisma from '@/prisma';
 import Link from 'next/link';
 import { auth } from '@/auth';
 import SignUpForm from '@/app/ui/competitions/mixer/signup/sign-up-form';
-import { redirect } from 'next/navigation';
 
 export default async function Signup({ params }) {
   const { slug } = await params;
@@ -49,7 +48,7 @@ export default async function Signup({ params }) {
         </p>
 
         <Link
-          href={`/competitions/mixer/${slug}`}
+          href={`/competitions/competition/mixer/${slug}`}
           className="bg-blue-500 rounded p-2"
         >
           Back to Comp Page
