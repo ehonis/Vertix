@@ -1,13 +1,13 @@
 export default function SendsBadgePlate({ completions, highlightedBadge }) {
   return (
-    <div className="flex px-4 gap-3">
-      <div className="size-44 bg-bg2 rounded-lg justify-center items-center flex flex-col gap-4">
+    <div className="flex gap-3 w-xs md:w-md">
+      <div className="w-1/2 bg-bg2 p-2 rounded-lg justify-center items-center flex flex-col gap-4">
         <p className=" font-barlow font-bold gradient-text-purple-pink text-8xl drop-shadow-customBlack">
           {completions}
         </p>
         <p className="font-barlow font-bold text-white text-xl">Total Sends</p>
       </div>
-      <div className="size-44 bg-bg2 rounded-lg justify-center items-center flex flex-col gap-4">
+      <div className="w-1/2 p-2 bg-bg2 rounded-lg justify-center items-center flex flex-col gap-4">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"

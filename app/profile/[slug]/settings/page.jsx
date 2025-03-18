@@ -17,25 +17,18 @@ export default async function Settings({ params }) {
     return (
       <div className="w-screen flex flex-col items-center px-5">
         <div className="px-4 py-3 flex flex-col gap-4 items-center w-full">
-          <div className="relative bg-black rounded-md p-2 px-2 overflow-hidden flex justify-between items-center outline outline-white md:w-lg w-xs">
+          <div className="relative bg-black rounded-md p-2 px-2 overflow-hidden flex justify-between items-center  md:w-lg w-xs">
             <h1 className="relative font-barlow italic font-bold text-white text-3xl md:text-4xl z-10">
               Settings
             </h1>
 
-            <div
-              className="absolute inset-0 opacity-60"
-              style={{
-                background:
-                  'radial-gradient(circle at right, #FFFFFF 0%, transparent 85%)',
-              }}
-            />
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
               strokeWidth={1.5}
               stroke="currentColor"
-              className="size-10 md:size-14 stroke-black z-10 fill-white"
+              className="size-10 md:size-14 stroke-white z-10 "
             >
               <path
                 strokeLinecap="round"

@@ -196,7 +196,7 @@ model MixerBoulder {
 
 model MixerClimber {
     id            String             @id @default(cuid())
-    name          String             @unique
+    name          String
     divisionId    String?
     division      MixerDivision?     @relation(fields: [divisionId], references: [id], onDelete: SetNull)
     boulderScore  MixerBoulderScore?

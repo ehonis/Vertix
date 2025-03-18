@@ -67,7 +67,7 @@ export default async function page({ params }) {
           {competition.status === 'upcoming' && climberExists === null && (
             <div className="flex flex-col gap-1">
               <p className="text-white font-barlow font-bold text-xs bg-green-500/25 border-green-500 border rounded-md p-2">
-                Sign up For the competition now!
+                Sign up for {competition.name} now!
               </p>
               {!user ? (
                 <div className="flex flex-col gap-1 mt-5">

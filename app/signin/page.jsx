@@ -21,9 +21,9 @@ export default function SignInForm() {
 
     try {
       if (provider === 'resend') {
-        await signIn('resend', { email: emailString, redirectTo: '/redirect' });
+        await signIn('resend', { email: emailString, redirectTo: '/profile' });
       } else {
-        await signIn(provider, { redirectTo: '/redirect' });
+        await signIn(provider, { redirectTo: '/profile' });
       }
     } catch (error) {
       console.error(error);
@@ -138,7 +138,7 @@ export default function SignInForm() {
                 </svg>
               </div>
             ) : (
-              <div className="bg-purple-500 rounded-full w-44 flex justify-center py-2">
+              <div className="rounded-full w-44 flex justify-center py-2">
                 <ElementLoadingAnimation size={7} />
               </div>
             )}

@@ -35,7 +35,7 @@ export default function ImageNamePlate({ image, name, username, title, id }) {
         </div>
 
         {/* Name and ID Plate */}
-        <div className="bg-bg2 w-full max-w-md rounded-lg mt-12 p-6 px-5 relative">
+        <div className="bg-bg2  w-xs md:w-md rounded-lg mt-12 p-6 px-5 relative">
           <h1 className="text-white font-barlow font-bold text-3xl text-start drop-shadow-customBlack">
             {name}
           </h1>
