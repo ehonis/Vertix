@@ -1,6 +1,9 @@
 import Image from 'next/image';
 
-export default function ImageNamePlate({ image, name, id, title }) {
+export default function ImageNamePlate({ image, name, username, title, id }) {
+  if (username === null) {
+    username = id;
+  }
   return (
     <>
       <div className="flex flex-col items-start px-4 py-4 relative">
@@ -37,7 +40,7 @@ export default function ImageNamePlate({ image, name, id, title }) {
             {name}
           </h1>
           <h2 className="text-gray-400 font-barlow font-bold text-start drop-shadow-customBlack">
-            @{id}
+            @{username}
           </h2>
         </div>
       </div>

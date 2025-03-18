@@ -9,7 +9,7 @@ import ElementLoadingAnimation from '../../general/element-loading-animation';
 
 export default function ProfileSettingsPane({ userData }) {
   const { showNotification } = useNotification();
-  const [name, setName] = useState(userData.name);
+  const [name, setName] = useState(userData.name || '');
   const [username, setUsername] = useState(userData.username);
   const [isImageUploaderOpen, setIsImageUploaderOpen] = useState(false);
   const [isUsernameAvailable, setIsUsernameAvailable] = useState(true);
@@ -20,7 +20,7 @@ export default function ProfileSettingsPane({ userData }) {
   const [hasUserTyped, setHasUserTyped] = useState(false);
   const [isNameValid, setIsNameValid] = useState(true);
   const [nameError, setNameError] = useState('');
-  const [tag, setTag] = useState(userData.tag);
+  const [tag, setTag] = useState(userData.tag || 'none');
 
   // A debounce function that returns a cancel function for cleanup.
   const debounce = (func, delay) => {
@@ -163,7 +163,7 @@ export default function ProfileSettingsPane({ userData }) {
   };
 
   return (
-    <div className=" bg-black p-5 rounded-lg flex-col flex gap-3 font-barlow text-white rounded-tl-none">
+    <div className=" bg-black p-5 w-xs md:w-md rounded-lg flex-col flex gap-3 font-barlow text-white rounded-tl-none">
       {isImageUploaderOpen && (
         <ImageUploaderPopUp
           onCancel={() => setIsImageUploaderOpen(false)}

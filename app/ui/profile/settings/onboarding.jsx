@@ -10,7 +10,7 @@ export default function Onboarding({ userData }) {
   const { showNotification } = useNotification();
   const router = useRouter();
 
-  const [name, setName] = useState(userData.name);
+  const [name, setName] = useState(userData.name || '');
   const [username, setUsername] = useState('');
   const [image, setImage] = useState(userData.image);
   const [tag, setTag] = useState('boulder');

@@ -3,6 +3,7 @@ import { auth } from '@/auth';
 import { redirect } from 'next/navigation';
 import RoutePieChart from '@/app/ui/profile/dashboard/route-pie-chart';
 import RouteLineChart from '@/app/ui/profile/dashboard/route-line-chart';
+import ConstructionBlur from '@/app/ui/general/construction-blur';
 import {
   getLineChartCompletionsData,
   getPieChartCompletionsData,
@@ -24,19 +25,22 @@ export default async function Dashboard({ params }) {
   }
 
   const user = await prisma.user.findUnique({
-    where: { id: slug },
+    where: { username: slug },
   });
 
-  if (!user || user.id !== session?.user?.id) {
+  if (!user || user.username !== session?.user?.username) {
     redirect('/signin');
     return;
   }
-
-  const pieChartCompletionsData = await getPieChartCompletionsData(user.id);
-  const lineChartData = await getRouteCompletions(user.id);
+  console.log(session?.user?.id);
+  const pieChartCompletionsData = await getPieChartCompletionsData(
+    user.username
+  );
+  const lineChartData = await getRouteCompletions(user.username);
 
   return (
     <div className="flex flex-col p-5 gap-5 w-screen">
+      <ConstructionBlur />
       <h1 className="text-white font-bold text-3xl">
         {user.name}&apos;s Dashboard
       </h1>

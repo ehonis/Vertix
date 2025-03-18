@@ -48,7 +48,7 @@ model CommunityGrade {
 
 model User {
     id              String            @id @default(cuid())
-    username        String?
+    username        String?           @unique
     name            String?
     email           String            @unique
     emailVerified   DateTime?

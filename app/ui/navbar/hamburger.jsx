@@ -26,7 +26,7 @@ export default function HamburgerMenu({ user, status }) {
   const profileLinks = [
     {
       name: 'Dashboard',
-      url: `/profile/${user?.id}/dashboard`,
+      url: `/profile/${user?.username}/dashboard`,
       icon: (
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -47,7 +47,7 @@ export default function HamburgerMenu({ user, status }) {
     },
     {
       name: 'Profile',
-      url: `/profile/${user?.id}`,
+      url: `/profile/${user?.username}`,
       icon: (
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -68,7 +68,7 @@ export default function HamburgerMenu({ user, status }) {
     },
     {
       name: 'Settings',
-      url: `/profile/${user?.id}/settings`,
+      url: `/profile/${user?.username}/settings`,
       icon: (
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -253,46 +253,13 @@ export default function HamburgerMenu({ user, status }) {
                     </svg>
                   )}
 
-                  <div className="flex flex-col">
-                    <p className="font-barlow font-semibold text-lg">
-                      @{user.name}
+                  <div className="flex flex-col w-3/4">
+                    <p className="font-barlow font-semibold text-lg  truncate">
+                      @{user.username ? user.username : user.id}
                     </p>
                     <p className="font-barlow font-thin">{user.email}</p>
                   </div>
                 </div>
-                <button onClick={() => setIsProfileOpen(!isProfileOpen)}>
-                  {!isProfileOpen ? (
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth={1.5}
-                      stroke="currentColor"
-                      className="size-9"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="m4.5 15.75 7.5-7.5 7.5 7.5"
-                      />
-                    </svg>
-                  ) : (
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth={1.5}
-                      stroke="currentColor"
-                      className="size-9"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="m19.5 8.25-7.5 7.5-7.5-7.5"
-                      />
-                    </svg>
-                  )}
-                </button>
               </div>
             </div>
           )}

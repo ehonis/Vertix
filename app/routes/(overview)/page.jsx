@@ -3,6 +3,7 @@ import { auth } from '@/auth';
 import { getRouteCompletions } from '@/lib/routeCompletions';
 import { unstable_cache } from 'next/cache';
 import prisma from '@/prisma';
+import ConstructionBlur from '@/app/ui/general/construction-blur';
 
 const getAllRoutes = unstable_cache(
   async () => prisma.Route.findMany(),
@@ -34,6 +35,7 @@ export default async function RoutePage() {
 
   return (
     <>
+      <ConstructionBlur />
       <Routes
         ropes={ropeRoutes}
         boulders={boulderRoutes}

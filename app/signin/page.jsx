@@ -21,9 +21,9 @@ export default function SignInForm() {
 
     try {
       if (provider === 'resend') {
-        await signIn('resend', { email: emailString });
+        await signIn('resend', { email: emailString, redirectTo: '/redirect' });
       } else {
-        await signIn(provider, { redirectTo: '/profile' });
+        await signIn(provider, { redirectTo: '/redirect' });
       }
     } catch (error) {
       console.error(error);
