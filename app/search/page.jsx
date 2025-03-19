@@ -6,11 +6,13 @@ import SearchTextBox from '../ui/search/search-text-box';
 import Image from 'next/image';
 import Link from 'next/link';
 import clsx from 'clsx';
+import ConstructionBlur from '../ui/general/construction-blur';
 
 export default function Search() {
   const [fetchedData, setFetchedData] = useState(null);
   return (
     <>
+      <ConstructionBlur />
       <SearchTextBox onDataFetch={(data) => setFetchedData(data)} />
       {fetchedData ? (
         fetchedData.message === 'profiles' ? (

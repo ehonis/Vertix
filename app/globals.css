@@ -1,17 +1,8 @@
 @import 'tailwindcss';
 @import 'uploadthing/tw/v4';
 @source "./node_modules/@uploadthing/react/dist";
-
 @config '../tailwind.config.js';
 
-/*
-  The default border color has changed to `currentColor` in Tailwind CSS v4,
-  so we've added these compatibility styles to make sure everything still
-  looks the same as it did with Tailwind CSS v3.
-
-  If we ever want to remove these styles, we need to add an explicit border
-  color utility to any element that depends on these defaults.
-*/
 @layer base {
   *,
   ::after,
@@ -222,7 +213,34 @@
     opacity: 1;
   }
 }
+.slider {
+  /* Increase the track thickness */
+  -webkit-appearance: none;
+  height: 8px;
+  background: #d1d5db; /* Tailwind's gray-300 */
+  border-radius: 4px;
+  outline: none;
+}
 
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 30px; /* Larger thumb hit area */
+  height: 30px;
+  background: #4f46e5; /* Example color */
+  border-radius: 50%;
+  cursor: pointer;
+  margin-top: -11px; /* Center thumb on track */
+}
+
+.slider::-moz-range-thumb {
+  width: 30px;
+  height: 30px;
+  background: #4f46e5;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+}
 .animate-flash-slow {
   animation: flash 3s infinite ease-in-out; /* Change duration to adjust the speed */
 }

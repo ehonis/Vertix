@@ -50,7 +50,7 @@ const orbitronFont = localFont({
 
 export const metadata = {
   title: 'Vertix',
-  description: '',
+  description: 'The OTR Climbing tracker for ropes, boulders, and competitions',
 };
 
 export default function RootLayout({ children }) {

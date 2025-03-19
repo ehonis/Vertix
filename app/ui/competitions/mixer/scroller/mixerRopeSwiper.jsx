@@ -221,11 +221,13 @@ export default function MixerRopeScorer({ mixerRoutes, StartTime }) {
   return (
     <>
       <Swiper
+        direction="vertical"
+        spaceBetween={35}
         grabCursor={true}
         onSwiper={(swiper) => (swiperRef.current = swiper)}
         onSlideChange={(swiper) => setRangeValue(swiper.activeIndex)}
         onTap={handleSwiperInteraction}
-        className="h-[calc(100vh-15rem)] max-w-sm md:max-w-lg rounded-sm"
+        className="h-[calc(100vh-16rem)] max-w-sm md:max-w-lg rounded-sm"
         modules={[Virtual]}
         virtual
         allowTouchMove={true}
@@ -234,6 +236,7 @@ export default function MixerRopeScorer({ mixerRoutes, StartTime }) {
       >
         {isInfoPopup ? (
           <MixerInfoPopup
+            direction="vertical"
             mixerRoutes={mixerRoutes}
             holds={hold}
             points={points}
@@ -587,7 +590,7 @@ export default function MixerRopeScorer({ mixerRoutes, StartTime }) {
           step="1"
           value={rangeValue}
           onChange={(e) => handleRangeChange(Number(e.target.value))}
-          className="w-3/4 md:w-1/5 mb-2 appearance-none bg-gray-300 rounded-sm h-2"
+          className="slider w-3/4 md:w-1/5 mb-2 appearance-none bg-gray-300 rounded-sm h-2 mt-4"
         />
 
         {/* Slider Labels */}

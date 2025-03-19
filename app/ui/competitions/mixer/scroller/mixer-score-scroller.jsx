@@ -36,14 +36,15 @@ export default function MixerScoreScroller({
         </div>
       </div>
 
-      {category === 'Rope' ? (
+      <div className={category === 'Rope' ? 'block' : 'hidden'}>
         <MixerRopeScorer mixerRoutes={mixerRoutes} StartTime={StartTime} />
-      ) : (
+      </div>
+      <div className={category === 'Boulder' ? 'block' : 'hidden'}>
         <MixerBoulderScorer
           mixerBoulders={mixerBoulders}
           StartTime={StartTime}
         />
-      )}
+      </div>
     </div>
   );
 }
