@@ -46,7 +46,7 @@ export default async function MixerManager() {
         </div>
         <div className="mb-3">
           <h2 className="font-barlow font-bold text-2xl text-white mb-2">
-            <span className="text-orange-400">Upcoming</span> Mixer Competitions
+            <span className="text-blue-500">Upcoming</span> Mixer Competitions
           </h2>
           <div className="bg-bg2 w-full p-3 rounded-sm flex justify-center">
             <Suspense fallback={<ElementLoadingAnimation />}>

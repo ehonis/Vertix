@@ -16,7 +16,7 @@ export default async function UpComingCompetitions() {
       {UpComingCompetitions.map((comp) => (
         <Link
           key={comp.id}
-          className="bg-bg1 max-w-md grid-cols-3 grid font-barlow font-bold text-white p-3 rounded-sm outline outline-white "
+          className="bg-bg1 max-w-md grid-cols-3 grid font-barlow font-bold text-white p-3 rounded-sm outline outline-white items-center"
           href={`/admin/manager/competitions/mixer/${comp.id}`}
         >
           {comp.imageUrl === null ? (
@@ -26,7 +26,7 @@ export default async function UpComingCompetitions() {
               viewBox="0 0 24 24"
               strokeWidth={1.5}
               stroke="currentColor"
-              className="size-6 stroke-white"
+              className="size-8 stroke-white"
             >
               <path
                 strokeLinecap="round"

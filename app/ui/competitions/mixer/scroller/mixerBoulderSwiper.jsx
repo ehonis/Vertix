@@ -10,19 +10,44 @@ import { useNotification } from '@/app/contexts/NotificationContext';
 export default function MixerBoulderScorer({ mixerBoulders, StartTime }) {
   const { showNotification } = useNotification();
 
-  const [boulderAttempts, setBoulderAttempts] = useState(() =>
-    mixerBoulders.reduce((acc, panel) => {
-      acc[panel.id] = 0; // Default value for each panel
+  // Load initial state from localStorage or use default values
+  const [boulderAttempts, setBoulderAttempts] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const savedAttempts = localStorage.getItem('boulderAttempts');
+      if (savedAttempts) {
+        return JSON.parse(savedAttempts);
+      }
+    }
+    return mixerBoulders.reduce((acc, panel) => {
+      acc[panel.id] = 0;
       return acc;
-    }, {})
-  );
+    }, {});
+  });
 
-  const [boulderCompletions, setBoulderCompletions] = useState(() =>
-    mixerBoulders.reduce((acc, panel) => {
+  const [boulderCompletions, setBoulderCompletions] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const savedCompletions = localStorage.getItem('boulderCompletions');
+      if (savedCompletions) {
+        return JSON.parse(savedCompletions);
+      }
+    }
+    return mixerBoulders.reduce((acc, panel) => {
       acc[panel.id] = false;
       return acc;
-    }, {})
-  );
+    }, {});
+  });
+
+  // Save to localStorage whenever attempts or completions change
+  useEffect(() => {
+    localStorage.setItem('boulderAttempts', JSON.stringify(boulderAttempts));
+  }, [boulderAttempts]);
+
+  useEffect(() => {
+    localStorage.setItem(
+      'boulderCompletions',
+      JSON.stringify(boulderCompletions)
+    );
+  }, [boulderCompletions]);
 
   const [boulderRangeValue, setBoulderRangeValue] = useState(0);
   const swiperBoulderRef = useRef(null);
@@ -125,7 +150,7 @@ export default function MixerBoulderScorer({ mixerBoulders, StartTime }) {
             {boulderCompletions[panel.id] === false ? (
               <div
                 className={clsx(
-                  'relative flex flex-col p-5 pt-6 items-center h-full rounded-lg bg-black shadow-xl text-white text-2xl gap-3 justify-between',
+                  'relative flex flex-col p-5 pt-6 items-center h-full rounded-lg bg-black shadow-lg text-white text-2xl gap-3 justify-between',
                   panel.color === 'blue' ? 'shadow-blue-500' : null,
                   panel.color === 'red' ? 'shadow-red-500' : null,
                   panel.color === 'green' ? 'shadow-green-400' : null,
@@ -143,7 +168,7 @@ export default function MixerBoulderScorer({ mixerBoulders, StartTime }) {
                   <div className="flex flex-col gap-2">
                     <h1
                       className={clsx(
-                        'font-orbitron font-bold text-5xl text-center',
+                        'font-orbitron font-bold text-6xl text-center',
                         panel.color === 'blue' ? 'text-blue-500' : null,
                         panel.color === 'green' ? 'text-green-400' : null,
                         panel.color === 'orange' ? 'text-orange-500' : null,
@@ -285,8 +310,7 @@ export default function MixerBoulderScorer({ mixerBoulders, StartTime }) {
                         panel.color === 'brown' && 'text-amber-950',
                         panel.color === 'purple' && 'text-purple-700',
                         panel.color === 'white' && 'text-white',
-                        panel.color === 'black' &&
-                          'text-black border-1 border-white'
+                        panel.color === 'black' && 'text-black '
                       )}
                     >
                       {panel.points}

@@ -16,40 +16,100 @@ export default function MixerRopeScorer({ mixerRoutes, StartTime }) {
   const { showNotification } = useNotification();
   const [isInfoPopup, setIsInfoPopup] = useState(false);
 
-  const [attempts, setAttempts] = useState(() =>
-    mixerRoutes.reduce((acc, panel) => {
-      acc[panel.id] = 0; // Default value for each panel
-      return acc;
-    }, {})
-  );
+  // Helper function to safely get localStorage value
+  const getLocalStorageValue = (key) => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem(key);
+    }
+    return null;
+  };
 
-  const [hold, setHold] = useState(() =>
-    mixerRoutes.reduce((acc, panel) => {
-      acc[panel.id] = 0; // Default value for each panel
+  // Load initial state from localStorage or use default values
+  const [attempts, setAttempts] = useState(() => {
+    const savedAttempts = getLocalStorageValue('mixerAttempts');
+    if (savedAttempts) {
+      return JSON.parse(savedAttempts);
+    }
+    return mixerRoutes.reduce((acc, panel) => {
+      acc[panel.id] = 0;
       return acc;
-    }, {})
-  );
+    }, {});
+  });
 
-  const [completions, setCompletions] = useState(() =>
-    mixerRoutes.reduce((acc, panel) => {
+  const [hold, setHold] = useState(() => {
+    const savedHold = getLocalStorageValue('mixerHold');
+    if (savedHold) {
+      return JSON.parse(savedHold);
+    }
+    return mixerRoutes.reduce((acc, panel) => {
+      acc[panel.id] = 0;
+      return acc;
+    }, {});
+  });
+
+  const [completions, setCompletions] = useState(() => {
+    const savedCompletions = getLocalStorageValue('mixerCompletions');
+    if (savedCompletions) {
+      return JSON.parse(savedCompletions);
+    }
+    return mixerRoutes.reduce((acc, panel) => {
       acc[panel.id] = false;
       return acc;
-    }, {})
-  );
+    }, {});
+  });
 
-  const [points, setPoints] = useState(() =>
-    mixerRoutes.reduce((acc, panel) => {
+  const [points, setPoints] = useState(() => {
+    const savedPoints = getLocalStorageValue('mixerPoints');
+    if (savedPoints) {
+      return JSON.parse(savedPoints);
+    }
+    return mixerRoutes.reduce((acc, panel) => {
       acc[panel.id] = null;
       return acc;
-    }, {})
-  );
+    }, {});
+  });
 
-  const [typeToggles, setTypeToggles] = useState(() =>
-    mixerRoutes.reduce((acc, panel) => {
-      acc[panel.id] = 'TR'; // Default to 'Top Rope' for each panel
+  const [typeToggles, setTypeToggles] = useState(() => {
+    const savedTypeToggles = getLocalStorageValue('mixerTypeToggles');
+    if (savedTypeToggles) {
+      return JSON.parse(savedTypeToggles);
+    }
+    return mixerRoutes.reduce((acc, panel) => {
+      acc[panel.id] = 'TR';
       return acc;
-    }, {})
-  );
+    }, {});
+  });
+
+  // Save state to localStorage whenever it changes
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('mixerAttempts', JSON.stringify(attempts));
+    }
+  }, [attempts]);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('mixerHold', JSON.stringify(hold));
+    }
+  }, [hold]);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('mixerCompletions', JSON.stringify(completions));
+    }
+  }, [completions]);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('mixerPoints', JSON.stringify(points));
+    }
+  }, [points]);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('mixerTypeToggles', JSON.stringify(typeToggles));
+    }
+  }, [typeToggles]);
 
   const [rangeValue, setRangeValue] = useState(0);
   const swiperRef = useRef(null);
@@ -267,7 +327,7 @@ export default function MixerRopeScorer({ mixerRoutes, StartTime }) {
             {completions[panel.id] === false ? (
               <div
                 className={clsx(
-                  'relative flex flex-col p-5 pt-3 items-center h-full rounded-lg bg-black shadow-blue-500 shadow-xl text-white text-2xl gap-3 justify-between',
+                  'relative flex flex-col p-5 pt-3 items-center h-full rounded-lg bg-black shadow-blue-500 shadow-lg text-white text-2xl gap-3 justify-between',
                   panel.color === 'blue' ? 'shadow-blue-500' : null,
                   panel.color === 'red' ? 'shadow-red-500' : null,
                   panel.color === 'green' ? 'shadow-green-400' : null,
@@ -508,18 +568,30 @@ export default function MixerRopeScorer({ mixerRoutes, StartTime }) {
                     'flex flex-col justify-between p-3 bg-green-500/20 border-2 border-green-500 h-full w-full text-white text-2xl shadow-xl rounded-lg z-20',
                     panel.color === 'blue' ? 'shadow-blue-500' : null,
                     panel.color === 'red' ? 'shadow-red-500' : null,
+                    panel.color === 'green' ? 'shadow-green-400' : null,
                     panel.color === 'orange' ? 'shadow-orange-500' : null,
-                    panel.color === 'yellow' ? 'shadow-yellow-400' : null
+                    panel.color === 'yellow' ? 'shadow-yellow-400' : null,
+                    panel.color === 'pink' ? 'shadow-pink-400' : null,
+                    panel.color === 'brown' && 'shadow-amber-950',
+                    panel.color === 'purple' && 'shadow-purple-700',
+                    panel.color === 'white' && 'shadow-white',
+                    panel.color === 'black' && 'shadow-black'
                   )}
                 >
                   <div className="z-30">
                     <h1
                       className={clsx(
                         'font-orbitron font-bold text-6xl text-center mb-2 drop-shadow-customBlack',
-                        panel.color === 'blue' ? 'text-blue-600' : null,
-                        panel.color === 'orange' ? 'text-orange-600' : null,
+                        panel.color === 'blue' ? 'text-blue-500' : null,
+                        panel.color === 'green' ? 'text-green-400' : null,
+                        panel.color === 'orange' ? 'text-orange-500' : null,
                         panel.color === 'yellow' ? 'text-yellow-400' : null,
-                        panel.color === 'red' ? 'text-red-600' : null
+                        panel.color === 'red' ? 'text-red-500' : null,
+                        panel.color === 'pink' ? 'text-pink-400' : null,
+                        panel.color === 'brown' && 'text-amber-950',
+                        panel.color === 'purple' && 'text-purple-700',
+                        panel.color === 'white' && 'text-white',
+                        panel.color === 'black' && 'text-black'
                       )}
                     >
                       {panel.name}
