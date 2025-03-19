@@ -8,6 +8,7 @@ import Image from 'next/image';
 import ImagePopUp from './image-uploader-popup';
 import { useNotification } from '@/app/contexts/NotificationContext';
 import { useRouter } from 'next/navigation';
+import { CompetitionStatus } from '@prisma/client';
 export default function VariablesComponent({
   compId,
   name,
@@ -484,20 +485,25 @@ export default function VariablesComponent({
                 onChange={handleStatusChange}
                 className={clsx(
                   'px-1 py-1 bg-bg1 rounded-md',
-                  statusOption === 'upcoming' && 'bg-orange-400',
-                  statusOption === 'unavailable' && 'bg-red-500',
-                  statusOption === 'inprogress' && 'bg-blue-500',
-                  statusOption === 'completed' && 'bg-green-500',
-                  statusOption === 'archived' && 'bg-yellow-400',
-                  statusOption === 'demo' && 'bg-purple-400'
+                  statusOption === CompetitionStatus.UPCOMING && 'bg-blue-400',
+                  statusOption === CompetitionStatus.INACTIVE && 'bg-red-500',
+                  statusOption === CompetitionStatus.IN_PROGRESS &&
+                    'bg-green-500',
+                  statusOption === CompetitionStatus.COMPLETED &&
+                    'bg-green-500',
+                  statusOption === CompetitionStatus.ARCHIVED &&
+                    'bg-yellow-400',
+                  statusOption === CompetitionStatus.DEMO && 'bg-purple-400'
                 )}
               >
-                <option value="upcoming">Upcoming</option>
-                <option value="unavailable">Unavailable</option>
-                <option value="inprogress">In Progress</option>
-                <option value="completed">Completed</option>
-                <option value="archived">Archived</option>
-                <option value="demo">Demo</option>
+                <option value={CompetitionStatus.UPCOMING}>Upcoming</option>
+                <option value={CompetitionStatus.INACTIVE}>Unavailable</option>
+                <option value={CompetitionStatus.IN_PROGRESS}>
+                  In Progress
+                </option>
+                <option value={CompetitionStatus.COMPLETED}>Completed</option>
+                <option value={CompetitionStatus.DEMO}>Demo</option>
+                <option value={CompetitionStatus.ARCHIVED}>Archived</option>
               </select>
               {isStatusSave && (
                 <button

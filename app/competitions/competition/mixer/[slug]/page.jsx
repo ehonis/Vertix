@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import prisma from '@/prisma';
 import { auth } from '@/auth';
-
+import { CompetitionStatus } from '@prisma/client';
 export default async function page({ params }) {
   const compId = (await params).slug;
   const competition = await prisma.MixerCompetition.findUnique({
@@ -52,46 +52,48 @@ export default async function page({ params }) {
         </svg>
 
         <div className="flex flex-col gap-5">
-          {competition.status === 'upcoming' && climberExists !== null && (
-            <div className="flex flex-col gap-1">
-              <p className="text-white font-barlow font-bold text-xs bg-green-500/25 border-green-500 border rounded-md p-2">
-                You are already signed up for this competition!
-              </p>
-              <p className="text-white font-barlow font-bold text-xs bg-green-500/25 border-green-500 border rounded-md p-2">
-                Come back to this page on{' '}
-                {competition.compDay.toLocaleDateString('en-US')} to start the
-                competition!
-              </p>
-            </div>
-          )}
-          {competition.status === 'upcoming' && climberExists === null && (
-            <div className="flex flex-col gap-1">
-              <p className="text-white font-barlow font-bold text-xs bg-green-500/25 border-green-500 border rounded-md p-2">
-                Sign up for {competition.name} now!
-              </p>
-              {!user ? (
-                <div className="flex flex-col gap-1 mt-5">
-                  <p className="text-white font-barlow font-bold text-xs text-center">
-                    Create an account with Vertix First
-                  </p>
+          {competition.status === CompetitionStatus.UPCOMING &&
+            climberExists !== null && (
+              <div className="flex flex-col gap-1">
+                <p className="text-white font-barlow font-bold text-xs bg-green-500/25 border-green-500 border rounded-md p-2">
+                  You are already signed up for this competition!
+                </p>
+                <p className="text-white font-barlow font-bold text-xs bg-green-500/25 border-green-500 border rounded-md p-2">
+                  Come back to this page on{' '}
+                  {competition.compDay.toLocaleDateString('en-US')} to start the
+                  competition!
+                </p>
+              </div>
+            )}
+          {competition.status === CompetitionStatus.UPCOMING &&
+            climberExists === null && (
+              <div className="flex flex-col gap-1">
+                <p className="text-white font-barlow font-bold text-xs bg-green-500/25 border-green-500 border rounded-md p-2">
+                  Sign up for {competition.name} now!
+                </p>
+                {!user ? (
+                  <div className="flex flex-col gap-1 mt-5">
+                    <p className="text-white font-barlow font-bold text-xs text-center">
+                      Create an account with Vertix First
+                    </p>
+                    <Link
+                      href={`/signup`}
+                      className="px-2 py-1 text-white bg-green-500 rounded-sm font-barlow font-bold text-center shadow-xl"
+                    >
+                      Create an Account with Vertix
+                    </Link>
+                  </div>
+                ) : (
                   <Link
-                    href={`/signup`}
+                    href={`/competitions/competition/mixer/${compId}/signup`}
                     className="px-2 py-1 text-white bg-green-500 rounded-sm font-barlow font-bold text-center shadow-xl"
                   >
-                    Create an Account with Vertix
+                    Sign up
                   </Link>
-                </div>
-              ) : (
-                <Link
-                  href={`/competitions/competition/mixer/${compId}/signup`}
-                  className="px-2 py-1 text-white bg-green-500 rounded-sm font-barlow font-bold text-center shadow-xl"
-                >
-                  Sign up
-                </Link>
-              )}
-            </div>
-          )}
-          {competition.status === 'unavailable' && (
+                )}
+              </div>
+            )}
+          {competition.status === CompetitionStatus.INACTIVE && (
             <div className="flex flex-col gap-1">
               <p className="text-white font-barlow font-bold text-xs bg-red-500/25 border-red-500 border rounded-md p-2">
                 This competition is not available yet.
@@ -103,7 +105,7 @@ export default async function page({ params }) {
               </p>
             </div>
           )}
-          {competition.status === 'demo' && (
+          {competition.status === CompetitionStatus.DEMO && (
             <div className="flex flex-col gap-1">
               <p className="text-white font-barlow font-bold text-xs bg-orange-500/25 border-orange-500 border rounded-md p-2">
                 this uses previous year{"'"}s data.
@@ -114,7 +116,7 @@ export default async function page({ params }) {
               </p>
             </div>
           )}
-          {competition.status === 'demo' && (
+          {competition.status === CompetitionStatus.DEMO && (
             <div className="flex flex-col gap-2">
               <Link
                 href={`/competitions/competition/mixer/${compId}/scroller`}

@@ -1,6 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
+
 import clsx from 'clsx';
 
 export default function ElementLoadingAnimation({ size }) {

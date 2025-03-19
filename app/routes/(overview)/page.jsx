@@ -36,12 +36,14 @@ export default async function RoutePage() {
   return (
     <>
       <ConstructionBlur />
-      <Routes
-        ropes={ropeRoutes}
-        boulders={boulderRoutes}
-        user={user}
-        completions={completions}
-      />
+      <div className="md:flex md:w-screen md:justify-center md:mt-10">
+        <Routes
+          ropes={ropeRoutes}
+          boulders={boulderRoutes}
+          user={user}
+          completions={completions}
+        />
+      </div>
     </>
   );
 }

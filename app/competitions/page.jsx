@@ -5,11 +5,11 @@ import prisma from '@/prisma';
 import { Suspense } from 'react';
 import clsx from 'clsx';
 import ElementLoadingAnimation from '../ui/general/element-loading-animation';
-
+import { CompetitionStatus } from '@prisma/client';
 async function DemoComps() {
   const demoCompetitions = await prisma.MixerCompetition.findMany({
     where: {
-      status: 'demo',
+      status: CompetitionStatus.DEMO,
     },
   });
   return (
@@ -28,7 +28,7 @@ async function DemoComps() {
 
               <p className="text-yellow-400 text-sm italic ">Demo</p>
             </div>
-            {comp.status === 'demo' && (
+            {comp.status === CompetitionStatus.DEMO && (
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="#000000"
@@ -48,7 +48,7 @@ async function UpComingComps() {
   const mixerCompetitions = await prisma.MixerCompetition.findMany({
     where: {
       status: {
-        in: ['upcoming', 'unavailable'],
+        in: [CompetitionStatus.UPCOMING, CompetitionStatus.INACTIVE],
       },
     },
   });
@@ -62,26 +62,27 @@ async function UpComingComps() {
             href={`/competitions/competition/mixer/${comp.id}`}
             className={clsx(
               ' bg-black rounded-lg  p-2 flex justify-between outline  place-items-center',
-              comp.status === 'unavailable' && 'outline-red-500',
-              comp.status === 'upcoming' && 'outline-blue-500',
-              comp.status === 'inprogress' && 'outline-green-500'
+              comp.status === CompetitionStatus.INACTIVE && 'outline-red-500',
+              comp.status === CompetitionStatus.UPCOMING && 'outline-blue-500',
+              comp.status === CompetitionStatus.IN_PROGRESS &&
+                'outline-green-500'
             )}
           >
             <div className="flex flex-col">
               <p className="font-barlow font-bold text-white text-xl text-center whitespace-nowrap">
                 {comp.name}
               </p>
-              {comp.status === 'upcoming' && (
+              {comp.status === CompetitionStatus.UPCOMING && (
                 <p className="text-blue-500 text-sm italic ">
                   Sign Ups are Active!
                 </p>
               )}
-              {comp.status === 'unavailable' && (
+              {comp.status === CompetitionStatus.INACTIVE && (
                 <p className="text-red-500 text-sm italic ">
                   Currently Unavailable
                 </p>
               )}
-              {comp.status === 'inprogress' && (
+              {comp.status === CompetitionStatus.IN_PROGRESS && (
                 <p className="text-green-500 text-sm italic ">In Progress</p>
               )}
             </div>

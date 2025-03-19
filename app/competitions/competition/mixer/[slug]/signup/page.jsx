@@ -2,7 +2,7 @@ import prisma from '@/prisma';
 import Link from 'next/link';
 import { auth } from '@/auth';
 import SignUpForm from '@/app/ui/competitions/mixer/signup/sign-up-form';
-
+import { CompetitionStatus } from '@prisma/client';
 export default async function Signup({ params }) {
   const { slug } = await params;
   const session = await auth();
@@ -56,7 +56,7 @@ export default async function Signup({ params }) {
       </div>
     );
   }
-  if (!competition || competition.status === 'unavailable') {
+  if (!competition || competition.status === CompetitionStatus.INACTIVE) {
     return (
       <div className="flex flex-col items-center justify-center h-screen-offset text-white font-barlow font-bold gap-5">
         <p className="text-white font-barlow font-bold text-2xl">

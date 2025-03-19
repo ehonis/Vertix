@@ -1,10 +1,11 @@
 import Link from 'next/link';
 import prisma from '@/prisma';
 import Image from 'next/image';
+import { CompetitionStatus } from '@prisma/client';
 export default async function CompletedMixerCompetitions() {
   const competitions = await prisma.MixerCompetition.findMany({
     where: {
-      status: { in: ['completed', 'demo'] },
+      status: { in: [CompetitionStatus.COMPLETED, CompetitionStatus.DEMO] },
     },
     orderBy: { compDay: 'asc' },
     take: 3,

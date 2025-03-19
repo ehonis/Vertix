@@ -25,6 +25,7 @@
     "framer-motion": "^12.4.2",
     "heic2any": "^0.0.4",
     "jose": "^5.9.6",
+    "ldrs": "^1.1.2",
     "motion": "^11.18.2",
     "next": "^15.2.2",
     "next-auth": "^5.0.0-beta.25",

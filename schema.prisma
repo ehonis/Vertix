@@ -158,11 +158,20 @@ enum EntryMethod {
     MANUAL
 }
 
+enum CompetitionStatus {
+    INACTIVE
+    UPCOMING
+    IN_PROGRESS
+    COMPLETED
+    DEMO
+    ARCHIVED
+}
+
 model MixerCompetition {
     id                 String              @id @default(cuid())
     name               String
     year               Int
-    status             String              @default("inactive") // inactive, upcoming, In Progress, completed
+    status             CompetitionStatus   @default(INACTIVE) // inactive, upcoming, In Progress, completed
     imageUrl           String?
     time               Int                 @default(180)
     compDay            DateTime?
