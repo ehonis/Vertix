@@ -2,6 +2,7 @@ import SettingsNavBar from '@/app/ui/profile/settings/settings-nav-bar';
 import { redirect } from 'next/navigation';
 import { auth } from '@/auth';
 import prisma from '@/prisma';
+import SignOut from '@/app/ui/general/sign-out-button';
 
 export default async function Settings({ params }) {
   const session = await auth();
@@ -15,10 +16,10 @@ export default async function Settings({ params }) {
 
   if (user && user.id === session?.user?.id) {
     return (
-      <div className="w-screen flex flex-col items-center px-5">
-        <div className="px-4 py-3 flex flex-col gap-4 items-center w-full">
-          <div className="relative bg-black rounded-md p-2 px-2 overflow-hidden flex justify-between items-center  md:w-lg w-xs">
-            <h1 className="relative font-barlow italic font-bold text-white text-3xl md:text-4xl z-10">
+      <div className="w-screen flex flex-col items-center px-5 ">
+        <div className="px-4 pt-2 flex flex-col gap-4 items-center w-full">
+          <div className=" bg-black overflow-hidden flex justify-between items-center  md:w-lg w-xs">
+            <h1 className=" font-barlow italic font-bold text-white text-3xl md:text-4xl">
               Settings
             </h1>
 
@@ -43,8 +44,12 @@ export default async function Settings({ params }) {
             </svg>
           </div>
         </div>
+        <div className="h-1 md:w-lg w-xs bg-white rounded-full mb-3 mt-1" />
         <div className="place-self-start w-full">
           <SettingsNavBar userData={user} />
+        </div>
+        <div className="px-2 flex justify-end w-full mt-2">
+          <SignOut />
         </div>
       </div>
     );

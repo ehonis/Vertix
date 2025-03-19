@@ -196,7 +196,7 @@ export default function HamburgerMenu({ user, status }) {
               </div>
             </div>
           ) : (
-            <div className="w-full place-self-end bg-bg2 rounded-md h-fit flex flex-col py-3 px-2 items-center font-tomorrow font-bold text-white text-md justify-between">
+            <div className="w-full place-self-end bg-bg1 rounded-md h-fit flex flex-col py-3 px-2 items-center font-tomorrow font-bold text-white text-md justify-between">
               <AnimatePresence>
                 {isProfileOpen && (
                   <motion.div
@@ -233,7 +233,7 @@ export default function HamburgerMenu({ user, status }) {
                       src={user.image}
                       height={100}
                       width={100}
-                      className="rounded-full size-12  outline-2 outline-blue-600"
+                      className="rounded-full size-12  outline-2 outline-white"
                       alt="picture of you"
                     />
                   ) : (

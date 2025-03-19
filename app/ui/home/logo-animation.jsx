@@ -46,7 +46,7 @@ export default function HomeLogoAnimation() {
           className="absolute inset-0 opacity-50"
           style={{
             background:
-              'radial-gradient(circle at bottom right, #1d4ed8 0%, transparent 55%)',
+              'radial-gradient(circle at bottom right, #1d4ed8 0%, transparent 75%)',
           }}
         />
 
@@ -54,7 +54,7 @@ export default function HomeLogoAnimation() {
           className="absolute inset-0 opacity-50"
           style={{
             background:
-              'radial-gradient(circle at top left, #6b21a8 0%, transparent 55%)',
+              'radial-gradient(circle at top left, #6b21a8 0%, transparent 75%)',
           }}
         />
 

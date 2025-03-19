@@ -163,7 +163,7 @@ export default function ProfileSettingsPane({ userData }) {
   };
 
   return (
-    <div className=" bg-black p-5 w-xs md:w-md rounded-lg flex-col flex gap-3 font-barlow text-white rounded-tl-none">
+    <div className=" bg-bg1 p-5 w-xs md:w-md rounded-lg flex-col flex gap-3 font-barlow text-white rounded-tl-none">
       {isImageUploaderOpen && (
         <ImageUploaderPopUp
           onCancel={() => setIsImageUploaderOpen(false)}

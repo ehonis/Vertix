@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import ProfileSettingsPane from './profile-settings-pane';
 import clsx from 'clsx';
 import Onboarding from './onboarding';
-import SignOut from '@/app/ui/general/sign-out-button';
+
 export default function SettingsNavBar({ userData }) {
   const [activeTab, setActiveTab] = useState(
     userData.isOnboarded ? 'profile-settings' : 'finish-onboarding'
@@ -24,8 +24,8 @@ export default function SettingsNavBar({ userData }) {
             <button
               onClick={() => setActiveTab('finish-onboarding')}
               className={clsx(
-                'font-barlow font-bold text-white bg-bg2 rounded-t-md p-2 text-sm flex gap-2 items-center',
-                activeTab === 'finish-onboarding' && 'bg-black p-2 rounded-t-md'
+                'font-barlow font-bold text-white rounded-t-md p-2 text-sm flex gap-2 items-center',
+                activeTab === 'finish-onboarding' && 'bg-bg1 p-2 rounded-t-md'
               )}
             >
               <div className="h-2 w-2 bg-green-500 rounded-full" />
@@ -35,16 +35,14 @@ export default function SettingsNavBar({ userData }) {
           <button
             onClick={() => setActiveTab('profile-settings')}
             className={clsx(
-              'font-barlow font-bold text-white text-sm p-2 bg-bg2 rounded-t-md',
-              activeTab === 'profile-settings' && 'bg-black p-2 rounded-t-md'
+              'font-barlow font-bold text-white text-sm p-2 rounded-t-md',
+              activeTab === 'profile-settings' && 'bg-bg1 p-2 rounded-t-md'
             )}
           >
             <p className="md:text-lg">Profile Settings</p>
           </button>
         </div>
-        <div className="flex justify-end">
-          <SignOut />
-        </div>
+        <div className="flex justify-end"></div>
       </div>
       <div className="flex flex-col gap-2 max-w-xs md:max-w-md">
         {activeTab === 'finish-onboarding' && (

@@ -334,7 +334,7 @@ export default function MixerRopeScorer({ mixerRoutes, StartTime }) {
                   panel.color === 'orange' ? 'shadow-orange-500' : null,
                   panel.color === 'yellow' ? 'shadow-yellow-400' : null,
                   panel.color === 'pink' ? 'shadow-pink-400' : null,
-                  panel.color === 'brown' && 'shadow-amber-950',
+                  panel.color === 'brown' && 'shadow-amber-800',
                   panel.color === 'purple' && 'shadow-purple-700',
                   panel.color === 'white' && 'shadow-white',
                   panel.color === 'black' && 'shadow-black'
@@ -373,7 +373,7 @@ export default function MixerRopeScorer({ mixerRoutes, StartTime }) {
                         panel.color === 'yellow' ? 'text-yellow-400' : null,
                         panel.color === 'red' ? 'text-red-500' : null,
                         panel.color === 'pink' ? 'text-pink-400' : null,
-                        panel.color === 'brown' && 'text-amber-950',
+                        panel.color === 'brown' && 'text-amber-800',
                         panel.color === 'purple' && 'text-purple-700',
                         panel.color === 'white' && 'text-white',
                         panel.color === 'black' && 'text-black'
@@ -565,14 +565,14 @@ export default function MixerRopeScorer({ mixerRoutes, StartTime }) {
                 {/* complete panel */}
                 <div
                   className={clsx(
-                    'flex flex-col justify-between p-3 bg-green-500/20 border-2 border-green-500 h-full w-full text-white text-2xl shadow-xl rounded-lg z-20',
+                    'flex flex-col justify-between p-3 bg-green-500/20 border-2 border-green-500 h-full w-full text-white text-2xl shadow-lg rounded-lg z-20',
                     panel.color === 'blue' ? 'shadow-blue-500' : null,
                     panel.color === 'red' ? 'shadow-red-500' : null,
                     panel.color === 'green' ? 'shadow-green-400' : null,
                     panel.color === 'orange' ? 'shadow-orange-500' : null,
                     panel.color === 'yellow' ? 'shadow-yellow-400' : null,
                     panel.color === 'pink' ? 'shadow-pink-400' : null,
-                    panel.color === 'brown' && 'shadow-amber-950',
+                    panel.color === 'brown' && 'shadow-amber-800',
                     panel.color === 'purple' && 'shadow-purple-700',
                     panel.color === 'white' && 'shadow-white',
                     panel.color === 'black' && 'shadow-black'
@@ -588,7 +588,7 @@ export default function MixerRopeScorer({ mixerRoutes, StartTime }) {
                         panel.color === 'yellow' ? 'text-yellow-400' : null,
                         panel.color === 'red' ? 'text-red-500' : null,
                         panel.color === 'pink' ? 'text-pink-400' : null,
-                        panel.color === 'brown' && 'text-amber-950',
+                        panel.color === 'brown' && 'text-amber-800',
                         panel.color === 'purple' && 'text-purple-700',
                         panel.color === 'white' && 'text-white',
                         panel.color === 'black' && 'text-black'

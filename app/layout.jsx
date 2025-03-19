@@ -57,7 +57,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" className={`${tomorrow.variable} ${barlow.variable}`}>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${jerseyFont.variable} ${stalinistFont.variable} ${orbitronFont.variable} ${tomorrow.variable} ${barlow.variable}antialiased bg-bg0`}
+        className={`${geistSans.variable} ${geistMono.variable} ${jerseyFont.variable} ${stalinistFont.variable} ${orbitronFont.variable} ${tomorrow.variable} ${barlow.variable}antialiased bg-black`}
       >
         <NotificationProvider>
           <NextSSRPlugin

@@ -4,7 +4,7 @@ export default function Announcement({}) {
   return (
     <Link
       href="/competitions/competition/mixer/cm780exfs0002oi365hvzdtt2"
-      className="flex justify-between items-center bg-black rounded-lg p-2 px-4 w-4/5 md:w-md mt-3 shadow-lg shadow-blue-500 outline outline-blue-500/65"
+      className="flex justify-between items-center blue-button rounded-lg p-2 px-4 w-4/5 md:w-md mt-3 "
     >
       <h2 className="font-barlow text-white text-lg font-semibold text-center ">
         Sign ups are now open for Spring Mixer 2025!
