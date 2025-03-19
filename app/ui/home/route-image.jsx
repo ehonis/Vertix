@@ -18,7 +18,7 @@ export default function RouteImage() {
     },
   ];
   return (
-    <div className="mt-5 flex flex-col gap-3 md:flex-row md:gap-5 md:mt-5 w-screen items-center md:justify-center">
+    <div className="mt-5 flex flex-col gap-3  md:gap-5 md:mt-5 w-screen items-center md:justify-center">
       {content.map((content, index) => (
         <div
           key={index}
