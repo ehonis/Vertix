@@ -287,7 +287,7 @@ export default function MixerRopeScorer({ mixerRoutes, StartTime }) {
         onSwiper={(swiper) => (swiperRef.current = swiper)}
         onSlideChange={(swiper) => setRangeValue(swiper.activeIndex)}
         onTap={handleSwiperInteraction}
-        className="h-[calc(100vh-16rem)] max-w-sm md:max-w-lg rounded-sm"
+        className="h-[calc(100vh-15.5rem)] max-w-sm md:max-w-lg rounded-sm"
         modules={[Virtual]}
         virtual
         allowTouchMove={true}
