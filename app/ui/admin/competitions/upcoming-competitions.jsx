@@ -35,7 +35,13 @@ export default async function UpComingCompetitions() {
               />
             </svg>
           ) : (
-            <Image src={comp.imageUrl} />
+            <Image
+              src={comp.imageUrl}
+              height={100}
+              width={100}
+              className="rounded-full size-14"
+              alt="pictue of competition"
+            />
           )}
           <p className="text-sm text-center self-center">{comp.name}</p>
           <p className="text-end">{comp.compDay.toLocaleDateString('en-US')}</p>

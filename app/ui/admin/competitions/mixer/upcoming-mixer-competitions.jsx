@@ -35,7 +35,13 @@ export default async function UpcomingMixerCompetitions() {
               />
             </svg>
           ) : (
-            <Image src={comp.imageUrl} />
+            <Image
+              src={comp.imageUrl}
+              width={100}
+              height={100}
+              className="object-cover rounded-full size-12"
+              alt="comp image"
+            />
           )}
           <p className=" text-center self-center">{comp.name}</p>
           <p className="text-end self-center">

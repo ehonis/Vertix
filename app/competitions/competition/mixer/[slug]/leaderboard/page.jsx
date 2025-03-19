@@ -37,15 +37,15 @@ const getDivisions = async (id) => {
 const getCachedBoulderScores = unstable_cache(
   getBoulderScores,
   ['boulderScores-cache'],
-  { revalidate: 300 }
+  { revalidate: 200 }
 );
 const getCachedRopeScores = unstable_cache(
   getRopeScores,
   ['ropeScores-cache'],
-  { revalidate: 300 }
+  { revalidate: 200 }
 );
 const getCachedDivisions = unstable_cache(getDivisions, ['divisions-cache'], {
-  revalidate: 300,
+  revalidate: 200,
 });
 
 export default async function MixerDemoLeaderboard({ params }) {

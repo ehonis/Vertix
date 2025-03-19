@@ -4,13 +4,13 @@ import { motion } from 'motion/react';
 import { useState, useEffect } from 'react';
 
 export default function HomeLogoAnimation() {
-  const words = ['climb', 'track', 'boulder', 'compete'];
   const [displayText, setDisplayText] = useState('');
   const [wordIndex, setWordIndex] = useState(0);
   const [charIndex, setCharIndex] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
+    const words = ['climb', 'track', 'boulder', 'compete'];
     const currentWord = words[wordIndex];
 
     if (isDeleting) {

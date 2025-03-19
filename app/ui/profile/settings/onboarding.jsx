@@ -6,6 +6,20 @@ import { useNotification } from '@/app/contexts/NotificationContext';
 import ImageUploaderPopUp from './image-uploader-popup';
 import { useRouter } from 'next/navigation';
 import clsx from 'clsx';
+
+// A debounce function that returns a cancel function for cleanup.
+const debounce = (func, delay) => {
+  let timeoutId;
+  const debouncedFunction = (...args) => {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => {
+      func(...args);
+    }, delay);
+  };
+  debouncedFunction.cancel = () => clearTimeout(timeoutId);
+  return debouncedFunction;
+};
+
 export default function Onboarding({ userData }) {
   const { showNotification } = useNotification();
   const router = useRouter();
@@ -17,19 +31,6 @@ export default function Onboarding({ userData }) {
   const [isLoading, setIsLoading] = useState(false);
   const [isImageUploader, setIsImageUploader] = useState(false);
   const [isUsernameAvailable, setIsUsernameAvailable] = useState(true);
-
-  // A debounce function that returns a cancel function for cleanup.
-  const debounce = (func, delay) => {
-    let timeoutId;
-    const debouncedFunction = (...args) => {
-      clearTimeout(timeoutId);
-      timeoutId = setTimeout(() => {
-        func(...args);
-      }, delay);
-    };
-    debouncedFunction.cancel = () => clearTimeout(timeoutId);
-    return debouncedFunction;
-  };
 
   const checkUsername = useCallback(async () => {
     if (username.length > 0) {
@@ -47,17 +48,15 @@ export default function Onboarding({ userData }) {
     }
   }, [username]);
 
-  const debouncedCheckUsername = useCallback(debounce(checkUsername, 2000), [
-    checkUsername,
-  ]);
+  const debouncedCheckUsername = useCallback(() => {
+    const timeoutId = setTimeout(checkUsername, 2000);
+    return () => clearTimeout(timeoutId);
+  }, [checkUsername]);
 
   // Effect to check username as user types with cleanup.
   useEffect(() => {
-    debouncedCheckUsername();
-
-    return () => {
-      debouncedCheckUsername.cancel();
-    };
+    const cleanup = debouncedCheckUsername();
+    return cleanup;
   }, [username, debouncedCheckUsername]);
 
   const handleSave = async () => {

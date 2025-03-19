@@ -26,7 +26,7 @@ export default function MixerInfoPopup({
         getPointPrediction(mixerRoutes, topScores, routeId)
       );
     }
-  }, []);
+  }, [mixerRoutes, topScores, routeId]);
 
   const handleCancel = () => {
     onCancel();

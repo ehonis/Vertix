@@ -37,19 +37,18 @@ export default function RouteLineChart({ completedRoutes }) {
     setTimePeriod(event.target.value);
   };
 
-  const getData = () => {
-    const lineChartCompletionsData = getLineChartCompletionsData(
-      completedRoutes,
-      timePeriod
-    );
-    setLineCompletion(lineChartCompletionsData);
-  };
-
   useEffect(() => {
-    getData();
-  }, [timePeriod]);
+    const getData = () => {
+      const lineChartCompletionsData = getLineChartCompletionsData(
+        completedRoutes,
+        timePeriod
+      );
+      setLineCompletion(lineChartCompletionsData);
+    };
 
-  useEffect;
+    getData();
+  }, [timePeriod, completedRoutes]);
+
   if (lineCompletion.length > 0) {
     return (
       <div className="grow bg-bg1 rounded-lg py-4 flex flex-col gap-3 justify-between items-center md:h-auto h-72">

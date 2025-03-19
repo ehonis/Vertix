@@ -17,7 +17,6 @@ model Route {
     communityGrades CommunityGrade[]
     images          RouteImage[]
     type            String
-    score           Int               @default(0) // New score field with a default value of 0
     isArchive       Boolean           @default(false)
     completions     RouteCompletion[] // One-to-many relationship with RouteCompletion
     attempts        RouteAttempt[] // One-to-many relationship with RouteAttempt
@@ -58,7 +57,6 @@ model User {
     attempts        RouteAttempt[] // One-to-many relationship with RouteAttempt
     communityGrades CommunityGrade[]
     stars           RouteStar[]
-    score           Int               @default(0)
     badges          Badge[]
     admin           Boolean           @default(false)
     routeSetter     Boolean           @default(false)
@@ -152,7 +150,7 @@ model VerificationToken {
 }
 
 // mixer competition 
-// Enum to denote whether a climber’s entry was via the app or manually entered.
+// Enum to denote whether a climber's entry was via the app or manually entered.
 enum EntryMethod {
     APP
     MANUAL
@@ -204,14 +202,14 @@ model MixerBoulder {
 }
 
 model MixerClimber {
-    id            String             @id @default(cuid())
+    id            String              @id @default(cuid())
     name          String
     divisionId    String?
-    division      MixerDivision?     @relation(fields: [divisionId], references: [id], onDelete: SetNull)
-    boulderScore  MixerBoulderScore?
-    ropeScore     MixerRopeScore?
+    division      MixerDivision?      @relation(fields: [divisionId], references: [id], onDelete: SetNull)
+    boulderScores MixerBoulderScore[]
+    ropeScores    MixerRopeScore[]
     competitionId String
-    competition   MixerCompetition   @relation(fields: [competitionId], references: [id], onDelete: Cascade)
+    competition   MixerCompetition    @relation(fields: [competitionId], references: [id], onDelete: Cascade)
 
     registeredAt DateTime    @default(now()) // signup time
     checkedIn    Boolean     @default(false) // set to true on comp day if participant shows up
@@ -235,7 +233,7 @@ model MixerDivision {
 
 model MixerBoulderScore {
     id            String           @id @default(cuid())
-    climberId     String           @unique
+    climberId     String
     climber       MixerClimber     @relation(fields: [climberId], references: [id], onDelete: Cascade)
     score         Int
     attempts      Int
@@ -245,7 +243,7 @@ model MixerBoulderScore {
 
 model MixerRopeScore {
     id            String           @id @default(cuid())
-    climberId     String           @unique
+    climberId     String
     climber       MixerClimber     @relation(fields: [climberId], references: [id], onDelete: Cascade)
     score         Int
     attempts      Int

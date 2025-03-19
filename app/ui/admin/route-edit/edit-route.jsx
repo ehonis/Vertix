@@ -37,7 +37,7 @@ export default function EditRoute({ route, images, daysOld, totalSends }) {
       setModifier(modifier);
       setGrade(grade);
     }
-  }, []);
+  }, [grade, route.grade]);
 
   useEffect(() => {
     if (grade === '5.B' || grade === '5.7' || grade.startsWith('v')) {

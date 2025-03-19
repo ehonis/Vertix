@@ -73,7 +73,7 @@ export default function EditUserPopUp({
     if (climber) {
       setConnectedUserAsync();
     }
-  }, [climber?.userId, entryMethod]);
+  }, [climber?.userId, entryMethod, climber]);
 
   // Check for changes in any field
   useEffect(() => {
@@ -82,10 +82,10 @@ export default function EditUserPopUp({
       const hasChanges =
         climberName !== climber.name ||
         entryMethod !== climber.entryMethod ||
-        tempBoulderScore !== boulderScore.score ||
-        tempBoulderAttempts !== boulderScore.attempts ||
-        tempRopeScore !== ropeScore.score ||
-        tempRopeAttempts !== ropeScore.attempts ||
+        tempBoulderScore !== boulderScore?.score ||
+        tempBoulderAttempts !== boulderScore?.attempts ||
+        tempRopeScore !== ropeScore?.score ||
+        tempRopeAttempts !== ropeScore?.attempts ||
         divisionId !== climber.divisionId;
 
       setIsSaveButton(hasChanges);
@@ -98,6 +98,11 @@ export default function EditUserPopUp({
     tempRopeScore,
     tempRopeAttempts,
     divisionId,
+    climber,
+    boulderScore?.score,
+    boulderScore?.attempts,
+    ropeScore?.score,
+    ropeScore?.attempts,
   ]);
 
   // Handle form changes

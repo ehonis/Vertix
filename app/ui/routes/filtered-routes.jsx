@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import RouteTile from './route-tile';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { useNotification } from '@/app/contexts/NotificationContext';
 
@@ -14,7 +14,7 @@ export default function FilteredRoutes({
   completions,
 }) {
   const [filteredRoutes, setFilteredRoutes] = useState([]);
-  const routes = [...ropes, ...boulders];
+  const routes = useMemo(() => [...ropes, ...boulders], [ropes, boulders]);
 
   useEffect(() => {
     const { boulderFilter, ropeFilter, colorFilter, sectionFilter } = filter;
@@ -49,7 +49,7 @@ export default function FilteredRoutes({
     });
 
     setFilteredRoutes(newFilteredRoutes);
-  }, [filter]);
+  }, [filter, routes]);
 
   // Rest of your code remains the same
   // Dependency array includes routes and filter

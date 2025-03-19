@@ -7,6 +7,19 @@ import Image from 'next/image';
 import { useCallback, useEffect } from 'react';
 import ElementLoadingAnimation from '../../general/element-loading-animation';
 
+// A debounce function that returns a cancel function for cleanup.
+const debounce = (func, delay) => {
+  let timeoutId;
+  const debouncedFunction = (...args) => {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => {
+      func(...args);
+    }, delay);
+  };
+  debouncedFunction.cancel = () => clearTimeout(timeoutId);
+  return debouncedFunction;
+};
+
 export default function ProfileSettingsPane({ userData }) {
   const { showNotification } = useNotification();
   const [name, setName] = useState(userData.name || '');
@@ -21,19 +34,6 @@ export default function ProfileSettingsPane({ userData }) {
   const [isNameValid, setIsNameValid] = useState(true);
   const [nameError, setNameError] = useState('');
   const [tag, setTag] = useState(userData.tag || 'none');
-
-  // A debounce function that returns a cancel function for cleanup.
-  const debounce = (func, delay) => {
-    let timeoutId;
-    const debouncedFunction = (...args) => {
-      clearTimeout(timeoutId);
-      timeoutId = setTimeout(() => {
-        func(...args);
-      }, delay);
-    };
-    debouncedFunction.cancel = () => clearTimeout(timeoutId);
-    return debouncedFunction;
-  };
 
   const checkUsername = useCallback(async () => {
     if (username.length > 0 && hasUserTyped && username !== userData.username) {
@@ -65,9 +65,18 @@ export default function ProfileSettingsPane({ userData }) {
     }
   }, [username, hasUserTyped, userData.username]);
 
-  const debouncedCheckUsername = useCallback(debounce(checkUsername, 1000), [
-    checkUsername,
-  ]);
+  const debouncedCheckUsername = useCallback(() => {
+    const debouncedFn = debounce((username, hasUserTyped, userDataUsername) => {
+      if (
+        username.length > 0 &&
+        hasUserTyped &&
+        username !== userDataUsername
+      ) {
+        checkUsername();
+      }
+    }, 1000);
+    return debouncedFn;
+  }, [checkUsername]);
 
   const handleSave = async () => {
     const data = {
@@ -115,15 +124,21 @@ export default function ProfileSettingsPane({ userData }) {
         setDidUsernameChange(true);
         if (isUsernameValid) {
           setIsUsernameLoading(true);
-          debouncedCheckUsername();
+          debouncedCheckUsername()(username, hasUserTyped, userData.username);
         }
       }
     }
 
     return () => {
-      debouncedCheckUsername.cancel();
+      debouncedCheckUsername().cancel();
     };
-  }, [username, debouncedCheckUsername, hasUserTyped]);
+  }, [
+    username,
+    debouncedCheckUsername,
+    hasUserTyped,
+    isUsernameValid,
+    userData.username,
+  ]);
 
   const handleUsernameChange = (e) => {
     setHasUserTyped(true);

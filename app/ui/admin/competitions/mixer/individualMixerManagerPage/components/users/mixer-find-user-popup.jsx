@@ -5,15 +5,6 @@ import { useState, useCallback } from 'react';
 import ElementLoadingAnimation from '@/app/ui/general/element-loading-animation';
 import clsx from 'clsx';
 
-function debounce(func, delay) {
-  let timeout;
-  return function (...args) {
-    const context = this;
-    clearTimeout(timeout);
-    timeout = setTimeout(() => func.apply(context, args), delay);
-  };
-}
-
 export default function FindUserPopUp({ onConnectUser, onCancel }) {
   const [foundUsers, setFoundUsers] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -22,7 +13,16 @@ export default function FindUserPopUp({ onConnectUser, onCancel }) {
   const [selectedUser, setSelectedUser] = useState({});
   const [isConnectButton, setIsConnectButton] = useState(false);
 
-  const findUsers = async (text) => {
+  const debounce = useCallback((func, delay) => {
+    let timeout;
+    return function (...args) {
+      const context = this;
+      clearTimeout(timeout);
+      timeout = setTimeout(() => func.apply(context, args), delay);
+    };
+  }, []);
+
+  const findUsers = useCallback(async (text) => {
     setSelectedUser({});
     setIsConnectButton(false);
     if (!text) {
@@ -51,14 +51,22 @@ export default function FindUserPopUp({ onConnectUser, onCancel }) {
     } finally {
       setIsLoading(false);
     }
-  };
-  const debouncedFindUsers = useCallback(debounce(findUsers, 300), []);
+  }, []);
 
-  const handleSearchTextChange = (e) => {
-    const text = e.target.value;
-    setSearchText(text);
-    debouncedFindUsers(text);
-  };
+  const debouncedFindUsers = useCallback(
+    debounce((text) => findUsers(text), 300),
+    [findUsers]
+  );
+
+  const handleSearchTextChange = useCallback(
+    (e) => {
+      const text = e.target.value;
+      setSearchText(text);
+      debouncedFindUsers(text);
+    },
+    [debouncedFindUsers]
+  );
+
   const handleUserClick = (user) => {
     setSelectedUser(user);
     setIsConnectButton(true);
