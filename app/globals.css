@@ -240,6 +240,7 @@
   border: none;
   border-radius: 50%;
   cursor: pointer;
+  margin-top: -11px;
 }
 .animate-flash-slow {
   animation: flash 3s infinite ease-in-out; /* Change duration to adjust the speed */
