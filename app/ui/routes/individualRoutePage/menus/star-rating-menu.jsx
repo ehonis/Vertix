@@ -1,26 +1,24 @@
-'use client';
+"use client";
 
-import { use, useState } from 'react';
-import clsx from 'clsx';
-import ConfirmationPopUp from '@/app/ui/admin/new_route/confirmation-pop-up';
-import { useNotification } from '@/app/contexts/NotificationContext';
+import { use, useState } from "react";
+import clsx from "clsx";
+import ConfirmationPopUp from "@/app/ui/admin/new_route/confirmation-pop-up";
+import { useNotification } from "@/app/contexts/NotificationContext";
 
 export default function StarRatingMenu({ route, userId, onCancel, rating }) {
   const { showNotification } = useNotification();
-  const [selectedRating, setSelectedRating] = useState(
-    rating?.stars ? rating.stars : 0
-  );
+  const [selectedRating, setSelectedRating] = useState(rating?.stars ? rating.stars : 0);
   const [isPopUp, setIsPopUp] = useState(false);
-  const [submessage, Setsubmessage] = useState('');
-  const [message, SetMessage] = useState('');
-  const [comment, SetComment] = useState(rating?.comment ? rating.comment : '');
-  const handleStarClick = (rating) => {
+  const [submessage, Setsubmessage] = useState("");
+  const [message, SetMessage] = useState("");
+  const [comment, SetComment] = useState(rating?.comment ? rating.comment : "");
+  const handleStarClick = rating => {
     setSelectedRating(rating);
   };
   const handleConfirmation = () => {
     if (selectedRating === 0) {
-      SetMessage('You are about to rate zero stars, are you sure?');
-      Setsubmessage('');
+      SetMessage("You are about to rate zero stars, are you sure?");
+      Setsubmessage("");
       setIsPopUp(true);
     } else {
       handleSubmit();
@@ -29,10 +27,10 @@ export default function StarRatingMenu({ route, userId, onCancel, rating }) {
   const handleSubmit = async () => {
     setIsPopUp(false);
     try {
-      const response = await fetch('/api/menus/starMenu', {
-        method: 'POST',
+      const response = await fetch("/api/menus/starMenu", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           userId: userId,
@@ -43,17 +41,17 @@ export default function StarRatingMenu({ route, userId, onCancel, rating }) {
         }),
       });
       if (!response.ok) {
-        throw new Error('Error in API Call');
+        throw new Error("Error in API Call");
       }
       showNotification({
         message: `Succesfully rated route!`,
-        color: 'green',
+        color: "green",
       });
       onCancel();
     } catch (error) {
       showNotification({
         message: `Could not rate route with error:${error}`,
-        color: 'red',
+        color: "red",
       });
     }
   };
@@ -61,7 +59,7 @@ export default function StarRatingMenu({ route, userId, onCancel, rating }) {
     setIsPopUp(false);
   };
 
-  const handleCommentChange = (event) => {
+  const handleCommentChange = event => {
     SetComment(event.target.value);
   };
 
@@ -80,23 +78,22 @@ export default function StarRatingMenu({ route, userId, onCancel, rating }) {
           <div className="flex flex-col items-center">
             <p className="font-barlow font-bold text-white">Edit Rating</p>
             <p className="font-barlow font-bold text-xs text-slate-500 italic text-center">
-              You have already rated this route, but you can still change your
-              rating
-            </p>{' '}
+              You have already rated this route, but you can still change your rating
+            </p>{" "}
           </div>
         ) : (
           <p className="font-barlow font-bold text-white">Rate the Route!</p>
         )}
         <div className="flex">
-          {[1, 2, 3, 4, 5].map((star) => (
+          {[1, 2, 3, 4, 5].map(star => (
             <svg
               key={star}
               onClick={() => handleStarClick(star)}
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"
               className={clsx(
-                'fill-slate-500 shadow-lg size-8 cursor-pointer',
-                star <= selectedRating ? 'fill-yellow-500' : null
+                "fill-slate-500 shadow-lg size-8 cursor-pointer",
+                star <= selectedRating ? "fill-yellow-500" : null
               )}
             >
               <path
@@ -110,11 +107,11 @@ export default function StarRatingMenu({ route, userId, onCancel, rating }) {
         <div className="flex flex-col items-center gap-1">
           {!rating ? (
             <p className="font-barlow font-bold text-slate-500 text-sm">
-              Write a comment to the routesetter {'(optional)'}
+              Write a comment to the routesetter {"(optional)"}
             </p>
           ) : (
             <p className="font-barlow font-bold text-slate-500 text-sm">
-              Edit Your Comment {'(optional)'}
+              Edit Your Comment {"(optional)"}
             </p>
           )}
 
@@ -133,11 +130,8 @@ export default function StarRatingMenu({ route, userId, onCancel, rating }) {
       </div>
 
       <div className="flex justify-end p-2">
-        <button
-          className="text-white bg-blue-400 p-2 rounded-sm "
-          onClick={handleConfirmation}
-        >
-          {rating?.stars ? 'Update' : 'Submit'}
+        <button className="text-white bg-blue-400 p-2 rounded-sm " onClick={handleConfirmation}>
+          {rating?.stars ? "Update" : "Submit"}
         </button>
       </div>
     </>

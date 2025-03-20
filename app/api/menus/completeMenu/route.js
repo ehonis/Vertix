@@ -1,19 +1,18 @@
-import prisma from '@/prisma';
-import { NextResponse } from 'next/server';
+import prisma from "@/prisma";
+import { NextResponse } from "next/server";
 
 export async function POST(request) {
-  const { userId, routeId, cases, selectedGrade, selectedSends } =
-    await request.json();
+  const { userId, routeId, cases, selectedGrade, selectedSends } = await request.json();
 
   try {
     switch (cases) {
-      case 'completedGraded':
+      case "completedGraded":
         await prisma.routeCompletion.update({
           where: { userId_routeId: { userId, routeId } },
           data: { sends: { increment: parseInt(selectedSends, 10) } },
         });
         break;
-      case 'completedNotGraded':
+      case "completedNotGraded":
         await prisma.routeCompletion.update({
           where: { userId_routeId: { userId, routeId } },
           data: { sends: { increment: parseInt(selectedSends, 10) } },
@@ -26,7 +25,7 @@ export async function POST(request) {
           },
         });
         break;
-      case 'notCompletedGraded':
+      case "notCompletedGraded":
         await prisma.routeCompletion.create({
           data: {
             user: { connect: { id: userId } },
@@ -34,7 +33,7 @@ export async function POST(request) {
           },
         });
         break;
-      case 'notCompletedNotGraded':
+      case "notCompletedNotGraded":
         await prisma.routeCompletion.create({
           data: {
             user: { connect: { id: userId } },
@@ -53,13 +52,10 @@ export async function POST(request) {
       default:
         return NextResponse.json({ status: 400 });
     }
-    return NextResponse.json(
-      { status: 200 },
-      { message: 'Successfully handled case' }
-    );
+    return NextResponse.json({ status: 200 }, { message: "Successfully handled case" });
   } catch (error) {
     return NextResponse.json(
-      { error: 'Failed to add route to completion', details: error.message },
+      { error: "Failed to add route to completion", details: error.message },
       { status: 500 }
     );
   }

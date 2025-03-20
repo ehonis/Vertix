@@ -1,14 +1,9 @@
-'use client';
+"use client";
 
-import { randomColor } from '@/lib/utils';
-import { useState, useEffect } from 'react';
+import { randomColor } from "@/lib/utils";
+import { useState, useEffect } from "react";
 
-function useClickState(
-  initialColor = '#FFFFFF',
-  id,
-  selectedPart,
-  setSelectedPart
-) {
+function useClickState(initialColor = "#FFFFFF", id, selectedPart, setSelectedPart) {
   const isActive = selectedPart === id;
   const fillColor = isActive ? randomColor() : initialColor;
 
@@ -20,22 +15,11 @@ function useClickState(
 }
 
 function MainWall1({ selectedPart, setSelectedPart }) {
-  const [fillColor, handleClick] = useClickState(
-    '#FFFFFF',
-    'main1',
-    selectedPart,
-    setSelectedPart
-  );
+  const [fillColor, handleClick] = useClickState("#FFFFFF", "main1", selectedPart, setSelectedPart);
 
   return (
     <g className="cursor-pointer" fill={fillColor} onClick={handleClick}>
-      <rect
-        id="mainwall1"
-        width="10.0286111"
-        height="22.150414"
-        x="129.67314"
-        y="279.68167"
-      />
+      <rect id="mainwall1" width="10.0286111" height="22.150414" x="129.67314" y="279.68167" />
       <rect
         id="mainwall1.1"
         width="10.0286111"
@@ -68,34 +52,17 @@ function MainWall1({ selectedPart, setSelectedPart }) {
         y="-81.981021"
         transform="matrix(-0.5700629,-0.82160105,0.94636629,-0.32309573,0,0)"
       />
-      <rect
-        id="mainwall1.5"
-        width="10.0286111"
-        height="49.964146"
-        x="80.42158"
-        y="254.11948"
-      />
+      <rect id="mainwall1.5" width="10.0286111" height="49.964146" x="80.42158" y="254.11948" />
     </g>
   );
 }
 
 function ABWall({ selectedPart, setSelectedPart }) {
-  const [fillColor, handleClick] = useClickState(
-    '#FFFFFF',
-    'AB',
-    selectedPart,
-    setSelectedPart
-  );
+  const [fillColor, handleClick] = useClickState("#FFFFFF", "AB", selectedPart, setSelectedPart);
 
   return (
     <g className="cursor-pointer" fill={fillColor} onClick={handleClick}>
-      <rect
-        id="AB-1"
-        width="10.5286111"
-        height="49.551445"
-        x="28.550168"
-        y="253.75826"
-      />
+      <rect id="AB-1" width="10.5286111" height="49.551445" x="28.550168" y="253.75826" />
       <rect
         id="AB-2"
         width="10.97174382"
@@ -104,31 +71,14 @@ function ABWall({ selectedPart, setSelectedPart }) {
         y="241.1954"
         transform="matrix(0.91670591,-0.39956261,0.60747614,0.79433792,0,0)"
       />
-      <rect
-        id="AB-3"
-        width="10.0286111"
-        height="30.990782"
-        x="20.334927"
-        y="215.87732"
-      />
-      <rect
-        id="AB-4"
-        width="10.0286111"
-        height="32.773054"
-        x="20.347147"
-        y="185.33461"
-      />
+      <rect id="AB-3" width="10.0286111" height="30.990782" x="20.334927" y="215.87732" />
+      <rect id="AB-4" width="10.0286111" height="32.773054" x="20.347147" y="185.33461" />
     </g>
   );
 }
 
 function MainWall2({ selectedPart, setSelectedPart }) {
-  const [fillColor, handleClick] = useClickState(
-    '#FFFFFF',
-    'main2',
-    selectedPart,
-    setSelectedPart
-  );
+  const [fillColor, handleClick] = useClickState("#FFFFFF", "main2", selectedPart, setSelectedPart);
 
   return (
     <g className="cursor-pointer" fill={fillColor} onClick={handleClick}>
@@ -164,13 +114,7 @@ function MainWall2({ selectedPart, setSelectedPart }) {
         y="163.61043"
         transform="rotate(-50)"
       />
-      <rect
-        id="main3"
-        width="10.0286111"
-        height="14.150414"
-        x="79.922047"
-        y="185.68465"
-      />
+      <rect id="main3" width="10.0286111" height="14.150414" x="79.922047" y="185.68465" />
       <rect
         id="main4"
         width="10.0286111"
@@ -209,8 +153,8 @@ function MainWall2({ selectedPart, setSelectedPart }) {
 
 function Boulder1({ selectedPart, setSelectedPart }) {
   const [fillColor, handleClick] = useClickState(
-    '#FFFFFF',
-    'boulder1',
+    "#FFFFFF",
+    "boulder1",
     selectedPart,
     setSelectedPart
   );
@@ -271,8 +215,8 @@ function Boulder1({ selectedPart, setSelectedPart }) {
 
 function Boulder2({ selectedPart, setSelectedPart }) {
   const [fillColor, handleClick] = useClickState(
-    '#FFFFFF',
-    'boulder2',
+    "#FFFFFF",
+    "boulder2",
     selectedPart,
     setSelectedPart
   );
@@ -339,15 +283,9 @@ export default function MobileTopdownParts({ onData }) {
   }, [selectedPart, onData]);
   return (
     <>
-      <MainWall1
-        selectedPart={selectedPart}
-        setSelectedPart={setSelectedPart}
-      />
+      <MainWall1 selectedPart={selectedPart} setSelectedPart={setSelectedPart} />
       <ABWall selectedPart={selectedPart} setSelectedPart={setSelectedPart} />
-      <MainWall2
-        selectedPart={selectedPart}
-        setSelectedPart={setSelectedPart}
-      />
+      <MainWall2 selectedPart={selectedPart} setSelectedPart={setSelectedPart} />
       <Boulder1 selectedPart={selectedPart} setSelectedPart={setSelectedPart} />
       <Boulder2 selectedPart={selectedPart} setSelectedPart={setSelectedPart} />
     </>

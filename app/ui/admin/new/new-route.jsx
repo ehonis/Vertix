@@ -1,68 +1,60 @@
-import { useState, useEffect } from 'react';
-import clsx from 'clsx';
-import GradeSelect from '../new_route/grade-select';
-import TopDown from '../../routes/topdown';
-import ErrorPopUp from './error-pop-up';
+import { useState, useEffect } from "react";
+import clsx from "clsx";
+import GradeSelect from "../new_route/grade-select";
+import TopDown from "../../routes/topdown";
+import ErrorPopUp from "./error-pop-up";
 
 export default function NewRoute({ id, onCommit, onUncommit }) {
-  const [commitText, setCommitText] = useState('Commit');
+  const [commitText, setCommitText] = useState("Commit");
   const [isToday, setIsToday] = useState(false);
 
-  const [name, SetName] = useState('');
-  const [selectedDate, setSelectedDate] = useState('');
-  const [grade, setGrade] = useState('');
-  const [color, setColor] = useState('');
+  const [name, SetName] = useState("");
+  const [selectedDate, setSelectedDate] = useState("");
+  const [grade, setGrade] = useState("");
+  const [color, setColor] = useState("");
   const [wall, setWall] = useState(null);
 
   const [isError, setIsError] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState("");
 
-  const handleNameChange = (event) => {
+  const handleNameChange = event => {
     SetName(event.target.value);
   };
-  const handleDateChange = (event) => {
+  const handleDateChange = event => {
     setSelectedDate(event.target.value);
   };
   const handleNowButton = () => {
     const date = new Date();
     // Format as YYYY-MM-DD
-    const formattedDate = date.toISOString().split('T')[0];
+    const formattedDate = date.toISOString().split("T")[0];
     setSelectedDate(formattedDate);
   };
-  const handleColorChange = (event) => {
+  const handleColorChange = event => {
     setColor(event.target.value);
   };
-  const handleWallData = (data) => {
+  const handleWallData = data => {
     setWall(data);
   };
-  const handleGradeData = (data) => {
+  const handleGradeData = data => {
     setGrade(data);
   };
 
   const handleCommit = () => {
-    if (commitText === 'Commit') {
+    if (commitText === "Commit") {
       if (!name) {
-        setErrorMessage('Name is empty for route');
+        setErrorMessage("Name is empty for route");
         setIsError(true);
       } else if (!grade) {
-        setErrorMessage(
-          `Grade is empty, please set the grade for the ${name} route`
-        );
+        setErrorMessage(`Grade is empty, please set the grade for the ${name} route`);
         setIsError(true);
       } else if (!color) {
-        setErrorMessage(
-          `Color is empty, please put a color for the ${name} route`
-        );
+        setErrorMessage(`Color is empty, please put a color for the ${name} route`);
         setIsError(true);
       } else if (!selectedDate) {
-        setErrorMessage(
-          `Set Date is empty, please put a date for the ${name} route`
-        );
+        setErrorMessage(`Set Date is empty, please put a date for the ${name} route`);
         setIsError(true);
       } else if (!wall) {
-        setErrorMessage(
-          `Wall is not selected, please select a wall for the ${name} route`
-        );
+        setErrorMessage(`Wall is not selected, please select a wall for the ${name} route`);
         setIsError(true);
       } else {
         onCommit({
@@ -72,14 +64,14 @@ export default function NewRoute({ id, onCommit, onUncommit }) {
           grade: grade,
           color: color,
           wall: wall,
-          type: 'route',
+          type: "route",
         });
-        setCommitText('Committed');
+        setCommitText("Committed");
       }
       // Invalid inputs
     } else {
       onUncommit(id);
-      setCommitText('Commit');
+      setCommitText("Commit");
     }
   };
 
@@ -89,7 +81,7 @@ export default function NewRoute({ id, onCommit, onUncommit }) {
 
   useEffect(() => {
     const date = new Date();
-    const formattedDate = date.toISOString().split('T')[0];
+    const formattedDate = date.toISOString().split("T")[0];
     if (selectedDate === formattedDate) {
       setIsToday(true);
     } else if (selectedDate !== formattedDate) {
@@ -114,17 +106,13 @@ export default function NewRoute({ id, onCommit, onUncommit }) {
             />
           </div>
           <div className="flex gap-1 items-center">
-            <label
-              htmlFor=""
-              className="text-white font-barlow font-bold text-lg"
-            >
-              <span className="font-barlow font-bold text-red-500">*</span>Set
-              Date:
+            <label htmlFor="" className="text-white font-barlow font-bold text-lg">
+              <span className="font-barlow font-bold text-red-500">*</span>Set Date:
             </label>
             <button
               className={clsx(
-                'font-barlow font-bold px-2 py-1 rounded-lg bg-bg1 text-white',
-                isToday && 'bg-green-500'
+                "font-barlow font-bold px-2 py-1 rounded-lg bg-bg1 text-white",
+                isToday && "bg-green-500"
               )}
               onClick={handleNowButton}
             >
@@ -141,10 +129,7 @@ export default function NewRoute({ id, onCommit, onUncommit }) {
           </div>
           <GradeSelect onGradeChange={handleGradeData} />
           <div className="flex gap-2 w-2/6 items-center">
-            <label
-              htmlFor=""
-              className="text-white font-barlow font-bold text-lg"
-            >
+            <label htmlFor="" className="text-white font-barlow font-bold text-lg">
               <span className="font-barlow font-bold text-red-500">*</span>
               Color:
             </label>
@@ -175,7 +160,7 @@ export default function NewRoute({ id, onCommit, onUncommit }) {
         </div>
       </div>
       <div className="flex gap-1 items-center justify-end">
-        {commitText === 'Commit' && (
+        {commitText === "Commit" && (
           <div className="flex gap-1">
             <p className="text-white font-barlow font-bold md:text-base text-xs">
               you must commit before submitting
@@ -198,8 +183,8 @@ export default function NewRoute({ id, onCommit, onUncommit }) {
 
         <button
           className={clsx(
-            'text-white  md:p-2 p-2 md:text-base text-sm md:w-32 min-w-16 rounded-full font-barlow font-bold',
-            commitText === 'Committed' ? 'bg-green-500' : 'bg-slate-500'
+            "text-white  md:p-2 p-2 md:text-base text-sm md:w-32 min-w-16 rounded-full font-barlow font-bold",
+            commitText === "Committed" ? "bg-green-500" : "bg-slate-500"
           )}
           onClick={handleCommit}
         >

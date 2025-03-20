@@ -1,11 +1,11 @@
-'use client';
-import { useState } from 'react';
-import { useNotification } from '@/app/contexts/NotificationContext';
-import clsx from 'clsx';
-import ImageUploaderPopUp from './image-uploader-popup';
-import Image from 'next/image';
-import { useCallback, useEffect } from 'react';
-import ElementLoadingAnimation from '../../general/element-loading-animation';
+"use client";
+import { useState } from "react";
+import { useNotification } from "@/app/contexts/NotificationContext";
+import clsx from "clsx";
+import ImageUploaderPopUp from "./image-uploader-popup";
+import Image from "next/image";
+import { useCallback, useEffect } from "react";
+import ElementLoadingAnimation from "../../general/element-loading-animation";
 
 // A debounce function that returns a cancel function for cleanup.
 const debounce = (func, delay) => {
@@ -22,56 +22,50 @@ const debounce = (func, delay) => {
 
 export default function ProfileSettingsPane({ userData }) {
   const { showNotification } = useNotification();
-  const [name, setName] = useState(userData.name || '');
+  const [name, setName] = useState(userData.name || "");
   const [username, setUsername] = useState(userData.username);
   const [isImageUploaderOpen, setIsImageUploaderOpen] = useState(false);
   const [isUsernameAvailable, setIsUsernameAvailable] = useState(true);
   const [didUsernameChange, setDidUsernameChange] = useState(false);
   const [isUsernameValid, setIsUsernameValid] = useState(true);
-  const [usernameError, setUsernameError] = useState('');
+  const [usernameError, setUsernameError] = useState("");
   const [isUsernameLoading, setIsUsernameLoading] = useState(false);
   const [hasUserTyped, setHasUserTyped] = useState(false);
   const [isNameValid, setIsNameValid] = useState(true);
-  const [nameError, setNameError] = useState('');
-  const [tag, setTag] = useState(userData.tag || 'none');
+  const [nameError, setNameError] = useState("");
+  const [tag, setTag] = useState(userData.tag || "none");
 
   const checkUsername = useCallback(async () => {
     if (username.length > 0 && hasUserTyped && username !== userData.username) {
       try {
         const response = await fetch(
-          `/api/user/settings/userNameCheck?username=${encodeURIComponent(
-            username
-          )}`
+          `/api/user/settings/userNameCheck?username=${encodeURIComponent(username)}`
         );
         const data = await response.json();
         setIsUsernameAvailable(data.available);
         if (data.available) {
-          setUsernameError('');
+          setUsernameError("");
           setIsUsernameValid(true);
         } else {
-          setUsernameError('Username is already taken');
+          setUsernameError("Username is already taken");
           setIsUsernameValid(false);
         }
         setIsUsernameLoading(false);
       } catch (error) {
-        console.error('Error checking username:', error);
+        console.error("Error checking username:", error);
         setIsUsernameLoading(false);
       }
     } else if (username === userData.username) {
       setIsUsernameAvailable(true);
       setIsUsernameValid(true);
-      setUsernameError('');
+      setUsernameError("");
       setIsUsernameLoading(false);
     }
   }, [username, hasUserTyped, userData.username]);
 
   const debouncedCheckUsername = useCallback(() => {
     const debouncedFn = debounce((username, hasUserTyped, userDataUsername) => {
-      if (
-        username.length > 0 &&
-        hasUserTyped &&
-        username !== userDataUsername
-      ) {
+      if (username.length > 0 && hasUserTyped && username !== userDataUsername) {
         checkUsername();
       }
     }, 1000);
@@ -87,31 +81,31 @@ export default function ProfileSettingsPane({ userData }) {
     };
     if (isNameValid && isUsernameValid && tag !== userData.tag) {
       try {
-        const response = await fetch('/api/user/settings/uploadOnboarding', {
-          method: 'POST',
+        const response = await fetch("/api/user/settings/uploadOnboarding", {
+          method: "POST",
           body: JSON.stringify(data),
         });
         if (!response.ok) {
           showNotification({
-            message: 'Error saving profile settings',
-            color: 'red',
+            message: "Error saving profile settings",
+            color: "red",
           });
         } else {
           showNotification({
-            message: 'Profile settings saved',
-            color: 'green',
+            message: "Profile settings saved",
+            color: "green",
           });
         }
       } catch (error) {
         showNotification({
-          message: 'Error saving profile settings',
-          color: 'red',
+          message: "Error saving profile settings",
+          color: "red",
         });
       }
     } else {
       showNotification({
-        message: 'Please fix all errors',
-        color: 'red',
+        message: "Please fix all errors",
+        color: "red",
       });
     }
   };
@@ -132,58 +126,49 @@ export default function ProfileSettingsPane({ userData }) {
     return () => {
       debouncedCheckUsername().cancel();
     };
-  }, [
-    username,
-    debouncedCheckUsername,
-    hasUserTyped,
-    isUsernameValid,
-    userData.username,
-  ]);
+  }, [username, debouncedCheckUsername, hasUserTyped, isUsernameValid, userData.username]);
 
-  const handleUsernameChange = (e) => {
+  const handleUsernameChange = e => {
     setHasUserTyped(true);
     setUsername(e.target.value);
 
     if (e.target.value.length < 3 || e.target.value.length > 16) {
       setIsUsernameValid(false);
-      setUsernameError('Username must be between 3 and 16 characters');
-    } else if (e.target.value.includes(' ')) {
+      setUsernameError("Username must be between 3 and 16 characters");
+    } else if (e.target.value.includes(" ")) {
       setIsUsernameValid(false);
-      setUsernameError('Username cannot contain spaces');
+      setUsernameError("Username cannot contain spaces");
     } else if (/[^a-zA-Z0-9]/.test(e.target.value)) {
       setIsUsernameValid(false);
-      setUsernameError('Username can only contain letters and numbers');
+      setUsernameError("Username can only contain letters and numbers");
     } else if (e.target.value === userData.username) {
       setIsUsernameValid(true);
-      setUsernameError('');
+      setUsernameError("");
       setIsUsernameAvailable(true);
     } else {
       setIsUsernameValid(true);
-      setUsernameError('');
+      setUsernameError("");
     }
   };
-  const handleNameChange = (e) => {
+  const handleNameChange = e => {
     setHasUserTyped(true);
     setName(e.target.value);
     if (e.target.value.length < 0 || e.target.value.length > 16) {
       setIsNameValid(false);
-      setNameError('Name must be between 1 and 16 characters');
+      setNameError("Name must be between 1 and 16 characters");
     } else if (/[^a-zA-Z0-9\s]/.test(e.target.value)) {
       setIsNameValid(false);
-      setNameError('Name can only contain letters, numbers and spaces');
+      setNameError("Name can only contain letters, numbers and spaces");
     } else {
       setIsNameValid(true);
-      setNameError('');
+      setNameError("");
     }
   };
 
   return (
     <div className=" bg-bg1 p-5 w-xs md:w-md rounded-lg flex-col flex gap-3 font-barlow text-white rounded-tl-none">
       {isImageUploaderOpen && (
-        <ImageUploaderPopUp
-          onCancel={() => setIsImageUploaderOpen(false)}
-          userId={userData.id}
-        />
+        <ImageUploaderPopUp onCancel={() => setIsImageUploaderOpen(false)} userId={userData.id} />
       )}
       <div className="flex flex-col">
         <p className="text-lg font-bold">Profile Picture</p>
@@ -248,18 +233,14 @@ export default function ProfileSettingsPane({ userData }) {
         <div className="flex items-center gap-1 w-full">
           <div
             className={clsx(
-              'flex items-center rounded-md w-full',
-              !isUsernameAvailable &&
-                didUsernameChange &&
-                'outline outline-red-500',
-              isUsernameAvailable &&
-                didUsernameChange &&
-                'outline outline-green-500'
+              "flex items-center rounded-md w-full",
+              !isUsernameAvailable && didUsernameChange && "outline outline-red-500",
+              isUsernameAvailable && didUsernameChange && "outline outline-green-500"
             )}
           >
             <p
               className={clsx(
-                'bg-blue-500 font-barlow text-white p-2 text-lg font-bold rounded-l-md '
+                "bg-blue-500 font-barlow text-white p-2 text-lg font-bold rounded-l-md "
               )}
             >
               @
@@ -278,9 +259,7 @@ export default function ProfileSettingsPane({ userData }) {
             </div>
           ) : null}
         </div>
-        {!isUsernameValid && (
-          <p className="text-red-500 text-sm">{usernameError}</p>
-        )}
+        {!isUsernameValid && <p className="text-red-500 text-sm">{usernameError}</p>}
       </div>
       <div className="flex flex-col gap-1">
         <p className="text-lg font-bold">Tag</p>
@@ -289,7 +268,7 @@ export default function ProfileSettingsPane({ userData }) {
           id=""
           className="bg-bg2 rounded-md p-2 text-lg"
           value={tag}
-          onChange={(e) => {
+          onChange={e => {
             setTag(e.target.value);
             setHasUserTyped(true);
           }}
@@ -301,10 +280,7 @@ export default function ProfileSettingsPane({ userData }) {
         </select>
       </div>
       {hasUserTyped && (
-        <button
-          className="bg-green-500 text-white p-2 rounded-md font-bold"
-          onClick={handleSave}
-        >
+        <button className="bg-green-500 text-white p-2 rounded-md font-bold" onClick={handleSave}>
           Save Changes
         </button>
       )}

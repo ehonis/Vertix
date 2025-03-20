@@ -1,19 +1,15 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import MixerCountdownTimer from './mixer-count-down-timer';
-import TypeToggleSwitch from './mixer-type-toggle';
-import MixerRopeScorer from './mixerRopeSwiper';
-import MixerBoulderScorer from './mixerBoulderSwiper';
+import { useState } from "react";
+import MixerCountdownTimer from "./mixer-count-down-timer";
+import TypeToggleSwitch from "./mixer-type-toggle";
+import MixerRopeScorer from "./mixerRopeSwiper";
+import MixerBoulderScorer from "./mixerBoulderSwiper";
 
-export default function MixerScoreScroller({
-  mixerRoutes,
-  mixerBoulders,
-  StartTime,
-}) {
-  const [category, setCategory] = useState('Rope');
+export default function MixerScoreScroller({ mixerRoutes, mixerBoulders, StartTime }) {
+  const [category, setCategory] = useState("Rope");
 
-  const handleCategoryChange = (value) => {
+  const handleCategoryChange = value => {
     setCategory(value);
   };
 
@@ -23,8 +19,8 @@ export default function MixerScoreScroller({
         <div className="mb-1 flex justify-between max-w-md gap-5 md:max-w-lg place-self-center">
           <MixerCountdownTimer />
           <TypeToggleSwitch
-            leftLabel={'Boulder'}
-            rightLabel={'Rope'}
+            leftLabel={"Boulder"}
+            rightLabel={"Rope"}
             value={category}
             onTypeSwitchValue={handleCategoryChange}
           />
@@ -36,14 +32,11 @@ export default function MixerScoreScroller({
         </div>
       </div>
 
-      <div className={category === 'Rope' ? 'block' : 'hidden'}>
+      <div className={category === "Rope" ? "block" : "hidden"}>
         <MixerRopeScorer mixerRoutes={mixerRoutes} StartTime={StartTime} />
       </div>
-      <div className={category === 'Boulder' ? 'block' : 'hidden'}>
-        <MixerBoulderScorer
-          mixerBoulders={mixerBoulders}
-          StartTime={StartTime}
-        />
+      <div className={category === "Boulder" ? "block" : "hidden"}>
+        <MixerBoulderScorer mixerBoulders={mixerBoulders} StartTime={StartTime} />
       </div>
     </div>
   );

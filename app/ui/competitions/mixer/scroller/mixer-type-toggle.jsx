@@ -1,13 +1,8 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 
-export default function TypeToggleSwitch({
-  leftLabel,
-  rightLabel,
-  value,
-  onTypeSwitchValue,
-}) {
+export default function TypeToggleSwitch({ leftLabel, rightLabel, value, onTypeSwitchValue }) {
   const [isLeftLabel, setIsLeftLabel] = useState(value); // Default to the passed value
 
   useEffect(() => {
@@ -25,9 +20,7 @@ export default function TypeToggleSwitch({
       {/* Left Label */}
       <span
         className={`font-barlow text-lg font-bold ${
-          isLeftLabel === leftLabel
-            ? 'text-blue-500 underline'
-            : 'text-gray-500'
+          isLeftLabel === leftLabel ? "text-blue-500 underline" : "text-gray-500"
         }`}
       >
         {leftLabel}
@@ -36,13 +29,13 @@ export default function TypeToggleSwitch({
       {/* Toggle Switch */}
       <div
         className={`relative w-12 h-6 rounded-full cursor-pointer transition-colors ${
-          isLeftLabel === leftLabel ? 'bg-blue-500' : 'bg-green-500'
+          isLeftLabel === leftLabel ? "bg-blue-500" : "bg-green-500"
         }`}
         onClick={toggleSwitch}
       >
         <div
           className={`absolute top-1 left-1 size-4 rounded-full bg-white shadow-md transition-transform ${
-            isLeftLabel === leftLabel ? 'translate-x-0' : 'translate-x-6'
+            isLeftLabel === leftLabel ? "translate-x-0" : "translate-x-6"
           }`}
         ></div>
       </div>
@@ -50,9 +43,7 @@ export default function TypeToggleSwitch({
       {/* Right Label */}
       <span
         className={`font-barlow text-lg font-bold ${
-          isLeftLabel === rightLabel
-            ? 'text-green-500 underline'
-            : 'text-gray-500'
+          isLeftLabel === rightLabel ? "text-green-500 underline" : "text-gray-500"
         }`}
       >
         {rightLabel}

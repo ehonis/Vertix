@@ -1,5 +1,5 @@
-import MixerScoreScroller from '@/app/ui/competitions/mixer/scroller/mixer-score-scroller';
-import prisma from '@/prisma';
+import MixerScoreScroller from "@/app/ui/competitions/mixer/scroller/mixer-score-scroller";
+import prisma from "@/prisma";
 
 export default async function Mixer({ params }) {
   const compId = (await params).slug;
@@ -10,18 +10,14 @@ export default async function Mixer({ params }) {
     where: { competitionId: compId },
   });
 
-  const parsedData = routes.map((route) => ({
+  const parsedData = routes.map(route => ({
     ...route, // Spread the route object
     holds: JSON.parse(route.holds), // Parse the holds string
   }));
 
   return (
     <>
-      <MixerScoreScroller
-        mixerRoutes={parsedData}
-        mixerBoulders={boulders}
-        StartTime={null}
-      />
+      <MixerScoreScroller mixerRoutes={parsedData} mixerBoulders={boulders} StartTime={null} />
     </>
   );
 }

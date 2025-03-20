@@ -1,11 +1,11 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import CompleteMenu from './complete-menu';
-import GradeMenu from './grade-menu';
-import AttemptMenu from './attempt-menu';
-import UploadPhotoMenu from './upload-photo-menu';
-import StarRatingMenu from './star-rating-menu';
+import { useEffect, useState } from "react";
+import CompleteMenu from "./complete-menu";
+import GradeMenu from "./grade-menu";
+import AttemptMenu from "./attempt-menu";
+import UploadPhotoMenu from "./upload-photo-menu";
+import StarRatingMenu from "./star-rating-menu";
 export default function FunctionButtonMenu({
   onCancel,
   route,
@@ -24,7 +24,7 @@ export default function FunctionButtonMenu({
     setIsVisible(true);
   }, []);
 
-  const handleMenuChange = (menuType) => {
+  const handleMenuChange = menuType => {
     setIsMenu(menuType);
   };
 
@@ -32,23 +32,20 @@ export default function FunctionButtonMenu({
     <>
       <div
         className={`fixed inset-0 bg-black z-30 transition-opacity duration-700 ${
-          isVisible ? 'opacity-50' : 'opacity-0'
+          isVisible ? "opacity-50" : "opacity-0"
         }`}
       />
       <div
         className={`fixed z-40 bg-[#181a1c] text-white rounded-lg shadow-lg w-[20rem] p-1 transform transition-all duration-700 ease-out ${
           isVisible
-            ? 'top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-100'
-            : 'top-full left-1/2 -translate-x-1/2 opacity-0'
+            ? "top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-100"
+            : "top-full left-1/2 -translate-x-1/2 opacity-0"
         }`}
       >
         <div className="mx-2">
           <div className="flex justify-between items-center">
-            {menu != 'Action Menu' ? (
-              <button
-                className=""
-                onClick={() => handleMenuChange('Action Menu')}
-              >
+            {menu != "Action Menu" ? (
+              <button className="" onClick={() => handleMenuChange("Action Menu")}>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -66,17 +63,14 @@ export default function FunctionButtonMenu({
               </button>
             ) : null}
             <p className="text-white mt-1 mb-2 font-bold">{menu}</p>
-            <button
-              onClick={onCancel}
-              className=" bg-red-500 p-2  rounded-full size-3"
-            ></button>
+            <button onClick={onCancel} className=" bg-red-500 p-2  rounded-full size-3"></button>
           </div>
-          {menu === 'Action Menu' ? (
+          {menu === "Action Menu" ? (
             <div className="flex flex-col items-center mb-3 gap-3">
               <div className="flex gap-3 ">
                 <button
                   className="bg-bg2 flex  p-1 rounded-sm w-32 justify-between group hover:bg-white"
-                  onClick={() => handleMenuChange('Complete Menu')}
+                  onClick={() => handleMenuChange("Complete Menu")}
                 >
                   <p className="group-hover:text-black">Complete</p>
                   <svg
@@ -95,7 +89,7 @@ export default function FunctionButtonMenu({
                 </button>
                 <button
                   className="bg-bg2 flex  p-1 rounded-sm w-32 justify-between hover:bg-white group"
-                  onClick={() => handleMenuChange('Attempt Menu')}
+                  onClick={() => handleMenuChange("Attempt Menu")}
                 >
                   <p className="group-hover:text-black">Attempt</p>
                   <svg
@@ -116,7 +110,7 @@ export default function FunctionButtonMenu({
               <div className="flex gap-3 ">
                 <button
                   className="bg-bg2 flex  p-1 rounded-sm w-32 justify-between group hover:bg-white"
-                  onClick={() => handleMenuChange('Grade Menu')}
+                  onClick={() => handleMenuChange("Grade Menu")}
                 >
                   <p className="group-hover:text-black">Grade</p>
                   <svg
@@ -135,7 +129,7 @@ export default function FunctionButtonMenu({
                 </button>
                 <button
                   className="bg-bg2 flex p-1 rounded-sm w-32 justify-between group hover:bg-white"
-                  onClick={() => handleMenuChange('Upload Photo Menu')}
+                  onClick={() => handleMenuChange("Upload Photo Menu")}
                 >
                   <p className="group-hover:text-black">Add Photo</p>
                   <svg
@@ -160,7 +154,7 @@ export default function FunctionButtonMenu({
               </div>
               <button
                 className="bg-bg2 flex p-1 rounded-sm w-32 justify-between group hover:bg-white"
-                onClick={() => handleMenuChange('Star Rating Menu')}
+                onClick={() => handleMenuChange("Star Rating Menu")}
               >
                 <p className="group-hover:text-black">Rate</p>
                 <svg
@@ -179,7 +173,7 @@ export default function FunctionButtonMenu({
               </button>
             </div>
           ) : null}
-          {menu === 'Complete Menu' ? (
+          {menu === "Complete Menu" ? (
             <CompleteMenu
               isComplete={isComplete}
               route={route}
@@ -188,7 +182,7 @@ export default function FunctionButtonMenu({
               onCancel={onCancel}
             />
           ) : null}
-          {menu === 'Grade Menu' ? (
+          {menu === "Grade Menu" ? (
             <GradeMenu
               isComplete={isComplete}
               route={route}
@@ -198,7 +192,7 @@ export default function FunctionButtonMenu({
               proposedGrade={proposedGrade}
             />
           ) : null}
-          {menu === 'Attempt Menu' ? (
+          {menu === "Attempt Menu" ? (
             <AttemptMenu
               isComplete={isComplete}
               route={route}
@@ -208,20 +202,11 @@ export default function FunctionButtonMenu({
               proposedGrade={proposedGrade}
             />
           ) : null}
-          {menu === 'Upload Photo Menu' ? (
-            <UploadPhotoMenu
-              route={route}
-              userId={userId}
-              onCancel={onCancel}
-            />
+          {menu === "Upload Photo Menu" ? (
+            <UploadPhotoMenu route={route} userId={userId} onCancel={onCancel} />
           ) : null}
-          {menu === 'Star Rating Menu' ? (
-            <StarRatingMenu
-              route={route}
-              userId={userId}
-              onCancel={onCancel}
-              rating={rating}
-            />
+          {menu === "Star Rating Menu" ? (
+            <StarRatingMenu route={route} userId={userId} onCancel={onCancel} rating={rating} />
           ) : null}
         </div>
       </div>

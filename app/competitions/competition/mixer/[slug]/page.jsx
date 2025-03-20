@@ -1,7 +1,7 @@
-import Link from 'next/link';
-import prisma from '@/prisma';
-import { auth } from '@/auth';
-import { CompetitionStatus } from '@prisma/client';
+import Link from "next/link";
+import prisma from "@/prisma";
+import { auth } from "@/auth";
+import { CompetitionStatus } from "@prisma/client";
 export default async function page({ params }) {
   const compId = (await params).slug;
   const competition = await prisma.MixerCompetition.findUnique({
@@ -32,9 +32,7 @@ export default async function page({ params }) {
           ← Back to Competitions
         </Link>
       </div>
-      <h1 className="text-white font-barlow font-bold text-3xl">
-        {competition.name}
-      </h1>
+      <h1 className="text-white font-barlow font-bold text-3xl">{competition.name}</h1>
       <div className="flex flex-col justify-center items-center gap-8 bg-black p-10 rounded-md md:w-md w-xs">
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -52,47 +50,44 @@ export default async function page({ params }) {
         </svg>
 
         <div className="flex flex-col gap-5">
-          {competition.status === CompetitionStatus.UPCOMING &&
-            climberExists !== null && (
-              <div className="flex flex-col gap-1">
-                <p className="text-white font-barlow font-bold text-xs bg-green-500/25 border-green-500 border rounded-md p-2">
-                  You are already signed up for this competition!
-                </p>
-                <p className="text-white font-barlow font-bold text-xs bg-green-500/25 border-green-500 border rounded-md p-2">
-                  Come back to this page on{' '}
-                  {competition.compDay.toLocaleDateString('en-US')} to start the
-                  competition!
-                </p>
-              </div>
-            )}
-          {competition.status === CompetitionStatus.UPCOMING &&
-            climberExists === null && (
-              <div className="flex flex-col gap-1">
-                <p className="text-white font-barlow font-bold text-xs bg-green-500/25 border-green-500 border rounded-md p-2">
-                  Sign up for {competition.name} now!
-                </p>
-                {!user ? (
-                  <div className="flex flex-col gap-1 mt-5">
-                    <p className="text-white font-barlow font-bold text-xs text-center">
-                      Create an account with Vertix First
-                    </p>
-                    <Link
-                      href={`/signup`}
-                      className="px-2 py-1 text-white bg-green-500 rounded-sm font-barlow font-bold text-center shadow-xl"
-                    >
-                      Create an Account with Vertix
-                    </Link>
-                  </div>
-                ) : (
+          {competition.status === CompetitionStatus.UPCOMING && climberExists !== null && (
+            <div className="flex flex-col gap-1">
+              <p className="text-white font-barlow font-bold text-xs bg-green-500/25 border-green-500 border rounded-md p-2">
+                You are already signed up for this competition!
+              </p>
+              <p className="text-white font-barlow font-bold text-xs bg-green-500/25 border-green-500 border rounded-md p-2">
+                Come back to this page on {competition.compDay.toLocaleDateString("en-US")} to start
+                the competition!
+              </p>
+            </div>
+          )}
+          {competition.status === CompetitionStatus.UPCOMING && climberExists === null && (
+            <div className="flex flex-col gap-1">
+              <p className="text-white font-barlow font-bold text-xs bg-green-500/25 border-green-500 border rounded-md p-2">
+                Sign up for {competition.name} now!
+              </p>
+              {!user ? (
+                <div className="flex flex-col gap-1 mt-5">
+                  <p className="text-white font-barlow font-bold text-xs text-center">
+                    Create an account with Vertix First
+                  </p>
                   <Link
-                    href={`/competitions/competition/mixer/${compId}/signup`}
+                    href={`/signup`}
                     className="px-2 py-1 text-white bg-green-500 rounded-sm font-barlow font-bold text-center shadow-xl"
                   >
-                    Sign up
+                    Create an Account with Vertix
                   </Link>
-                )}
-              </div>
-            )}
+                </div>
+              ) : (
+                <Link
+                  href={`/competitions/competition/mixer/${compId}/signup`}
+                  className="px-2 py-1 text-white bg-green-500 rounded-sm font-barlow font-bold text-center shadow-xl"
+                >
+                  Sign up
+                </Link>
+              )}
+            </div>
+          )}
           {competition.status === CompetitionStatus.INACTIVE && (
             <div className="flex flex-col gap-1">
               <p className="text-white font-barlow font-bold text-xs bg-red-500/25 border-red-500 border rounded-md p-2">
@@ -100,8 +95,8 @@ export default async function page({ params }) {
               </p>
 
               <p className="text-white font-barlow font-bold text-xs bg-yellow-400/25 border-yellow-400 border rounded-md p-2">
-                Look out for updates on social media and the comps page to see
-                when sign ups are available
+                Look out for updates on social media and the comps page to see when sign ups are
+                available
               </p>
             </div>
           )}
@@ -109,10 +104,10 @@ export default async function page({ params }) {
             <div className="flex flex-col gap-1">
               <p className="text-white font-barlow font-bold text-xs bg-orange-500/25 border-orange-500 border rounded-md p-2">
                 this uses previous year{"'"}s data.
-              </p>{' '}
+              </p>{" "}
               <p className="text-white font-barlow font-bold text-xs bg-blue-500/25 border-blue-500 border rounded-md p-2">
-                This is just a demo for you to see how comp day will work. No
-                points, attempts, or completions will be counted
+                This is just a demo for you to see how comp day will work. No points, attempts, or
+                completions will be counted
               </p>
             </div>
           )}

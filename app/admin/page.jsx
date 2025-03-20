@@ -1,6 +1,6 @@
-import { auth } from '@/auth';
-import { redirect } from 'next/navigation';
-import Link from 'next/link';
+import { auth } from "@/auth";
+import { redirect } from "next/navigation";
+import Link from "next/link";
 
 export default async function AdminCenter() {
   const session = await auth();
@@ -8,8 +8,8 @@ export default async function AdminCenter() {
 
   const adminPanels = [
     {
-      text: 'Route Manager',
-      url: '/admin/manager/routes',
+      text: "Route Manager",
+      url: "/admin/manager/routes",
       svg: (
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -28,8 +28,8 @@ export default async function AdminCenter() {
       ),
     },
     {
-      text: 'Comp Manager',
-      url: '/admin/manager/competitions',
+      text: "Comp Manager",
+      url: "/admin/manager/competitions",
       svg: (
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -48,8 +48,8 @@ export default async function AdminCenter() {
       ),
     },
     {
-      text: 'User Manager',
-      url: '/admin',
+      text: "User Manager",
+      url: "/admin",
       svg: (
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -70,18 +70,16 @@ export default async function AdminCenter() {
   ];
 
   if (!user || user.admin === false) {
-    redirect('/signin');
+    redirect("/signin");
   } else {
     return (
       <div className="flex justify-center w-screen">
         <div className="flex p-5 flex-col w-full max-w-lg">
-          <h1 className="text-white font-barlow font-bold text-3xl mb-3">
-            Admin Center
-          </h1>
+          <h1 className="text-white font-barlow font-bold text-3xl mb-3">Admin Center</h1>
           <div className="flex flex-col bg-bg2 gap-3 rounded-md p-5 mb-10">
             <Link
               className="bg-bg1 flex p-2 items-center w-full rounded-sm outline outline-white"
-              href={'/admin/create'}
+              href={"/admin/create"}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -102,9 +100,7 @@ export default async function AdminCenter() {
               </h3>
             </Link>
           </div>
-          <h2 className="text-white font-barlow font-bold text-3xl mb-3">
-            Content Manager
-          </h2>
+          <h2 className="text-white font-barlow font-bold text-3xl mb-3">Content Manager</h2>
           <div className="flex flex-col bg-bg2 gap-5 rounded-md p-5 mb-10">
             {adminPanels.map((panel, index) => (
               <Link

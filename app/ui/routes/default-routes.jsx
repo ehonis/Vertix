@@ -1,16 +1,10 @@
-import Link from 'next/link';
-import RouteTile from './route-tile';
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { useNotification } from '@/app/contexts/NotificationContext';
+import Link from "next/link";
+import RouteTile from "./route-tile";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useNotification } from "@/app/contexts/NotificationContext";
 
-export default function DefaultRoutes({
-  ropes,
-  boulders,
-  user,
-  completions,
-  totalRoutes,
-}) {
+export default function DefaultRoutes({ ropes, boulders, user, completions, totalRoutes }) {
   const { showNotification } = useNotification();
   const router = useRouter();
 
@@ -20,12 +14,12 @@ export default function DefaultRoutes({
   const itemsPerPage = 8; // Number of items per page
 
   // Calculate the routes to display on the current page
-  const paginateBoulder = (data) => {
+  const paginateBoulder = data => {
     const start = (currentBoulderPage - 1) * itemsPerPage;
     const end = start + itemsPerPage;
     return data.slice(start, end);
   };
-  const paginateRope = (data) => {
+  const paginateRope = data => {
     const start = (currentRopePage - 1) * itemsPerPage;
     const end = start + itemsPerPage;
     return data.slice(start, end);
@@ -39,20 +33,20 @@ export default function DefaultRoutes({
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_BASE_URL}/api/user/add-route-completion`,
         {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ userId: userId, routeId: routeId }),
         }
       );
       if (response.ok) {
         showNotification({
           message: `Quick Completed ${routeName}`,
-          color: 'green',
+          color: "green",
         });
       } else {
         showNotification({
           message: `Could Not Quick Complete ${routeName} w/ erorr : ${response.error}`,
-          color: 'red',
+          color: "red",
         });
       }
     } catch (error) {
@@ -67,15 +61,15 @@ export default function DefaultRoutes({
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_BASE_URL}/api/user/remove-route-completion`,
         {
-          method: 'DELETE',
-          headers: { 'Content-Type': 'application/json' },
+          method: "DELETE",
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ userId: userId, routeId: routeId }),
         }
       );
       if (response.ok) {
         showNotification({
           message: `Uncompleted ${routeName}`,
-          color: 'green',
+          color: "green",
         });
       } else {
         showNotification({
@@ -99,9 +93,9 @@ export default function DefaultRoutes({
 
   if (user) {
     try {
-      completedRouteIds = completions.map((completion) => completion.routeId);
+      completedRouteIds = completions.map(completion => completion.routeId);
     } catch (error) {
-      console.error('failed getting route completions. Error:', error);
+      console.error("failed getting route completions. Error:", error);
     }
   }
   return (
@@ -111,14 +105,10 @@ export default function DefaultRoutes({
           <h2 className="text-white font-bold text-3xl">All Ropes</h2>
         </div>
         <div className="p-3 flex flex-col items-center gap-2">
-          {paginateRope(ropes).map((route) => (
+          {paginateRope(ropes).map(route => (
             <div className="flex items-center gap-2" key={route.id}>
               <Link href={`routes/${route.id}`}>
-                <RouteTile
-                  color={route.color}
-                  name={route.title}
-                  grade={route.grade}
-                />
+                <RouteTile color={route.color} name={route.title} grade={route.grade} />
               </Link>
               {user && !completedRouteIds.includes(route.id) ? (
                 <button
@@ -183,11 +173,7 @@ export default function DefaultRoutes({
               strokeWidth={1.5}
               className="size-6 stroke-white"
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M15.75 19.5 8.25 12l7.5-7.5"
-              />
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
             </svg>
           </button>
           <span className="text-white">{`Page ${currentRopePage} of ${totalRopePages}`}</span>
@@ -203,11 +189,7 @@ export default function DefaultRoutes({
               strokeWidth={1.5}
               className="size-6 stroke-white"
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="m8.25 4.5 7.5 7.5-7.5 7.5"
-              />
+              <path strokeLinecap="round" strokeLinejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
             </svg>
           </button>
         </div>
@@ -217,15 +199,11 @@ export default function DefaultRoutes({
           <h2 className="text-white font-bold text-3xl">All Boulders</h2>
         </div>
         <div className="p-3 flex flex-col items-center gap-2">
-          {paginateBoulder(boulders).map((route) => {
+          {paginateBoulder(boulders).map(route => {
             return (
               <div className="flex items-center gap-2" key={route.id}>
                 <Link href={`routes/${route.id}`}>
-                  <RouteTile
-                    color={route.color}
-                    name={route.title}
-                    grade={route.grade}
-                  />
+                  <RouteTile color={route.color} name={route.title} grade={route.grade} />
                 </Link>
                 {user && !completedRouteIds.includes(route.id) ? (
                   <button
@@ -291,11 +269,7 @@ export default function DefaultRoutes({
               strokeWidth={1.5}
               className="size-6 stroke-white"
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M15.75 19.5 8.25 12l7.5-7.5"
-              />
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
             </svg>
           </button>
           <span className="text-white">{`Page ${currentBoulderPage} of ${totalBoulderPages}`}</span>
@@ -311,11 +285,7 @@ export default function DefaultRoutes({
               strokeWidth={1.5}
               className="size-6 stroke-white"
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="m8.25 4.5 7.5 7.5-7.5 7.5"
-              />
+              <path strokeLinecap="round" strokeLinejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
             </svg>
           </button>
         </div>

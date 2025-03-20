@@ -1,20 +1,20 @@
-import Image from 'next/image';
+import Image from "next/image";
 
-import Link from 'next/link';
-import clsx from 'clsx';
+import Link from "next/link";
+import clsx from "clsx";
 
 export default function RouteImage() {
   const baseDelay = 9 * 0.05 + 0.3;
   const content = [
     {
-      text: 'Routes',
-      imageUrl: '/img/routes_ui_image.png',
-      pageUrl: '/routes',
+      text: "Routes",
+      imageUrl: "/img/routes_ui_image.png",
+      pageUrl: "/routes",
     },
     {
-      text: 'Comps',
-      imageUrl: '/img/comp_image.jpeg',
-      pageUrl: '/competitions',
+      text: "Comps",
+      imageUrl: "/img/comp_image.jpeg",
+      pageUrl: "/competitions",
     },
   ];
   return (
@@ -32,9 +32,9 @@ export default function RouteImage() {
             height={1000}
             alt="picture of route page"
             className={clsx(
-              'absolute left-1/2 top-1/2 w-[130%] h-auto transform -translate-x-1/2 -translate-y-1/2 scale-125 rotate-12',
-              (index + 1) % 2 === 0 && '-rotate-12',
-              index === 1 && '-translate-y-2/3 scale-110'
+              "absolute left-1/2 top-1/2 w-[130%] h-auto transform -translate-x-1/2 -translate-y-1/2 scale-125 rotate-12",
+              (index + 1) % 2 === 0 && "-rotate-12",
+              index === 1 && "-translate-y-2/3 scale-110"
             )}
           />
 

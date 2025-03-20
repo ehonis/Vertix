@@ -1,5 +1,5 @@
-'use client';
-import { useEffect, useState } from 'react';
+"use client";
+import { useEffect, useState } from "react";
 
 export default function ErrorPopUp({ onCancel, message }) {
   const [isVisible, setIsVisible] = useState(false);
@@ -14,15 +14,13 @@ export default function ErrorPopUp({ onCancel, message }) {
       {/* Overlay */}
       <div
         className={`fixed inset-0 bg-black z-30 transition-opacity duration-700 ${
-          isVisible ? 'opacity-50' : 'opacity-0'
+          isVisible ? "opacity-50" : "opacity-0"
         }`}
       />
       {/* Popup */}
       <div
         className={`fixed z-100 bg-[#181a1c] text-white top-1/2 left-1/2 transform rounded-lg w-2/3 -translate-x-1/2 ${
-          isVisible
-            ? '-translate-y-1/2 opacity-100'
-            : 'translate-y-full opacity-0'
+          isVisible ? "-translate-y-1/2 opacity-100" : "translate-y-full opacity-0"
         } transition-all duration-700 ease-out p-5 rounded shadow-lg`}
       >
         <svg
@@ -41,10 +39,7 @@ export default function ErrorPopUp({ onCancel, message }) {
 
         <p className="font-bold">{message}</p>
         <div className="flex justify-end">
-          <button
-            onClick={onCancel}
-            className="mt-4 rounded-full bg-red-500 px-3 py-1 text-white"
-          >
+          <button onClick={onCancel} className="mt-4 rounded-full bg-red-500 px-3 py-1 text-white">
             Exit
           </button>
         </div>

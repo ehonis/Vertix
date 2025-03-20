@@ -1,21 +1,21 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import clsx from 'clsx';
-import DefaultRoutes from './default-routes';
-import FilteredRoutes from './filtered-routes';
-import TopDown from './topdown';
-import Link from 'next/link';
+import { useEffect, useState } from "react";
+import clsx from "clsx";
+import DefaultRoutes from "./default-routes";
+import FilteredRoutes from "./filtered-routes";
+import TopDown from "./topdown";
+import Link from "next/link";
 
 export default function Routes({ ropes, boulders, user, completions }) {
-  const [type, setType] = useState('boulder');
+  const [type, setType] = useState("boulder");
   const [filterByWall, setFilterByWall] = useState(null);
   const [isFilter, setIsFilter] = useState(false);
   const [filter, setFilter] = useState({});
   const [isFilterMenu, setIsFilterMenu] = useState(false);
   const [isFilterMap, setIsFilterMap] = useState(false);
   const [isFilterQaulity, setIsFilterQaulity] = useState(false);
-  const [header, setHeader] = useState('Current Set');
+  const [header, setHeader] = useState("Current Set");
   const [checkedColors, setCheckedColors] = useState({
     red: false,
     blue: false,
@@ -42,11 +42,11 @@ export default function Routes({ ropes, boulders, user, completions }) {
     v10: false,
   });
   const [checkedRopeGrades, setCheckedRopeGrades] = useState({
-    '5.B': false,
+    "5.B": false,
     5.7: false,
     5.8: false,
     5.9: false,
-    '5.10': false,
+    "5.10": false,
     5.11: false,
     5.12: false,
     5.13: false,
@@ -64,11 +64,11 @@ export default function Routes({ ropes, boulders, user, completions }) {
     handleResize();
 
     // Add event listener
-    window.addEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
 
     // Cleanup on unmount
     return () => {
-      window.removeEventListener('resize', handleResize);
+      window.removeEventListener("resize", handleResize);
     };
   }, []);
   useEffect(() => {
@@ -109,38 +109,38 @@ export default function Routes({ ropes, boulders, user, completions }) {
       sectionFilter.length === 0
     ) {
       setIsFilter(false);
-      setHeader('Current Set');
+      setHeader("Current Set");
     } else {
       setIsFilter(true);
-      setHeader('Filtered Routes');
+      setHeader("Filtered Routes");
     }
     // Update the filter state
     setFilter({ boulderFilter, ropeFilter, colorFilter, sectionFilter });
   }, [checkedColors, filterByWall, checkedBoulderGrades, checkedRopeGrades]);
 
-  const handleRopeCheckboxChange = (event) => {
+  const handleRopeCheckboxChange = event => {
     const { id, checked } = event.target;
-    setCheckedRopeGrades((prev) => ({
+    setCheckedRopeGrades(prev => ({
       ...prev,
       [id]: checked,
     }));
   };
-  const handleBoulderCheckboxChange = (event) => {
+  const handleBoulderCheckboxChange = event => {
     const { id, checked } = event.target;
-    setCheckedBoulderGrades((prev) => ({
+    setCheckedBoulderGrades(prev => ({
       ...prev,
       [id]: checked,
     }));
   };
-  const handleColorCheckboxChange = (event) => {
+  const handleColorCheckboxChange = event => {
     const { id, checked } = event.target;
-    setCheckedColors((prev) => ({
+    setCheckedColors(prev => ({
       ...prev,
       [id]: checked,
     }));
   };
-  const handleTypeChange = (event) => setType(event.target.value);
-  const handleData = (data) => {
+  const handleTypeChange = event => setType(event.target.value);
+  const handleData = data => {
     setFilterByWall(data);
   };
   const handleFilterMenu = () => {
@@ -155,9 +155,9 @@ export default function Routes({ ropes, boulders, user, completions }) {
   const resetFilters = () => {
     setFilter({});
     setIsFilter(false);
-    setHeader('Current Set');
+    setHeader("Current Set");
     setFilterByWall(null);
-    setType('boulder');
+    setType("boulder");
     setCheckedColors({
       red: false,
       blue: false,
@@ -184,11 +184,11 @@ export default function Routes({ ropes, boulders, user, completions }) {
       v10: false,
     });
     setCheckedRopeGrades({
-      '5.B': false,
+      "5.B": false,
       5.7: false,
       5.8: false,
       5.9: false,
-      '5.10': false,
+      "5.10": false,
       5.11: false,
       5.12: false,
       5.13: false,
@@ -202,8 +202,8 @@ export default function Routes({ ropes, boulders, user, completions }) {
         <div className="flex flex-col">
           <div
             className={clsx(
-              'bg-bg1 mx-5 mt-5 rounded-xl p-3 flex h-12 lg:w-96 md:grow-0 grow items-center justify-between cursor-pointer',
-              !isFilterMenu ? 'mb-3' : ''
+              "bg-bg1 mx-5 mt-5 rounded-xl p-3 flex h-12 lg:w-96 md:grow-0 grow items-center justify-between cursor-pointer",
+              !isFilterMenu ? "mb-3" : ""
             )}
             onClick={handleFilterMenu}
           >
@@ -218,11 +218,7 @@ export default function Routes({ ropes, boulders, user, completions }) {
                 strokeWidth={1.5}
                 className="size-6 stroke-white"
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="m19.5 8.25-7.5 7.5-7.5-7.5"
-                />
+                <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
               </svg>
             ) : (
               <svg
@@ -232,11 +228,7 @@ export default function Routes({ ropes, boulders, user, completions }) {
                 strokeWidth={1.5}
                 className="size-6 stroke-white"
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="m4.5 15.75 7.5-7.5 7.5 7.5"
-                />
+                <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 15.75 7.5-7.5 7.5 7.5" />
               </svg>
             )}
           </div>
@@ -244,14 +236,12 @@ export default function Routes({ ropes, boulders, user, completions }) {
             <div className="mb-3">
               <div
                 className={clsx(
-                  'bg-bg1 mx-8 mt-1 rounded-xl p-3 flex grow items-center justify-between cursor-pointer',
-                  isFilterQaulity ? 'rounded-b-none' : ''
+                  "bg-bg1 mx-8 mt-1 rounded-xl p-3 flex grow items-center justify-between cursor-pointer",
+                  isFilterQaulity ? "rounded-b-none" : ""
                 )}
                 onClick={handleFilterQaulity}
               >
-                <button className="text-white flex text-xl items-center gap-2">
-                  By Qualities
-                </button>
+                <button className="text-white flex text-xl items-center gap-2">By Qualities</button>
                 {!isFilterQaulity ? (
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -287,15 +277,14 @@ export default function Routes({ ropes, boulders, user, completions }) {
                   <div className="ml-8 bg-bg1 px-5 pb-5 rounded-bl-xl grow justify-center flex flex-col items-center">
                     <h3 className="text-white text-lg">Color</h3>
                     <div className="grid grid-cols-2 gap-2">
-                      {Object.keys(checkedColors).map((color) => (
+                      {Object.keys(checkedColors).map(color => (
                         <label key={color} className="flex items-center gap-2">
                           <div
                             className={clsx(
                               `size-3 rounded-full bg-${color}-500`,
-                              color === 'black' &&
-                                'bg-black outline-1 outline-white',
-                              color === 'white' && 'bg-white',
-                              color === 'brown' && 'bg-yellow-950'
+                              color === "black" && "bg-black outline-1 outline-white",
+                              color === "white" && "bg-white",
+                              color === "brown" && "bg-yellow-950"
                             )}
                           ></div>
                           <input
@@ -321,13 +310,10 @@ export default function Routes({ ropes, boulders, user, completions }) {
                       <option value="boulder">Boulders</option>
                       <option value="rope">Ropes</option>
                     </select>
-                    {type === 'boulder' ? (
+                    {type === "boulder" ? (
                       <div className="grid grid-cols-3 gap-1 grid-flow-row">
-                        {Object.keys(checkedBoulderGrades).map((grade) => (
-                          <label
-                            key={grade}
-                            className="flex items-center gap-2"
-                          >
+                        {Object.keys(checkedBoulderGrades).map(grade => (
+                          <label key={grade} className="flex items-center gap-2">
                             <span className="text-white text-sm">{grade}</span>
                             <input
                               type="checkbox"
@@ -341,11 +327,8 @@ export default function Routes({ ropes, boulders, user, completions }) {
                       </div>
                     ) : (
                       <div className="grid grid-cols-3 gap-1 grid-flow-row">
-                        {Object.keys(checkedRopeGrades).map((grade) => (
-                          <label
-                            key={grade}
-                            className="flex items-center gap-2"
-                          >
+                        {Object.keys(checkedRopeGrades).map(grade => (
+                          <label key={grade} className="flex items-center gap-2">
                             <span className="text-white text-sm">{grade}</span>
                             <input
                               type="checkbox"
@@ -364,14 +347,12 @@ export default function Routes({ ropes, boulders, user, completions }) {
 
               <div
                 className={clsx(
-                  'bg-bg1 mx-8 mt-1 rounded-xl p-3 flex grow items-center justify-between cursor-pointer',
-                  isFilterMap ? 'rounded-b-none' : ''
+                  "bg-bg1 mx-8 mt-1 rounded-xl p-3 flex grow items-center justify-between cursor-pointer",
+                  isFilterMap ? "rounded-b-none" : ""
                 )}
                 onClick={handleFilterMap}
               >
-                <button className="text-white flex text-xl items-center gap-2 ">
-                  By Map
-                </button>
+                <button className="text-white flex text-xl items-center gap-2 ">By Map</button>
                 {!isFilterMap ? (
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -428,18 +409,12 @@ export default function Routes({ ropes, boulders, user, completions }) {
             <h1 className="text-white  text-4xl drop-shadow-customBlack font-barlow font-bold">
               {header}
             </h1>
-            {header === 'Filtered Routes' ? (
-              <button
-                className="bg-red-500 p-2 rounded-sm"
-                onClick={resetFilters}
-              >
+            {header === "Filtered Routes" ? (
+              <button className="bg-red-500 p-2 rounded-sm" onClick={resetFilters}>
                 Reset Filters
               </button>
             ) : (
-              <Link
-                href={'/search'}
-                className="bg-bg2 p-3 rounded-full drop-shadow-customBlack"
-              >
+              <Link href={"/search"} className="bg-bg2 p-3 rounded-full drop-shadow-customBlack">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"

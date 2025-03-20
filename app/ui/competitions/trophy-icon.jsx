@@ -9,10 +9,9 @@ export default function TrophyIcon() {
         >
           <defs>
             <radialGradient id="gradient" cx="50%" cy="50%" r="50%">
-              <stop offset="50%" stopColor="rgba(255, 215, 0, 0.4)" />{' '}
+              <stop offset="50%" stopColor="rgba(255, 215, 0, 0.4)" />{" "}
               {/* Softer gold transition */}
-              <stop offset="80%" stopColor="rgba(255, 215, 0, 1)" />{' '}
-              {/* Faint gold near edge */}
+              <stop offset="80%" stopColor="rgba(255, 215, 0, 1)" /> {/* Faint gold near edge */}
               <stop offset="100%" stopColor="rgba(32, 34, 36, 1)" />
             </radialGradient>
           </defs>
@@ -28,7 +27,7 @@ export default function TrophyIcon() {
           strokeWidth={0.6}
           className="size-32 stroke-white fill-yellow-400 stroke"
           style={{
-            filter: 'drop-shadow(0px 4px 6px rgba(0, 0, 0, 1))',
+            filter: "drop-shadow(0px 4px 6px rgba(0, 0, 0, 1))",
           }}
         >
           <path

@@ -1,5 +1,5 @@
-import prisma from '@/prisma';
-import { NextResponse } from 'next/server';
+import prisma from "@/prisma";
+import { NextResponse } from "next/server";
 
 export async function POST(request) {
   const { userId, routeId, rating, comment, isRated } = await request.json();
@@ -16,10 +16,7 @@ export async function POST(request) {
       if (!response.ok) {
         return NextResponse.json({ status: 400 });
       }
-      return NextResponse.json(
-        { status: 200 },
-        { message: 'Successfully Rated Route' }
-      );
+      return NextResponse.json({ status: 200 }, { message: "Successfully Rated Route" });
     } catch (error) {
       return NextResponse.json({ status: 400 }, { message: `error: ${error}` });
     }
@@ -32,17 +29,11 @@ export async function POST(request) {
       if (!response.ok) {
         return NextResponse.json({ status: 400 });
       }
-      return NextResponse.json(
-        { status: 200 },
-        { message: 'Successfully Updated Rating' }
-      );
+      return NextResponse.json({ status: 200 }, { message: "Successfully Updated Rating" });
     } catch (error) {
       return NextResponse.json({ status: 400 }, { message: `error: ${error}` });
     }
   } else {
-    return NextResponse.json(
-      { status: 400 },
-      { message: 'failed to handle any cases' }
-    );
+    return NextResponse.json({ status: 400 }, { message: "failed to handle any cases" });
   }
 }

@@ -1,36 +1,30 @@
-'use client';
-import { useState, useEffect } from 'react';
-import { getGradeRange } from '@/lib/routes';
-import { useRouter } from 'next/navigation';
-import { useNotification } from '@/app/contexts/NotificationContext';
+"use client";
+import { useState, useEffect } from "react";
+import { getGradeRange } from "@/lib/routes";
+import { useRouter } from "next/navigation";
+import { useNotification } from "@/app/contexts/NotificationContext";
 
-export default function CompleteMenu({
-  route,
-  userId,
-  isComplete,
-  isGraded,
-  onCancel,
-}) {
+export default function CompleteMenu({ route, userId, isComplete, isGraded, onCancel }) {
   const { showNotification } = useNotification();
   const gradeOptions = getGradeRange(route.grade);
   const router = useRouter();
   const [selectedGrade, setSelectedGrade] = useState(gradeOptions[0]);
-  const [selectedSends, setSelectedSends] = useState('1'); // Default sends to 1
-  const [cases, setCases] = useState('');
-  const handleSelectGradeChange = (event) => {
+  const [selectedSends, setSelectedSends] = useState("1"); // Default sends to 1
+  const [cases, setCases] = useState("");
+  const handleSelectGradeChange = event => {
     setSelectedGrade(event.target.value);
   };
-  const handleSelectSendsChange = (event) => {
+  const handleSelectSendsChange = event => {
     setSelectedSends(event.target.value);
   };
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = async event => {
     event.preventDefault();
     try {
-      const response = await fetch('/api/menus/completeMenu', {
-        method: 'POST',
+      const response = await fetch("/api/menus/completeMenu", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           userId: userId,
@@ -41,18 +35,18 @@ export default function CompleteMenu({
         }),
       });
       if (!response.ok) {
-        throw new Error('Error in API Call');
+        throw new Error("Error in API Call");
       }
       showNotification({
         message: `completed ${route.title}`,
-        color: 'green',
+        color: "green",
       });
       onCancel();
     } catch (error) {
-      console.error('submission failed:', error);
+      console.error("submission failed:", error);
       showNotification({
         message: `could not complete ${route.title}`,
-        color: 'red',
+        color: "red",
       });
     }
     router.refresh();
@@ -61,34 +55,32 @@ export default function CompleteMenu({
 
   useEffect(() => {
     if (isComplete && isGraded) {
-      setCases('completedGraded');
+      setCases("completedGraded");
     } else if (isComplete && !isGraded) {
-      setCases('completedNotGraded');
+      setCases("completedNotGraded");
     } else if (!isComplete && isGraded) {
-      setCases('notCompletedGraded');
+      setCases("notCompletedGraded");
     } else {
-      setCases('notCompletedNotGraded');
+      setCases("notCompletedNotGraded");
     }
   }, [isComplete, isGraded]);
 
   const renderCompleteMenu = () => {
-    if (cases === 'completedGraded') {
+    if (cases === "completedGraded") {
       return (
         <p className="text-center">
-          You have completed this route once, add another send! If you want to
-          edit your community grade, go to the grade menu.
+          You have completed this route once, add another send! If you want to edit your community
+          grade, go to the grade menu.
         </p>
       );
-    } else if (cases === 'completedNotGraded') {
+    } else if (cases === "completedNotGraded") {
       return (
         <div className="flex flex-col items-center gap-1">
           <p className="text-center">
-            You have completed this route once, but did not grade it. If you
-            want to add a grade but not any sends, go to the grade menu. <br />
+            You have completed this route once, but did not grade it. If you want to add a grade but
+            not any sends, go to the grade menu. <br />
             <br />
-            <span className="text-blue-500">
-              Add a grade and add some sends!
-            </span>
+            <span className="text-blue-500">Add a grade and add some sends!</span>
           </p>
           <label className="flex gap-3 font-bold">
             Grade:
@@ -106,11 +98,11 @@ export default function CompleteMenu({
           </label>
         </div>
       );
-    } else if (cases === 'notCompletedGraded') {
+    } else if (cases === "notCompletedGraded") {
       return (
         <p className="text-center">
-          You already graded this route but did not complete it. If you want to
-          edit your community grade, go to the grade menu.
+          You already graded this route but did not complete it. If you want to edit your community
+          grade, go to the grade menu.
         </p>
       );
     } else {
@@ -135,10 +127,7 @@ export default function CompleteMenu({
 
   return (
     <div className="flex flex-col items-center">
-      <form
-        onSubmit={handleSubmit}
-        className="flex flex-col gap-2 items-center"
-      >
+      <form onSubmit={handleSubmit} className="flex flex-col gap-2 items-center">
         {renderCompleteMenu()}
 
         <label className="flex gap-3 font-bold">

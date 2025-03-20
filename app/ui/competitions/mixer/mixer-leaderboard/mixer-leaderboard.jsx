@@ -1,7 +1,7 @@
-'use client';
-import clsx from 'clsx';
-import { useEffect, useState } from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
+"use client";
+import clsx from "clsx";
+import { useEffect, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 
 export default function MixerLeaderBoard({
   user,
@@ -17,17 +17,17 @@ export default function MixerLeaderBoard({
 
   const [openDivisions, setOpenDivisions] = useState({});
   useEffect(() => {
-    const storedIsReady = localStorage.getItem('isReady');
-    if (storedIsReady === 'true') {
+    const storedIsReady = localStorage.getItem("isReady");
+    if (storedIsReady === "true") {
       setIsReady(true);
     }
   }, []);
 
   useEffect(() => {
-    localStorage.setItem('isReady', isReady);
+    localStorage.setItem("isReady", isReady);
   }, [isReady]);
-  const handleToggleDivision = (divisionName) => {
-    setOpenDivisions((prev) => ({
+  const handleToggleDivision = divisionName => {
+    setOpenDivisions(prev => ({
       ...prev,
       [divisionName]: !prev[divisionName], // Toggle true/false
     }));
@@ -53,8 +53,8 @@ export default function MixerLeaderBoard({
           </h1>
           <div className="flex-1 justify-center flex flex-col gap-3 items-center">
             <p className="text-white font-barlow font-bold text-center">
-              By clicking this button, you will be able to view all scores for
-              the Spring Mixer 2024!
+              By clicking this button, you will be able to view all scores for the Spring Mixer
+              2024!
             </p>
             <button
               onClick={handleViewScores}
@@ -63,8 +63,7 @@ export default function MixerLeaderBoard({
               View Scores
             </button>
             <p className="text-white font-barlow font-bold text-xs text-center">
-              If you want to keep the suspense, wait till the scores are
-              announced in person
+              If you want to keep the suspense, wait till the scores are announced in person
             </p>
           </div>
         </div>
@@ -72,17 +71,15 @@ export default function MixerLeaderBoard({
         <div className="flex flex-col justify-center items-center">
           {/* top three */}
           <div className="flex flex-col justify-center items-center p-3 mb-5">
-            <h1 className="text-white font-barlow font-bold text-3xl mb-3">
-              Top 3 Overall
-            </h1>
+            <h1 className="text-white font-barlow font-bold text-3xl mb-3">Top 3 Overall</h1>
             <div className="flex flex-col gap-4">
               {combinedScores.slice(0, 3).map((score, index) => (
                 <div
                   className={clsx(
-                    'flex w-80 rounded-lg justify-start p-2 px-4 items-center outline outline-white outline-2',
-                    index === 0 && 'bg-amber-500 shadow-lg shadow-amber-500', // Gold
-                    index === 1 && 'bg-gray-400 shadow-lg shadow-gray-400', // Silver
-                    index === 2 && 'bg-orange-600 shadow-lg shadow-orange-600' // Bronze
+                    "flex w-80 rounded-lg justify-start p-2 px-4 items-center outline outline-white outline-2",
+                    index === 0 && "bg-amber-500 shadow-lg shadow-amber-500", // Gold
+                    index === 1 && "bg-gray-400 shadow-lg shadow-gray-400", // Silver
+                    index === 2 && "bg-orange-600 shadow-lg shadow-orange-600" // Bronze
                   )}
                   key={index}
                 >
@@ -98,9 +95,7 @@ export default function MixerLeaderBoard({
           </div>
           {/* By Division */}
           <div className="flex flex-col gap-3 mb-8 px-6 w-full max-w-3xl">
-            <h2 className="font-barlow font-bold text-3xl text-white text-start">
-              By Division
-            </h2>
+            <h2 className="font-barlow font-bold text-3xl text-white text-start">By Division</h2>
 
             {Object.entries(adjustedRankings.updatedDivisions).map(
               ([divisionName, divisionData]) => (
@@ -108,14 +103,12 @@ export default function MixerLeaderBoard({
                   {/* Division Button */}
                   <button
                     className={clsx(
-                      'bg-bg1 flex w-full rounded-sm justify-center p-2 outline outline-1 outline-white',
-                      openDivisions[divisionName] && 'bg-bg2' // Change color when open
+                      "bg-bg1 flex w-full rounded-sm justify-center p-2 outline outline-1 outline-white",
+                      openDivisions[divisionName] && "bg-bg2" // Change color when open
                     )}
                     onClick={() => handleToggleDivision(divisionName)}
                   >
-                    <p className="text-white font-barlow font-bold text-center">
-                      {divisionName}
-                    </p>
+                    <p className="text-white font-barlow font-bold text-center">{divisionName}</p>
                   </button>
 
                   {/* AnimatePresence for Smooth Open/Close */}
@@ -126,7 +119,7 @@ export default function MixerLeaderBoard({
                         initial={{ opacity: 0, y: -10, scale: 0.95 }}
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: -10, scale: 0.95 }}
-                        transition={{ duration: 0.3, ease: 'easeInOut' }}
+                        transition={{ duration: 0.3, ease: "easeInOut" }}
                       >
                         <motion.div
                           className="w-full max-w-md rounded-sm flex justify-between px-1 py-1"
@@ -134,16 +127,10 @@ export default function MixerLeaderBoard({
                           animate={{ opacity: 1, y: 0 }}
                           transition={{ duration: 0.2 }}
                         >
-                          <p className="text-white font-barlow font-bold">
-                            Rank
-                          </p>
-                          <p className="text-white font-barlow font-bold">
-                            Name
-                          </p>
+                          <p className="text-white font-barlow font-bold">Rank</p>
+                          <p className="text-white font-barlow font-bold">Name</p>
                           <div className="flex flex-col text-center">
-                            <p className="text-white font-barlow font-bold">
-                              Score
-                            </p>
+                            <p className="text-white font-barlow font-bold">Score</p>
                           </div>
                         </motion.div>
                         {/* Display rankings inside the division */}
@@ -151,29 +138,20 @@ export default function MixerLeaderBoard({
                           <motion.div
                             key={climber.name}
                             className={clsx(
-                              'w-full max-w-md rounded-sm flex justify-between px-4 py-1',
-                              climber.userId === user?.id && 'bg-blue-500',
-                              index === 0 &&
-                                'bg-amber-500 shadow-lg shadow-amber-500',
-                              index === 1 &&
-                                'bg-gray-400 shadow-lg shadow-gray-400',
-                              index === 2 &&
-                                'bg-orange-600 shadow-lg shadow-orange-600',
-                              index > 2 && 'bg-bg1'
+                              "w-full max-w-md rounded-sm flex justify-between px-4 py-1",
+                              climber.userId === user?.id && "bg-blue-500",
+                              index === 0 && "bg-amber-500 shadow-lg shadow-amber-500",
+                              index === 1 && "bg-gray-400 shadow-lg shadow-gray-400",
+                              index === 2 && "bg-orange-600 shadow-lg shadow-orange-600",
+                              index > 2 && "bg-bg1"
                             )}
                             initial={{ opacity: 0, y: -5 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.1 * index, duration: 0.2 }}
                           >
-                            <p className="text-white font-jersey">
-                              {index + 1}
-                            </p>
-                            <p className="text-white font-jersey">
-                              {climber.name}
-                            </p>
-                            <p className="text-white font-jersey">
-                              {climber.combinedRank}
-                            </p>
+                            <p className="text-white font-jersey">{index + 1}</p>
+                            <p className="text-white font-jersey">{climber.name}</p>
+                            <p className="text-white font-jersey">{climber.combinedRank}</p>
                           </motion.div>
                         ))}
                       </motion.div>
@@ -194,14 +172,12 @@ export default function MixerLeaderBoard({
               {/* Ropes Button */}
               <button
                 className={clsx(
-                  'bg-bg1 flex w-full rounded-sm justify-center p-2 outline outline-1 outline-white',
-                  isRopes && 'bg-bg2'
+                  "bg-bg1 flex w-full rounded-sm justify-center p-2 outline outline-1 outline-white",
+                  isRopes && "bg-bg2"
                 )}
                 onClick={handleRopeScores}
               >
-                <p className="text-white font-barlow font-bold text-center">
-                  Ropes
-                </p>
+                <p className="text-white font-barlow font-bold text-center">Ropes</p>
               </button>
 
               {/* Ropes Scores List */}
@@ -212,7 +188,7 @@ export default function MixerLeaderBoard({
                     initial={{ opacity: 0, y: -10, scale: 0.95 }}
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: -10, scale: 0.95 }}
-                    transition={{ duration: 0.3, ease: 'easeInOut' }}
+                    transition={{ duration: 0.3, ease: "easeInOut" }}
                   >
                     <motion.div
                       className="w-full max-w-md rounded-sm grid grid-cols-4 px-1 py-1 text-center"
@@ -222,24 +198,19 @@ export default function MixerLeaderBoard({
                     >
                       <p className="text-white font-barlow font-bold">Rank</p>
                       <p className="text-white font-barlow font-bold">Name</p>
-                      <p className="text-white font-barlow font-bold">
-                        Attempts
-                      </p>
+                      <p className="text-white font-barlow font-bold">Attempts</p>
                       <p className="text-white font-barlow font-bold">Score</p>
                     </motion.div>
-                    {ropeScoresRanked.map((climber) => (
+                    {ropeScoresRanked.map(climber => (
                       <motion.div
                         key={climber.name}
                         className={clsx(
-                          'w-full max-w-md rounded-sm grid grid-cols-4 px-1 py-1 text-center place-items-center',
-                          climber.userId === user?.id && 'bg-blue-500',
-                          climber.rank === 1 &&
-                            'bg-amber-500 shadow-lg shadow-amber-500',
-                          climber.rank === 2 &&
-                            'bg-gray-400 shadow-lg shadow-gray-400',
-                          climber.rank === 3 &&
-                            'bg-orange-600 shadow-lg shadow-orange-600',
-                          climber.rank > 3 && 'bg-bg1'
+                          "w-full max-w-md rounded-sm grid grid-cols-4 px-1 py-1 text-center place-items-center",
+                          climber.userId === user?.id && "bg-blue-500",
+                          climber.rank === 1 && "bg-amber-500 shadow-lg shadow-amber-500",
+                          climber.rank === 2 && "bg-gray-400 shadow-lg shadow-gray-400",
+                          climber.rank === 3 && "bg-orange-600 shadow-lg shadow-orange-600",
+                          climber.rank > 3 && "bg-bg1"
                         )}
                         initial={{ opacity: 0, y: -5 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -249,15 +220,9 @@ export default function MixerLeaderBoard({
                         }}
                       >
                         <p className="text-white font-jersey">{climber.rank}</p>
-                        <p className="text-white font-jersey text-sm">
-                          {climber.name}
-                        </p>
-                        <p className="text-white font-jersey">
-                          {climber.attempts}
-                        </p>
-                        <p className="text-white font-jersey">
-                          {climber.score}
-                        </p>
+                        <p className="text-white font-jersey text-sm">{climber.name}</p>
+                        <p className="text-white font-jersey">{climber.attempts}</p>
+                        <p className="text-white font-jersey">{climber.score}</p>
                       </motion.div>
                     ))}
                   </motion.div>
@@ -269,14 +234,12 @@ export default function MixerLeaderBoard({
               {/* Boulders Button */}
               <button
                 className={clsx(
-                  'bg-bg1 flex w-full rounded-sm justify-center p-2 outline outline-1 outline-white',
-                  isBoulders && 'bg-bg2'
+                  "bg-bg1 flex w-full rounded-sm justify-center p-2 outline outline-1 outline-white",
+                  isBoulders && "bg-bg2"
                 )}
                 onClick={handleBoulderScores}
               >
-                <p className="text-white font-barlow font-bold text-center">
-                  Boulders
-                </p>
+                <p className="text-white font-barlow font-bold text-center">Boulders</p>
               </button>
 
               {/* Boulders Scores List */}
@@ -287,7 +250,7 @@ export default function MixerLeaderBoard({
                     initial={{ opacity: 0, y: -10, scale: 0.95 }}
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: -10, scale: 0.95 }}
-                    transition={{ duration: 0.3, ease: 'easeInOut' }}
+                    transition={{ duration: 0.3, ease: "easeInOut" }}
                   >
                     <motion.div
                       className="w-full max-w-md rounded-sm grid grid-cols-4 px-1 py-1 text-center"
@@ -297,24 +260,19 @@ export default function MixerLeaderBoard({
                     >
                       <p className="text-white font-barlow font-bold">Rank</p>
                       <p className="text-white font-barlow font-bold">Name</p>
-                      <p className="text-white font-barlow font-bold">
-                        Attempts
-                      </p>
+                      <p className="text-white font-barlow font-bold">Attempts</p>
                       <p className="text-white font-barlow font-bold">Score</p>
                     </motion.div>
-                    {boulderScoresRanked.map((climber) => (
+                    {boulderScoresRanked.map(climber => (
                       <motion.div
                         key={climber.name}
                         className={clsx(
-                          'w-full max-w-md rounded-sm grid grid-cols-4 px-1 py-1 text-center place-items-center',
-                          climber.userId === user?.id && 'bg-blue-500',
-                          climber.rank === 1 &&
-                            'bg-amber-500 shadow-lg shadow-amber-500',
-                          climber.rank === 2 &&
-                            'bg-gray-400 shadow-lg shadow-gray-400',
-                          climber.rank === 3 &&
-                            'bg-orange-600 shadow-lg shadow-orange-600',
-                          climber.rank > 3 && 'bg-bg1'
+                          "w-full max-w-md rounded-sm grid grid-cols-4 px-1 py-1 text-center place-items-center",
+                          climber.userId === user?.id && "bg-blue-500",
+                          climber.rank === 1 && "bg-amber-500 shadow-lg shadow-amber-500",
+                          climber.rank === 2 && "bg-gray-400 shadow-lg shadow-gray-400",
+                          climber.rank === 3 && "bg-orange-600 shadow-lg shadow-orange-600",
+                          climber.rank > 3 && "bg-bg1"
                         )}
                         initial={{ opacity: 0, y: -5 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -324,15 +282,9 @@ export default function MixerLeaderBoard({
                         }}
                       >
                         <p className="text-white font-jersey">{climber.rank}</p>
-                        <p className="text-white font-jersey text-sm">
-                          {climber.name}
-                        </p>
-                        <p className="text-white font-jersey">
-                          {climber.attempts}
-                        </p>
-                        <p className="text-white font-jersey">
-                          {climber.score}
-                        </p>
+                        <p className="text-white font-jersey text-sm">{climber.name}</p>
+                        <p className="text-white font-jersey">{climber.attempts}</p>
+                        <p className="text-white font-jersey">{climber.score}</p>
                       </motion.div>
                     ))}
                   </motion.div>
@@ -348,14 +300,12 @@ export default function MixerLeaderBoard({
             <div className="flex flex-col gap-2">
               <button
                 className={clsx(
-                  'bg-bg1 flex w-full rounded-sm justify-center p-2 outline outline-1 outline-white',
-                  isRopes && 'bg-bg2'
+                  "bg-bg1 flex w-full rounded-sm justify-center p-2 outline outline-1 outline-white",
+                  isRopes && "bg-bg2"
                 )}
                 onClick={handleCombinedScores}
               >
-                <p className="text-white font-barlow font-bold text-center">
-                  Combined Scores
-                </p>
+                <p className="text-white font-barlow font-bold text-center">Combined Scores</p>
               </button>
 
               {/* combinedScores list */}
@@ -366,7 +316,7 @@ export default function MixerLeaderBoard({
                     initial={{ opacity: 0, y: -10, scale: 0.95 }}
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: -10, scale: 0.95 }}
-                    transition={{ duration: 0.3, ease: 'easeInOut' }}
+                    transition={{ duration: 0.3, ease: "easeInOut" }}
                   >
                     <motion.div
                       className="w-full max-w-md rounded-sm grid grid-cols-5 px-1 py-1 text-center"
@@ -374,35 +324,22 @@ export default function MixerLeaderBoard({
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.2 }}
                     >
-                      <p className="text-white font-barlow font-bold text-xs">
-                        Rank
-                      </p>
-                      <p className="text-white font-barlow font-bold text-xs">
-                        Name
-                      </p>
-                      <p className="text-white font-barlow font-bold text-xs">
-                        Boulder
-                      </p>
-                      <p className="text-white font-barlow font-bold text-xs">
-                        Rope
-                      </p>
-                      <p className="text-white font-barlow font-bold text-xs">
-                        Combined
-                      </p>
+                      <p className="text-white font-barlow font-bold text-xs">Rank</p>
+                      <p className="text-white font-barlow font-bold text-xs">Name</p>
+                      <p className="text-white font-barlow font-bold text-xs">Boulder</p>
+                      <p className="text-white font-barlow font-bold text-xs">Rope</p>
+                      <p className="text-white font-barlow font-bold text-xs">Combined</p>
                     </motion.div>
                     {combinedScores.map((climber, index) => (
                       <motion.div
                         key={climber.name}
                         className={clsx(
-                          'w-full max-w-md rounded-sm grid grid-cols-5 px-1 py-1 text-center place-items-center',
-                          climber.userId === user?.id && 'bg-blue-500',
-                          index === 0 &&
-                            'bg-amber-500 shadow-lg shadow-amber-500',
-                          index === 1 &&
-                            'bg-gray-400 shadow-lg shadow-gray-400',
-                          index === 2 &&
-                            'bg-orange-600 shadow-lg shadow-orange-600',
-                          index > 2 && 'bg-bg1'
+                          "w-full max-w-md rounded-sm grid grid-cols-5 px-1 py-1 text-center place-items-center",
+                          climber.userId === user?.id && "bg-blue-500",
+                          index === 0 && "bg-amber-500 shadow-lg shadow-amber-500",
+                          index === 1 && "bg-gray-400 shadow-lg shadow-gray-400",
+                          index === 2 && "bg-orange-600 shadow-lg shadow-orange-600",
+                          index > 2 && "bg-bg1"
                         )}
                         initial={{ opacity: 0, y: -5 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -412,18 +349,10 @@ export default function MixerLeaderBoard({
                         }}
                       >
                         <p className="text-white font-jersey">{index + 1}</p>
-                        <p className="text-white font-jersey text-sm">
-                          {climber.name}
-                        </p>
-                        <p className="text-white font-jersey">
-                          {climber.boulderRank}
-                        </p>
-                        <p className="text-white font-jersey">
-                          {climber.ropeRank}
-                        </p>
-                        <p className="text-white font-jersey">
-                          {climber.combinedRank}
-                        </p>
+                        <p className="text-white font-jersey text-sm">{climber.name}</p>
+                        <p className="text-white font-jersey">{climber.boulderRank}</p>
+                        <p className="text-white font-jersey">{climber.ropeRank}</p>
+                        <p className="text-white font-jersey">{climber.combinedRank}</p>
                       </motion.div>
                     ))}
                   </motion.div>

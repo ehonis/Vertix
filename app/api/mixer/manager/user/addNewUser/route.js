@@ -1,13 +1,7 @@
-import { NextResponse } from 'next/server';
-import prisma from '@/prisma';
-import { auth } from '@/auth';
-export const POST = auth(async function POST(req) {
-  if (!req.auth) {
-    return NextResponse.json({ success: false, error: 'Unauthorized' });
-  }
-  if (!req.auth.user.admin) {
-    return NextResponse.json({ success: false, error: 'Unauthorized' });
-  }
+import { NextResponse } from "next/server";
+import prisma from "@/prisma";
+import { auth } from "@/auth";
+export async function POST(req) {
   try {
     const {
       compId,
@@ -27,7 +21,7 @@ export const POST = auth(async function POST(req) {
     const parsedBoulderAttempts = parseInt(boulderAttempts, 10);
 
     // Use a transaction to ensure all operations succeed or fail together
-    const result = await prisma.$transaction(async (tx) => {
+    const result = await prisma.$transaction(async tx => {
       // Create the climber first
       const climberData = {
         competition: {
@@ -104,10 +98,7 @@ export const POST = auth(async function POST(req) {
       };
     });
 
-    return NextResponse.json(
-      { status: 200 },
-      { message: 'Successfully created user' }
-    );
+    return NextResponse.json({ status: 200 }, { message: "Successfully created user" });
   } catch (error) {
     console.log(error);
     return NextResponse.json(
@@ -117,4 +108,4 @@ export const POST = auth(async function POST(req) {
       { status: 500 }
     );
   }
-});
+}

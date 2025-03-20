@@ -1,11 +1,11 @@
-import prisma from '@/prisma';
-import { NextResponse } from 'next/server';
+import prisma from "@/prisma";
+import { NextResponse } from "next/server";
 
 export async function GET(req) {
   try {
     const searchParams = req.nextUrl.searchParams;
 
-    const userId = searchParams.get('userId');
+    const userId = searchParams.get("userId");
 
     const user = await prisma.user.findUnique({
       where: { id: userId },
@@ -16,7 +16,7 @@ export async function GET(req) {
     console.error(error);
     return NextResponse.json({
       status: 500,
-      message: 'error finding user in api',
+      message: "error finding user in api",
     });
   }
 }

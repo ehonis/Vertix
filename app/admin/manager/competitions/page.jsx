@@ -1,25 +1,23 @@
-import Link from 'next/link';
-import UpComingCompetitions from '@/app/ui/admin/competitions/upcoming-competitions';
-import { Suspense } from 'react';
-import ElementLoadingAnimation from '@/app/ui/general/element-loading-animation';
-import { auth } from '@/auth';
-import { redirect } from 'next/navigation';
+import Link from "next/link";
+import UpComingCompetitions from "@/app/ui/admin/competitions/upcoming-competitions";
+import { Suspense } from "react";
+import ElementLoadingAnimation from "@/app/ui/general/element-loading-animation";
+import { auth } from "@/auth";
+import { redirect } from "next/navigation";
 
 export default async function Page() {
-  const compTypes = [
-    { text: 'Mixer', url: '/admin/manager/competitions/mixer' },
-  ];
+  const compTypes = [{ text: "Mixer", url: "/admin/manager/competitions/mixer" }];
   const session = await auth();
   const user = session?.user || null;
 
   if (!user || !user?.admin) {
-    redirect('/signin');
+    redirect("/signin");
   }
 
   return (
     <div className="w-screen p-5 flex flex-col items-center">
       <div className="max-w-md flex-col flex">
-        <Link href={'/admin'} className="flex gap-1 items-center ">
+        <Link href={"/admin"} className="flex gap-1 items-center ">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -34,21 +32,17 @@ export default async function Page() {
               d="M9 15 3 9m0 0 6-6M3 9h12a6 6 0 0 1 0 12h-3"
             />
           </svg>
-          <p className="font-barlow font-bold text-xs text-white">
-            Admin Center
-          </p>
+          <p className="font-barlow font-bold text-xs text-white">Admin Center</p>
         </Link>
         <div className="mt-3 flex flex-col">
           <div className="flex flex-col gap-2 mb-2">
-            <h1 className="font-barlow font-bold text-white text-4xl">
-              Competitions Manager
-            </h1>
+            <h1 className="font-barlow font-bold text-white text-4xl">Competitions Manager</h1>
             <div className="h-[2px] w-full bg-white"></div>
           </div>
           <div className="flex flex-col gap-2 mb-3">
             <h2 className="font-barlow font-bold text-white text-2xl">Types</h2>
             <div className="flex flex-col bg-bg2 gap-2 p-2 rounded-sm">
-              {compTypes.map((type) => (
+              {compTypes.map(type => (
                 <Link
                   href={type.url}
                   className="bg-bg1 max-w-md grid grid-cols-3 font-barlow font-bold text-white p-3 rounded-sm outline outline-white outline-1"
@@ -75,9 +69,7 @@ export default async function Page() {
           </div>
 
           <div className="flex flex-col gap-2">
-            <h2 className="font-barlow font-bold text-white text-2xl">
-              Upcoming Competitions
-            </h2>
+            <h2 className="font-barlow font-bold text-white text-2xl">Upcoming Competitions</h2>
             <Suspense fallback={<ElementLoadingAnimation />}>
               <UpComingCompetitions />
             </Suspense>

@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import MobileTopdownParts from './mobile-topdown-parts';
+import { useState, useEffect } from "react";
+import MobileTopdownParts from "./mobile-topdown-parts";
 
 export default function TopDown({ onData }) {
   return (

@@ -1,12 +1,12 @@
-'use client';
-import { useState, useEffect } from 'react';
-import { motion } from 'motion/react';
-import clsx from 'clsx';
-import Image from 'next/image';
-import FindUserPopUp from './mixer-find-user-popup';
-import { useNotification } from '@/app/contexts/NotificationContext';
-import { useRouter } from 'next/navigation';
-import ConfirmationPopUp from '@/app/ui/admin/new_route/confirmation-pop-up';
+"use client";
+import { useState, useEffect } from "react";
+import { motion } from "motion/react";
+import clsx from "clsx";
+import Image from "next/image";
+import FindUserPopUp from "./mixer-find-user-popup";
+import { useNotification } from "@/app/contexts/NotificationContext";
+import { useRouter } from "next/navigation";
+import ConfirmationPopUp from "@/app/ui/admin/new_route/confirmation-pop-up";
 
 export default function EditUserPopUp({
   compId,
@@ -20,24 +20,16 @@ export default function EditUserPopUp({
   const { showNotification } = useNotification();
   const router = useRouter();
   //user data
-  const [climberName, setClimberName] = useState(climber?.name || '');
-  const [entryMethod, setEntryMethod] = useState(
-    climber?.entryMethod || 'MANUAL'
-  );
-  const [divisionId, setDivisionId] = useState(climber?.divisionId || 'none');
+  const [climberName, setClimberName] = useState(climber?.name || "");
+  const [entryMethod, setEntryMethod] = useState(climber?.entryMethod || "MANUAL");
+  const [divisionId, setDivisionId] = useState(climber?.divisionId || "none");
   const [connectedUser, setConnectedUser] = useState(null);
 
   //user route data
-  const [tempBoulderScore, setTempBoulderScore] = useState(
-    boulderScore?.score || ''
-  );
-  const [tempRopeScore, setTempRopeScore] = useState(ropeScore?.score || '');
-  const [tempBoulderAttempts, setTempBoulderAttempts] = useState(
-    boulderScore?.attempts || ''
-  );
-  const [tempRopeAttempts, setTempRopeAttempts] = useState(
-    ropeScore?.attempts || ''
-  );
+  const [tempBoulderScore, setTempBoulderScore] = useState(boulderScore?.score || "");
+  const [tempRopeScore, setTempRopeScore] = useState(ropeScore?.score || "");
+  const [tempBoulderAttempts, setTempBoulderAttempts] = useState(boulderScore?.attempts || "");
+  const [tempRopeAttempts, setTempRopeAttempts] = useState(ropeScore?.attempts || "");
 
   const [isSaveButton, setIsSaveButton] = useState(false);
   const [isUserSearchPopUp, setIsUserSearchPopUp] = useState(false);
@@ -54,7 +46,7 @@ export default function EditUserPopUp({
           `/api/mixer/manager/user/getMixerUser?${queryData.toString()}`
         );
         if (!response.ok) {
-          console.log('error');
+          console.log("error");
         }
         const result = await response.json();
         return result.user;
@@ -64,7 +56,7 @@ export default function EditUserPopUp({
     };
 
     const setConnectedUserAsync = async () => {
-      if (entryMethod === 'APP') {
+      if (entryMethod === "APP") {
         const user = await getConnectUser(); // Await the result
         setConnectedUser(user);
         console.log(user);
@@ -106,70 +98,70 @@ export default function EditUserPopUp({
   ]);
 
   // Handle form changes
-  const handleNameChange = (e) => {
+  const handleNameChange = e => {
     setClimberName(e.target.value);
   };
 
-  const handleEntryMethodChange = (e) => {
+  const handleEntryMethodChange = e => {
     setEntryMethod(e.target.value);
-    if (e.target.value === 'MANUAL') {
+    if (e.target.value === "MANUAL") {
       setConnectedUser(null);
     }
   };
 
-  const handleBoulderScoreChange = (e) => {
-    const value = e.target.value.replace(/[^0-9]/g, ''); // Allow only numbers
+  const handleBoulderScoreChange = e => {
+    const value = e.target.value.replace(/[^0-9]/g, ""); // Allow only numbers
     setTempBoulderScore(value);
   };
 
-  const handleBoulderAttemptsChange = (e) => {
-    const value = e.target.value.replace(/[^0-9]/g, ''); // Allow only numbers
+  const handleBoulderAttemptsChange = e => {
+    const value = e.target.value.replace(/[^0-9]/g, ""); // Allow only numbers
     setTempBoulderAttempts(value);
   };
 
-  const handleRopeScoreChange = (e) => {
-    const value = e.target.value.replace(/[^0-9]/g, ''); // Allow only numbers
+  const handleRopeScoreChange = e => {
+    const value = e.target.value.replace(/[^0-9]/g, ""); // Allow only numbers
     setTempRopeScore(value);
   };
 
-  const handleRopeAttemptsChange = (e) => {
-    const value = e.target.value.replace(/[^0-9]/g, ''); // Allow only numbers
+  const handleRopeAttemptsChange = e => {
+    const value = e.target.value.replace(/[^0-9]/g, ""); // Allow only numbers
     setTempRopeAttempts(value);
   };
 
   // Handle form submission
   const handleSubmit = async () => {
-    if (climberName === '') {
-      showNotification({ message: 'Cannot Submit: No Name', color: 'red' });
-    } else if (tempBoulderScore === '') {
+    if (climberName === "") {
+      showNotification({ message: "Cannot Submit: No Name", color: "red" });
+    } else if (tempBoulderScore === "") {
       showNotification({
-        message: 'Cannot Submit: No Boulder Score',
-        color: 'red',
+        message: "Cannot Submit: No Boulder Score",
+        color: "red",
       });
-    } else if (tempBoulderAttempts === '') {
+    } else if (tempBoulderAttempts === "") {
       showNotification({
-        message: 'Cannot Submit: No boulder attempts',
-        color: 'red',
+        message: "Cannot Submit: No boulder attempts",
+        color: "red",
       });
-    } else if (tempRopeScore === '') {
+    } else if (tempRopeScore === "") {
       showNotification({
-        message: 'Cannot Submit: No rope score',
-        color: 'red',
+        message: "Cannot Submit: No rope score",
+        color: "red",
       });
-    } else if (tempRopeAttempts === '') {
+    } else if (tempRopeAttempts === "") {
       showNotification({
-        message: 'Cannot Submit: No rope attempts',
-        color: 'red',
+        message: "Cannot Submit: No rope attempts",
+        color: "red",
       });
-    } else if (entryMethod === 'APP' && !connectedUser) {
+    } else if (entryMethod === "APP" && !connectedUser) {
       showNotification({
-        message: 'Cannot Submit: No selected user',
-        color: 'red',
+        message: "Cannot Submit: No selected user",
+        color: "red",
       });
-    } else if (divisionId === 'none') {
+    } else if (divisionId === "none") {
       showNotification({
-        message: 'Cannot Submit: No selected division',
-        color: 'red',
+        message: "Cannot Submit: No selected division",
+        color: "red",
       });
     } else {
       const data = {
@@ -185,26 +177,26 @@ export default function EditUserPopUp({
         entryMethod,
       };
       try {
-        const response = await fetch('/api/mixer/manager/user/updateUser', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+        const response = await fetch("/api/mixer/manager/user/updateUser", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify(data),
         });
         const responseData = await response.json();
         if (!response.ok) {
-          showNotification({ message: responseData.error, color: 'red' });
+          showNotification({ message: responseData.error, color: "red" });
         } else {
-          showNotification({ message: 'Updated User!', color: 'green' });
+          showNotification({ message: "Updated User!", color: "green" });
           router.refresh();
           onCancel();
         }
       } catch (error) {
-        showNotification({ message: error, color: 'red' });
+        showNotification({ message: error, color: "red" });
       }
     }
   };
 
-  const handleUpdateConnectedUser = (user) => {
+  const handleUpdateConnectedUser = user => {
     setConnectedUser(user);
   };
 
@@ -212,55 +204,55 @@ export default function EditUserPopUp({
     setIsConfirmationPopUp(false);
     const data = { climberId: climber.id };
     try {
-      const response = await fetch('/api/mixer/manager/user/deleteUser', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const response = await fetch("/api/mixer/manager/user/deleteUser", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
       });
       if (!response.ok) {
-        showNotification({ message: 'Could not delete user', color: 'red' });
+        showNotification({ message: "Could not delete user", color: "red" });
       } else {
-        showNotification({ message: 'Deleted User', color: 'green' });
+        showNotification({ message: "Deleted User", color: "green" });
         router.refresh();
         onCancel();
       }
     } catch (error) {
-      showNotification({ message: 'Could not delete user', color: 'red' });
+      showNotification({ message: "Could not delete user", color: "red" });
     }
   };
 
   const handleNewUserSubmit = async () => {
-    if (climberName === '') {
-      showNotification({ message: 'Cannot Submit: No Name', color: 'red' });
-    } else if (tempBoulderScore === '') {
+    if (climberName === "") {
+      showNotification({ message: "Cannot Submit: No Name", color: "red" });
+    } else if (tempBoulderScore === "") {
       showNotification({
-        message: 'Cannot Submit: No Boulder Score',
-        color: 'red',
+        message: "Cannot Submit: No Boulder Score",
+        color: "red",
       });
-    } else if (tempBoulderAttempts === '') {
+    } else if (tempBoulderAttempts === "") {
       showNotification({
-        message: 'Cannot Submit: No boulder attempts',
-        color: 'red',
+        message: "Cannot Submit: No boulder attempts",
+        color: "red",
       });
-    } else if (tempRopeScore === '') {
+    } else if (tempRopeScore === "") {
       showNotification({
-        message: 'Cannot Submit: No rope score',
-        color: 'red',
+        message: "Cannot Submit: No rope score",
+        color: "red",
       });
-    } else if (tempRopeAttempts === '') {
+    } else if (tempRopeAttempts === "") {
       showNotification({
-        message: 'Cannot Submit: No rope attempts',
-        color: 'red',
+        message: "Cannot Submit: No rope attempts",
+        color: "red",
       });
-    } else if (entryMethod === 'APP' && !connectedUser) {
+    } else if (entryMethod === "APP" && !connectedUser) {
       showNotification({
-        message: 'Cannot Submit: No selected user',
-        color: 'red',
+        message: "Cannot Submit: No selected user",
+        color: "red",
       });
-    } else if (divisionId === 'none') {
+    } else if (divisionId === "none") {
       showNotification({
-        message: 'Cannot Submit: No selected division',
-        color: 'red',
+        message: "Cannot Submit: No selected division",
+        color: "red",
       });
     } else {
       const data = {
@@ -275,21 +267,21 @@ export default function EditUserPopUp({
         entryMethod,
       };
       try {
-        const response = await fetch('/api/mixer/manager/user/addNewUser', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+        const response = await fetch("/api/mixer/manager/user/addNewUser", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify(data),
         });
         const responseData = await response.json();
         if (!response.ok) {
-          showNotification({ message: responseData.error, color: 'red' });
+          showNotification({ message: responseData.error, color: "red" });
         } else {
-          showNotification({ message: 'Created New User!', color: 'green' });
+          showNotification({ message: "Created New User!", color: "green" });
           router.refresh();
           onCancel();
         }
       } catch (error) {
-        showNotification({ message: error, color: 'red' });
+        showNotification({ message: error, color: "red" });
       }
     }
   };
@@ -300,8 +292,8 @@ export default function EditUserPopUp({
         <ConfirmationPopUp
           onConfirmation={handleDelete}
           onCancel={() => setIsConfirmationPopUp(false)}
-          message={'Caution! This will delete the climber for the comp'}
-          submessage={'this action cannot be undone'}
+          message={"Caution! This will delete the climber for the comp"}
+          submessage={"this action cannot be undone"}
         />
       )}
       {isUserSearchPopUp && (
@@ -333,15 +325,11 @@ export default function EditUserPopUp({
               stroke="currentColor"
               className="size-7"
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M6 18 18 6M6 6l12 12"
-              />
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
             </svg>
           </button>
           <h2 className="text-xl">
-            {type === 'NEW' && 'New '}Climber {type === 'EDIT' && 'Editor'}
+            {type === "NEW" && "New "}Climber {type === "EDIT" && "Editor"}
           </h2>
           {/* name and entryMethod */}
           <div className="flex justify-center">
@@ -360,8 +348,8 @@ export default function EditUserPopUp({
               value={entryMethod}
               onChange={handleEntryMethodChange}
               className={clsx(
-                'font-light bg-bg1 p-1 rounded-r text-center w-24',
-                entryMethod === 'MANUAL' ? 'text-gray-300' : 'text-green-400'
+                "font-light bg-bg1 p-1 rounded-r text-center w-24",
+                entryMethod === "MANUAL" ? "text-gray-300" : "text-green-400"
               )}
             >
               <option value="APP">APP</option>
@@ -369,7 +357,7 @@ export default function EditUserPopUp({
             </select>
           </div>
           {/* connected user */}
-          {connectedUser === null && entryMethod === 'APP' ? (
+          {connectedUser === null && entryMethod === "APP" ? (
             <div className="flex justify-center">
               <button
                 className="px-2 py-1 bg-blue-500 rounded-sm w-72 "
@@ -379,7 +367,7 @@ export default function EditUserPopUp({
               </button>
             </div>
           ) : null}
-          {connectedUser !== null && entryMethod === 'APP' ? (
+          {connectedUser !== null && entryMethod === "APP" ? (
             <div className="flex justify-center">
               <div className="flex bg-bg1 items-center p-2 rounded-sm w-72 justify-between">
                 {/* user image */}
@@ -410,9 +398,7 @@ export default function EditUserPopUp({
                       </svg>
                     )}
                     <div className="flex flex-col gap-0 self-center">
-                      <p className="text-lg truncate max-w-max w-[9.5rem]">
-                        {connectedUser.name}
-                      </p>
+                      <p className="text-lg truncate max-w-max w-[9.5rem]">{connectedUser.name}</p>
                       <p className="text-sm text-gray-500 truncate w-24 -mt-2">
                         @{connectedUser.id}
                       </p>
@@ -437,11 +423,11 @@ export default function EditUserPopUp({
                 name=""
                 id=""
                 value={divisionId}
-                onChange={(e) => setDivisionId(e.target.value)}
+                onChange={e => setDivisionId(e.target.value)}
                 className="bg-bg1 w-72 px-2 py-1 rounded-md text-center"
               >
                 <option value="none"></option>
-                {divisions.map((division) => (
+                {divisions.map(division => (
                   <option key={division.id} value={division.id}>
                     {division.name}
                   </option>
@@ -515,7 +501,7 @@ export default function EditUserPopUp({
             </div>
           </div>
           <div className="flex justify-between">
-            {type === 'EDIT' && (
+            {type === "EDIT" && (
               <button
                 className="px-2 py-1 ml-1 bg-red-500 rounded-sm justify-end-start font-normal"
                 onClick={() => setIsConfirmationPopUp(true)}
@@ -531,7 +517,7 @@ export default function EditUserPopUp({
                 Update Changes
               </button>
             )}
-            {type === 'NEW' && (
+            {type === "NEW" && (
               <button
                 className="px-2 py-1 mr-1 bg-green-500 rounded-sm justify-self-end font-normal"
                 onClick={handleNewUserSubmit}

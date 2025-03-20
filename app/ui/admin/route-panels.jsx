@@ -1,11 +1,11 @@
-'use client';
+"use client";
 
-import { useState, useRef, useEffect } from 'react';
-import clsx from 'clsx';
-import RoutePanel from './route-panel';
-import ConfirmationPopUp from './new_route/confirmation-pop-up';
-import { useNotification } from '@/app/contexts/NotificationContext';
-import { useRouter } from 'next/navigation';
+import { useState, useRef, useEffect } from "react";
+import clsx from "clsx";
+import RoutePanel from "./route-panel";
+import ConfirmationPopUp from "./new_route/confirmation-pop-up";
+import { useNotification } from "@/app/contexts/NotificationContext";
+import { useRouter } from "next/navigation";
 
 export default function RoutePanels({ routes }) {
   const [isEdit, setIsEdit] = useState(false);
@@ -13,24 +13,22 @@ export default function RoutePanels({ routes }) {
   const router = useRouter();
   const { showNotification } = useNotification();
   const [checkedState, setCheckedState] = useState(
-    routes.map((route) => ({ id: route.id, isChecked: false })) // Default unchecked state
+    routes.map(route => ({ id: route.id, isChecked: false })) // Default unchecked state
   );
 
-  const handleCheckboxChange = (id) => {
-    setCheckedState((prevState) =>
-      prevState.map((route) =>
-        route.id === id ? { ...route, isChecked: !route.isChecked } : route
-      )
+  const handleCheckboxChange = id => {
+    setCheckedState(prevState =>
+      prevState.map(route => (route.id === id ? { ...route, isChecked: !route.isChecked } : route))
     );
   };
 
   const handleDelete = () => {
-    if (checkedState.find((route) => route.isChecked)) {
+    if (checkedState.find(route => route.isChecked)) {
       setIsPopUp(true);
     } else {
       showNotification({
-        message: 'make sure you check at least one route before you hit delete',
-        color: 'red',
+        message: "make sure you check at least one route before you hit delete",
+        color: "red",
       });
     }
   };
@@ -40,17 +38,17 @@ export default function RoutePanels({ routes }) {
   };
 
   const handleConfirmation = async () => {
-    const checkedRoutes = checkedState.filter((route) => route.isChecked);
+    const checkedRoutes = checkedState.filter(route => route.isChecked);
     let checkedRouteIds = [];
-    checkedRoutes.forEach((element) => {
+    checkedRoutes.forEach(element => {
       checkedRouteIds.push(element.id);
     });
 
     try {
-      const data = await fetch('/api/delete-route', {
-        method: 'DELETE',
+      const data = await fetch("/api/delete-route", {
+        method: "DELETE",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ routeIds: checkedRouteIds }),
       });
@@ -58,13 +56,13 @@ export default function RoutePanels({ routes }) {
       const response = await data.json();
       showNotification({
         message: `${response.message}`,
-        color: 'green',
+        color: "green",
       });
 
       router.refresh();
     } catch (error) {
       const response = await data.json();
-      showNotification({ message: `Error: ${response.message}`, color: 'red' });
+      showNotification({ message: `Error: ${response.message}`, color: "red" });
     }
 
     setIsPopUp(false);
@@ -107,10 +105,8 @@ export default function RoutePanels({ routes }) {
       <hr className="my-4" />
 
       <div className="flex flex-col gap-2">
-        {routes.map((route) => {
-          const routeCheckbox = checkedState.find(
-            (item) => item.id === route.id
-          );
+        {routes.map(route => {
+          const routeCheckbox = checkedState.find(item => item.id === route.id);
           return (
             <div key={route.id} className="flex items-center ">
               {isEdit ? (

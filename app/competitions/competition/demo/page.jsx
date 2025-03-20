@@ -1,11 +1,11 @@
-import Link from 'next/link';
+import Link from "next/link";
 
 export default function DemoPage() {
   return (
     <div>
       {/* back arrow */}
       <div className="m-5 absolute ">
-        <Link href={'/events'}>
+        <Link href={"/events"}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -32,7 +32,7 @@ export default function DemoPage() {
             stroke="currentColor"
             className="size-32 stroke-white"
             style={{
-              filter: 'drop-shadow(0px 4px 6px rgba(0, 0, 0, 1))',
+              filter: "drop-shadow(0px 4px 6px rgba(0, 0, 0, 1))",
             }}
           >
             <path
@@ -44,14 +44,13 @@ export default function DemoPage() {
         </div>
         <Link
           className="bg-green-500 text-white p-3 rounded-md font-barlow font-bold text-3xl"
-          href={'/events/competition/demo/competition-score-traker'}
+          href={"/events/competition/demo/competition-score-traker"}
         >
           Start Demo
         </Link>
         <p className="font-barlow font-bold text-xl text-white text-center">
-          This is a demo of starting a competition. Depending on the
-          competition, the layout, scores, and time might be different. No
-          scores will be recorded during the demo.
+          This is a demo of starting a competition. Depending on the competition, the layout,
+          scores, and time might be different. No scores will be recorded during the demo.
         </p>
       </div>
     </div>

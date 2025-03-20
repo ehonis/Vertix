@@ -1,6 +1,6 @@
-import prisma from '@/prisma';
-import { NextResponse } from 'next/server';
-import { parseDateString } from '@/lib/dates';
+import prisma from "@/prisma";
+import { NextResponse } from "next/server";
+import { parseDateString } from "@/lib/dates";
 
 export async function POST(request) {
   try {
@@ -8,20 +8,20 @@ export async function POST(request) {
     const data = res;
 
     if (!data || data.length === 0) {
-      return NextResponse.json({ message: 'No data to commit', status: 500 });
+      return NextResponse.json({ message: "No data to commit", status: 500 });
     }
 
     // Use Promise.all to handle async operations for all elements
 
     console.log(data);
     const results = await Promise.all(
-      data.map(async (element) => {
-        if (element.type === 'route') {
-          let routeType = '';
-          if (element.grade.startsWith('v')) {
-            routeType = 'boulder';
+      data.map(async element => {
+        if (element.type === "route") {
+          let routeType = "";
+          if (element.grade.startsWith("v")) {
+            routeType = "boulder";
           } else {
-            routeType = 'rope';
+            routeType = "rope";
           }
 
           const dateObject = parseDateString(element.setDate);
@@ -37,15 +37,15 @@ export async function POST(request) {
               location: element.wall,
             },
           });
-        } else if (element.type === 'comp') {
-          if (element.compType === 'Mixer') {
+        } else if (element.type === "comp") {
+          if (element.compType === "Mixer") {
             const dateObject = parseDateString(element.selectedDate);
             const year = dateObject.getFullYear();
-            let status = '';
+            let status = "";
             if (element.isActive) {
-              status = 'upcoming';
+              status = "upcoming";
             } else {
-              status = 'unavailable';
+              status = "unavailable";
             }
             return prisma.MixerCompetition.create({
               data: {
@@ -61,13 +61,13 @@ export async function POST(request) {
 
     // Return success response
     return NextResponse.json({
-      message: 'Content successfully added',
+      message: "Content successfully added",
       results,
     });
   } catch (error) {
-    console.error('Error committing routes:', error);
+    console.error("Error committing routes:", error);
     return NextResponse.json({
-      message: 'An error occurred',
+      message: "An error occurred",
       error: error.message,
       status: 500,
     });

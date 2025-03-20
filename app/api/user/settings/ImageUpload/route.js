@@ -1,5 +1,5 @@
-import prisma from '@/prisma';
-import { NextResponse } from 'next/server';
+import prisma from "@/prisma";
+import { NextResponse } from "next/server";
 
 export async function POST(req) {
   try {
@@ -11,15 +11,9 @@ export async function POST(req) {
       },
     });
 
-    return NextResponse.json(
-      { message: 'Successfully added Image' },
-      { status: 200 }
-    );
+    return NextResponse.json({ message: "Successfully added Image" }, { status: 200 });
   } catch (error) {
     console.error(error);
-    return NextResponse.json(
-      { status: 500 },
-      { message: 'error adding/updating image in api' }
-    );
+    return NextResponse.json({ status: 500 }, { message: "error adding/updating image in api" });
   }
 }

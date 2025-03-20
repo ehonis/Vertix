@@ -1,6 +1,6 @@
 export default function StarRating({ rating }) {
   const roundedRating = Math.floor(rating * 2) / 2;
-  const [intPart, decimalPart] = roundedRating.toString().split('.');
+  const [intPart, decimalPart] = roundedRating.toString().split(".");
   let starRating = [];
   for (let i = 0; i < intPart; i++) {
     starRating.push(
@@ -20,11 +20,7 @@ export default function StarRating({ rating }) {
   }
   if (decimalPart) {
     starRating.push(
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 24 24"
-        className="shadow-lg size-8"
-      >
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="shadow-lg size-8">
         <path
           d="M12 2.5c-.398 0-.776.235-.948.61l-2.082 5.005-5.404.434c-.882.071-1.247 1.18-.573 1.764l4.117 3.527-1.257 5.273c-.205.861.733 1.543 1.487 1.082L12 17.5V2.5Z"
           className="fill-yellow-500"

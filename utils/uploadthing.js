@@ -1,50 +1,44 @@
-'use client';
+"use client";
 
-import {
-  generateUploadButton,
-  generateUploadDropzone,
-} from '@uploadthing/react';
-import { useEffect, useState } from 'react';
+import { generateUploadButton, generateUploadDropzone } from "@uploadthing/react";
+import { useEffect, useState } from "react";
 
 const CustomUploadDropzoneComponent = ({ ...props }) => {
   const [Dropzone, setDropzone] = useState(null);
 
   useEffect(() => {
     const loadDropzone = async () => {
-      const { generateUploadDropzone } = await import('@uploadthing/react');
-      const heic2any = (await import('heic2any')).default;
+      const { generateUploadDropzone } = await import("@uploadthing/react");
+      const heic2any = (await import("heic2any")).default;
 
       const CustomDropzone = generateUploadDropzone();
 
-      const ModifiedDropzone = (props) => (
+      const ModifiedDropzone = props => (
         <CustomDropzone
           {...props}
-          onBeforeUploadBegin={async (files) => {
+          onBeforeUploadBegin={async files => {
             const convertedFiles = await Promise.all(
-              files.map(async (file) => {
+              files.map(async file => {
                 // Check if the file is HEIC or HEIF
                 if (
-                  file.name.toLowerCase().endsWith('.heic') ||
-                  file.name.toLowerCase().endsWith('.heif')
+                  file.name.toLowerCase().endsWith(".heic") ||
+                  file.name.toLowerCase().endsWith(".heif")
                 ) {
                   try {
                     const convertedBlob = await heic2any({
                       blob: file,
-                      toType: 'image/jpeg',
+                      toType: "image/jpeg",
                       quality: 0.8,
                     });
 
                     // Create a new file name with .jpg extension
-                    const newName = file.name.replace(
-                      /\.(heic|heif)$/i,
-                      '.jpg'
-                    );
+                    const newName = file.name.replace(/\.(heic|heif)$/i, ".jpg");
 
                     return new File([convertedBlob], newName, {
-                      type: 'image/jpeg',
+                      type: "image/jpeg",
                     });
                   } catch (error) {
-                    console.error('Error converting HEIC/HEIF:', error);
+                    console.error("Error converting HEIC/HEIF:", error);
                     return file;
                   }
                 }

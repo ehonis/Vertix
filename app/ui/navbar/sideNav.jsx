@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { useEffect, useState, useRef } from 'react';
-import clsx from 'clsx';
-import Link from 'next/link';
+import { useEffect, useState, useRef } from "react";
+import clsx from "clsx";
+import Link from "next/link";
 
 // Example icon components (you can replace these with your actual SVG components)
 const RoutesIcon = () => (
@@ -56,18 +56,18 @@ const SearchIcon = () => (
 
 const navItems = [
   {
-    href: '/routes',
-    title: 'Routes',
+    href: "/routes",
+    title: "Routes",
     Icon: RoutesIcon,
   },
   {
-    href: '/competitions',
-    title: 'Comps',
+    href: "/competitions",
+    title: "Comps",
     Icon: CompsIcon,
   },
   {
-    href: '/search',
-    title: 'Search',
+    href: "/search",
+    title: "Search",
     Icon: SearchIcon,
   },
 ];
@@ -78,7 +78,7 @@ export default function SideNav() {
   const buttonRef = useRef(null);
 
   useEffect(() => {
-    const handleClickOutside = (event) => {
+    const handleClickOutside = event => {
       if (
         navRef.current &&
         !navRef.current.contains(event.target) &&
@@ -87,9 +87,9 @@ export default function SideNav() {
         setIsNavbar(true); // Close the navbar if click is outside
       }
     };
-    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
 
@@ -105,8 +105,8 @@ export default function SideNav() {
     <>
       <div
         className={clsx(
-          'fixed inset-0 top-16 z-10 bg-black transition-opacity duration-700 transform',
-          isNavbar ? 'invisible opacity-0' : 'visible opacity-25'
+          "fixed inset-0 top-16 z-10 bg-black transition-opacity duration-700 transform",
+          isNavbar ? "invisible opacity-0" : "visible opacity-25"
         )}
       ></div>
 
@@ -114,8 +114,8 @@ export default function SideNav() {
       <div
         ref={navRef}
         className={clsx(
-          'z-50 fixed flex flex-col h-screen w-56 bg-bg1 top-16 left-0 transition-all duration-700 transform gap-3 p-3',
-          isNavbar ? 'opacity-0 -translate-x-full' : 'opacity-100 translate-x-0'
+          "z-50 fixed flex flex-col h-screen w-56 bg-bg1 top-16 left-0 transition-all duration-700 transform gap-3 p-3",
+          isNavbar ? "opacity-0 -translate-x-full" : "opacity-100 translate-x-0"
         )}
       >
         {navItems.map((item, index) => (
@@ -123,10 +123,10 @@ export default function SideNav() {
             key={index}
             href={item.href}
             className={clsx(
-              'flex gap-3 z-100 items-center group transition-all duration-700 rounded-md',
-              isNavbar ? 'p-0' : 'p-4',
+              "flex gap-3 z-100 items-center group transition-all duration-700 rounded-md",
+              isNavbar ? "p-0" : "p-4",
               item.extraClasses,
-              'blue-button outline-1 md:hover:bg-white md:bg-bg2'
+              "blue-button outline-1 md:hover:bg-white md:bg-bg2"
             )}
             onClick={navClick}
           >

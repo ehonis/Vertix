@@ -1,19 +1,19 @@
-'use client';
+"use client";
 
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Virtual } from 'swiper/modules';
-import clsx from 'clsx';
-import { useState, useRef, useEffect } from 'react';
-import 'swiper/css';
-import { useNotification } from '@/app/contexts/NotificationContext';
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Virtual } from "swiper/modules";
+import clsx from "clsx";
+import { useState, useRef, useEffect } from "react";
+import "swiper/css";
+import { useNotification } from "@/app/contexts/NotificationContext";
 
 export default function MixerBoulderScorer({ mixerBoulders, StartTime }) {
   const { showNotification } = useNotification();
 
   // Load initial state from localStorage or use default values
   const [boulderAttempts, setBoulderAttempts] = useState(() => {
-    if (typeof window !== 'undefined') {
-      const savedAttempts = localStorage.getItem('boulderAttempts');
+    if (typeof window !== "undefined") {
+      const savedAttempts = localStorage.getItem("boulderAttempts");
       if (savedAttempts) {
         return JSON.parse(savedAttempts);
       }
@@ -25,8 +25,8 @@ export default function MixerBoulderScorer({ mixerBoulders, StartTime }) {
   });
 
   const [boulderCompletions, setBoulderCompletions] = useState(() => {
-    if (typeof window !== 'undefined') {
-      const savedCompletions = localStorage.getItem('boulderCompletions');
+    if (typeof window !== "undefined") {
+      const savedCompletions = localStorage.getItem("boulderCompletions");
       if (savedCompletions) {
         return JSON.parse(savedCompletions);
       }
@@ -39,14 +39,11 @@ export default function MixerBoulderScorer({ mixerBoulders, StartTime }) {
 
   // Save to localStorage whenever attempts or completions change
   useEffect(() => {
-    localStorage.setItem('boulderAttempts', JSON.stringify(boulderAttempts));
+    localStorage.setItem("boulderAttempts", JSON.stringify(boulderAttempts));
   }, [boulderAttempts]);
 
   useEffect(() => {
-    localStorage.setItem(
-      'boulderCompletions',
-      JSON.stringify(boulderCompletions)
-    );
+    localStorage.setItem("boulderCompletions", JSON.stringify(boulderCompletions));
   }, [boulderCompletions]);
 
   const [boulderRangeValue, setBoulderRangeValue] = useState(0);
@@ -77,28 +74,28 @@ export default function MixerBoulderScorer({ mixerBoulders, StartTime }) {
 
   const handleBoulderAttemptChange = (panelId, e) => {
     const inputValue = e.target.value;
-    const sanitizedValue = inputValue.replace(/[^0-9]/g, '');
-    setBoulderAttempts((prev) => ({
+    const sanitizedValue = inputValue.replace(/[^0-9]/g, "");
+    setBoulderAttempts(prev => ({
       ...prev,
       [panelId]: Math.min(Number(sanitizedValue), 20),
     }));
   };
 
-  const handlePlusBoulderAttempt = (panelId) => {
-    setBoulderAttempts((prev) => ({
+  const handlePlusBoulderAttempt = panelId => {
+    setBoulderAttempts(prev => ({
       ...prev,
       [panelId]: Math.min(prev[panelId] + 1, 20),
     }));
   };
 
-  const handleMinusBoulderAttempt = (panelId) => {
-    setBoulderAttempts((prev) => ({
+  const handleMinusBoulderAttempt = panelId => {
+    setBoulderAttempts(prev => ({
       ...prev,
       [panelId]: Math.max(prev[panelId] - 1, 0),
     }));
   };
 
-  const handleBoulderRangeChange = (value) => {
+  const handleBoulderRangeChange = value => {
     setBoulderRangeValue(value);
     if (swiperBoulderRef.current) {
       swiperBoulderRef.current.slideTo(value);
@@ -109,18 +106,18 @@ export default function MixerBoulderScorer({ mixerBoulders, StartTime }) {
     if (attempts < 1) {
       showNotification({
         message: `1 Attempt Needed`,
-        color: 'red',
+        color: "red",
       });
     } else {
-      setBoulderCompletions((prev) => ({
+      setBoulderCompletions(prev => ({
         ...prev,
         [panelId]: true,
       }));
     }
   };
 
-  const handleBoulderUncompletion = (panelId) => {
-    setBoulderCompletions((prev) => ({
+  const handleBoulderUncompletion = panelId => {
+    setBoulderCompletions(prev => ({
       ...prev,
       [panelId]: false,
     }));
@@ -131,8 +128,8 @@ export default function MixerBoulderScorer({ mixerBoulders, StartTime }) {
       <Swiper
         direction="vertical"
         grabCursor={true}
-        onSwiper={(swiper) => (swiperBoulderRef.current = swiper)}
-        onSlideChange={(swiper) => setBoulderRangeValue(swiper.activeIndex)}
+        onSwiper={swiper => (swiperBoulderRef.current = swiper)}
+        onSlideChange={swiper => setBoulderRangeValue(swiper.activeIndex)}
         onTap={handleSwiperInteraction}
         className="h-[calc(100vh-16rem)] max-w-sm md:max-w-lg rounded-sm"
         modules={[Virtual]}
@@ -142,25 +139,21 @@ export default function MixerBoulderScorer({ mixerBoulders, StartTime }) {
         resistanceRatio={0.85}
       >
         {mixerBoulders.map((panel, index) => (
-          <SwiperSlide
-            key={panel.id}
-            virtualIndex={index}
-            className="p-8 pt-2 rounded-lg"
-          >
+          <SwiperSlide key={panel.id} virtualIndex={index} className="p-8 pt-2 rounded-lg">
             {boulderCompletions[panel.id] === false ? (
               <div
                 className={clsx(
-                  'relative flex flex-col p-5 pt-6 items-center h-full rounded-lg bg-black shadow-lg text-white text-2xl gap-3 justify-between',
-                  panel.color === 'blue' ? 'shadow-blue-500' : null,
-                  panel.color === 'red' ? 'shadow-red-500' : null,
-                  panel.color === 'green' ? 'shadow-green-400' : null,
-                  panel.color === 'orange' ? 'shadow-orange-500' : null,
-                  panel.color === 'yellow' ? 'shadow-yellow-400' : null,
-                  panel.color === 'pink' ? 'shadow-pink-400' : null,
-                  panel.color === 'brown' && 'shadow-amber-800',
-                  panel.color === 'purple' && 'shadow-purple-700',
-                  panel.color === 'white' && 'shadow-white',
-                  panel.color === 'black' && 'shadow-2xl'
+                  "relative flex flex-col p-5 pt-6 items-center h-full rounded-lg bg-black shadow-lg text-white text-2xl gap-3 justify-between",
+                  panel.color === "blue" ? "shadow-blue-500" : null,
+                  panel.color === "red" ? "shadow-red-500" : null,
+                  panel.color === "green" ? "shadow-green-400" : null,
+                  panel.color === "orange" ? "shadow-orange-500" : null,
+                  panel.color === "yellow" ? "shadow-yellow-400" : null,
+                  panel.color === "pink" ? "shadow-pink-400" : null,
+                  panel.color === "brown" && "shadow-amber-800",
+                  panel.color === "purple" && "shadow-purple-700",
+                  panel.color === "white" && "shadow-white",
+                  panel.color === "black" && "shadow-2xl"
                 )}
               >
                 <div className="flex flex-col gap-2">
@@ -168,17 +161,17 @@ export default function MixerBoulderScorer({ mixerBoulders, StartTime }) {
                   <div className="flex flex-col gap-2">
                     <h1
                       className={clsx(
-                        'font-orbitron font-bold text-6xl text-center',
-                        panel.color === 'blue' ? 'text-blue-500' : null,
-                        panel.color === 'green' ? 'text-green-400' : null,
-                        panel.color === 'orange' ? 'text-orange-500' : null,
-                        panel.color === 'yellow' ? 'text-yellow-300' : null,
-                        panel.color === 'red' ? 'text-red-500' : null,
-                        panel.color === 'pink' ? 'text-pink-400' : null,
-                        panel.color === 'brown' && 'text-amber-800',
-                        panel.color === 'purple' && 'text-purple-700',
-                        panel.color === 'white' && 'text-white',
-                        panel.color === 'black' && 'text-white'
+                        "font-orbitron font-bold text-6xl text-center",
+                        panel.color === "blue" ? "text-blue-500" : null,
+                        panel.color === "green" ? "text-green-400" : null,
+                        panel.color === "orange" ? "text-orange-500" : null,
+                        panel.color === "yellow" ? "text-yellow-300" : null,
+                        panel.color === "red" ? "text-red-500" : null,
+                        panel.color === "pink" ? "text-pink-400" : null,
+                        panel.color === "brown" && "text-amber-800",
+                        panel.color === "purple" && "text-purple-700",
+                        panel.color === "white" && "text-white",
+                        panel.color === "black" && "text-white"
                       )}
                     >
                       {panel.points}
@@ -188,10 +181,7 @@ export default function MixerBoulderScorer({ mixerBoulders, StartTime }) {
 
                 {/* attempts */}
                 <div className="flex flex-col items-center">
-                  <label
-                    htmlFor=""
-                    className="font-barlow font-bold text-xl text-white"
-                  >
+                  <label htmlFor="" className="font-barlow font-bold text-xl text-white">
                     Attempts
                   </label>
                   <div className="flex items-center gap-3 blue-button p-2 rounded-md">
@@ -207,20 +197,16 @@ export default function MixerBoulderScorer({ mixerBoulders, StartTime }) {
                         stroke="currentColor"
                         className="size-4"
                         style={{
-                          filter: 'drop-shadow(0px 4px 6px rgba(0, 0, 0, 1))',
+                          filter: "drop-shadow(0px 4px 6px rgba(0, 0, 0, 1))",
                         }}
                       >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M5 12h14"
-                        />
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 12h14" />
                       </svg>
                     </button>
                     <input
                       type="text"
                       value={boulderAttempts[panel.id]}
-                      onChange={(e) => handleBoulderAttemptChange(panel.id, e)}
+                      onChange={e => handleBoulderAttemptChange(panel.id, e)}
                       className="p-2 text-white font-barlow font-bold size-10 text-2xl rounded-sm text-center focus:outline-hidden border-none"
                       placeholder="#"
                     />
@@ -236,7 +222,7 @@ export default function MixerBoulderScorer({ mixerBoulders, StartTime }) {
                         stroke="currentColor"
                         className="size-4"
                         style={{
-                          filter: 'drop-shadow(0px 4px 6px rgba(0, 0, 0, 1))',
+                          filter: "drop-shadow(0px 4px 6px rgba(0, 0, 0, 1))",
                         }}
                       >
                         <path
@@ -253,12 +239,7 @@ export default function MixerBoulderScorer({ mixerBoulders, StartTime }) {
                 <div className="flex flex-col gap-3 items-center">
                   <button
                     className="bg-green-500/45 border-2 border-green-500 rounded-full size-16 flex justify-center items-center"
-                    onClick={() =>
-                      handleBoulderCompletion(
-                        panel.id,
-                        boulderAttempts[panel.id]
-                      )
-                    }
+                    onClick={() => handleBoulderCompletion(panel.id, boulderAttempts[panel.id])}
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -284,33 +265,33 @@ export default function MixerBoulderScorer({ mixerBoulders, StartTime }) {
                 {/* complete panel */}
                 <div
                   className={clsx(
-                    'flex flex-col justify-between p-3 bg-green-500/20 border-2 border-green-500 h-full w-full text-white text-2xl shadow-lg rounded-lg z-20',
-                    panel.color === 'blue' ? 'shadow-blue-500' : null,
-                    panel.color === 'red' ? 'shadow-red-500' : null,
-                    panel.color === 'green' ? 'shadow-green-400' : null,
-                    panel.color === 'orange' ? 'shadow-orange-500' : null,
-                    panel.color === 'yellow' ? 'shadow-yellow-400' : null,
-                    panel.color === 'pink' ? 'shadow-pink-400' : null,
-                    panel.color === 'brown' && 'shadow-amber-800',
-                    panel.color === 'purple' && 'shadow-purple-700',
-                    panel.color === 'white' && 'shadow-white',
-                    panel.color === 'black' && 'shadow-black'
+                    "flex flex-col justify-between p-3 bg-green-500/20 border-2 border-green-500 h-full w-full text-white text-2xl shadow-lg rounded-lg z-20",
+                    panel.color === "blue" ? "shadow-blue-500" : null,
+                    panel.color === "red" ? "shadow-red-500" : null,
+                    panel.color === "green" ? "shadow-green-400" : null,
+                    panel.color === "orange" ? "shadow-orange-500" : null,
+                    panel.color === "yellow" ? "shadow-yellow-400" : null,
+                    panel.color === "pink" ? "shadow-pink-400" : null,
+                    panel.color === "brown" && "shadow-amber-800",
+                    panel.color === "purple" && "shadow-purple-700",
+                    panel.color === "white" && "shadow-white",
+                    panel.color === "black" && "shadow-black"
                   )}
                 >
                   <div className="z-30">
                     <h1
                       className={clsx(
-                        'font-orbitron font-bold text-6xl text-center mb-2 drop-shadow-customBlack',
-                        panel.color === 'blue' ? 'text-blue-500' : null,
-                        panel.color === 'green' ? 'text-green-400' : null,
-                        panel.color === 'orange' ? 'text-orange-500' : null,
-                        panel.color === 'yellow' ? 'text-yellow-300' : null,
-                        panel.color === 'red' ? 'text-red-500' : null,
-                        panel.color === 'pink' ? 'text-pink-400' : null,
-                        panel.color === 'brown' && 'text-amber-800',
-                        panel.color === 'purple' && 'text-purple-700',
-                        panel.color === 'white' && 'text-white',
-                        panel.color === 'black' && 'text-black '
+                        "font-orbitron font-bold text-6xl text-center mb-2 drop-shadow-customBlack",
+                        panel.color === "blue" ? "text-blue-500" : null,
+                        panel.color === "green" ? "text-green-400" : null,
+                        panel.color === "orange" ? "text-orange-500" : null,
+                        panel.color === "yellow" ? "text-yellow-300" : null,
+                        panel.color === "red" ? "text-red-500" : null,
+                        panel.color === "pink" ? "text-pink-400" : null,
+                        panel.color === "brown" && "text-amber-800",
+                        panel.color === "purple" && "text-purple-700",
+                        panel.color === "white" && "text-white",
+                        panel.color === "black" && "text-black "
                       )}
                     >
                       {panel.points}
@@ -370,15 +351,13 @@ export default function MixerBoulderScorer({ mixerBoulders, StartTime }) {
           max={mixerBoulders.length - 1}
           step="1"
           value={boulderRangeValue}
-          onChange={(e) => handleBoulderRangeChange(Number(e.target.value))}
+          onChange={e => handleBoulderRangeChange(Number(e.target.value))}
           className=" slider w-3/4 md:w-1/5 mb-2 appearance-none bg-gray-300 rounded-sm h-2 mt-4"
         />
 
         {/* Slider Labels */}
         <div className="flex justify-between w-3/4 md:w-1/5 text-sm text-gray-400">
-          <span className="text-left font-barlow font-bold">
-            {mixerBoulders[0].points}
-          </span>
+          <span className="text-left font-barlow font-bold">{mixerBoulders[0].points}</span>
           <span className="text-center font-barlow font-bold">
             {mixerBoulders[Math.floor(mixerBoulders.length / 2)].points}
           </span>

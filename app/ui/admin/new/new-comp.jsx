@@ -1,23 +1,23 @@
-'use client';
-import { useState } from 'react';
-import clsx from 'clsx';
-import ErrorPopUp from './error-pop-up';
-import OnOffSwitch from '../../general/on-off-switch';
-import InformationalPopUp from '../../general/informational-pop-up';
-import { AnimatePresence } from 'framer-motion';
+"use client";
+import { useState } from "react";
+import clsx from "clsx";
+import ErrorPopUp from "./error-pop-up";
+import OnOffSwitch from "../../general/on-off-switch";
+import InformationalPopUp from "../../general/informational-pop-up";
+import { AnimatePresence } from "framer-motion";
 
 export default function NewComp({ id, onCommit, onUncommit }) {
-  const [commitText, setCommitText] = useState('Commit');
+  const [commitText, setCommitText] = useState("Commit");
 
-  const [name, SetName] = useState('');
-  const [compType, setCompType] = useState('Mixer');
-  const [selectedDate, setSelectedDate] = useState('');
+  const [name, SetName] = useState("");
+  const [compType, setCompType] = useState("Mixer");
+  const [selectedDate, setSelectedDate] = useState("");
   const [isActive, setIsActive] = useState(false);
 
   const [isError, setIsError] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState("");
   const [isInformationalPopUp, setIsInformationalPopUp] = useState(false);
-  const [informationalPopUpText, setInformationalPopUpText] = useState('');
+  const [informationalPopUpText, setInformationalPopUpText] = useState("");
 
   const handleCommit = () => {
     const today = new Date();
@@ -26,12 +26,12 @@ export default function NewComp({ id, onCommit, onUncommit }) {
     // Remove time component for accurate comparison
     today.setHours(0, 0, 0, 0);
     selected.setHours(0, 0, 0, 0);
-    if (commitText === 'Commit') {
+    if (commitText === "Commit") {
       if (!name) {
-        setErrorMessage('Name is empty for Competition');
+        setErrorMessage("Name is empty for Competition");
         setIsError(true);
       } else if (!selectedDate) {
-        setErrorMessage('Date is empty for Competition');
+        setErrorMessage("Date is empty for Competition");
         setIsError(true);
       } else if (selected <= today) {
         setErrorMessage("Date must be beyond today's date");
@@ -43,31 +43,31 @@ export default function NewComp({ id, onCommit, onUncommit }) {
           compType: compType,
           isActive: isActive,
           selectedDate: selectedDate,
-          type: 'comp',
+          type: "comp",
         });
-        setCommitText('Committed');
+        setCommitText("Committed");
       }
       // Invalid inputs
     } else {
       onUncommit(id);
-      setCommitText('Commit');
+      setCommitText("Commit");
     }
   };
 
-  const handleDateChange = (event) => {
+  const handleDateChange = event => {
     setSelectedDate(event.target.value);
   };
 
-  const handleNameChange = (event) => {
+  const handleNameChange = event => {
     SetName(event.target.value);
   };
   const handleCancel = () => {
     setIsError(false);
   };
-  const handleActiveSwitchChange = (value) => {
+  const handleActiveSwitchChange = value => {
     setIsActive(value);
   };
-  const handleCompTypeChange = (event) => {
+  const handleCompTypeChange = event => {
     setCompType(event.target.value);
   };
   const handleInformationalCancel = () => {
@@ -78,22 +78,20 @@ export default function NewComp({ id, onCommit, onUncommit }) {
       <div className="font-barlow font-bold text-white flex-col flex gap-2 text-sm">
         <div>
           <p>
-            <span className="text-green-500 text-lg">Active:</span> This comp
-            will show in the competitions page and people will be able to sign
-            up
+            <span className="text-green-500 text-lg">Active:</span> This comp will show in the
+            competitions page and people will be able to sign up
           </p>
         </div>
         <div>
           <p>
-            <span className="text-red-500 text-lg">InActive:</span> This comp
-            will not show in the competitions page and people will not be able
-            to sign up
+            <span className="text-red-500 text-lg">InActive:</span> This comp will not show in the
+            competitions page and people will not be able to sign up
           </p>
         </div>
         <div className="w-full h-[2px] bg-white"></div>
         <p>
-          Either Active or inactive, the comp will still show in the comp
-          manager for extra detailing
+          Either Active or inactive, the comp will still show in the comp manager for extra
+          detailing
         </p>
       </div>
     );
@@ -105,16 +103,14 @@ export default function NewComp({ id, onCommit, onUncommit }) {
         <AnimatePresence>
           <InformationalPopUp
             html={informationalPopUpText}
-            type={'basic'}
+            type={"basic"}
             onCancel={handleInformationalCancel}
           />
         </AnimatePresence>
       )}
       {isError && <ErrorPopUp message={errorMessage} onCancel={handleCancel} />}
       <div className="bg-bg2 w-full rounded-lg flex flex-col p-3 gap-2">
-        <h2 className="text-white font-barlow font-bold text-2xl">
-          Competition
-        </h2>
+        <h2 className="text-white font-barlow font-bold text-2xl">Competition</h2>
         <div className="w-full h-[2px] bg-white"></div>
         <div className="flex gap-2">
           <input
@@ -142,10 +138,7 @@ export default function NewComp({ id, onCommit, onUncommit }) {
           </select>
         </div>
         <div className="flex gap-1 items-center">
-          <label
-            htmlFor=""
-            className="text-white font-barlow font-bold text-lg"
-          >
+          <label htmlFor="" className="text-white font-barlow font-bold text-lg">
             Date:
           </label>
           <input
@@ -157,20 +150,14 @@ export default function NewComp({ id, onCommit, onUncommit }) {
             className="p-1 rounded-lg bg-bg1 text-white cursor-pointer font-barlow font-bold focus:outline-hidden"
           />
           <p className="text-xs text-white font-barlow font-bold">
-            {'(this can be changed later)'}
+            {"(this can be changed later)"}
           </p>
         </div>
         <div className="flex gap-2">
-          <label
-            htmlFor=""
-            className="text-white font-barlow font-bold text-lg"
-          >
+          <label htmlFor="" className="text-white font-barlow font-bold text-lg">
             Is Active:
           </label>
-          <OnOffSwitch
-            value={isActive}
-            onTypeSwitchValue={handleActiveSwitchChange}
-          />
+          <OnOffSwitch value={isActive} onTypeSwitchValue={handleActiveSwitchChange} />
           <button onClick={handleInfoButton}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -190,12 +177,11 @@ export default function NewComp({ id, onCommit, onUncommit }) {
         </div>
         <div className="w-full h-[2px] bg-white"></div>
         <p className="text-white font-barlow font-bold italic text-sm">
-          Divisions, Points, and other variables will be determined in the Comp
-          Manager Page
+          Divisions, Points, and other variables will be determined in the Comp Manager Page
         </p>
       </div>
       <div className="flex gap-1 items-center justify-end mt-2">
-        {commitText === 'Commit' && (
+        {commitText === "Commit" && (
           <div className="flex gap-1">
             <p className="text-white font-barlow font-bold md:text-base text-xs">
               you must commit before submitting
@@ -218,8 +204,8 @@ export default function NewComp({ id, onCommit, onUncommit }) {
 
         <button
           className={clsx(
-            'text-white  md:p-2 p-2 md:text-base text-sm md:w-32 min-w-16 rounded-full font-barlow font-bold',
-            commitText === 'Committed' ? 'bg-green-500' : 'bg-slate-500'
+            "text-white  md:p-2 p-2 md:text-base text-sm md:w-32 min-w-16 rounded-full font-barlow font-bold",
+            commitText === "Committed" ? "bg-green-500" : "bg-slate-500"
           )}
           onClick={handleCommit}
         >

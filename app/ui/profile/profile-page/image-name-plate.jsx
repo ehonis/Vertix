@@ -1,4 +1,4 @@
-import Image from 'next/image';
+import Image from "next/image";
 
 export default function ImageNamePlate({ image, name, username, title, id }) {
   if (username === null) {
@@ -11,9 +11,7 @@ export default function ImageNamePlate({ image, name, username, title, id }) {
         <div className="relative -mb-16 z-10">
           {image === null ? (
             <Image
-              src={
-                'https://8jiyvthxbb.ufs.sh/f/bujx12z5cHJjhC8qChmfsrL6AEIclW7bn0CeSKix1gBohFRZ'
-              }
+              src={"https://8jiyvthxbb.ufs.sh/f/bujx12z5cHJjhC8qChmfsrL6AEIclW7bn0CeSKix1gBohFRZ"}
               width={120}
               height={120}
               className="rounded-full border-4 border-bg2"

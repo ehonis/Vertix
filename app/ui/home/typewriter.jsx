@@ -1,12 +1,12 @@
-'use client';
+"use client";
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from "react";
 
-const words = ['Climbing', 'Bouldering', 'Workouts'];
+const words = ["Climbing", "Bouldering", "Workouts"];
 
 function TypewriterText() {
   const [index, setIndex] = useState(0); // Current word index
-  const [text, setText] = useState(''); // Text to display
+  const [text, setText] = useState(""); // Text to display
   const [isDeleting, setIsDeleting] = useState(false); // Deleting or typing
   const [typingSpeed, setTypingSpeed] = useState(150); // Typing speed
 
@@ -26,9 +26,9 @@ function TypewriterText() {
       const updatedText = currentWord.slice(0, text.length - 1);
       setText(updatedText);
       setTypingSpeed(50);
-      if (updatedText === '') {
+      if (updatedText === "") {
         setIsDeleting(false);
-        setIndex((prevIndex) => (prevIndex + 1) % words.length);
+        setIndex(prevIndex => (prevIndex + 1) % words.length);
         setTypingSpeed(150);
       }
     }

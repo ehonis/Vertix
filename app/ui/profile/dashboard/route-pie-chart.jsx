@@ -1,17 +1,10 @@
-'use client';
+"use client";
 
-import {
-  PieChart,
-  Pie,
-  Legend,
-  Tooltip,
-  ResponsiveContainer,
-  Cell,
-} from 'recharts';
-import Link from 'next/link';
+import { PieChart, Pie, Legend, Tooltip, ResponsiveContainer, Cell } from "recharts";
+import Link from "next/link";
 
 // Define colors for each slice
-const COLORS = ['#0088FE', '#00C49F'];
+const COLORS = ["#0088FE", "#00C49F"];
 
 // Custom Tooltip component
 function CustomTooltip({ active, payload }) {
@@ -36,18 +29,18 @@ export default function RoutePieChart({ userData }) {
       data[1] = { rope: 0 };
     }
 
-    const dataTransformed = data.map((type) => {
+    const dataTransformed = data.map(type => {
       // Get the key and value from each object
       const [name, value] = Object.entries(type)[0];
 
       return { name, value };
     });
 
-    dataTransformed.forEach((item) => {
+    dataTransformed.forEach(item => {
       //charAt to change individual letter at index
       // item.name.charAt(0).toUpperCase() seperates the first letter than capitalizes it.
       // item.name.slice(1) + s takes the rest of the string starting at the second letter and adds a s on it
-      item.name = item.name.charAt(0).toUpperCase() + item.name.slice(1) + 's';
+      item.name = item.name.charAt(0).toUpperCase() + item.name.slice(1) + "s";
     });
 
     return (
@@ -63,10 +56,7 @@ export default function RoutePieChart({ userData }) {
               labelLine={true}
             >
               {data.map((entry, index) => (
-                <Cell
-                  key={`cell-${index}`}
-                  fill={COLORS[index % COLORS.length]}
-                />
+                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
               ))}
             </Pie>
             <Tooltip content={<CustomTooltip />} />
@@ -81,10 +71,10 @@ export default function RoutePieChart({ userData }) {
         <h2 className="text-white font-bold text-xl">Total Completed Routes</h2>
         <p className="text-red-500 font-bold text-center">No Data to Display</p>
         <p className="text-white font-bold text-center">
-          Go the the{' '}
-          <Link className="text-blue-500 underline font-bold" href={'/routes'}>
+          Go the the{" "}
+          <Link className="text-blue-500 underline font-bold" href={"/routes"}>
             Routes Page
-          </Link>{' '}
+          </Link>{" "}
           to record some routes you completed
         </p>
       </div>

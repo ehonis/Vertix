@@ -1,10 +1,10 @@
-'use client';
-import Image from 'next/image';
-import { useState, useRef, useEffect } from 'react';
-import clsx from 'clsx';
-import Link from 'next/link';
+"use client";
+import Image from "next/image";
+import { useState, useRef, useEffect } from "react";
+import clsx from "clsx";
+import Link from "next/link";
 
-import SignOut from '../general/sign-out-button';
+import SignOut from "../general/sign-out-button";
 
 export default function UserProfile({ user, status }) {
   const [isProfilePopUp, setIsProfilePopUp] = useState(false);
@@ -13,7 +13,7 @@ export default function UserProfile({ user, status }) {
   const buttonRef = useRef(null);
 
   useEffect(() => {
-    const handleClickOutside = (event) => {
+    const handleClickOutside = event => {
       if (
         profileRef.current &&
         !profileRef.current.contains(event.target) &&
@@ -22,11 +22,11 @@ export default function UserProfile({ user, status }) {
         setIsProfilePopUp(false); // Close the navbar if click is outside
       }
     };
-    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
 
     // Cleanup the listener on unmount
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
 
@@ -37,7 +37,7 @@ export default function UserProfile({ user, status }) {
   const menuItems = [
     {
       href: `/profile/${user?.id}`,
-      text: 'Profile',
+      text: "Profile",
       icon: (
         <path
           strokeLinecap="round"
@@ -48,7 +48,7 @@ export default function UserProfile({ user, status }) {
     },
     {
       href: `/profile/${user?.id}/dashboard`,
-      text: 'Dashboard',
+      text: "Dashboard",
       icon: (
         <path
           strokeLinecap="round"
@@ -59,7 +59,7 @@ export default function UserProfile({ user, status }) {
     },
     {
       href: `/profile/${user?.id}/settings`,
-      text: 'Settings',
+      text: "Settings",
       icon: (
         <>
           <path
@@ -78,8 +78,8 @@ export default function UserProfile({ user, status }) {
     ...(user?.admin || user?.routeSetter
       ? [
           {
-            href: '/admin',
-            text: 'Admin Center',
+            href: "/admin",
+            text: "Admin Center",
             icon: (
               <path
                 strokeLinecap="round"
@@ -94,7 +94,7 @@ export default function UserProfile({ user, status }) {
 
   if (!user) {
     return (
-      <Link href={'/signin'}>
+      <Link href={"/signin"}>
         <span className="bg-purple-400/20  outline-purple-400 outline-1 p-2 rounded-sm text-white font-barlow font-bold text-sm md:text-base">
           Sign In
         </span>
@@ -135,10 +135,8 @@ export default function UserProfile({ user, status }) {
         <div
           ref={profileRef}
           className={clsx(
-            'z-50 fixed flex flex-col  h-max w-56  bg-black top-[5.2rem] justify-start transition-all p-3 duration-700 transform gap-3 right-0 button-container rounded-sm cursor-default',
-            isProfilePopUp
-              ? 'opacity-100 -translate-x-2'
-              : 'opacity-0 translate-x-full'
+            "z-50 fixed flex flex-col  h-max w-56  bg-black top-[5.2rem] justify-start transition-all p-3 duration-700 transform gap-3 right-0 button-container rounded-sm cursor-default",
+            isProfilePopUp ? "opacity-100 -translate-x-2" : "opacity-0 translate-x-full"
           )}
         >
           <p className="text-white font-bold">
@@ -150,8 +148,8 @@ export default function UserProfile({ user, status }) {
               key={index}
               href={item.href}
               className={clsx(
-                'flex blue-button rounded-sm p-1 gap-2 group hover:bg-white transition-all duration-200',
-                item.text === 'Admin Center' && 'purple-button'
+                "flex blue-button rounded-sm p-1 gap-2 group hover:bg-white transition-all duration-200",
+                item.text === "Admin Center" && "purple-button"
               )}
               onClick={handleClick}
             >
@@ -166,9 +164,7 @@ export default function UserProfile({ user, status }) {
                 {item.icon}
               </svg>
 
-              <p className="text-white font-bold group-hover:text-black">
-                {item.text}
-              </p>
+              <p className="text-white font-bold group-hover:text-black">{item.text}</p>
             </Link>
           ))}
 

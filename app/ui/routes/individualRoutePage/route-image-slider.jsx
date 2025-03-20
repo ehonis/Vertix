@@ -1,6 +1,6 @@
-'use client';
-import Image from 'next/image';
-import { useState } from 'react';
+"use client";
+import Image from "next/image";
+import { useState } from "react";
 
 export default function ImageSlider(images) {
   const imagesArray = Object.values(images)[0];
@@ -8,15 +8,11 @@ export default function ImageSlider(images) {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const handleNext = () => {
-    setCurrentIndex((prevIndex) =>
-      prevIndex === imagesArray.length - 1 ? 0 : prevIndex + 1
-    );
+    setCurrentIndex(prevIndex => (prevIndex === imagesArray.length - 1 ? 0 : prevIndex + 1));
   };
 
   const handlePrev = () => {
-    setCurrentIndex((prevIndex) =>
-      prevIndex === 0 ? imagesArray.length - 1 : prevIndex - 1
-    );
+    setCurrentIndex(prevIndex => (prevIndex === 0 ? imagesArray.length - 1 : prevIndex - 1));
   };
   return (
     <div className="flex items-center">
@@ -31,7 +27,7 @@ export default function ImageSlider(images) {
         alt={`Slide ${currentIndex + 1}`}
         height={600}
         width={600}
-        style={{ objectFit: 'cover' }}
+        style={{ objectFit: "cover" }}
         className="w-32 h-40"
       />
 

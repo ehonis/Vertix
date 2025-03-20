@@ -1,8 +1,8 @@
-import SettingsNavBar from '@/app/ui/profile/settings/settings-nav-bar';
-import { redirect } from 'next/navigation';
-import { auth } from '@/auth';
-import prisma from '@/prisma';
-import SignOut from '@/app/ui/general/sign-out-button';
+import SettingsNavBar from "@/app/ui/profile/settings/settings-nav-bar";
+import { redirect } from "next/navigation";
+import { auth } from "@/auth";
+import prisma from "@/prisma";
+import SignOut from "@/app/ui/general/sign-out-button";
 
 export default async function Settings({ params }) {
   const session = await auth();
@@ -54,6 +54,6 @@ export default async function Settings({ params }) {
       </div>
     );
   } else {
-    redirect('/signin');
+    redirect("/signin");
   }
 }

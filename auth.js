@@ -1,9 +1,9 @@
-import NextAuth from 'next-auth';
-import Github from 'next-auth/providers/github';
-import Google from 'next-auth/providers/google';
-import Resend from 'next-auth/providers/resend';
-import { PrismaAdapter } from '@auth/prisma-adapter';
-import prisma from '@/prisma';
+import NextAuth from "next-auth";
+import Github from "next-auth/providers/github";
+import Google from "next-auth/providers/google";
+import Resend from "next-auth/providers/resend";
+import { PrismaAdapter } from "@auth/prisma-adapter";
+import prisma from "@/prisma";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   adapter: PrismaAdapter(prisma),
@@ -17,7 +17,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     }),
     Resend({
-      from: 'no-reply@vertixclimb.com', // Use your verified domain
+      from: "no-reply@vertixclimb.com", // Use your verified domain
     }),
   ],
   callbacks: {
@@ -36,7 +36,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             data: { username: user.id },
           });
         } catch (error) {
-          console.error('Error updating username:', error);
+          console.error("Error updating username:", error);
           // Return false to reject the sign in, or handle as needed.
           return false;
         }

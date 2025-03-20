@@ -1,26 +1,26 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 
 export default function MixerCountdownTimer({ startTime, timeAllotted }) {
   const [timeLeft, setTimeLeft] = useState(3 * 60 * 60); // Initialize with 3 hours in seconds
 
   useEffect(() => {
     const timer = setInterval(() => {
-      setTimeLeft((prevTime) => (prevTime > 0 ? prevTime - 1 : 0)); // Decrement time by 1 second
+      setTimeLeft(prevTime => (prevTime > 0 ? prevTime - 1 : 0)); // Decrement time by 1 second
     }, 1000);
 
     return () => clearInterval(timer); // Cleanup the interval on component unmount
   }, []);
 
-  const formatTime = (seconds) => {
+  const formatTime = seconds => {
     const hours = Math.floor(seconds / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);
     const secs = seconds % 60;
-    return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(
+    return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(
       2,
-      '0'
-    )}:${String(secs).padStart(2, '0')}`;
+      "0"
+    )}:${String(secs).padStart(2, "0")}`;
   };
 
   return (

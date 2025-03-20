@@ -1,11 +1,11 @@
-'use client';
-import { useState, useEffect, useCallback } from 'react';
-import Image from 'next/image';
-import ElementLoadingAnimation from '../../general/element-loading-animation';
-import { useNotification } from '@/app/contexts/NotificationContext';
-import ImageUploaderPopUp from './image-uploader-popup';
-import { useRouter } from 'next/navigation';
-import clsx from 'clsx';
+"use client";
+import { useState, useEffect, useCallback } from "react";
+import Image from "next/image";
+import ElementLoadingAnimation from "../../general/element-loading-animation";
+import { useNotification } from "@/app/contexts/NotificationContext";
+import ImageUploaderPopUp from "./image-uploader-popup";
+import { useRouter } from "next/navigation";
+import clsx from "clsx";
 
 // A debounce function that returns a cancel function for cleanup.
 const debounce = (func, delay) => {
@@ -24,10 +24,10 @@ export default function Onboarding({ userData }) {
   const { showNotification } = useNotification();
   const router = useRouter();
 
-  const [name, setName] = useState(userData.name || '');
-  const [username, setUsername] = useState('');
+  const [name, setName] = useState(userData.name || "");
+  const [username, setUsername] = useState("");
   const [image, setImage] = useState(userData.image);
-  const [tag, setTag] = useState('boulder');
+  const [tag, setTag] = useState("boulder");
   const [isLoading, setIsLoading] = useState(false);
   const [isImageUploader, setIsImageUploader] = useState(false);
   const [isUsernameAvailable, setIsUsernameAvailable] = useState(true);
@@ -36,14 +36,12 @@ export default function Onboarding({ userData }) {
     if (username.length > 0) {
       try {
         const response = await fetch(
-          `/api/user/settings/userNameCheck?username=${encodeURIComponent(
-            username
-          )}`
+          `/api/user/settings/userNameCheck?username=${encodeURIComponent(username)}`
         );
         const data = await response.json();
         setIsUsernameAvailable(data.available);
       } catch (error) {
-        console.error('Error checking username:', error);
+        console.error("Error checking username:", error);
       }
     }
   }, [username]);
@@ -61,44 +59,44 @@ export default function Onboarding({ userData }) {
 
   const handleSave = async () => {
     setIsLoading(true);
-    if (name.trim() === '' || username.trim() === '') {
-      showNotification({ message: 'Please fill in all fields', color: 'red' });
+    if (name.trim() === "" || username.trim() === "") {
+      showNotification({ message: "Please fill in all fields", color: "red" });
       setIsLoading(false);
       return;
     }
 
     if (!isUsernameAvailable) {
       showNotification({
-        message: 'Username is already taken',
-        color: 'red',
+        message: "Username is already taken",
+        color: "red",
       });
       setIsLoading(false);
       return;
     }
 
     try {
-      const response = await fetch('/api/user/settings/uploadOnboarding', {
-        method: 'POST',
+      const response = await fetch("/api/user/settings/uploadOnboarding", {
+        method: "POST",
         body: JSON.stringify({ id: userData.id, name, username, tag }),
       });
 
       if (response.ok) {
         showNotification({
-          message: 'Successfully updated profile',
-          color: 'green',
+          message: "Successfully updated profile",
+          color: "green",
         });
       } else {
         showNotification({
-          message: 'Failed to update profile',
-          color: 'red',
+          message: "Failed to update profile",
+          color: "red",
         });
       }
       router.refresh();
     } catch (error) {
-      console.error('Save error:', error);
+      console.error("Save error:", error);
       showNotification({
-        message: 'An unexpected error occurred.',
-        color: 'red',
+        message: "An unexpected error occurred.",
+        color: "red",
       });
     }
     setIsLoading(false);
@@ -117,8 +115,7 @@ export default function Onboarding({ userData }) {
         Let{"'"}s get to know you better
       </h2>
       <p className="text-white text-xs italic text-center">
-        You are not required to fill this information, but it helps indentify
-        you in the community
+        You are not required to fill this information, but it helps indentify you in the community
       </p>
       <div className="flex flex-col gap-3 mt-5 px-5">
         <div className="flex flex-col gap-1">
@@ -150,21 +147,17 @@ export default function Onboarding({ userData }) {
                 className="size-16 rounded-full"
               />
             )}
-            <p className="text-white text-xs text-center">
-              Tap here to upload a image
-            </p>
+            <p className="text-white text-xs text-center">Tap here to upload a image</p>
           </button>
         </div>
         <div className="flex flex-col gap-1">
-          <p className="text-white font-bold text-lg text-start">
-            What is your name?
-          </p>
+          <p className="text-white font-bold text-lg text-start">What is your name?</p>
           <input
             type="text"
             className="text-white text-md bg-bg2 rounded  p-2"
             value={name}
-            placeholder={'First and Last Name'}
-            onChange={(e) => setName(e.target.value)}
+            placeholder={"First and Last Name"}
+            onChange={e => setName(e.target.value)}
           />
           <p className="text-white text-xs text-start">
             This will be used to identify you in the community
@@ -174,51 +167,37 @@ export default function Onboarding({ userData }) {
           <p className="text-white font-bold text-lg text-start">username?</p>
           <div
             className={clsx(
-              'flex items-center rounded-md',
-              !isUsernameAvailable &&
-                username.length > 0 &&
-                'outline-2 outline-red-500',
-              isUsernameAvailable &&
-                username.length > 0 &&
-                'outline-2 outline-green-500'
+              "flex items-center rounded-md",
+              !isUsernameAvailable && username.length > 0 && "outline-2 outline-red-500",
+              isUsernameAvailable && username.length > 0 && "outline-2 outline-green-500"
             )}
           >
-            <p className="text-white text-lg p-2 bg-blue-500 rounded-l font-bold">
-              @
-            </p>
+            <p className="text-white text-lg p-2 bg-blue-500 rounded-l font-bold">@</p>
             <input
               type="text"
               className="text-white text-lg bg-bg2 rounded-r p-2 w-full focus:outline-none"
               placeholder={userData.id}
-              onChange={(e) => setUsername(e.target.value)}
+              onChange={e => setUsername(e.target.value)}
             />
           </div>
           {username.length > 0 && (
             <>
               {!isUsernameAvailable ? (
-                <p className="text-red-500 text-xs text-center">
-                  This username is already taken
-                </p>
+                <p className="text-red-500 text-xs text-center">This username is already taken</p>
               ) : (
-                <p className="text-green-500 text-xs text-center">
-                  This username is available!
-                </p>
+                <p className="text-green-500 text-xs text-center">This username is available!</p>
               )}
-              <p className="text-white text-xs text-center">
-                This has to be unique
-              </p>
+              <p className="text-white text-xs text-center">This has to be unique</p>
             </>
           )}
         </div>
         <div className="flex flex-col gap-1 items-center">
-          <p className="text-white font-bold text-lg text-center">
-            What do you mainly climb?
-          </p>
+          <p className="text-white font-bold text-lg text-center">What do you mainly climb?</p>
           <div className="flex items-center">
             <select
               className="text-white text-lg bg-bg2 rounded p-2"
               value={tag}
-              onChange={(e) => setTag(e.target.value)}
+              onChange={e => setTag(e.target.value)}
             >
               <option value="Boulderer">Boulders</option>
               <option value="Rope Climber">Ropes</option>
@@ -236,7 +215,7 @@ export default function Onboarding({ userData }) {
               <ElementLoadingAnimation />
             </div>
           ) : (
-            'Save'
+            "Save"
           )}
         </button>
       </div>

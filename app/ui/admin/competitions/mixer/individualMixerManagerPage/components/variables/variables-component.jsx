@@ -1,14 +1,14 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 
-import InformationalPopUp from '@/app/ui/general/informational-pop-up';
-import { clsx } from 'clsx';
-import Image from 'next/image';
-import ImagePopUp from './image-uploader-popup';
-import { useNotification } from '@/app/contexts/NotificationContext';
-import { useRouter } from 'next/navigation';
-import { CompetitionStatus } from '@prisma/client';
+import InformationalPopUp from "@/app/ui/general/informational-pop-up";
+import { clsx } from "clsx";
+import Image from "next/image";
+import ImagePopUp from "./image-uploader-popup";
+import { useNotification } from "@/app/contexts/NotificationContext";
+import { useRouter } from "next/navigation";
+import { CompetitionStatus } from "@prisma/client";
 export default function VariablesComponent({
   compId,
   name,
@@ -22,17 +22,13 @@ export default function VariablesComponent({
   const router = useRouter();
 
   const [compName, setCompName] = useState(name);
-  const [selectedDate, setSelectedDate] = useState(
-    compDay.toISOString().split('T')[0]
-  );
-  const [isScoresAvailable, setIsScoresAvailable] =
-    useState(areScoresAvailable);
+  const [selectedDate, setSelectedDate] = useState(compDay.toISOString().split("T")[0]);
+  const [isScoresAvailable, setIsScoresAvailable] = useState(areScoresAvailable);
   const [compTime, setCompTime] = useState(time);
   const [statusOption, setStatusOption] = useState(status);
 
   const [infoPopUpHtml, setInfoPopUpHtml] = useState(<div></div>);
-  const [isScoresAvailableInfoPopUp, setIsScoresAvailableInfoPopUp] =
-    useState(false);
+  const [isScoresAvailableInfoPopUp, setIsScoresAvailableInfoPopUp] = useState(false);
   const [isImagePopUp, setIsImagePopUp] = useState(false);
   const [isStatusInfoPopUp, setIsStatusInfoPopUp] = useState(false);
 
@@ -44,7 +40,7 @@ export default function VariablesComponent({
 
   useEffect(() => {
     setCompName(name);
-    setSelectedDate(compDay.toISOString().split('T')[0]);
+    setSelectedDate(compDay.toISOString().split("T")[0]);
     setIsScoresAvailable(areScoresAvailable);
     setStatusOption(status);
     setCompTime(time);
@@ -55,20 +51,15 @@ export default function VariablesComponent({
     setInfoPopUpHtml(
       <div className="flex flex-col gap-1">
         <p className="text-sm font-normal">
-          <span className="text-green-400 font-bold underline">
-            AreAvailable:
-          </span>{' '}
-          After the comp is finished and after the manual user{"'"}s points have
-          entered, you can turn this setting to release the leaderboard to
-          everyone. This should be done right before the announcement of
-          rankings.
+          <span className="text-green-400 font-bold underline">AreAvailable:</span> After the comp
+          is finished and after the manual user{"'"}s points have entered, you can turn this setting
+          to release the leaderboard to everyone. This should be done right before the announcement
+          of rankings.
         </p>
         <p className="text-sm font-normal">
-          <span className="text-red-500 font-bold underline">
-            AreNotAvailable:
-          </span>{' '}
-          This should remain the toggle when scores are not calculated. No one
-          will be able to see the leaderboard when this is the current setting.
+          <span className="text-red-500 font-bold underline">AreNotAvailable:</span> This should
+          remain the toggle when scores are not calculated. No one will be able to see the
+          leaderboard when this is the current setting.
         </p>
       </div>
     );
@@ -79,27 +70,23 @@ export default function VariablesComponent({
     setInfoPopUpHtml(
       <div className="flex flex-col gap-1">
         <p className="text-sm font-normal">
-          <span className="text-red-500 font-bold underline">Unavailable:</span>{' '}
-          Only admins can see the comp in the comp manager. Use this setting
-          when first setting up the comp.
+          <span className="text-red-500 font-bold underline">Unavailable:</span> Only admins can see
+          the comp in the comp manager. Use this setting when first setting up the comp.
         </p>
         <p className="text-sm font-normal">
-          <span className="text-orange-400 font-bold underline">Upcoming:</span>{' '}
-          Users will be able to see the comp in the comp page, but they can only
-          sign up. Please have divisions ready before enabling this status
+          <span className="text-orange-400 font-bold underline">Upcoming:</span> Users will be able
+          to see the comp in the comp page, but they can only sign up. Please have divisions ready
+          before enabling this status
         </p>
         <p className="text-sm font-normal">
-          <span className="text-blue-400 font-bold underline">
-            In Progress:
-          </span>
-          This will start the comp. Users will be able to submit scores. This
-          status will only last for the time allotted to the comp and switch to
-          completed when the timer is finished.
+          <span className="text-blue-400 font-bold underline">In Progress:</span>
+          This will start the comp. Users will be able to submit scores. This status will only last
+          for the time allotted to the comp and switch to completed when the timer is finished.
         </p>
         <p className="text-sm font-normal">
           <span className="text-green-500 font-bold underline">Completed:</span>
-          The comp has ended, but the comp is still listed on the comp page.
-          Users will be able to see scores/leaderboard, but not enter any scores
+          The comp has ended, but the comp is still listed on the comp page. Users will be able to
+          see scores/leaderboard, but not enter any scores
         </p>
         <p className="text-sm font-normal">
           <span className="text-yellow-400 font-bold underline">Archived:</span>
@@ -114,7 +101,7 @@ export default function VariablesComponent({
     setIsScoresAvailableInfoPopUp(false);
     setIsImagePopUp(false);
   };
-  const handleNameChange = (e) => {
+  const handleNameChange = e => {
     const tempName = e.target.value;
     setCompName(tempName);
 
@@ -127,28 +114,28 @@ export default function VariablesComponent({
   const handleNameSubmit = async () => {
     const data = { compId, compName };
     try {
-      const response = await fetch('/api/mixer/manager/variables/nameUpdate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const response = await fetch("/api/mixer/manager/variables/nameUpdate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
       });
       if (!response.ok) {
-        showNotification({ message: 'Could not update name', color: 'red' });
+        showNotification({ message: "Could not update name", color: "red" });
       } else {
         showNotification({
-          message: 'Successfully Changed Title',
-          color: 'green',
+          message: "Successfully Changed Title",
+          color: "green",
         });
         setIsNameSave(false);
         router.refresh();
       }
     } catch (error) {
-      showNotification({ message: 'Could not update name', color: 'red' });
+      showNotification({ message: "Could not update name", color: "red" });
     }
   };
-  const handleAreScoresAvailableChange = (e) => {
-    setIsScoresAvailable(e.target.value === 'true');
-    if ((e.target.value === 'true') !== areScoresAvailable) {
+  const handleAreScoresAvailableChange = e => {
+    setIsScoresAvailable(e.target.value === "true");
+    if ((e.target.value === "true") !== areScoresAvailable) {
       setIsScoresAvailableSave(true);
     } else {
       setIsScoresAvailableSave(false);
@@ -158,35 +145,32 @@ export default function VariablesComponent({
     const data = { compId, isScoresAvailable };
 
     try {
-      const response = await fetch(
-        '/api/mixer/manager/variables/areScoresAvailableUpdate',
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(data),
-        }
-      );
+      const response = await fetch("/api/mixer/manager/variables/areScoresAvailableUpdate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
       if (!response.ok) {
         showNotification({
-          message: 'Could not update areScoresAvailable',
-          color: 'red',
+          message: "Could not update areScoresAvailable",
+          color: "red",
         });
       } else {
         showNotification({
-          message: 'Successfully updated areScoresAvailable',
-          color: 'green',
+          message: "Successfully updated areScoresAvailable",
+          color: "green",
         });
         setIsScoresAvailableSave(false);
         router.refresh();
       }
     } catch (error) {
       showNotification({
-        message: 'Could not update areScoresAvailable',
-        color: 'red',
+        message: "Could not update areScoresAvailable",
+        color: "red",
       });
     }
   };
-  const handleStatusChange = (e) => {
+  const handleStatusChange = e => {
     setStatusOption(e.target.value);
 
     if (e.target.value !== status) {
@@ -199,39 +183,36 @@ export default function VariablesComponent({
     const data = { compId, statusOption };
 
     try {
-      const response = await fetch(
-        '/api/mixer/manager/variables/statusUpdate',
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(data),
-        }
-      );
+      const response = await fetch("/api/mixer/manager/variables/statusUpdate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
       if (!response.ok) {
         showNotification({
-          message: 'Could not update status',
-          color: 'red',
+          message: "Could not update status",
+          color: "red",
         });
       } else {
         showNotification({
-          message: 'Successfully updated status',
-          color: 'green',
+          message: "Successfully updated status",
+          color: "green",
         });
         setIsStatusSave(false);
         router.refresh();
       }
     } catch (error) {
       showNotification({
-        message: 'Could not update status',
-        color: 'red',
+        message: "Could not update status",
+        color: "red",
       });
     }
   };
-  const handleAlottedTimeChange = (e) => {
+  const handleAlottedTimeChange = e => {
     // Allow only digits
     const value = e.target.value;
     // Only update if it's empty or a valid number
-    if (value === '' || /^\d+$/.test(value)) {
+    if (value === "" || /^\d+$/.test(value)) {
       if (value > 300) {
         setCompTime(300);
       } else {
@@ -250,44 +231,41 @@ export default function VariablesComponent({
 
     if (compTime === time) {
       showNotification({
-        message: 'Cannot change time to already set time',
-        color: 'red',
+        message: "Cannot change time to already set time",
+        color: "red",
       });
     } else {
       try {
-        const response = await fetch(
-          '/api/mixer/manager/variables/timeAllottedUpdate',
-          {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data),
-          }
-        );
+        const response = await fetch("/api/mixer/manager/variables/timeAllottedUpdate", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data),
+        });
         if (!response.ok) {
           showNotification({
-            message: 'Could not update timeAllotted',
-            color: 'red',
+            message: "Could not update timeAllotted",
+            color: "red",
           });
         } else {
           showNotification({
-            message: 'Successfully updated timeAllotted',
-            color: 'green',
+            message: "Successfully updated timeAllotted",
+            color: "green",
           });
           setIsTimeAllottedSave(false);
           router.refresh();
         }
       } catch (error) {
         showNotification({
-          message: 'Could not update timeAllotted',
-          color: 'red',
+          message: "Could not update timeAllotted",
+          color: "red",
         });
       }
     }
   };
-  const handleDayChange = (e) => {
+  const handleDayChange = e => {
     setSelectedDate(e.target.value);
 
-    if (e.target.value !== compDay.toISOString().split('T')[0]) {
+    if (e.target.value !== compDay.toISOString().split("T")[0]) {
       setIsDaySave(true);
     } else {
       setIsDaySave(false);
@@ -299,28 +277,28 @@ export default function VariablesComponent({
     const data = { compId, dateObject };
 
     try {
-      const response = await fetch('/api/mixer/manager/variables/dateUpdate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const response = await fetch("/api/mixer/manager/variables/dateUpdate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
       });
       if (!response.ok) {
         showNotification({
-          message: 'Could not update comp date',
-          color: 'red',
+          message: "Could not update comp date",
+          color: "red",
         });
       } else {
         showNotification({
-          message: 'Successfully updated comp date',
-          color: 'green',
+          message: "Successfully updated comp date",
+          color: "green",
         });
         setIsDaySave(false);
         router.refresh();
       }
     } catch (error) {
       showNotification({
-        message: 'Could not update comp date',
-        color: 'red',
+        message: "Could not update comp date",
+        color: "red",
       });
     }
   };
@@ -328,17 +306,10 @@ export default function VariablesComponent({
   return (
     <div>
       {(isStatusInfoPopUp || isScoresAvailableInfoPopUp) && (
-        <InformationalPopUp
-          html={infoPopUpHtml}
-          onCancel={handleOnCancelClick}
-        />
+        <InformationalPopUp html={infoPopUpHtml} onCancel={handleOnCancelClick} />
       )}
       {isImagePopUp && (
-        <ImagePopUp
-          compId={compId}
-          onCancel={handleOnCancelClick}
-          imageUrl={imageUrl}
-        />
+        <ImagePopUp compId={compId} onCancel={handleOnCancelClick} imageUrl={imageUrl} />
       )}
       {/* name */}
       <div className="flex justify-between max-w-sm">
@@ -371,7 +342,7 @@ export default function VariablesComponent({
                 Comp Image
               </label>
               <label htmlFor="" className="text-sm text-gray-400 font-normal">
-                {'(Tap the image to upload new)'}
+                {"(Tap the image to upload new)"}
               </label>
             </div>
             <button
@@ -434,15 +405,15 @@ export default function VariablesComponent({
                 value={isScoresAvailable}
                 onChange={handleAreScoresAvailableChange}
                 className={clsx(
-                  'px-1 py-1 bg-bg1 rounded-md text-center',
+                  "px-1 py-1 bg-bg1 rounded-md text-center",
 
-                  isScoresAvailable === false && 'bg-red-500',
+                  isScoresAvailable === false && "bg-red-500",
 
-                  isScoresAvailable === true && 'bg-green-500'
+                  isScoresAvailable === true && "bg-green-500"
                 )}
               >
-                <option value={'true'}>AreAvailable</option>
-                <option value={'false'}>AreNotAvailable</option>
+                <option value={"true"}>AreAvailable</option>
+                <option value={"false"}>AreNotAvailable</option>
               </select>
               {isScoresAvailableSave && (
                 <button
@@ -484,23 +455,18 @@ export default function VariablesComponent({
                 value={statusOption}
                 onChange={handleStatusChange}
                 className={clsx(
-                  'px-1 py-1 bg-bg1 rounded-md',
-                  statusOption === CompetitionStatus.UPCOMING && 'bg-blue-400',
-                  statusOption === CompetitionStatus.INACTIVE && 'bg-red-500',
-                  statusOption === CompetitionStatus.IN_PROGRESS &&
-                    'bg-green-500',
-                  statusOption === CompetitionStatus.COMPLETED &&
-                    'bg-green-500',
-                  statusOption === CompetitionStatus.ARCHIVED &&
-                    'bg-yellow-400',
-                  statusOption === CompetitionStatus.DEMO && 'bg-purple-400'
+                  "px-1 py-1 bg-bg1 rounded-md",
+                  statusOption === CompetitionStatus.UPCOMING && "bg-blue-400",
+                  statusOption === CompetitionStatus.INACTIVE && "bg-red-500",
+                  statusOption === CompetitionStatus.IN_PROGRESS && "bg-green-500",
+                  statusOption === CompetitionStatus.COMPLETED && "bg-green-500",
+                  statusOption === CompetitionStatus.ARCHIVED && "bg-yellow-400",
+                  statusOption === CompetitionStatus.DEMO && "bg-purple-400"
                 )}
               >
                 <option value={CompetitionStatus.UPCOMING}>Upcoming</option>
                 <option value={CompetitionStatus.INACTIVE}>Unavailable</option>
-                <option value={CompetitionStatus.IN_PROGRESS}>
-                  In Progress
-                </option>
+                <option value={CompetitionStatus.IN_PROGRESS}>In Progress</option>
                 <option value={CompetitionStatus.COMPLETED}>Completed</option>
                 <option value={CompetitionStatus.DEMO}>Demo</option>
                 <option value={CompetitionStatus.ARCHIVED}>Archived</option>

@@ -1,5 +1,5 @@
-import prisma from '@/prisma';
-import { NextResponse, NextRequest } from 'next/server';
+import prisma from "@/prisma";
+import { NextResponse, NextRequest } from "next/server";
 
 export async function DELETE(request) {
   try {
@@ -8,10 +8,7 @@ export async function DELETE(request) {
 
     // Check if routeIds is an array and has values
     if (!routeIds || !Array.isArray(routeIds) || routeIds.length === 0) {
-      return NextResponse.json(
-        { message: 'No valid route IDs provided' },
-        { status: 400 }
-      );
+      return NextResponse.json({ message: "No valid route IDs provided" }, { status: 400 });
     }
 
     // Use Prisma to delete the routes with the provided IDs
@@ -30,10 +27,7 @@ export async function DELETE(request) {
       { status: 200 }
     );
   } catch (error) {
-    console.error('Error deleting routes:', error);
-    return NextResponse.json(
-      { message: 'Failed to delete routes' },
-      { status: 500 }
-    );
+    console.error("Error deleting routes:", error);
+    return NextResponse.json({ message: "Failed to delete routes" }, { status: 500 });
   }
 }

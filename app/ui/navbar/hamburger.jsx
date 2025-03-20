@@ -1,11 +1,11 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import Link from 'next/link';
+import { useState } from "react";
+import Link from "next/link";
 
-import Image from 'next/image';
-import { motion, AnimatePresence } from 'motion/react';
-import clsx from 'clsx';
+import Image from "next/image";
+import { motion, AnimatePresence } from "motion/react";
+import clsx from "clsx";
 
 export default function HamburgerMenu({ user, status }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -18,14 +18,14 @@ export default function HamburgerMenu({ user, status }) {
     setIsOpen(false);
   };
   const links = [
-    { name: 'Routes', href: '/routes' },
-    { name: 'Comps', href: '/competitions' },
-    { name: 'Search', href: '/search' },
+    { name: "Routes", href: "/routes" },
+    { name: "Comps", href: "/competitions" },
+    { name: "Search", href: "/search" },
   ];
 
   const profileLinks = [
     {
-      name: 'Dashboard',
+      name: "Dashboard",
       url: `/profile/${user?.username}/dashboard`,
       icon: (
         <svg
@@ -43,10 +43,10 @@ export default function HamburgerMenu({ user, status }) {
           />
         </svg>
       ),
-      extraStyles: '',
+      extraStyles: "",
     },
     {
-      name: 'Profile',
+      name: "Profile",
       url: `/profile/${user?.username}`,
       icon: (
         <svg
@@ -64,10 +64,10 @@ export default function HamburgerMenu({ user, status }) {
           />
         </svg>
       ),
-      extraStyles: '',
+      extraStyles: "",
     },
     {
-      name: 'Settings',
+      name: "Settings",
       url: `/profile/${user?.username}/settings`,
       icon: (
         <svg
@@ -90,12 +90,12 @@ export default function HamburgerMenu({ user, status }) {
           />
         </svg>
       ),
-      extraStyles: '',
+      extraStyles: "",
     },
   ];
   if (user?.admin === true) {
     profileLinks.push({
-      name: 'Admin Center',
+      name: "Admin Center",
       url: `/admin`,
       icon: (
         <svg
@@ -113,7 +113,7 @@ export default function HamburgerMenu({ user, status }) {
           />
         </svg>
       ),
-      extraStyles: 'purple-button text-sm',
+      extraStyles: "purple-button text-sm",
     });
   }
   return (
@@ -125,17 +125,17 @@ export default function HamburgerMenu({ user, status }) {
         <div className="absolute w-7 h-3.5 flex flex-col justify-between">
           <div
             className={`w-full h-0.5 bg-white rounded-sm transform transition-all duration-300 ease-out ${
-              isOpen ? 'rotate-45 translate-y-1.5' : ''
+              isOpen ? "rotate-45 translate-y-1.5" : ""
             }`}
           />
           <div
             className={`w-full h-0.5 bg-white rounded-sm transform transition-all duration-300 ease-out ${
-              isOpen ? 'opacity-0' : ''
+              isOpen ? "opacity-0" : ""
             }`}
           />
           <div
             className={`w-full h-0.5 bg-white rounded-sm transform transition-all duration-300 ease-out ${
-              isOpen ? '-rotate-45 -translate-y-1.5' : ''
+              isOpen ? "-rotate-45 -translate-y-1.5" : ""
             }`}
           />
         </div>
@@ -143,7 +143,7 @@ export default function HamburgerMenu({ user, status }) {
       {isOpen && (
         <div className="fixed top-0 left-0 -z-10 bg-black h-svh w-screen px-5 pb-5 flex flex-col justify-between">
           <div className="mt-24 flex flex-col gap-12 ">
-            {links.map((link) => (
+            {links.map(link => (
               <Link
                 key={link.name}
                 href={link.href}
@@ -181,14 +181,14 @@ export default function HamburgerMenu({ user, status }) {
               <div className="flex gap-4">
                 <Link
                   className="blue-button rounded-xs px-5 py-3"
-                  href={'/signin'}
+                  href={"/signin"}
                   onClick={closeMenu}
                 >
                   Login
                 </Link>
                 <Link
                   className="bg-purple-600/15 outline-purple-400 outline-1 rounded-xs px-5 py-3"
-                  href={'/signin'}
+                  href={"/signin"}
                   onClick={closeMenu}
                 >
                   Sign Up
@@ -201,13 +201,13 @@ export default function HamburgerMenu({ user, status }) {
                 {isProfileOpen && (
                   <motion.div
                     initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: 'auto', opacity: 1 }}
+                    animate={{ height: "auto", opacity: 1 }}
                     exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.125, ease: 'easeInOut' }}
+                    transition={{ duration: 0.125, ease: "easeInOut" }}
                     className="overflow-hidden mb-3 p-1"
                   >
                     <div className="grid grid-cols-2 grid-rows-2 gap-3 font-barlow items-center">
-                      {profileLinks.map((link) => (
+                      {profileLinks.map(link => (
                         <Link
                           key={link.name}
                           href={link.url}
@@ -215,9 +215,7 @@ export default function HamburgerMenu({ user, status }) {
                           className={`grid grid-cols-3 w-full blue-button rounded-sm p-2 font-semibold text-center ${link.extraStyles}`}
                         >
                           <span>{link.icon}</span>
-                          <p
-                            className={`place-self-center w-full text-sm whitespace-nowrap`}
-                          >
+                          <p className={`place-self-center w-full text-sm whitespace-nowrap`}>
                             {link.name}
                           </p>
                         </Link>

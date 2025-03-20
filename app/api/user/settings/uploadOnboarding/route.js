@@ -1,5 +1,5 @@
-import prisma from '@/prisma';
-import { NextResponse } from 'next/server';
+import prisma from "@/prisma";
+import { NextResponse } from "next/server";
 
 export async function POST(req) {
   const { id, name, username, tag } = await req.json();

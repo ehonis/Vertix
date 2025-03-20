@@ -1,63 +1,53 @@
-'use client';
-import { useState, useEffect } from 'react';
-import NewRoute from '@/app/ui/admin/new/new-route';
-import NewComp from './new-comp';
-import { v4 as uuidv4 } from 'uuid';
-import ErrorPopUp from './error-pop-up';
-import { useNotification } from '@/app/contexts/NotificationContext';
-import { useRouter } from 'next/navigation';
-import Link from 'next/link';
+"use client";
+import { useState, useEffect } from "react";
+import NewRoute from "@/app/ui/admin/new/new-route";
+import NewComp from "./new-comp";
+import { v4 as uuidv4 } from "uuid";
+import ErrorPopUp from "./error-pop-up";
+import { useNotification } from "@/app/contexts/NotificationContext";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function NewWrapper() {
   const { showNotification } = useNotification();
   const router = useRouter();
-  const options = ['Route', 'Comp'];
+  const options = ["Route", "Comp"];
   const [table, setTable] = useState([]);
   const [data, setData] = useState([]);
 
   const [isError, setIsError] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState("");
 
-  const handleNewOption = (optionText) => {
-    if (optionText === 'Route') {
+  const handleNewOption = optionText => {
+    if (optionText === "Route") {
       const newId = uuidv4();
-      setTable((prevTable) => [
+      setTable(prevTable => [
         ...prevTable,
-        <NewRoute
-          id={newId}
-          key={newId}
-          onCommit={handleCommit}
-          onUncommit={handleUncommit}
-        />,
+        <NewRoute id={newId} key={newId} onCommit={handleCommit} onUncommit={handleUncommit} />,
       ]);
     }
-    if (optionText === 'Comp') {
+    if (optionText === "Comp") {
       const newId = uuidv4();
-      setTable((prevTable) => [
+      setTable(prevTable => [
         ...prevTable,
-        <NewComp
-          id={newId}
-          key={newId}
-          onCommit={handleCommit}
-          onUncommit={handleUncommit}
-        />,
+        <NewComp id={newId} key={newId} onCommit={handleCommit} onUncommit={handleUncommit} />,
       ]);
     }
   };
 
-  const handleCommit = (data) => {
-    setData((prevData) => [...prevData, data]);
+  const handleCommit = data => {
+    setData(prevData => [...prevData, data]);
   };
 
   const handleSubmit = async () => {
     if (data.length < table.length) {
-      setErrorMessage('You have Uncommitted Entries, please revise and commit');
+      setErrorMessage("You have Uncommitted Entries, please revise and commit");
       setIsError(true);
     } else {
       try {
-        const response = await fetch('/api/new', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+        const response = await fetch("/api/new", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify(data),
         });
         if (!response.ok) {
@@ -65,13 +55,13 @@ export default function NewWrapper() {
         }
         showNotification({
           message: `Successfully added new Item(s)`,
-          color: 'green',
+          color: "green",
         });
         router.refresh();
       } catch (error) {
         showNotification({
           message: `${error}`,
-          color: 'red',
+          color: "red",
         });
       }
     }
@@ -79,10 +69,10 @@ export default function NewWrapper() {
   const handleCancel = () => {
     setIsError(false);
   };
-  const handleUncommit = (id) => {
+  const handleUncommit = id => {
     // Use functional update to ensure latest state is used
-    setData((prevData) => {
-      const newData = prevData.filter((item) => item.id !== id);
+    setData(prevData => {
+      const newData = prevData.filter(item => item.id !== id);
       return newData; // Return the updated array
     });
   };
@@ -91,7 +81,7 @@ export default function NewWrapper() {
     <>
       {isError && <ErrorPopUp message={errorMessage} onCancel={handleCancel} />}
       <div className="p-5 flex-col flex gap-3">
-        <Link href={'/admin'} className="flex gap-1 items-center">
+        <Link href={"/admin"} className="flex gap-1 items-center">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -106,14 +96,12 @@ export default function NewWrapper() {
               d="M9 15 3 9m0 0 6-6M3 9h12a6 6 0 0 1 0 12h-3"
             />
           </svg>
-          <p className="font-barlow font-bold text-xs text-white">
-            Admin Center
-          </p>
+          <p className="font-barlow font-bold text-xs text-white">Admin Center</p>
         </Link>
         <h1 className="text-white font-barlow font-bold text-4xl">New</h1>
         <div className="flex justify-between items-center">
           <div className="flex gap-3 items-center overflow-x-auto w-[66%] rounded-r-full">
-            {options.map((optionText) => {
+            {options.map(optionText => {
               return (
                 <button
                   key={optionText}
@@ -148,7 +136,7 @@ export default function NewWrapper() {
         </div>
         <div className="h-1 w-full bg-white rounded-full"></div>
         <div className="flex flex-col gap-2">
-          {table.map((option) => {
+          {table.map(option => {
             return option;
           })}
         </div>

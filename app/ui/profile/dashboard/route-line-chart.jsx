@@ -1,5 +1,5 @@
-'use client';
-import { getLineChartCompletionsData } from '@/lib/routeCompletionsClientScripts';
+"use client";
+import { getLineChartCompletionsData } from "@/lib/routeCompletionsClientScripts";
 
 import {
   LineChart,
@@ -10,11 +10,11 @@ import {
   Tooltip,
   Legend,
   ResponsiveContainer,
-} from 'recharts';
-import Link from 'next/link';
-import { useEffect, useState } from 'react';
+} from "recharts";
+import Link from "next/link";
+import { useEffect, useState } from "react";
 // Define colors for each slice
-const COLORS = ['#0088FE', '#00C49F'];
+const COLORS = ["#0088FE", "#00C49F"];
 
 // Custom Tooltip component
 function CustomTooltip({ active, payload }) {
@@ -31,18 +31,15 @@ function CustomTooltip({ active, payload }) {
 
 export default function RouteLineChart({ completedRoutes }) {
   const [lineCompletion, setLineCompletion] = useState([]);
-  const [timePeriod, setTimePeriod] = useState('Day');
+  const [timePeriod, setTimePeriod] = useState("Day");
 
-  const handleTimePeriodChange = (event) => {
+  const handleTimePeriodChange = event => {
     setTimePeriod(event.target.value);
   };
 
   useEffect(() => {
     const getData = () => {
-      const lineChartCompletionsData = getLineChartCompletionsData(
-        completedRoutes,
-        timePeriod
-      );
+      const lineChartCompletionsData = getLineChartCompletionsData(completedRoutes, timePeriod);
       setLineCompletion(lineChartCompletionsData);
     };
 
@@ -54,7 +51,7 @@ export default function RouteLineChart({ completedRoutes }) {
       <div className="grow bg-bg1 rounded-lg py-4 flex flex-col gap-3 justify-between items-center md:h-auto h-72">
         <div className="flex justify-between items-center w-full px-7">
           <h2 className="text-white font-bold text-xl">
-            Total Completed Routes By{' '}
+            Total Completed Routes By{" "}
             {timePeriod.charAt(0).toLocaleUpperCase() + timePeriod.slice(1)}
           </h2>
           <select
@@ -82,11 +79,7 @@ export default function RouteLineChart({ completedRoutes }) {
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey={timePeriod} />
             <YAxis
-              tickCount={
-                Math.max(
-                  ...lineCompletion.map((d) => Math.max(d.Boulders, d.Ropes))
-                ) + 5
-              } // Limit Y-axis based on max value in the data
+              tickCount={Math.max(...lineCompletion.map(d => Math.max(d.Boulders, d.Ropes))) + 5} // Limit Y-axis based on max value in the data
               interval={0} // Display every tick
               allowDecimals={false} // Ensure only integers
             />
@@ -99,12 +92,7 @@ export default function RouteLineChart({ completedRoutes }) {
               activeDot={{ r: 8 }}
               strokeWidth={2}
             />
-            <Line
-              type="monotone"
-              dataKey="Ropes"
-              stroke={COLORS[1]}
-              strokeWidth={2}
-            />
+            <Line type="monotone" dataKey="Ropes" stroke={COLORS[1]} strokeWidth={2} />
           </LineChart>
         </ResponsiveContainer>
       </div>
@@ -112,15 +100,13 @@ export default function RouteLineChart({ completedRoutes }) {
   } else {
     return (
       <div className="grow bg-bg1 rounded-lg p-4 flex flex-col justify-between items-center">
-        <h2 className="text-white font-bold text-xl">
-          Total Completed Routes Over Time
-        </h2>
+        <h2 className="text-white font-bold text-xl">Total Completed Routes Over Time</h2>
         <p className="text-red-500 font-bold ">No Data to Display</p>
         <p className="text-white font-bold text-center">
-          Go the the{' '}
-          <Link className="text-blue-500 underline font-bold" href={'/routes'}>
+          Go the the{" "}
+          <Link className="text-blue-500 underline font-bold" href={"/routes"}>
             Routes Page
-          </Link>{' '}
+          </Link>{" "}
           to record some routes you completed
         </p>
       </div>

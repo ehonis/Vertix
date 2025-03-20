@@ -1,8 +1,8 @@
-import { motion } from 'motion/react';
-import { useState } from 'react';
-import ElementLoadingAnimation from '@/app/ui/general/element-loading-animation';
-import { useNotification } from '@/app/contexts/NotificationContext';
-import { useRouter } from 'next/navigation';
+import { motion } from "motion/react";
+import { useState } from "react";
+import ElementLoadingAnimation from "@/app/ui/general/element-loading-animation";
+import { useNotification } from "@/app/contexts/NotificationContext";
+import { useRouter } from "next/navigation";
 
 export default function EditDivisionPopUp({
   divisionId,
@@ -15,24 +15,20 @@ export default function EditDivisionPopUp({
 }) {
   const { showNotification } = useNotification();
   const router = useRouter();
-  const [tempDivision, setTempDivision] = useState(
-    divisionText ? divisionText : ''
-  );
+  const [tempDivision, setTempDivision] = useState(divisionText ? divisionText : "");
   const [isSaveButton, setIsSaveButton] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [infoText, setInfoText] = useState(
-    'No Changes have been made. Edit the text above to update the division'
+    "No Changes have been made. Edit the text above to update the division"
   );
-  const handleDivisionTextChange = (e) => {
+  const handleDivisionTextChange = e => {
     const tempText = e.target.value;
     setTempDivision(tempText);
-    if (tempText === '') {
-      setInfoText('Text Box is empty, you cannot update with nothing inside');
+    if (tempText === "") {
+      setInfoText("Text Box is empty, you cannot update with nothing inside");
       setIsSaveButton(false);
     } else if (tempText === divisionText) {
-      setInfoText(
-        'No Changes have been made. Edit the text above to update the division'
-      );
+      setInfoText("No Changes have been made. Edit the text above to update the division");
       setIsSaveButton(false);
     } else {
       setIsSaveButton(true);
@@ -47,20 +43,17 @@ export default function EditDivisionPopUp({
     };
     setIsLoading(true);
     try {
-      const response = await fetch(
-        '/api/mixer/manager/division/updateDivision',
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(data),
-        }
-      );
+      const response = await fetch("/api/mixer/manager/division/updateDivision", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
       if (!response.ok) {
         console.error(response.message);
       }
       showNotification({
         message: `Updated Division`,
-        color: 'green',
+        color: "green",
       });
       setIsLoading(false);
       onCancel();
@@ -69,7 +62,7 @@ export default function EditDivisionPopUp({
       setIsLoading(false);
       showNotification({
         message: `Update Failed`,
-        color: 'red',
+        color: "red",
       });
     } finally {
     }
@@ -80,9 +73,9 @@ export default function EditDivisionPopUp({
 
     setIsLoading(true);
     try {
-      const response = await fetch('/api/mixer/manager/division/newDivision', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const response = await fetch("/api/mixer/manager/division/newDivision", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
       });
       if (!response.ok) {
@@ -93,7 +86,7 @@ export default function EditDivisionPopUp({
       setIsLoading(false);
       showNotification({
         message: `Added Division`,
-        color: 'green',
+        color: "green",
       });
       router.refresh();
       onCancel();
@@ -101,7 +94,7 @@ export default function EditDivisionPopUp({
       setIsLoading(false);
       showNotification({
         message: `New Division Failed ${error}`,
-        color: 'red',
+        color: "red",
       });
     }
   };
@@ -130,11 +123,7 @@ export default function EditDivisionPopUp({
               stroke="currentColor"
               className="size-7"
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M6 18 18 6M6 6l12 12"
-              />
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
             </svg>
           </button>
           {isLoading ? (
@@ -142,7 +131,7 @@ export default function EditDivisionPopUp({
           ) : (
             <div className="flex flex-col gap-2 w-full">
               <h2 className="text-xl">
-                {type === 'NEW' && 'New '}Division {type === 'EDIT' && 'Editor'}
+                {type === "NEW" && "New "}Division {type === "EDIT" && "Editor"}
               </h2>
               <input
                 type="text"
@@ -153,7 +142,7 @@ export default function EditDivisionPopUp({
               />
               {isSaveButton ? (
                 <div className="w-full flex justify-end">
-                  {type === 'NEW' ? (
+                  {type === "NEW" ? (
                     <button
                       className="px-2 py-1 bg-green-500/35 outline outline-green-500 outline-1 rounded-sm text-white font-barlow"
                       onClick={handleNewDivision}
@@ -171,9 +160,7 @@ export default function EditDivisionPopUp({
                 </div>
               ) : (
                 <div>
-                  <p className="text-gray-300 font-barlow font-light italic text-sm">
-                    {infoText}
-                  </p>
+                  <p className="text-gray-300 font-barlow font-light italic text-sm">{infoText}</p>
                 </div>
               )}
             </div>

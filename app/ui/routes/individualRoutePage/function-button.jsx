@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import FunctionButtonMenu from './menus/function-button-menu';
+import { useState } from "react";
+import FunctionButtonMenu from "./menus/function-button-menu";
 
 export default function FunctionButton({
   route,

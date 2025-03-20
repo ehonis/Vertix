@@ -1,5 +1,5 @@
 export default function BoulderGradeSelect({ onGradeChange }) {
-  const handleGradeChange = (event) => {
+  const handleGradeChange = event => {
     onGradeChange(event.target.value); // Pass grade to parent
   };
   return (

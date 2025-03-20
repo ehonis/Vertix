@@ -1,35 +1,35 @@
-import { getRouteById, getRouteImagesById, findRating } from '@/lib/routes';
-import Image from 'next/image';
-import clsx from 'clsx';
-import ImageSlider from '@/app/ui/routes/individualRoutePage/route-image-slider';
-import FunctionButton from '@/app/ui/routes/individualRoutePage/function-button';
-import { findIfCompleted } from '@/lib/routeCompletions';
-import { formatDate, findDaysOld } from '@/lib/dates';
-import { auth } from '@/auth';
-import Link from 'next/link';
-import prisma from '@/prisma';
+import { getRouteById, getRouteImagesById, findRating } from "@/lib/routes";
+import Image from "next/image";
+import clsx from "clsx";
+import ImageSlider from "@/app/ui/routes/individualRoutePage/route-image-slider";
+import FunctionButton from "@/app/ui/routes/individualRoutePage/function-button";
+import { findIfCompleted } from "@/lib/routeCompletions";
+import { formatDate, findDaysOld } from "@/lib/dates";
+import { auth } from "@/auth";
+import Link from "next/link";
+import prisma from "@/prisma";
 import {
   findAllTotalSends,
   findProposedGrade,
   findIfCommunityGraded,
   findStarRating,
   findCommunityGrade,
-} from '@/lib/routes';
-import StarRating from '@/app/ui/general/star-rating';
+} from "@/lib/routes";
+import StarRating from "@/app/ui/general/star-rating";
 
 export const revalidate = 120;
 
 export async function generateStaticParams() {
   const ids = await prisma.route
     .findMany()
-    .then((routes) => routes.map((route) => ({ slug: route.id })));
+    .then(routes => routes.map(route => ({ slug: route.id })));
   return ids;
 }
 
 function Header({ route, user, isComplete, isGraded, proposedGrade, rating }) {
   return (
     <div className="flex w-11/12 md:w-3/5 justify-between items-center mb-4">
-      <Link href={'/routes'}>
+      <Link href={"/routes"}>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 24 24"
@@ -51,9 +51,9 @@ function Header({ route, user, isComplete, isGraded, proposedGrade, rating }) {
           isComplete={isComplete}
           isGraded={isGraded}
           proposedGrade={proposedGrade}
-          intialMenu={'Action Menu'}
+          intialMenu={"Action Menu"}
           rating={rating}
-          size={'size-12'}
+          size={"size-12"}
         />
       ) : (
         <div className="size-12"></div>
@@ -79,16 +79,16 @@ function RouteInfo({
     <>
       <div className="w-11/12 md:w-3/5 bg-bg1 rounded-xl h-max">
         <div
-          className={clsx('w-full h-8 rounded-t-xl', {
-            'bg-green-400': route.color === 'green',
-            'bg-red-400': route.color === 'red',
-            'bg-blue-400': route.color === 'blue',
-            'bg-yellow-400': route.color === 'yellow',
-            'bg-purple-400': route.color === 'purple',
-            'bg-orange-400': route.color === 'orange',
-            'bg-white': route.color === 'white',
-            'bg-slate-400': route.color === 'defaultColor',
-            'bg-pink-400': route.color === 'pink',
+          className={clsx("w-full h-8 rounded-t-xl", {
+            "bg-green-400": route.color === "green",
+            "bg-red-400": route.color === "red",
+            "bg-blue-400": route.color === "blue",
+            "bg-yellow-400": route.color === "yellow",
+            "bg-purple-400": route.color === "purple",
+            "bg-orange-400": route.color === "orange",
+            "bg-white": route.color === "white",
+            "bg-slate-400": route.color === "defaultColor",
+            "bg-pink-400": route.color === "pink",
           })}
         ></div>
         <div className="p-5 flex md:gap-5 gap-3">
@@ -96,13 +96,11 @@ function RouteInfo({
             <ImageSlider images={route.images} />
           ) : (
             <Image
-              src={
-                'https://utfs.io/f/bujx12z5cHJjc9Ak3DLO1WJXeZH487yuvrhiVgUb5MoAPlpN'
-              }
+              src={"https://utfs.io/f/bujx12z5cHJjc9Ak3DLO1WJXeZH487yuvrhiVgUb5MoAPlpN"}
               alt="Default climbing image"
               height={600}
               width={600}
-              style={{ objectFit: 'cover' }}
+              style={{ objectFit: "cover" }}
               className="w-32 h-40"
             />
           )}
@@ -113,17 +111,11 @@ function RouteInfo({
             </h2>
             <div className="w-full bg-white h-px"></div>
             <div>
+              <p className="text-white md:text-base text-sm">Grade: {route.grade}</p>
+              <p className="text-white md:text-base text-sm">Community Grade: {communityGrade}</p>
+              <p className="text-white md:text-base text-sm">Set Date: {date}</p>
               <p className="text-white md:text-base text-sm">
-                Grade: {route.grade}
-              </p>
-              <p className="text-white md:text-base text-sm">
-                Community Grade: {communityGrade}
-              </p>
-              <p className="text-white md:text-base text-sm">
-                Set Date: {date}
-              </p>
-              <p className="text-white md:text-base text-sm">
-                Current Set?{' '}
+                Current Set?{" "}
                 {route.isArchive ? (
                   <span className="text-red-500">No</span>
                 ) : (
@@ -138,7 +130,7 @@ function RouteInfo({
         {starRating === 0 ? (
           <div className="flex items-center gap-3">
             <p className="text-white font-barlow font-bold">
-              No Star Rating, Be the first one {'->'}
+              No Star Rating, Be the first one {"->"}
             </p>
             {user ? (
               <FunctionButton
@@ -147,12 +139,12 @@ function RouteInfo({
                 isComplete={isComplete}
                 isGraded={isGraded}
                 proposedGrade={proposedGrade}
-                intialMenu={'Star Rating Menu'}
+                intialMenu={"Star Rating Menu"}
                 rating={rating}
-                size={'size-8'}
+                size={"size-8"}
               />
             ) : (
-              <Link href={'/signin'}>
+              <Link href={"/signin"}>
                 <span className="text-white bg-blue-500 p-2 rounded-sm font-barlow font-bold">
                   Sign In
                 </span>
@@ -161,7 +153,7 @@ function RouteInfo({
           </div>
         ) : (
           <div className="flex gap-5 justify-center">
-            <StarRating rating={starRating} />{' '}
+            <StarRating rating={starRating} />{" "}
             {user && (
               <FunctionButton
                 route={route}
@@ -169,9 +161,9 @@ function RouteInfo({
                 isComplete={isComplete}
                 isGraded={isGraded}
                 proposedGrade={proposedGrade}
-                intialMenu={'Star Rating Menu'}
+                intialMenu={"Star Rating Menu"}
                 rating={rating}
-                size={'size-8'}
+                size={"size-8"}
               />
             )}
           </div>

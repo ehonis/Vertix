@@ -1,19 +1,19 @@
-'use client';
-import { useState } from 'react';
+"use client";
+import { useState } from "react";
 
 export default function RopeGradeSelect({ onGradeChange }) {
-  const [grade, setGrade] = useState('5.7'); // Default to 5.7 or your preferred default
-  const [modifier, setModifier] = useState(''); // Default to no modifier (none)
+  const [grade, setGrade] = useState("5.7"); // Default to 5.7 or your preferred default
+  const [modifier, setModifier] = useState(""); // Default to no modifier (none)
 
   // Handle changes for the grade (5.7, 5.8, etc.)
-  const handleGradeChange = (event) => {
+  const handleGradeChange = event => {
     const newGrade = event.target.value;
     setGrade(newGrade);
     onGradeChange(`${newGrade}${modifier}`); // Combine grade with current modifier and pass to parent
   };
 
   // Handle changes for the modifier (-, +, none)
-  const handleModifierChange = (event) => {
+  const handleModifierChange = event => {
     const newModifier = event.target.value;
     setModifier(newModifier);
     onGradeChange(`${grade}${newModifier}`); // Combine current grade with new modifier and pass to parent

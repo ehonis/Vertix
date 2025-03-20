@@ -1,13 +1,9 @@
-'use client';
+"use client";
 
-import { motion } from 'motion/react';
-import {
-  getPointPrediction,
-  getTopScores,
-  getRouteNameById,
-} from '@/lib/mixer';
-import { useEffect, useState } from 'react';
-import clsx from 'clsx';
+import { motion } from "motion/react";
+import { getPointPrediction, getTopScores, getRouteNameById } from "@/lib/mixer";
+import { useEffect, useState } from "react";
+import clsx from "clsx";
 export default function MixerInfoPopup({
   mixerRoutes,
   mixerBoulders,
@@ -22,9 +18,7 @@ export default function MixerInfoPopup({
 
   useEffect(() => {
     if (topScores.length > 0) {
-      setPredictedHoldsAndPoints(
-        getPointPrediction(mixerRoutes, topScores, routeId)
-      );
+      setPredictedHoldsAndPoints(getPointPrediction(mixerRoutes, topScores, routeId));
     }
   }, [mixerRoutes, topScores, routeId]);
 
@@ -49,7 +43,7 @@ export default function MixerInfoPopup({
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.9 }}
-        transition={{ duration: 0.3, ease: 'easeInOut' }}
+        transition={{ duration: 0.3, ease: "easeInOut" }}
       >
         <div className="relative bg-gray-700 rounded-lg p-5 w-[83%] max-w-md h-1/2 shadow-lg flex flex-col justify-between">
           <button className="absolute top-0 right-0 p-2" onClick={onCancel}>
@@ -60,65 +54,53 @@ export default function MixerInfoPopup({
               strokeWidth={1.5}
               className="size-8 stroke-white"
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M6 18 18 6M6 6l12 12"
-              />
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
             </svg>
           </button>
           <div className="flex flex-col">
-            <h2 className="text-2xl font-barlow font-bold text-white ">
-              Point Prediction
-            </h2>
+            <h2 className="text-2xl font-barlow font-bold text-white ">Point Prediction</h2>
             <p className="text-gray-300 text-xs font-barlow font-bold italic">
-              These are holds you need to get too to improve your previous
-              score(s)
+              These are holds you need to get too to improve your previous score(s)
             </p>
           </div>
           {topScores.length > 0 ? (
             <div className="flex flex-col gap-2">
-              {predictedHoldsAndPoints.map((info) => {
-                const foundRoute = mixerRoutes.find(
-                  (route) => route.id === info.id
-                );
+              {predictedHoldsAndPoints.map(info => {
+                const foundRoute = mixerRoutes.find(route => route.id === info.id);
 
                 const color = foundRoute ? foundRoute.color : null;
                 return (
-                  <div
-                    className="flex flex-col bg-bg1 p-2 rounded-sm"
-                    key={info.id}
-                  >
+                  <div className="flex flex-col bg-bg1 p-2 rounded-sm" key={info.id}>
                     <p className="text-white font-barlow font-bold">
-                      Tope Rope Hold:{' '}
+                      Tope Rope Hold:{" "}
                       <span className="font-stalinist gradient-text-blue-cyan">
                         {info.topRopetoBeat.hold}
-                      </span>{' '}
-                      {' => '}
+                      </span>{" "}
+                      {" => "}
                       <span className="font-stalinist gradient-text-red-orange">
                         {info.topRopetoBeat.topRopePts}pts
                       </span>
                     </p>
                     <p className="text-white font-barlow font-bold">
-                      Lead Hold:{' '}
+                      Lead Hold:{" "}
                       <span className="font-stalinist gradient-text-blue-cyan">
                         {info.leadToBeat.hold}
                       </span>
-                      {' => '}
+                      {" => "}
                       <span className="font-stalinist gradient-text-red-orange">
                         {info.leadToBeat.leadPts}pts
                       </span>
                     </p>
                     <p className="text-white font-barlow font-bold">
-                      To beat{' '}
+                      To beat{" "}
                       <span
                         className={clsx(
-                          'font-orbitron font-bold text-2xl',
-                          color === 'blue' ? 'text-blue-500' : null,
-                          color === 'green' ? 'text-green-400' : null,
-                          color === 'orange' ? 'text-orange-500' : null,
-                          color === 'yellow' ? 'text-yellow-300' : null,
-                          color === 'red' ? 'text-red-500' : null
+                          "font-orbitron font-bold text-2xl",
+                          color === "blue" ? "text-blue-500" : null,
+                          color === "green" ? "text-green-400" : null,
+                          color === "orange" ? "text-orange-500" : null,
+                          color === "yellow" ? "text-yellow-300" : null,
+                          color === "red" ? "text-red-500" : null
                         )}
                       >
                         {foundRoute.name}
@@ -130,8 +112,7 @@ export default function MixerInfoPopup({
             </div>
           ) : (
             <p className="text-white font-barlow font-bold text-center">
-              You have not completed any routes. So there is nothing to predict
-              yet
+              You have not completed any routes. So there is nothing to predict yet
             </p>
           )}
           <div></div>

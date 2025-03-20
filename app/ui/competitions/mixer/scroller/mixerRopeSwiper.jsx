@@ -1,24 +1,24 @@
-'use client';
+"use client";
 
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Virtual } from 'swiper/modules';
-import clsx from 'clsx';
-import { useState, useRef, useEffect } from 'react';
-import 'swiper/css';
-import { useNotification } from '@/app/contexts/NotificationContext';
-import TypeToggleSwitch from './mixer-type-toggle';
-import { getPoints } from '@/lib/mixer';
-import MixerInfoPopup from './mixer-info-popup';
-import SwipeAnimation from '@/app/ui/general/swipe-animation';
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Virtual } from "swiper/modules";
+import clsx from "clsx";
+import { useState, useRef, useEffect } from "react";
+import "swiper/css";
+import { useNotification } from "@/app/contexts/NotificationContext";
+import TypeToggleSwitch from "./mixer-type-toggle";
+import { getPoints } from "@/lib/mixer";
+import MixerInfoPopup from "./mixer-info-popup";
+import SwipeAnimation from "@/app/ui/general/swipe-animation";
 
 export default function MixerRopeScorer({ mixerRoutes, StartTime }) {
-  const [tempRouteId, setTempRouteId] = useState('');
+  const [tempRouteId, setTempRouteId] = useState("");
   const { showNotification } = useNotification();
   const [isInfoPopup, setIsInfoPopup] = useState(false);
 
   // Helper function to safely get localStorage value
-  const getLocalStorageValue = (key) => {
-    if (typeof window !== 'undefined') {
+  const getLocalStorageValue = key => {
+    if (typeof window !== "undefined") {
       return localStorage.getItem(key);
     }
     return null;
@@ -26,7 +26,7 @@ export default function MixerRopeScorer({ mixerRoutes, StartTime }) {
 
   // Load initial state from localStorage or use default values
   const [attempts, setAttempts] = useState(() => {
-    const savedAttempts = getLocalStorageValue('mixerAttempts');
+    const savedAttempts = getLocalStorageValue("mixerAttempts");
     if (savedAttempts) {
       return JSON.parse(savedAttempts);
     }
@@ -37,7 +37,7 @@ export default function MixerRopeScorer({ mixerRoutes, StartTime }) {
   });
 
   const [hold, setHold] = useState(() => {
-    const savedHold = getLocalStorageValue('mixerHold');
+    const savedHold = getLocalStorageValue("mixerHold");
     if (savedHold) {
       return JSON.parse(savedHold);
     }
@@ -48,7 +48,7 @@ export default function MixerRopeScorer({ mixerRoutes, StartTime }) {
   });
 
   const [completions, setCompletions] = useState(() => {
-    const savedCompletions = getLocalStorageValue('mixerCompletions');
+    const savedCompletions = getLocalStorageValue("mixerCompletions");
     if (savedCompletions) {
       return JSON.parse(savedCompletions);
     }
@@ -59,7 +59,7 @@ export default function MixerRopeScorer({ mixerRoutes, StartTime }) {
   });
 
   const [points, setPoints] = useState(() => {
-    const savedPoints = getLocalStorageValue('mixerPoints');
+    const savedPoints = getLocalStorageValue("mixerPoints");
     if (savedPoints) {
       return JSON.parse(savedPoints);
     }
@@ -70,44 +70,44 @@ export default function MixerRopeScorer({ mixerRoutes, StartTime }) {
   });
 
   const [typeToggles, setTypeToggles] = useState(() => {
-    const savedTypeToggles = getLocalStorageValue('mixerTypeToggles');
+    const savedTypeToggles = getLocalStorageValue("mixerTypeToggles");
     if (savedTypeToggles) {
       return JSON.parse(savedTypeToggles);
     }
     return mixerRoutes.reduce((acc, panel) => {
-      acc[panel.id] = 'TR';
+      acc[panel.id] = "TR";
       return acc;
     }, {});
   });
 
   // Save state to localStorage whenever it changes
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('mixerAttempts', JSON.stringify(attempts));
+    if (typeof window !== "undefined") {
+      localStorage.setItem("mixerAttempts", JSON.stringify(attempts));
     }
   }, [attempts]);
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('mixerHold', JSON.stringify(hold));
+    if (typeof window !== "undefined") {
+      localStorage.setItem("mixerHold", JSON.stringify(hold));
     }
   }, [hold]);
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('mixerCompletions', JSON.stringify(completions));
+    if (typeof window !== "undefined") {
+      localStorage.setItem("mixerCompletions", JSON.stringify(completions));
     }
   }, [completions]);
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('mixerPoints', JSON.stringify(points));
+    if (typeof window !== "undefined") {
+      localStorage.setItem("mixerPoints", JSON.stringify(points));
     }
   }, [points]);
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('mixerTypeToggles', JSON.stringify(typeToggles));
+    if (typeof window !== "undefined") {
+      localStorage.setItem("mixerTypeToggles", JSON.stringify(typeToggles));
     }
   }, [typeToggles]);
 
@@ -139,18 +139,18 @@ export default function MixerRopeScorer({ mixerRoutes, StartTime }) {
 
   const handleHoldChange = (panelId, maxHold, e) => {
     const inputValue = e.target.value;
-    const sanitizedValue = inputValue.replace(/[^0-9]/g, '');
+    const sanitizedValue = inputValue.replace(/[^0-9]/g, "");
     const newHoldValue = Math.min(Number(sanitizedValue), maxHold);
 
     // Update the points for the current hold value
-    const type = typeToggles[panelId] === 'TR' ? 'topRopePoints' : 'leadPoints';
+    const type = typeToggles[panelId] === "TR" ? "topRopePoints" : "leadPoints";
 
-    setHold((prev) => ({
+    setHold(prev => ({
       ...prev,
       [panelId]: newHoldValue,
     }));
 
-    setPoints((prevPoints) => ({
+    setPoints(prevPoints => ({
       ...prevPoints,
       [panelId]: getPoints(mixerRoutes, panelId, newHoldValue, type),
     }));
@@ -158,35 +158,34 @@ export default function MixerRopeScorer({ mixerRoutes, StartTime }) {
 
   const handleAttemptChange = (panelId, e) => {
     const inputValue = e.target.value;
-    const sanitizedValue = inputValue.replace(/[^0-9]/g, '');
-    setAttempts((prev) => ({
+    const sanitizedValue = inputValue.replace(/[^0-9]/g, "");
+    setAttempts(prev => ({
       ...prev,
       [panelId]: Math.min(Number(sanitizedValue), 20),
     }));
   };
 
-  const handlePlusAttempt = (panelId) => {
-    setAttempts((prev) => ({
+  const handlePlusAttempt = panelId => {
+    setAttempts(prev => ({
       ...prev,
       [panelId]: Math.min(prev[panelId] + 1, 20),
     }));
   };
 
-  const handleMinusAttempt = (panelId) => {
-    setAttempts((prev) => ({
+  const handleMinusAttempt = panelId => {
+    setAttempts(prev => ({
       ...prev,
       [panelId]: Math.max(prev[panelId] - 1, 0),
     }));
   };
 
   const handlePlusHold = (panelId, maxHold) => {
-    setHold((prev) => {
+    setHold(prev => {
       const newHoldValue = Math.min(prev[panelId] + 1, maxHold);
 
       // Update the points for the current hold value
-      const type =
-        typeToggles[panelId] === 'TR' ? 'topRopePoints' : 'leadPoints';
-      setPoints((prevPoints) => ({
+      const type = typeToggles[panelId] === "TR" ? "topRopePoints" : "leadPoints";
+      setPoints(prevPoints => ({
         ...prevPoints,
         [panelId]: getPoints(mixerRoutes, panelId, newHoldValue, type),
       }));
@@ -198,15 +197,14 @@ export default function MixerRopeScorer({ mixerRoutes, StartTime }) {
     });
   };
 
-  const handleMinusHold = (panelId) => {
-    setHold((prev) => {
+  const handleMinusHold = panelId => {
+    setHold(prev => {
       const newHoldValue = Math.max(prev[panelId] - 1, 0);
 
       // Update the points for the current hold value
       if (newHoldValue >= 0) {
-        const type =
-          typeToggles[panelId] === 'TR' ? 'topRopePoints' : 'leadPoints';
-        setPoints((prevPoints) => ({
+        const type = typeToggles[panelId] === "TR" ? "topRopePoints" : "leadPoints";
+        setPoints(prevPoints => ({
           ...prevPoints,
           [panelId]: getPoints(mixerRoutes, panelId, newHoldValue, type),
         }));
@@ -220,11 +218,11 @@ export default function MixerRopeScorer({ mixerRoutes, StartTime }) {
   };
 
   const handleTypeChange = (panelId, value) => {
-    setTypeToggles((prev) => {
+    setTypeToggles(prev => {
       const newTypeValue = value;
 
-      const type = newTypeValue === 'TR' ? 'topRopePoints' : 'leadPoints';
-      setPoints((prevPoints) => ({
+      const type = newTypeValue === "TR" ? "topRopePoints" : "leadPoints";
+      setPoints(prevPoints => ({
         ...prevPoints,
         [panelId]: getPoints(mixerRoutes, panelId, hold[panelId], type),
       }));
@@ -236,7 +234,7 @@ export default function MixerRopeScorer({ mixerRoutes, StartTime }) {
     });
   };
 
-  const handleRangeChange = (value) => {
+  const handleRangeChange = value => {
     setRangeValue(value);
     if (swiperRef.current) {
       swiperRef.current.slideTo(value);
@@ -247,29 +245,29 @@ export default function MixerRopeScorer({ mixerRoutes, StartTime }) {
     if (attempts < 1) {
       showNotification({
         message: `1 Attempt Needed`,
-        color: 'red',
+        color: "red",
       });
     } else if (points === null) {
       showNotification({
         message: `1 Hold Needed`,
-        color: 'red',
+        color: "red",
       });
     } else {
-      setCompletions((prev) => ({
+      setCompletions(prev => ({
         ...prev,
         [panelId]: true,
       }));
     }
   };
 
-  const handleUncompletion = (panelId) => {
-    setCompletions((prev) => ({
+  const handleUncompletion = panelId => {
+    setCompletions(prev => ({
       ...prev,
       [panelId]: false,
     }));
   };
 
-  const handleInfoClick = (routeId) => {
+  const handleInfoClick = routeId => {
     setTempRouteId(routeId);
     setIsInfoPopup(!isInfoPopup);
   };
@@ -284,8 +282,8 @@ export default function MixerRopeScorer({ mixerRoutes, StartTime }) {
         direction="vertical"
         spaceBetween={35}
         grabCursor={true}
-        onSwiper={(swiper) => (swiperRef.current = swiper)}
-        onSlideChange={(swiper) => setRangeValue(swiper.activeIndex)}
+        onSwiper={swiper => (swiperRef.current = swiper)}
+        onSlideChange={swiper => setRangeValue(swiper.activeIndex)}
         onTap={handleSwiperInteraction}
         className="h-[calc(100vh-15.5rem)] max-w-sm md:max-w-lg rounded-sm"
         modules={[Virtual]}
@@ -319,25 +317,21 @@ export default function MixerRopeScorer({ mixerRoutes, StartTime }) {
         )}
 
         {mixerRoutes.map((panel, index) => (
-          <SwiperSlide
-            key={panel.id}
-            virtualIndex={index}
-            className="p-8 pt-2 rounded-lg"
-          >
+          <SwiperSlide key={panel.id} virtualIndex={index} className="p-8 pt-2 rounded-lg">
             {completions[panel.id] === false ? (
               <div
                 className={clsx(
-                  'relative flex flex-col p-5 pt-3 items-center h-full rounded-lg bg-black shadow-blue-500 shadow-lg text-white text-2xl gap-3 justify-between',
-                  panel.color === 'blue' ? 'shadow-blue-500' : null,
-                  panel.color === 'red' ? 'shadow-red-500' : null,
-                  panel.color === 'green' ? 'shadow-green-400' : null,
-                  panel.color === 'orange' ? 'shadow-orange-500' : null,
-                  panel.color === 'yellow' ? 'shadow-yellow-400' : null,
-                  panel.color === 'pink' ? 'shadow-pink-400' : null,
-                  panel.color === 'brown' && 'shadow-amber-800',
-                  panel.color === 'purple' && 'shadow-purple-700',
-                  panel.color === 'white' && 'shadow-white',
-                  panel.color === 'black' && 'shadow-black'
+                  "relative flex flex-col p-5 pt-3 items-center h-full rounded-lg bg-black shadow-blue-500 shadow-lg text-white text-2xl gap-3 justify-between",
+                  panel.color === "blue" ? "shadow-blue-500" : null,
+                  panel.color === "red" ? "shadow-red-500" : null,
+                  panel.color === "green" ? "shadow-green-400" : null,
+                  panel.color === "orange" ? "shadow-orange-500" : null,
+                  panel.color === "yellow" ? "shadow-yellow-400" : null,
+                  panel.color === "pink" ? "shadow-pink-400" : null,
+                  panel.color === "brown" && "shadow-amber-800",
+                  panel.color === "purple" && "shadow-purple-700",
+                  panel.color === "white" && "shadow-white",
+                  panel.color === "black" && "shadow-black"
                 )}
               >
                 <button
@@ -366,37 +360,32 @@ export default function MixerRopeScorer({ mixerRoutes, StartTime }) {
                   <div className="flex flex-col gap-2">
                     <h1
                       className={clsx(
-                        'font-orbitron font-bold text-5xl text-center ',
-                        panel.color === 'blue' ? 'text-blue-500' : null,
-                        panel.color === 'green' ? 'text-green-400' : null,
-                        panel.color === 'orange' ? 'text-orange-500' : null,
-                        panel.color === 'yellow' ? 'text-yellow-400' : null,
-                        panel.color === 'red' ? 'text-red-500' : null,
-                        panel.color === 'pink' ? 'text-pink-400' : null,
-                        panel.color === 'brown' && 'text-amber-800',
-                        panel.color === 'purple' && 'text-purple-700',
-                        panel.color === 'white' && 'text-white',
-                        panel.color === 'black' && 'text-black'
+                        "font-orbitron font-bold text-5xl text-center ",
+                        panel.color === "blue" ? "text-blue-500" : null,
+                        panel.color === "green" ? "text-green-400" : null,
+                        panel.color === "orange" ? "text-orange-500" : null,
+                        panel.color === "yellow" ? "text-yellow-400" : null,
+                        panel.color === "red" ? "text-red-500" : null,
+                        panel.color === "pink" ? "text-pink-400" : null,
+                        panel.color === "brown" && "text-amber-800",
+                        panel.color === "purple" && "text-purple-700",
+                        panel.color === "white" && "text-white",
+                        panel.color === "black" && "text-black"
                       )}
                     >
                       {panel.name}
                     </h1>
                     <TypeToggleSwitch
-                      leftLabel={'TR'}
-                      rightLabel={'Lead'}
+                      leftLabel={"TR"}
+                      rightLabel={"Lead"}
                       value={typeToggles[panel.id]}
-                      onTypeSwitchValue={(value) =>
-                        handleTypeChange(panel.id, value)
-                      }
+                      onTypeSwitchValue={value => handleTypeChange(panel.id, value)}
                     />
                   </div>
                   {/* holds */}
                   <div className="flex flex-col items-center ">
-                    <label
-                      htmlFor=""
-                      className="font-barlow font-bold text-xl text-white"
-                    >
-                      Hold {'#'}
+                    <label htmlFor="" className="font-barlow font-bold text-xl text-white">
+                      Hold {"#"}
                     </label>
                     <div className="flex items-center gap-3 blue-button rounded-md p-2">
                       <button
@@ -411,30 +400,22 @@ export default function MixerRopeScorer({ mixerRoutes, StartTime }) {
                           stroke="currentColor"
                           className="size-4"
                           style={{
-                            filter: 'drop-shadow(0px 4px 6px rgba(0, 0, 0, 1))',
+                            filter: "drop-shadow(0px 4px 6px rgba(0, 0, 0, 1))",
                           }}
                         >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            d="M5 12h14"
-                          />
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M5 12h14" />
                         </svg>
                       </button>
                       <input
                         type="text"
                         value={hold[panel.id]}
-                        onChange={(e) =>
-                          handleHoldChange(panel.id, panel.holds.length, e)
-                        }
+                        onChange={e => handleHoldChange(panel.id, panel.holds.length, e)}
                         className="p-2 text-white font-barlow font-bold size-10 text-2xl rounded-sm text-center focus:outline-hidden border-none"
                         placeholder="#"
                       />
                       <button
                         className="rounded-full size-12 font-barlow font-bold bg-green-500/45 border-2 border-green-500 flex justify-center items-center"
-                        onClick={() =>
-                          handlePlusHold(panel.id, panel.holds.length)
-                        }
+                        onClick={() => handlePlusHold(panel.id, panel.holds.length)}
                       >
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -444,7 +425,7 @@ export default function MixerRopeScorer({ mixerRoutes, StartTime }) {
                           stroke="currentColor"
                           className="size-4"
                           style={{
-                            filter: 'drop-shadow(0px 4px 6px rgba(0, 0, 0, 1))',
+                            filter: "drop-shadow(0px 4px 6px rgba(0, 0, 0, 1))",
                           }}
                         >
                           <path
@@ -461,17 +442,12 @@ export default function MixerRopeScorer({ mixerRoutes, StartTime }) {
                   <p className="font-stalinist gradient-text-yellow-red text-3xl text-center">
                     {points[panel.id] > 0 ? points[panel.id] : 0}
                   </p>
-                  <p className="font-stalinist gradient-text-yellow-red text-base">
-                    Points
-                  </p>
+                  <p className="font-stalinist gradient-text-yellow-red text-base">Points</p>
                 </div>
 
                 {/* attempts */}
                 <div className="flex flex-col items-center">
-                  <label
-                    htmlFor=""
-                    className="font-barlow font-bold text-xl text-white"
-                  >
+                  <label htmlFor="" className="font-barlow font-bold text-xl text-white">
                     Attempts
                   </label>
                   <div className="flex items-center gap-3 blue-button p-2 rounded-md">
@@ -487,20 +463,16 @@ export default function MixerRopeScorer({ mixerRoutes, StartTime }) {
                         stroke="currentColor"
                         className="size-4"
                         style={{
-                          filter: 'drop-shadow(0px 4px 6px rgba(0, 0, 0, 1))',
+                          filter: "drop-shadow(0px 4px 6px rgba(0, 0, 0, 1))",
                         }}
                       >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M5 12h14"
-                        />
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 12h14" />
                       </svg>
                     </button>
                     <input
                       type="text"
                       value={attempts[panel.id]}
-                      onChange={(e) => handleAttemptChange(panel.id, e)}
+                      onChange={e => handleAttemptChange(panel.id, e)}
                       className="p-2 text-white font-barlow font-bold size-10 text-2xl rounded-sm text-center focus:outline-hidden border-none"
                       placeholder="#"
                     />
@@ -516,7 +488,7 @@ export default function MixerRopeScorer({ mixerRoutes, StartTime }) {
                         stroke="currentColor"
                         className="size-4"
                         style={{
-                          filter: 'drop-shadow(0px 4px 6px rgba(0, 0, 0, 1))',
+                          filter: "drop-shadow(0px 4px 6px rgba(0, 0, 0, 1))",
                         }}
                       >
                         <path
@@ -533,13 +505,7 @@ export default function MixerRopeScorer({ mixerRoutes, StartTime }) {
                 <div className="flex flex-col gap-3 items-center">
                   <button
                     className="bg-green-500/45 border-2 border-green-500 rounded-full size-16 flex justify-center items-center"
-                    onClick={() =>
-                      handleCompletion(
-                        panel.id,
-                        attempts[panel.id],
-                        points[panel.id]
-                      )
-                    }
+                    onClick={() => handleCompletion(panel.id, attempts[panel.id], points[panel.id])}
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -565,33 +531,33 @@ export default function MixerRopeScorer({ mixerRoutes, StartTime }) {
                 {/* complete panel */}
                 <div
                   className={clsx(
-                    'flex flex-col justify-between p-3 bg-green-500/20 border-2 border-green-500 h-full w-full text-white text-2xl shadow-lg rounded-lg z-20',
-                    panel.color === 'blue' ? 'shadow-blue-500' : null,
-                    panel.color === 'red' ? 'shadow-red-500' : null,
-                    panel.color === 'green' ? 'shadow-green-400' : null,
-                    panel.color === 'orange' ? 'shadow-orange-500' : null,
-                    panel.color === 'yellow' ? 'shadow-yellow-400' : null,
-                    panel.color === 'pink' ? 'shadow-pink-400' : null,
-                    panel.color === 'brown' && 'shadow-amber-800',
-                    panel.color === 'purple' && 'shadow-purple-700',
-                    panel.color === 'white' && 'shadow-white',
-                    panel.color === 'black' && 'shadow-black'
+                    "flex flex-col justify-between p-3 bg-green-500/20 border-2 border-green-500 h-full w-full text-white text-2xl shadow-lg rounded-lg z-20",
+                    panel.color === "blue" ? "shadow-blue-500" : null,
+                    panel.color === "red" ? "shadow-red-500" : null,
+                    panel.color === "green" ? "shadow-green-400" : null,
+                    panel.color === "orange" ? "shadow-orange-500" : null,
+                    panel.color === "yellow" ? "shadow-yellow-400" : null,
+                    panel.color === "pink" ? "shadow-pink-400" : null,
+                    panel.color === "brown" && "shadow-amber-800",
+                    panel.color === "purple" && "shadow-purple-700",
+                    panel.color === "white" && "shadow-white",
+                    panel.color === "black" && "shadow-black"
                   )}
                 >
                   <div className="z-30">
                     <h1
                       className={clsx(
-                        'font-orbitron font-bold text-6xl text-center mb-2 drop-shadow-customBlack',
-                        panel.color === 'blue' ? 'text-blue-500' : null,
-                        panel.color === 'green' ? 'text-green-400' : null,
-                        panel.color === 'orange' ? 'text-orange-500' : null,
-                        panel.color === 'yellow' ? 'text-yellow-400' : null,
-                        panel.color === 'red' ? 'text-red-500' : null,
-                        panel.color === 'pink' ? 'text-pink-400' : null,
-                        panel.color === 'brown' && 'text-amber-800',
-                        panel.color === 'purple' && 'text-purple-700',
-                        panel.color === 'white' && 'text-white',
-                        panel.color === 'black' && 'text-black'
+                        "font-orbitron font-bold text-6xl text-center mb-2 drop-shadow-customBlack",
+                        panel.color === "blue" ? "text-blue-500" : null,
+                        panel.color === "green" ? "text-green-400" : null,
+                        panel.color === "orange" ? "text-orange-500" : null,
+                        panel.color === "yellow" ? "text-yellow-400" : null,
+                        panel.color === "red" ? "text-red-500" : null,
+                        panel.color === "pink" ? "text-pink-400" : null,
+                        panel.color === "brown" && "text-amber-800",
+                        panel.color === "purple" && "text-purple-700",
+                        panel.color === "white" && "text-white",
+                        panel.color === "black" && "text-black"
                       )}
                     >
                       {panel.name}
@@ -601,7 +567,7 @@ export default function MixerRopeScorer({ mixerRoutes, StartTime }) {
                     </p>
                   </div>
                   <p className="font-barlow font-bold text-center text-4xl">
-                    {typeToggles[panel.id] === 'TR' ? 'Top Rope' : 'Lead'}
+                    {typeToggles[panel.id] === "TR" ? "Top Rope" : "Lead"}
                   </p>
                   <div className="flex flex-col gap-2">
                     <p className="font-stalinist gradient-text-yellow-red text-6xl text-center drop-shadow-customBlack">
@@ -661,15 +627,13 @@ export default function MixerRopeScorer({ mixerRoutes, StartTime }) {
           max={mixerRoutes.length - 1}
           step="1"
           value={rangeValue}
-          onChange={(e) => handleRangeChange(Number(e.target.value))}
+          onChange={e => handleRangeChange(Number(e.target.value))}
           className="slider w-3/4 md:w-1/5 mb-2 appearance-none bg-gray-300 rounded-sm h-2 mt-4"
         />
 
         {/* Slider Labels */}
         <div className="flex justify-between w-3/4 md:w-1/5 text-sm text-gray-400">
-          <span className="text-left font-barlow font-bold">
-            {mixerRoutes[0].name}
-          </span>
+          <span className="text-left font-barlow font-bold">{mixerRoutes[0].name}</span>
           <span className="text-center font-barlow font-bold">
             {mixerRoutes[Math.floor(mixerRoutes.length / 2)].name}
           </span>

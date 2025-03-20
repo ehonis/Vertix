@@ -1,6 +1,6 @@
-import prisma from '@/prisma';
-import { NextResponse } from 'next/server';
-import { parseDateString } from '@/lib/dates';
+import prisma from "@/prisma";
+import { NextResponse } from "next/server";
+import { parseDateString } from "@/lib/dates";
 
 export async function POST(request) {
   const res = await request.json();

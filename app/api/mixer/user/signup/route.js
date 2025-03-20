@@ -1,11 +1,7 @@
-import prisma from '@/prisma';
-import { NextResponse } from 'next/server';
-import { auth } from '@/auth';
-export const POST = auth(async function POST(req) {
-  if (!req.auth) {
-    return NextResponse.json({ success: false, error: 'Unauthorized' });
-  }
-
+import prisma from "@/prisma";
+import { NextResponse } from "next/server";
+import { auth } from "@/auth";
+export async function POST(req) {
   const { userId, climberName, selectedDivision, compId } = await req.json();
   console.log(userId, climberName, selectedDivision, compId);
   try {
@@ -22,7 +18,7 @@ export const POST = auth(async function POST(req) {
             id: selectedDivision,
           },
         },
-        entryMethod: 'APP',
+        entryMethod: "APP",
         competition: {
           connect: {
             id: compId,
@@ -36,4 +32,4 @@ export const POST = auth(async function POST(req) {
   } catch (error) {
     return NextResponse.json({ success: false, error: error.message });
   }
-});
+}

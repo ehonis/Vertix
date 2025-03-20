@@ -1,7 +1,7 @@
-import { useState } from 'react';
-import { useNotification } from '@/app/contexts/NotificationContext';
-import { getGradeRange } from '@/lib/routes';
-import { useRouter } from 'next/navigation';
+import { useState } from "react";
+import { useNotification } from "@/app/contexts/NotificationContext";
+import { getGradeRange } from "@/lib/routes";
+import { useRouter } from "next/navigation";
 export default function GradeMenu({
   route,
   userId,
@@ -14,7 +14,7 @@ export default function GradeMenu({
   const gradeOptions = getGradeRange(route.grade);
   const [selectedGrade, setSelectedGrade] = useState(gradeOptions[0]);
   const { showNotification } = useNotification();
-  const handleSelectGradeChange = (event) => {
+  const handleSelectGradeChange = event => {
     setSelectedGrade(event.target.value);
   };
 
@@ -23,12 +23,9 @@ export default function GradeMenu({
       return (
         <div className="flex flex-col items-center gap-3">
           <p className="text-center">
-            You have already graded this problem, you can change your proposed
-            grade below <br />
+            You have already graded this problem, you can change your proposed grade below <br />
             <br />
-            <span className="text-blue-500 underline">
-              Your Proposed Grade : {proposedGrade}
-            </span>
+            <span className="text-blue-500 underline">Your Proposed Grade : {proposedGrade}</span>
           </p>
           <label className="flex gap-3 font-bold">
             Grade:
@@ -71,12 +68,12 @@ export default function GradeMenu({
     }
   };
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = async event => {
     event.preventDefault();
     try {
-      const response = await fetch('/api/menus/gradeMenu', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const response = await fetch("/api/menus/gradeMenu", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           userId: userId,
           routeId: route.id,
@@ -85,11 +82,11 @@ export default function GradeMenu({
         }),
       });
       if (!response.ok) {
-        throw new Error('Error in API Call');
+        throw new Error("Error in API Call");
       }
       showNotification({
         message: `Graded ${route.title} w/ grade: ${selectedGrade}`,
-        color: 'green',
+        color: "green",
       });
       onCancel();
     } catch (error) {
@@ -101,10 +98,7 @@ export default function GradeMenu({
   };
   return (
     <div className="flex flex-col items-center">
-      <form
-        onSubmit={handleSubmit}
-        className="flex flex-col gap-2 items-center"
-      >
+      <form onSubmit={handleSubmit} className="flex flex-col gap-2 items-center">
         {renderGradeMenuText()}
 
         <button type="submit" className="bg-green-500 p-1 rounded-sm m-3">

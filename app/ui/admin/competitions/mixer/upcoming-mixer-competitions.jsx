@@ -1,19 +1,19 @@
-import Link from 'next/link';
-import prisma from '@/prisma';
-import Image from 'next/image';
-import { CompetitionStatus } from '@prisma/client';
+import Link from "next/link";
+import prisma from "@/prisma";
+import Image from "next/image";
+import { CompetitionStatus } from "@prisma/client";
 export default async function UpcomingMixerCompetitions() {
   const competitions = await prisma.MixerCompetition.findMany({
     where: {
       status: { in: [CompetitionStatus.INACTIVE, CompetitionStatus.UPCOMING] },
     },
-    orderBy: { compDay: 'asc' },
+    orderBy: { compDay: "asc" },
     take: 3,
     select: { id: true, name: true, compDay: true, imageUrl: true },
   });
   return (
     <div className="flex flex-col gap-2 w-full">
-      {competitions.map((comp) => (
+      {competitions.map(comp => (
         <Link
           key={comp.id}
           className="bg-bg1 w-full grid grid-cols-3 gap-3 font-barlow font-bold text-white p-2 rounded-sm outline outline-white outline-1"
@@ -44,9 +44,7 @@ export default async function UpcomingMixerCompetitions() {
             />
           )}
           <p className=" text-center self-center">{comp.name}</p>
-          <p className="text-end self-center">
-            {comp.compDay.toLocaleDateString('en-US')}
-          </p>
+          <p className="text-end self-center">{comp.compDay.toLocaleDateString("en-US")}</p>
         </Link>
       ))}
     </div>

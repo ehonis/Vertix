@@ -1,0 +1,8 @@
+node_modules
+.next
+build
+dist
+coverage
+public
+lib/testPrisma.js
+lib/updateSchema.js 

@@ -1,51 +1,37 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
-import RouteTile from './route-tile';
-import { useEffect, useState, useMemo } from 'react';
-import { useRouter } from 'next/navigation';
-import { useNotification } from '@/app/contexts/NotificationContext';
+import Link from "next/link";
+import RouteTile from "./route-tile";
+import { useEffect, useState, useMemo } from "react";
+import { useRouter } from "next/navigation";
+import { useNotification } from "@/app/contexts/NotificationContext";
 
-export default function FilteredRoutes({
-  filter,
-  ropes,
-  boulders,
-  user,
-  completions,
-}) {
+export default function FilteredRoutes({ filter, ropes, boulders, user, completions }) {
   const [filteredRoutes, setFilteredRoutes] = useState([]);
   const routes = useMemo(() => [...ropes, ...boulders], [ropes, boulders]);
 
   useEffect(() => {
     const { boulderFilter, ropeFilter, colorFilter, sectionFilter } = filter;
 
-    const newFilteredRoutes = routes.filter((route) => {
+    const newFilteredRoutes = routes.filter(route => {
       // Check if the route matches any color filter
-      const matchesColor =
-        colorFilter.length === 0 || colorFilter.includes(route.color);
+      const matchesColor = colorFilter.length === 0 || colorFilter.includes(route.color);
 
       // Check if the route matches boulder grade if it's a boulder
       const matchesBoulderGrade =
         boulderFilter.length === 0 ||
-        (route.type === 'boulder' && boulderFilter.includes(route.grade));
+        (route.type === "boulder" && boulderFilter.includes(route.grade));
 
       // Check if the route matches rope grade if it's a rope
       const matchesRopeGrade =
         ropeFilter.length === 0 ||
-        (route.type === 'rope' &&
-          ropeFilter.some((grade) => route.grade.startsWith(grade)));
+        (route.type === "rope" && ropeFilter.some(grade => route.grade.startsWith(grade)));
 
       // Check if the route matches any section filter
-      const matchesSection =
-        sectionFilter.length === 0 || sectionFilter.includes(route.location);
+      const matchesSection = sectionFilter.length === 0 || sectionFilter.includes(route.location);
 
       // Return true if the route matches all active filters
-      return (
-        matchesColor &&
-        matchesBoulderGrade &&
-        matchesRopeGrade &&
-        matchesSection
-      );
+      return matchesColor && matchesBoulderGrade && matchesRopeGrade && matchesSection;
     });
 
     setFilteredRoutes(newFilteredRoutes);
@@ -61,25 +47,25 @@ export default function FilteredRoutes({
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_BASE_URL}/api/user/add-route-completion`,
         {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ userId, routeId }),
         }
       );
       if (response.ok) {
         showNotification({
           message: `Quick Completed ${routeName}`,
-          color: 'green',
+          color: "green",
         });
       } else {
         const { error } = await response.json();
         showNotification({
           message: `Could Not Quick Complete ${routeName}: ${error}`,
-          color: 'red',
+          color: "red",
         });
       }
     } catch (error) {
-      showNotification({ message: `Error: ${error.message}`, color: 'red' });
+      showNotification({ message: `Error: ${error.message}`, color: "red" });
       console.error(error);
     }
     router.refresh();
@@ -90,26 +76,26 @@ export default function FilteredRoutes({
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_BASE_URL}/api/user/remove-route-completion`,
         {
-          method: 'DELETE',
-          headers: { 'Content-Type': 'application/json' },
+          method: "DELETE",
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ userId, routeId }),
         }
       );
       if (response.ok) {
         showNotification({
           message: `Uncompleted ${routeName}`,
-          color: 'green',
+          color: "green",
         });
       } else {
         const { error } = await response.json();
         showNotification({
           message: `Could Not Uncomplete ${routeName}: ${error}`,
-          color: 'red',
+          color: "red",
         });
       }
       router.refresh();
     } catch (error) {
-      showNotification({ message: `Error: ${error.message}`, color: 'red' });
+      showNotification({ message: `Error: ${error.message}`, color: "red" });
       console.error(error);
     }
   };
@@ -122,22 +108,16 @@ export default function FilteredRoutes({
     postRouteUnCompletion(user.id, routeId, routeName);
   };
 
-  const completedRouteIds = user
-    ? completions.map((completion) => completion.routeId)
-    : [];
+  const completedRouteIds = user ? completions.map(completion => completion.routeId) : [];
 
   return (
     <div className="flex md:grow flex-col gap-5 p-5">
       <div className="bg-bg1 h-full grow rounded-xl">
         <div className="p-3 flex flex-col md:grid md:grid-cols-2 md:items-start items-center gap-2">
-          {filteredRoutes.map((route) => (
+          {filteredRoutes.map(route => (
             <div className="flex items-center gap-2" key={route.id}>
               <Link href={`routes/${route.id}`}>
-                <RouteTile
-                  color={route.color}
-                  name={route.title}
-                  grade={route.grade}
-                />
+                <RouteTile color={route.color} name={route.title} grade={route.grade} />
               </Link>
               {user && !completedRouteIds.includes(route.id) ? (
                 <button

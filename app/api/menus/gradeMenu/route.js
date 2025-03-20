@@ -1,5 +1,5 @@
-import { NextResponse } from 'next/server';
-import prisma from '@/prisma';
+import { NextResponse } from "next/server";
+import prisma from "@/prisma";
 
 export async function POST(request) {
   const { userId, routeId, isGraded, selectedGrade } = await request.json();
@@ -10,11 +10,8 @@ export async function POST(request) {
         data: { grade: selectedGrade },
       });
       if (updateResult.count === 0) {
-        console.log('No matching record found to update.');
-        return NextResponse.json(
-          { error: 'No matching record found' },
-          { status: 404 }
-        );
+        console.log("No matching record found to update.");
+        return NextResponse.json({ error: "No matching record found" }, { status: 404 });
       }
     } else {
       await prisma.CommunityGrade.create({
@@ -27,11 +24,11 @@ export async function POST(request) {
     }
     return NextResponse.json(
       { status: 200 },
-      { message: 'Successfully created or updated commnity grade' }
+      { message: "Successfully created or updated commnity grade" }
     );
   } catch (error) {
     return NextResponse.json(
-      { error: 'Failed to add route to completion', details: error.message },
+      { error: "Failed to add route to completion", details: error.message },
       { status: 500 }
     );
   }

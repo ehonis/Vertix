@@ -1,11 +1,11 @@
-import Link from 'next/link';
-import TrophyIcon from '../ui/competitions/trophy-icon';
-import Image from 'next/image';
-import prisma from '@/prisma';
-import { Suspense } from 'react';
-import clsx from 'clsx';
-import ElementLoadingAnimation from '../ui/general/element-loading-animation';
-import { CompetitionStatus } from '@prisma/client';
+import Link from "next/link";
+import TrophyIcon from "../ui/competitions/trophy-icon";
+import Image from "next/image";
+import prisma from "@/prisma";
+import { Suspense } from "react";
+import clsx from "clsx";
+import ElementLoadingAnimation from "../ui/general/element-loading-animation";
+import { CompetitionStatus } from "@prisma/client";
 async function DemoComps() {
   const demoCompetitions = await prisma.MixerCompetition.findMany({
     where: {
@@ -15,7 +15,7 @@ async function DemoComps() {
   return (
     <div className="flex justify-center ">
       <div className="flex flex-col gap-3 w-full">
-        {demoCompetitions.map((comp) => (
+        {demoCompetitions.map(comp => (
           <Link
             key={comp.id}
             href={`/competitions/competition/mixer/${comp.id}`}
@@ -56,18 +56,15 @@ async function UpComingComps() {
   return (
     <div className="flex justify-center ">
       <div className="flex flex-col gap-3 w-full">
-        {mixerCompetitions.map((comp) => (
+        {mixerCompetitions.map(comp => (
           <Link
             key={comp.id}
             href={`/competitions/competition/mixer/${comp.id}`}
             className={clsx(
-              ' bg-blue-500/15 rounded-lg  p-2 flex justify-between outline  place-items-center',
-              comp.status === CompetitionStatus.INACTIVE &&
-                'outline-red-500 bg-red-500/15',
-              comp.status === CompetitionStatus.UPCOMING &&
-                'outline-blue-500 bg-blue-500/15',
-              comp.status === CompetitionStatus.IN_PROGRESS &&
-                'outline-green-500 bg-green-500/15'
+              " bg-blue-500/15 rounded-lg  p-2 flex justify-between outline  place-items-center",
+              comp.status === CompetitionStatus.INACTIVE && "outline-red-500 bg-red-500/15",
+              comp.status === CompetitionStatus.UPCOMING && "outline-blue-500 bg-blue-500/15",
+              comp.status === CompetitionStatus.IN_PROGRESS && "outline-green-500 bg-green-500/15"
             )}
           >
             <div className="flex flex-col">
@@ -75,14 +72,10 @@ async function UpComingComps() {
                 {comp.name}
               </p>
               {comp.status === CompetitionStatus.UPCOMING && (
-                <p className="text-blue-500 text-sm italic ">
-                  Sign Ups are Active!
-                </p>
+                <p className="text-blue-500 text-sm italic ">Sign Ups are Active!</p>
               )}
               {comp.status === CompetitionStatus.INACTIVE && (
-                <p className="text-red-500 text-sm italic ">
-                  Currently Unavailable
-                </p>
+                <p className="text-red-500 text-sm italic ">Currently Unavailable</p>
               )}
               {comp.status === CompetitionStatus.IN_PROGRESS && (
                 <p className="text-green-500 text-sm italic ">In Progress</p>
@@ -152,9 +145,7 @@ export default function page() {
           <div className="md:w-lg w-xs h-1 rounded-full bg-white" />
         </div>
         <div className="w-xs md:w-lg">
-          <h1 className="font-barlow text-2xl text-white font-semibold mb-1">
-            Active or Upcoming
-          </h1>
+          <h1 className="font-barlow text-2xl text-white font-semibold mb-1">Active or Upcoming</h1>
           <Suspense
             fallback={
               <div className="flex justify-center mt-2">
@@ -166,9 +157,7 @@ export default function page() {
           </Suspense>
         </div>
         <div className="w-xs md:w-lg">
-          <h1 className="font-barlow text-2xl text-white font-semibold mb-1">
-            Demo
-          </h1>
+          <h1 className="font-barlow text-2xl text-white font-semibold mb-1">Demo</h1>
           <Suspense
             fallback={
               <div className="flex justify-center mt-2">
@@ -182,8 +171,7 @@ export default function page() {
         <div
           className="absolute inset-0 opacity-40 -z-20"
           style={{
-            background:
-              'radial-gradient(circle at bottom right, #ef4444 0%, transparent 65%)',
+            background: "radial-gradient(circle at bottom right, #ef4444 0%, transparent 65%)",
           }}
         />
       </div>

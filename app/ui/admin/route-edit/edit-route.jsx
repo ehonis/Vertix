@@ -1,14 +1,14 @@
-'use client';
-import clsx from 'clsx';
-import Link from 'next/link';
-import { formatDate, formatDateToYYYYMMDD, parseDateString } from '@/lib/dates';
-import ImageSlider from '../../routes/individualRoutePage/route-image-slider';
-import Image from 'next/image';
-import StarRating from '../../general/star-rating';
-import { splitGradeModifier } from '@/lib/routes';
-import { useState, useEffect } from 'react';
-import { useNotification } from '@/app/contexts/NotificationContext';
-import { useRouter } from 'next/navigation';
+"use client";
+import clsx from "clsx";
+import Link from "next/link";
+import { formatDate, formatDateToYYYYMMDD, parseDateString } from "@/lib/dates";
+import ImageSlider from "../../routes/individualRoutePage/route-image-slider";
+import Image from "next/image";
+import StarRating from "../../general/star-rating";
+import { splitGradeModifier } from "@/lib/routes";
+import { useState, useEffect } from "react";
+import { useNotification } from "@/app/contexts/NotificationContext";
+import { useRouter } from "next/navigation";
 
 export default function EditRoute({ route, images, daysOld, totalSends }) {
   const { showNotification } = useNotification();
@@ -20,7 +20,7 @@ export default function EditRoute({ route, images, daysOld, totalSends }) {
 
   const [grade, setGrade] = useState(route.grade);
   const [finalGrade, setFinalGrade] = useState(route.grade);
-  const [modifier, setModifier] = useState('');
+  const [modifier, setModifier] = useState("");
   const [isModifier, setIsModifier] = useState(true);
 
   const [date, setDate] = useState(formatDateToYYYYMMDD(route.setDate));
@@ -30,7 +30,7 @@ export default function EditRoute({ route, images, daysOld, totalSends }) {
 
   const [isSubmit, setIsSubmit] = useState(false);
   useEffect(() => {
-    if (grade.startsWith('v')) {
+    if (grade.startsWith("v")) {
       setGrade(route.grade);
     } else {
       const [grade, modifier] = splitGradeModifier(route.grade);
@@ -40,48 +40,48 @@ export default function EditRoute({ route, images, daysOld, totalSends }) {
   }, [grade, route.grade]);
 
   useEffect(() => {
-    if (grade === '5.B' || grade === '5.7' || grade.startsWith('v')) {
+    if (grade === "5.B" || grade === "5.7" || grade.startsWith("v")) {
       setIsModifier(false);
     } else {
       setIsModifier(true);
     }
   }, [grade, modifier]);
 
-  const handleTitleChange = (event) => {
+  const handleTitleChange = event => {
     const newTitle = event.target.value;
     setTitle(newTitle);
     setIsSubmit(true);
   };
-  const handleBoulderGradeChange = (event) => {
+  const handleBoulderGradeChange = event => {
     const newGrade = event.target.value;
     setGrade(newGrade);
     setFinalGrade(newGrade);
     setIsSubmit(true);
   };
-  const handleRopeGradeChange = (event) => {
+  const handleRopeGradeChange = event => {
     const newGrade = event.target.value;
     setGrade(newGrade);
     setFinalGrade(`${newGrade}${modifier}`);
     setIsSubmit(true);
   };
-  const handleRopeModifierChange = (event) => {
+  const handleRopeModifierChange = event => {
     const newModifier = event.target.value;
     setModifier(newModifier);
     setFinalGrade(`${grade}${newModifier}`);
     setIsSubmit(true);
   };
-  const handleTypeChange = (event) => {
+  const handleTypeChange = event => {
     const newType = event.target.value;
     setType(newType);
     setIsSubmit(true);
   };
-  const handleDateChange = (event) => {
+  const handleDateChange = event => {
     const newDate = event.target.value;
     setDate(newDate);
     setFinalDate(parseDateString(newDate));
     setIsSubmit(true);
   };
-  const handleLocationChange = (event) => {
+  const handleLocationChange = event => {
     const newLocation = event.target.value;
     setLocation(newLocation);
     setIsSubmit(true);
@@ -96,9 +96,9 @@ export default function EditRoute({ route, images, daysOld, totalSends }) {
       newLocation: location,
     };
     try {
-      const response = await fetch('/api/edit/updateRoute', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const response = await fetch("/api/edit/updateRoute", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
       });
       if (!response.ok) {
@@ -106,14 +106,14 @@ export default function EditRoute({ route, images, daysOld, totalSends }) {
       } else {
         showNotification({
           message: `Successfully Updated ${route.title}`,
-          color: 'green',
+          color: "green",
         });
         router.refresh();
       }
     } catch (error) {
       showNotification({
         message: `${error}`,
-        color: 'red',
+        color: "red",
       });
     }
   };
@@ -127,7 +127,7 @@ export default function EditRoute({ route, images, daysOld, totalSends }) {
       <div className="flex justify-center items-center flex-col py-7 ">
         <div className="flex justify-between items-center w-11/12 md:w-3/5 ">
           <div className="">
-            <Link href={'/admin/manager/routes'}>
+            <Link href={"/admin/manager/routes"}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -163,11 +163,8 @@ export default function EditRoute({ route, images, daysOld, totalSends }) {
                 d="m20.25 7.5-.625 10.632a2.25 2.25 0 0 1-2.247 2.118H6.622a2.25 2.25 0 0 1-2.247-2.118L3.75 7.5m8.25 3v6.75m0 0-3-3m3 3 3-3M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125Z"
               />
             </svg>
-            <label
-              htmlFor=""
-              className="font-barlow font-bold text-white text-xs"
-            >
-              {route.isArchive ? 'Unarchive' : 'Archive'}
+            <label htmlFor="" className="font-barlow font-bold text-white text-xs">
+              {route.isArchive ? "Unarchive" : "Archive"}
             </label>
           </button>
         </div>
@@ -175,17 +172,17 @@ export default function EditRoute({ route, images, daysOld, totalSends }) {
         <div className="w-11/12 md:w-3/5 bg-bg1 h-max rounded-xl mt-5 justify-center">
           <div
             className={clsx(
-              ' w-full h-8 rounded-t-xl',
+              " w-full h-8 rounded-t-xl",
               {
-                'bg-green-400': color === 'green',
-                'bg-red-400': color === 'red',
-                'bg-blue-400': color === 'blue',
-                'bg-yellow-400': color === 'yellow',
-                'bg-purple-400': color === 'purple',
-                'bg-orange-400': color === 'orange',
-                'bg-white': color === 'white',
-                'bg-slate-400': color === 'defaultColor',
-                'bg-pink-400': color === 'pink',
+                "bg-green-400": color === "green",
+                "bg-red-400": color === "red",
+                "bg-blue-400": color === "blue",
+                "bg-yellow-400": color === "yellow",
+                "bg-purple-400": color === "purple",
+                "bg-orange-400": color === "orange",
+                "bg-white": color === "white",
+                "bg-slate-400": color === "defaultColor",
+                "bg-pink-400": color === "pink",
               } // Using clsx for dynamic color
             )}
           ></div>
@@ -213,7 +210,7 @@ export default function EditRoute({ route, images, daysOld, totalSends }) {
                 <label htmlFor="" className="text-white font-barlow font-bold">
                   Grade:
                 </label>
-                {type === 'rope' ? (
+                {type === "rope" ? (
                   <>
                     <select
                       name="type"
@@ -268,7 +265,7 @@ export default function EditRoute({ route, images, daysOld, totalSends }) {
               {/* Date */}
               <div className="flex gap-2">
                 <label htmlFor="" className="font-barlow font-bold text-white">
-                  setDate:{' '}
+                  setDate:{" "}
                 </label>
                 <input
                   type="date"
@@ -296,11 +293,9 @@ export default function EditRoute({ route, images, daysOld, totalSends }) {
                   <option value="boulder2">boulderSouth</option>
                 </select>
               </div>
+              <div className="text-white font-barlow font-bold">Id: {route.id}</div>
               <div className="text-white font-barlow font-bold">
-                Id: {route.id}
-              </div>
-              <div className="text-white font-barlow font-bold">
-                IsArchive: {route.isArchive ? 'Yes' : 'No'}
+                IsArchive: {route.isArchive ? "Yes" : "No"}
               </div>
             </div>
             {/* Images */}
@@ -308,12 +303,10 @@ export default function EditRoute({ route, images, daysOld, totalSends }) {
               <ImageSlider images={images} />
             ) : (
               <Image
-                src={
-                  'https://utfs.io/f/bujx12z5cHJjc9Ak3DLO1WJXeZH487yuvrhiVgUb5MoAPlpN'
-                }
+                src={"https://utfs.io/f/bujx12z5cHJjc9Ak3DLO1WJXeZH487yuvrhiVgUb5MoAPlpN"}
                 height={600}
                 width={600}
-                style={{ objectFit: 'cover' }}
+                style={{ objectFit: "cover" }}
                 className="w-32 h-40"
                 alt="default route picture"
               />
@@ -335,15 +328,11 @@ export default function EditRoute({ route, images, daysOld, totalSends }) {
         </div>
         <div className="flex mt-3 justify-between w-11/12 md:w-3/5">
           <div className="mr-3 flex w-full flex-col items-center rounded-xl bg-bg1 p-4 shadow-lg">
-            <h2 className="gradient-text-blue m-0 p-0 text-8xl font-bold">
-              {totalSends}
-            </h2>
+            <h2 className="gradient-text-blue m-0 p-0 text-8xl font-bold">{totalSends}</h2>
             <p className="m-0 p-0 text-lg font-semibold text-white">Sends</p>
           </div>
           <div className="ml-2 flex w-full flex-col items-center rounded-xl bg-bg1 p-4 shadow-lg">
-            <h2 className="gradient-text m-0 p-0 text-8xl font-bold">
-              {daysOld}
-            </h2>
+            <h2 className="gradient-text m-0 p-0 text-8xl font-bold">{daysOld}</h2>
             <p className="m-0 p-0 text-lg font-semibold text-white">
               days <span className="text-iconbg">(old)</span>
             </p>

@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function InformationalPopUp({ html, onCancel, type }) {
   return (
@@ -27,11 +27,7 @@ export default function InformationalPopUp({ html, onCancel, type }) {
             stroke="currentColor"
             className="size-7"
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M6 18 18 6M6 6l12 12"
-            />
+            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
           </svg>
         </button>
         <h2 className="font-barlow font-bold text-xl ">Info</h2>

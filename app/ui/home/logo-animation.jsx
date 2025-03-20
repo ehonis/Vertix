@@ -1,16 +1,16 @@
-'use client';
+"use client";
 
-import { motion } from 'motion/react';
-import { useState, useEffect } from 'react';
+import { motion } from "motion/react";
+import { useState, useEffect } from "react";
 
 export default function HomeLogoAnimation() {
-  const [displayText, setDisplayText] = useState('');
+  const [displayText, setDisplayText] = useState("");
   const [wordIndex, setWordIndex] = useState(0);
   const [charIndex, setCharIndex] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
-    const words = ['climb', 'track', 'boulder', 'compete'];
+    const words = ["climb", "track", "boulder", "compete"];
     const currentWord = words[wordIndex];
 
     if (isDeleting) {
@@ -21,7 +21,7 @@ export default function HomeLogoAnimation() {
         }, 100);
       } else {
         setIsDeleting(false);
-        setWordIndex((prev) => (prev + 1) % words.length); // Move to next word
+        setWordIndex(prev => (prev + 1) % words.length); // Move to next word
       }
     } else {
       if (charIndex < currentWord.length) {
@@ -45,16 +45,14 @@ export default function HomeLogoAnimation() {
         <div
           className="absolute inset-0 opacity-50"
           style={{
-            background:
-              'radial-gradient(circle at bottom right, #1d4ed8 0%, transparent 75%)',
+            background: "radial-gradient(circle at bottom right, #1d4ed8 0%, transparent 75%)",
           }}
         />
 
         <div
           className="absolute inset-0 opacity-50"
           style={{
-            background:
-              'radial-gradient(circle at top left, #6b21a8 0%, transparent 75%)',
+            background: "radial-gradient(circle at top left, #6b21a8 0%, transparent 75%)",
           }}
         />
 
@@ -68,11 +66,11 @@ export default function HomeLogoAnimation() {
           transition={{
             delay: 0.5,
             duration: 1,
-            ease: 'easeInOut',
+            ease: "easeInOut",
           }}
           className="z-20 text-xl md:text-2xl font-barlow font-bold text-center"
         >
-          a new way to{' '}
+          a new way to{" "}
           <span className="text-primary">
             {displayText}
             <span className="animate-flash-fast">|</span>

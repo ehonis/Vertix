@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import clsx from 'clsx';
+import { useState } from "react";
+import clsx from "clsx";
 export default function SearchTextBox({ onDataFetch }) {
-  const [searchText, setSearchText] = useState('');
+  const [searchText, setSearchText] = useState("");
   const [routesBool, setRoutesBool] = useState(true);
   const [profilesBool, setProfilesBool] = useState(false);
   const handleRoutesButtonChange = () => {
@@ -14,13 +14,13 @@ export default function SearchTextBox({ onDataFetch }) {
     setRoutesBool(false);
     setProfilesBool(true);
   };
-  const handleTextChange = (event) => {
+  const handleTextChange = event => {
     const tempSearchText = event.target.value;
 
     setSearchText(tempSearchText);
   };
   const handleSubmit = async () => {
-    if (searchText === '') {
+    if (searchText === "") {
       return;
     } else {
       const queryData = new URLSearchParams({
@@ -31,7 +31,7 @@ export default function SearchTextBox({ onDataFetch }) {
       try {
         const response = await fetch(`/api/search?${queryData.toString()}`);
         if (!response.ok) {
-          console.log('error');
+          console.log("error");
         }
         const result = await response.json();
         onDataFetch(result);
@@ -46,25 +46,21 @@ export default function SearchTextBox({ onDataFetch }) {
         <div className="flex gap-3">
           <button
             className={clsx(
-              'bg-bg2 outline outline-1 outline-gray-400 px-2 py-1 rounded-full ',
-              routesBool ? 'bg-green-400 outline-hidden' : null
+              "bg-bg2 outline outline-1 outline-gray-400 px-2 py-1 rounded-full ",
+              routesBool ? "bg-green-400 outline-hidden" : null
             )}
             onClick={handleRoutesButtonChange}
           >
-            <p className="text-white font-barlow font-bold drop-shadow-customBlack">
-              Routes
-            </p>
+            <p className="text-white font-barlow font-bold drop-shadow-customBlack">Routes</p>
           </button>
           <button
             className={clsx(
-              'bg-bg2 outline outline-1 outline-gray-400 px-2 py-1 rounded-full text-white font-barlow font-bold drop-shadow-customBlack',
-              profilesBool ? 'bg-green-400 outline-hidden' : null
+              "bg-bg2 outline outline-1 outline-gray-400 px-2 py-1 rounded-full text-white font-barlow font-bold drop-shadow-customBlack",
+              profilesBool ? "bg-green-400 outline-hidden" : null
             )}
             onClick={handleProfilesButtonChange}
           >
-            <p className="text-white font-barlow font-bold drop-shadow-customBlack">
-              Profiles
-            </p>
+            <p className="text-white font-barlow font-bold drop-shadow-customBlack">Profiles</p>
           </button>
         </div>
       </div>

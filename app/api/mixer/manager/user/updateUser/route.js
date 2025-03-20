@@ -1,13 +1,7 @@
-import { NextResponse } from 'next/server';
-import prisma from '@/prisma';
-import { auth } from '@/auth';
-export const POST = auth(async function POST(req) {
-  if (!req.auth) {
-    return NextResponse.json({ success: false, error: 'Unauthorized' });
-  }
-  if (!req.auth.user.admin) {
-    return NextResponse.json({ success: false, error: 'Unauthorized' });
-  }
+import { NextResponse } from "next/server";
+import prisma from "@/prisma";
+import { auth } from "@/auth";
+export async function POST(req) {
   try {
     const {
       compId,
@@ -29,7 +23,7 @@ export const POST = auth(async function POST(req) {
     const parsedBoulderAttempts = parseInt(boulderAttempts, 10);
 
     // Use a transaction to ensure all operations succeed or fail together
-    const result = await prisma.$transaction(async (tx) => {
+    const result = await prisma.$transaction(async tx => {
       // Create the climber first
       const climberData = {
         competition: {
@@ -53,7 +47,7 @@ export const POST = auth(async function POST(req) {
             id: user.id,
           },
         };
-      } else if (entryMethod === 'MANUAL') {
+      } else if (entryMethod === "MANUAL") {
         climberData.user = {
           disconnect: true,
         };
@@ -93,17 +87,14 @@ export const POST = auth(async function POST(req) {
       };
     });
 
-    return NextResponse.json(
-      { status: 200 },
-      { message: 'Successfully Updated user' }
-    );
+    return NextResponse.json({ status: 200 }, { message: "Successfully Updated user" });
   } catch (error) {
     console.error(JSON.stringify(error, null, 2));
     return NextResponse.json(
       {
-        error: 'error in api',
+        error: "error in api",
       },
       { status: 500 }
     );
   }
-});
+}

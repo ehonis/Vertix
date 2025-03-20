@@ -1,5 +1,5 @@
-@import 'tailwindcss';
-@import 'uploadthing/tw/v4';
+@import "tailwindcss";
+@import "uploadthing/tw/v4";
 @source "./node_modules/@uploadthing/react/dist";
 @config '../tailwind.config.js';
 
@@ -107,11 +107,7 @@
   background-image: linear-gradient(to right, red, rgb(248, 90, 90));
 }
 @utility gradient-background-pink {
-  background-image: linear-gradient(
-    to right,
-    rgb(240, 0, 144),
-    rgb(250, 151, 167)
-  );
+  background-image: linear-gradient(to right, rgb(240, 0, 144), rgb(250, 151, 167));
 }
 @utility gradient-background-black {
   background-image: linear-gradient(to right, rgb(0, 0, 0), rgb(246, 222, 222));
@@ -120,21 +116,13 @@
   background-image: linear-gradient(to right, rgb(255, 255, 255), rgb(0, 0, 0));
 }
 @utility gradient-background-comp {
-  background-image: linear-gradient(
-    to right,
-    rgb(255, 204, 0),
-    rgb(255, 119, 0)
-  );
+  background-image: linear-gradient(to right, rgb(255, 204, 0), rgb(255, 119, 0));
 }
 @utility gradient-background-purple {
   background-image: linear-gradient(to right, rgb(255, 0, 255), rgb(0, 0, 255));
 }
 @utility gradient-background-yellow {
-  background-image: linear-gradient(
-    to right,
-    rgb(255, 255, 0),
-    rgb(255, 204, 0)
-  );
+  background-image: linear-gradient(to right, rgb(255, 255, 0), rgb(255, 204, 0));
 }
 @utility blue-button {
   /* 25% opacity of #3B82F6 */

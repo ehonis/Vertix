@@ -1,12 +1,12 @@
-import prisma from '@/prisma';
-import SendsPlate from '@/app/ui/profile/profile-page/sends-plate';
-import ImageNamePlate from '@/app/ui/profile/profile-page/image-name-plate';
-import { getRouteCompletions } from '@/lib/routeCompletions';
+import prisma from "@/prisma";
+import SendsPlate from "@/app/ui/profile/profile-page/sends-plate";
+import ImageNamePlate from "@/app/ui/profile/profile-page/image-name-plate";
+import { getRouteCompletions } from "@/lib/routeCompletions";
 // generate static pages
 export async function generateStaticParams() {
   const usernames = await prisma.user
     .findMany()
-    .then((users) => users.map((user) => ({ slug: user.username })));
+    .then(users => users.map(user => ({ slug: user.username })));
   return usernames;
 }
 

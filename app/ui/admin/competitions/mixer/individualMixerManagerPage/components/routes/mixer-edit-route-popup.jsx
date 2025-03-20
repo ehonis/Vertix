@@ -1,23 +1,17 @@
-'use client';
+"use client";
 
-import { motion } from 'framer-motion';
-import { useState } from 'react';
-import clsx from 'clsx';
+import { motion } from "framer-motion";
+import { useState } from "react";
+import clsx from "clsx";
 
-export default function EditRoutePopUp({
-  onCancel,
-  routeId,
-  routeName,
-  holds,
-  updateRouteHolds,
-}) {
+export default function EditRoutePopUp({ onCancel, routeId, routeName, holds, updateRouteHolds }) {
   const [name, setName] = useState(routeName);
   const [tempHolds, setTempHolds] = useState([...holds]);
 
   const handleHoldChange = (index, field, value) => {
-    const cleanedValue = Number(String(value).replace(/^0+/, '') || '0');
+    const cleanedValue = Number(String(value).replace(/^0+/, "") || "0");
 
-    setTempHolds((prevHolds) => {
+    setTempHolds(prevHolds => {
       const updatedHolds = [...prevHolds];
       updatedHolds[index] = { ...updatedHolds[index], [field]: cleanedValue };
       return updatedHolds;
@@ -25,7 +19,7 @@ export default function EditRoutePopUp({
   };
 
   const handleAddHold = () => {
-    setTempHolds((prevHolds) => [
+    setTempHolds(prevHolds => [
       ...prevHolds,
       {
         holdNumber: prevHolds.length + 1, // Auto-increment hold number
@@ -65,11 +59,7 @@ export default function EditRoutePopUp({
               stroke="currentColor"
               className="size-7"
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M6 18 18 6M6 6l12 12"
-              />
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
             </svg>
           </button>
           <h2 className="text-xl">Route Editor</h2>
@@ -77,7 +67,7 @@ export default function EditRoutePopUp({
           <input
             type="text"
             value={name}
-            onChange={(e) => setName(e.target.value)}
+            onChange={e => setName(e.target.value)}
             className="bg-bg1 p-2 rounded-sm w-full focus:outline-hidden"
             placeholder="Route Name"
           />
@@ -97,14 +87,13 @@ export default function EditRoutePopUp({
                     <div
                       key={index}
                       className={clsx(
-                        'bg-bg1 p-1 rounded-sm w-full grid grid-cols-3 gap-2 items-center',
+                        "bg-bg1 p-1 rounded-sm w-full grid grid-cols-3 gap-2 items-center",
                         index > 0 &&
-                          tempHolds[index - 1]?.topRopePoints >
-                            hold.topRopePoints &&
-                          'outline outline-red-500',
+                          tempHolds[index - 1]?.topRopePoints > hold.topRopePoints &&
+                          "outline outline-red-500",
                         index > 0 &&
                           tempHolds[index - 1]?.leadPoints > hold.leadPoints &&
-                          'outline outline-red-500'
+                          "outline outline-red-500"
                       )}
                     >
                       <p className="text-start">{hold.holdNumber}</p>
@@ -112,22 +101,14 @@ export default function EditRoutePopUp({
                       <input
                         type="number"
                         value={hold.topRopePoints}
-                        onChange={(e) =>
-                          handleHoldChange(
-                            index,
-                            'topRopePoints',
-                            e.target.value
-                          )
-                        }
+                        onChange={e => handleHoldChange(index, "topRopePoints", e.target.value)}
                         className="bg-bg2 p-1 rounded-sm w-3/4 text-center place-self-center focus:outline-hidden"
                       />
 
                       <input
                         type="number"
                         value={hold.leadPoints}
-                        onChange={(e) =>
-                          handleHoldChange(index, 'leadPoints', e.target.value)
-                        }
+                        onChange={e => handleHoldChange(index, "leadPoints", e.target.value)}
                         className="bg-bg2 p-1 rounded-sm w-3/4 text-center place-self-end focus:outline-hidden"
                       />
                     </div>
@@ -161,10 +142,7 @@ export default function EditRoutePopUp({
                 <span>Add Hold</span>
               </button>
 
-              <button
-                className="bg-blue-500 px-3 py-1 rounded-md"
-                onClick={handleSaveChanges}
-              >
+              <button className="bg-blue-500 px-3 py-1 rounded-md" onClick={handleSaveChanges}>
                 Save Changes
               </button>
             </div>

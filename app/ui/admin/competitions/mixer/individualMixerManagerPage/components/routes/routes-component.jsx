@@ -1,11 +1,11 @@
-'use client';
-import { useEffect, useState } from 'react';
-import EditRoutePopUp from './mixer-edit-route-popup';
-import { clsx } from 'clsx';
+"use client";
+import { useEffect, useState } from "react";
+import EditRoutePopUp from "./mixer-edit-route-popup";
+import { clsx } from "clsx";
 
 export default function RoutesComponent({ routes }) {
   const [compRoutes, setCompRoutes] = useState(
-    routes.map((route) => ({
+    routes.map(route => ({
       ...route,
       holds: JSON.parse(route.holds), // Convert holds JSON string to array
     }))
@@ -14,10 +14,10 @@ export default function RoutesComponent({ routes }) {
   const [isNewEditRoutePopUp, setIsNewEditRoutePopup] = useState(false); //route
   const [tempHolds, setTempHolds] = useState([]); //route
   const [tempRouteId, setTempRouteId] = useState(null); //route
-  const [tempRouteName, setTempRouteName] = useState(''); //route
+  const [tempRouteName, setTempRouteName] = useState(""); //route
 
-  const handleEditRoutePopUp = (id) => {
-    const tempRoute = compRoutes.find((route) => route.id === id);
+  const handleEditRoutePopUp = id => {
+    const tempRoute = compRoutes.find(route => route.id === id);
 
     if (tempRoute) {
       setTempHolds(tempRoute.holds);
@@ -30,21 +30,16 @@ export default function RoutesComponent({ routes }) {
   }; //route
 
   const updateRouteHolds = (routeId, newHolds, newName) => {
-    setCompRoutes((prevRoutes) =>
-      prevRoutes.map((route) =>
-        route.id === routeId
-          ? { ...route, holds: newHolds, name: newName }
-          : route
+    setCompRoutes(prevRoutes =>
+      prevRoutes.map(route =>
+        route.id === routeId ? { ...route, holds: newHolds, name: newName } : route
       )
     );
   }; //route
   return (
     <div>
       {isNewEditRoutePopUp && (
-        <EditRoutePopUp
-          onCancel={() => setIsNewEditRoutePopup(false)}
-          holds={null}
-        />
+        <EditRoutePopUp onCancel={() => setIsNewEditRoutePopup(false)} holds={null} />
       )}
       {isEditRoutePopup && (
         <EditRoutePopUp
@@ -60,24 +55,22 @@ export default function RoutesComponent({ routes }) {
         <div className="bg-bg2 flex-col gap-2 flex p-3 rounded-sm w-full">
           {compRoutes.length > 0 ? (
             <div className="w-full flex-col flex gap-2">
-              {compRoutes.map((route) => (
+              {compRoutes.map(route => (
                 <button
                   key={route.id}
                   className={clsx(
-                    ' flex p-1 rounded-sm',
-                    route.color === 'red' && 'bg-red-500',
-                    route.color === 'blue' && 'bg-blue-500',
-                    route.color === 'green' && 'bg-green-400',
-                    route.color === 'orange' && 'bg-orange-500',
-                    route.color === 'yellow' && 'bg-yellow-500'
+                    " flex p-1 rounded-sm",
+                    route.color === "red" && "bg-red-500",
+                    route.color === "blue" && "bg-blue-500",
+                    route.color === "green" && "bg-green-400",
+                    route.color === "orange" && "bg-orange-500",
+                    route.color === "yellow" && "bg-yellow-500"
                   )}
                   onClick={() => handleEditRoutePopUp(route.id)}
                 >
                   <div className="grid bg-bg1 grid-cols-2 items-center p-1 px-2 w-full rounded-sm">
                     <p className="text-xl place-self-start">{route.name}</p>
-                    <p className="text-xl place-self-end">
-                      Holds: {route.holds.length}
-                    </p>
+                    <p className="text-xl place-self-end">Holds: {route.holds.length}</p>
                   </div>
                 </button>
               ))}

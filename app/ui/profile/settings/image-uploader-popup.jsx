@@ -1,38 +1,38 @@
-'use client';
+"use client";
 
-import { motion } from 'framer-motion';
-import { useState } from 'react';
-import { UploadDropzone } from '@/utils/uploadthing';
-import CustomUploadDropzoneComponent from '@/utils/uploadthing';
-import { useNotification } from '@/app/contexts/NotificationContext';
-import { useRouter } from 'next/navigation';
-import Image from 'next/image';
+import { motion } from "framer-motion";
+import { useState } from "react";
+import { UploadDropzone } from "@/utils/uploadthing";
+import CustomUploadDropzoneComponent from "@/utils/uploadthing";
+import { useNotification } from "@/app/contexts/NotificationContext";
+import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 export default function ImageUploaderPopUp({ onCancel, userId }) {
   const { showNotification } = useNotification();
 
   const router = useRouter();
 
-  const handleImageUpload = async (url) => {
+  const handleImageUpload = async url => {
     if (url) {
       const data = { newImage: url, userId: userId };
 
       try {
-        const response = await fetch('/api/user/settings/imageUpload', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+        const response = await fetch("/api/user/settings/imageUpload", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify(data),
         });
 
         if (!response.ok) {
           showNotification({
-            message: 'Error uploading image, try again later',
-            color: 'red',
+            message: "Error uploading image, try again later",
+            color: "red",
           });
         } else {
           showNotification({
-            message: 'Successfully Uploaded Image',
-            color: 'green',
+            message: "Successfully Uploaded Image",
+            color: "green",
           });
 
           router.refresh();
@@ -40,39 +40,39 @@ export default function ImageUploaderPopUp({ onCancel, userId }) {
         }
       } catch (error) {
         showNotification({
-          message: 'Error uploading image, try again later',
-          color: 'red',
+          message: "Error uploading image, try again later",
+          color: "red",
         });
       }
     } else {
-      showNotification({ message: 'could not find image on client' });
+      showNotification({ message: "could not find image on client" });
     }
   };
   const handleRemoveImage = async () => {
     const data = { userId: userId };
     try {
-      const response = await fetch('/api/user/settings/removeImage', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const response = await fetch("/api/user/settings/removeImage", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
       });
       if (!response.ok) {
         showNotification({
-          message: 'Error removing image, try again later',
-          color: 'red',
+          message: "Error removing image, try again later",
+          color: "red",
         });
       } else {
         showNotification({
-          message: 'Image removed successfully',
-          color: 'green',
+          message: "Image removed successfully",
+          color: "green",
         });
         router.refresh();
         onCancel();
       }
     } catch (error) {
       showNotification({
-        message: 'Error removing image, try again later',
-        color: 'red',
+        message: "Error removing image, try again later",
+        color: "red",
       });
     }
   };
@@ -102,11 +102,7 @@ export default function ImageUploaderPopUp({ onCancel, userId }) {
               stroke="currentColor"
               className="size-7"
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M6 18 18 6M6 6l12 12"
-              />
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
             </svg>
           </button>
           <h2 className="text-xl">Upload Image</h2>
@@ -114,20 +110,19 @@ export default function ImageUploaderPopUp({ onCancel, userId }) {
           <CustomUploadDropzoneComponent
             appearance={{
               button:
-                'ut-ready:bg-green-500 ut-uploading:cursor-not-allowed p-2 bg-red-500 bg-none after:bg-orange-400',
-              container: 'flex-col rounded-md border-cyan-300 bg-slate-800',
-              allowedContent:
-                'flex h-8 flex-col items-center justify-center px-2 text-white',
+                "ut-ready:bg-green-500 ut-uploading:cursor-not-allowed p-2 bg-red-500 bg-none after:bg-orange-400",
+              container: "flex-col rounded-md border-cyan-300 bg-slate-800",
+              allowedContent: "flex h-8 flex-col items-center justify-center px-2 text-white",
             }}
             endpoint="imageUploader"
-            onClientUploadComplete={(res) => {
+            onClientUploadComplete={res => {
               handleImageUpload(res[0].ufsUrl);
             }}
-            onUploadError={(error) => {
+            onUploadError={error => {
               console.log(error);
               showNotification({
-                message: 'Could not uploaded image',
-                color: 'red',
+                message: "Could not uploaded image",
+                color: "red",
               });
             }}
           />

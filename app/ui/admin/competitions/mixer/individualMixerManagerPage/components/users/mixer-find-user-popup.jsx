@@ -1,15 +1,15 @@
-'use client';
+"use client";
 
-import { motion } from 'motion/react';
-import { useState, useCallback } from 'react';
-import ElementLoadingAnimation from '@/app/ui/general/element-loading-animation';
-import clsx from 'clsx';
+import { motion } from "motion/react";
+import { useState, useCallback } from "react";
+import ElementLoadingAnimation from "@/app/ui/general/element-loading-animation";
+import clsx from "clsx";
 
 export default function FindUserPopUp({ onConnectUser, onCancel }) {
   const [foundUsers, setFoundUsers] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isSearched, setIsSearched] = useState(false);
-  const [searchText, setSearchText] = useState('');
+  const [searchText, setSearchText] = useState("");
   const [selectedUser, setSelectedUser] = useState({});
   const [isConnectButton, setIsConnectButton] = useState(false);
 
@@ -22,7 +22,7 @@ export default function FindUserPopUp({ onConnectUser, onCancel }) {
     };
   }, []);
 
-  const findUsers = useCallback(async (text) => {
+  const findUsers = useCallback(async text => {
     setSelectedUser({});
     setIsConnectButton(false);
     if (!text) {
@@ -54,12 +54,12 @@ export default function FindUserPopUp({ onConnectUser, onCancel }) {
   }, []);
 
   const debouncedFindUsers = useCallback(
-    debounce((text) => findUsers(text), 300),
+    debounce(text => findUsers(text), 300),
     [findUsers]
   );
 
   const handleSearchTextChange = useCallback(
-    (e) => {
+    e => {
       const text = e.target.value;
       setSearchText(text);
       debouncedFindUsers(text);
@@ -67,12 +67,12 @@ export default function FindUserPopUp({ onConnectUser, onCancel }) {
     [debouncedFindUsers]
   );
 
-  const handleUserClick = (user) => {
+  const handleUserClick = user => {
     setSelectedUser(user);
     setIsConnectButton(true);
   };
 
-  const handleConnect = (user) => {
+  const handleConnect = user => {
     onConnectUser(user);
     onCancel();
   };
@@ -101,11 +101,7 @@ export default function FindUserPopUp({ onConnectUser, onCancel }) {
               stroke="currentColor"
               className="size-7"
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M6 18 18 6M6 6l12 12"
-              />
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
             </svg>
           </button>
           <h2 className="text-xl">User Finder</h2>
@@ -142,13 +138,13 @@ export default function FindUserPopUp({ onConnectUser, onCancel }) {
                 </div>
               ) : (
                 <div className="flex flex-col justify-center gap-2">
-                  {foundUsers.map((user) => (
+                  {foundUsers.map(user => (
                     <div key={user.id} className="">
                       <button
                         className={clsx(
-                          'bg-bg1 p-1 w-full rounded-sm',
+                          "bg-bg1 p-1 w-full rounded-sm",
                           user === selectedUser &&
-                            'outline outline-blue-500 outline-1 shadow-md shadow-blue-500'
+                            "outline outline-blue-500 outline-1 shadow-md shadow-blue-500"
                         )}
                         onClick={() => handleUserClick(user)}
                       >

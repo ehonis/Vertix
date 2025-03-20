@@ -1,10 +1,10 @@
-import prisma from '@/prisma';
-import { formatMixerDataFromDatabase, calculateScores } from '@/lib/mixer';
-import { unstable_cache } from 'next/cache';
-import MixerLeaderBoard from '@/app/ui/competitions/mixer/mixer-leaderboard/mixer-leaderboard';
-import { auth } from '@/auth';
+import prisma from "@/prisma";
+import { formatMixerDataFromDatabase, calculateScores } from "@/lib/mixer";
+import { unstable_cache } from "next/cache";
+import MixerLeaderBoard from "@/app/ui/competitions/mixer/mixer-leaderboard/mixer-leaderboard";
+import { auth } from "@/auth";
 
-const getBoulderScores = async (id) => {
+const getBoulderScores = async id => {
   return await prisma.MixerBoulderScore.findMany({
     where: { competitionId: id },
     select: {
@@ -14,7 +14,7 @@ const getBoulderScores = async (id) => {
     },
   });
 };
-const getRopeScores = async (id) => {
+const getRopeScores = async id => {
   return await prisma.MixerRopeScore.findMany({
     where: { competitionId: id },
     select: {
@@ -24,7 +24,7 @@ const getRopeScores = async (id) => {
     },
   });
 };
-const getDivisions = async (id) => {
+const getDivisions = async id => {
   return await prisma.MixerDivision.findMany({
     where: { competitionId: id },
     select: {
@@ -34,17 +34,13 @@ const getDivisions = async (id) => {
   });
 };
 
-const getCachedBoulderScores = unstable_cache(
-  getBoulderScores,
-  ['boulderScores-cache'],
-  { revalidate: 200 }
-);
-const getCachedRopeScores = unstable_cache(
-  getRopeScores,
-  ['ropeScores-cache'],
-  { revalidate: 200 }
-);
-const getCachedDivisions = unstable_cache(getDivisions, ['divisions-cache'], {
+const getCachedBoulderScores = unstable_cache(getBoulderScores, ["boulderScores-cache"], {
+  revalidate: 200,
+});
+const getCachedRopeScores = unstable_cache(getRopeScores, ["ropeScores-cache"], {
+  revalidate: 200,
+});
+const getCachedDivisions = unstable_cache(getDivisions, ["divisions-cache"], {
   revalidate: 200,
 });
 
@@ -73,16 +69,8 @@ export default async function MixerDemoLeaderboard({ params }) {
 
   const { formattedDivisions, formattedBoulderScores, formattedRopeScores } =
     formatMixerDataFromDatabase(divisions, boulderScores, ropeScores);
-  const {
-    combinedScores,
-    adjustedRankings,
-    boulderScoresRanked,
-    ropeScoresRanked,
-  } = calculateScores(
-    formattedBoulderScores,
-    formattedRopeScores,
-    formattedDivisions
-  );
+  const { combinedScores, adjustedRankings, boulderScoresRanked, ropeScoresRanked } =
+    calculateScores(formattedBoulderScores, formattedRopeScores, formattedDivisions);
   const session = await auth();
   const user = session?.user || null;
   return (

@@ -1,36 +1,36 @@
-'use client';
+"use client";
 
-import { signIn } from 'next-auth/react';
-import { useState } from 'react';
-import ElementLoadingAnimation from '../ui/general/element-loading-animation';
+import { signIn } from "next-auth/react";
+import { useState } from "react";
+import ElementLoadingAnimation from "../ui/general/element-loading-animation";
 export default function SignInForm() {
   const [isGoogleLoading, setIsGoogleloading] = useState(false);
   const [isGithubLoading, setIsGithubLoading] = useState(false);
   const [isMagicLinkLoading, setIsMagicLinkLoading] = useState(false);
 
-  const [emailString, setEmailString] = useState('');
+  const [emailString, setEmailString] = useState("");
 
-  const handleSignIn = async (provider) => {
-    if (provider === 'google') {
+  const handleSignIn = async provider => {
+    if (provider === "google") {
       setIsGoogleloading(true);
-    } else if (provider === 'github') {
+    } else if (provider === "github") {
       setIsGithubLoading(true);
     } else {
       setIsMagicLinkLoading(true);
     }
 
     try {
-      if (provider === 'resend') {
-        await signIn('resend', { email: emailString, redirectTo: '/profile' });
+      if (provider === "resend") {
+        await signIn("resend", { email: emailString, redirectTo: "/profile" });
       } else {
-        await signIn(provider, { redirectTo: '/profile' });
+        await signIn(provider, { redirectTo: "/profile" });
       }
     } catch (error) {
       console.error(error);
     }
-    if (provider === 'google') {
+    if (provider === "google") {
       setIsGoogleloading(false);
-    } else if (provider === 'github') {
+    } else if (provider === "github") {
       setIsGithubLoading(false);
     } else {
       setIsMagicLinkLoading(false);
@@ -41,7 +41,7 @@ export default function SignInForm() {
       <h1 className="text-3xl text-white font-bold m-5">Login or Sign Up</h1>
       <div className="bg-bg2 flex flex-col items-center justify-center p-5 px-10 md:w-96 w-80 rounded-lg shadow-md gap-3">
         <div className="flex flex-col gap-4 w-full">
-          <button onClick={() => handleSignIn('google')}>
+          <button onClick={() => handleSignIn("google")}>
             {!isGoogleLoading ? (
               <div className=" w-full gap-3 items-center p-2 rounded-full text-white bg-white/25 outline-white outline grid grid-cols-3 font-barlow font-medium border-black ">
                 <svg
@@ -75,7 +75,7 @@ export default function SignInForm() {
             )}
           </button>
 
-          <button onClick={() => handleSignIn('github')}>
+          <button onClick={() => handleSignIn("github")}>
             {!isGithubLoading ? (
               <div className="bg-black/35 w-full grid grid-cols-3 gap-3 items-center p-2 rounded-full text-white outline outline-black ">
                 <svg
@@ -106,11 +106,11 @@ export default function SignInForm() {
             name="email"
             placeholder="Email"
             value={emailString}
-            onChange={(e) => setEmailString(e.target.value)}
+            onChange={e => setEmailString(e.target.value)}
             className="text-white bg-bg1 rounded-sm px-2 py-1 font-barlow text-lg focus:outline-hidden"
           />
           <button
-            onClick={() => handleSignIn('resend')}
+            onClick={() => handleSignIn("resend")}
             className="bg-linear-to-l from-purple-500/35 to-purple-700/35 outline-purple-600 outline px-4 py-1 text-white font-barlow font-semibold rounded-full"
           >
             {!isMagicLinkLoading ? (

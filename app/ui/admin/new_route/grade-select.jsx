@@ -1,14 +1,14 @@
-'use client';
+"use client";
 
-import RopeGradeSelect from './rope-grade-select';
-import BoulderGradeSelect from './boulder-grade-select';
-import { useState } from 'react';
+import RopeGradeSelect from "./rope-grade-select";
+import BoulderGradeSelect from "./boulder-grade-select";
+import { useState } from "react";
 
 export default function GradeSelect({ onGradeChange }) {
   const [type, setType] = useState();
 
-  const handleTypeChange = (event) => setType(event.target.value);
-  const handleGradeSelect = (selectedGrade) => {
+  const handleTypeChange = event => setType(event.target.value);
+  const handleGradeSelect = selectedGrade => {
     onGradeChange(selectedGrade); // Pass grade to parent
   };
 
@@ -28,9 +28,9 @@ export default function GradeSelect({ onGradeChange }) {
           <option value="rope">Rope</option>
           <option value="boulder">Boulder</option>
         </select>
-        {type === 'boulder' ? (
+        {type === "boulder" ? (
           <BoulderGradeSelect onGradeChange={handleGradeSelect} />
-        ) : type === 'rope' ? (
+        ) : type === "rope" ? (
           <RopeGradeSelect onGradeChange={handleGradeSelect} />
         ) : null}
       </div>
