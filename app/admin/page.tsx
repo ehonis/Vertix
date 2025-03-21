@@ -2,11 +2,17 @@ import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 
+interface AdminPanel {
+  text: string;
+  url: string;
+  svg: React.ReactNode;
+}
+
 export default async function AdminCenter() {
   const session = await auth();
   const user = session?.user || null;
 
-  const adminPanels = [
+  const adminPanels: AdminPanel[] = [
     {
       text: "Route Manager",
       url: "/admin/manager/routes",
@@ -49,7 +55,7 @@ export default async function AdminCenter() {
     },
     {
       text: "User Manager",
-      url: "/admin",
+      url: "/admin/manager/users",
       svg: (
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -69,7 +75,7 @@ export default async function AdminCenter() {
     },
   ];
 
-  if (!user || user.admin === false) {
+  if (!user || user?.admin === false) {
     redirect("/signin");
   } else {
     return (
@@ -108,7 +114,7 @@ export default async function AdminCenter() {
                 href={panel.url}
                 className="bg-bg1 flex p-2 items-center w-full rounded-sm outline outline-white"
               >
-                <span>{panel.svg}</span>
+                {panel.svg}
                 <h3 className="text-white font-barlow font-bold text-2xl flex-1 text-center">
                   {panel.text}
                 </h3>
