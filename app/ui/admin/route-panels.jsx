@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import clsx from "clsx";
 import RoutePanel from "./route-panel";
-import ConfirmationPopUp from "./new_route/confirmation-pop-up";
+import ConfirmationPopUp from "../general/confirmation-pop-up";
 import { useNotification } from "@/app/contexts/NotificationContext";
 import { useRouter } from "next/navigation";
 

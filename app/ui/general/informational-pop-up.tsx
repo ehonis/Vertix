@@ -1,8 +1,13 @@
 "use client";
 
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 
-export default function InformationalPopUp({ html, onCancel, type }) {
+type PopUpTypes = {
+  html: React.ReactNode;
+  onCancel: () => void;
+};
+
+export default function InformationalPopUp({ html, onCancel }: PopUpTypes) {
   return (
     <motion.div
       initial={{ opacity: 0, y: -20 }}

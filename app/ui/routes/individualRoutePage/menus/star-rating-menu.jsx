@@ -2,7 +2,8 @@
 
 import { use, useState } from "react";
 import clsx from "clsx";
-import ConfirmationPopUp from "@/app/ui/admin/new_route/confirmation-pop-up";
+import ConfirmationPopUp from "@/app/ui/general/confirmation-pop-up";
+
 import { useNotification } from "@/app/contexts/NotificationContext";
 
 export default function StarRatingMenu({ route, userId, onCancel, rating }) {

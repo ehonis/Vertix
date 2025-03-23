@@ -45,6 +45,12 @@ model CommunityGrade {
     @@unique([userId, routeId]) // Ensure only one grade per user per route
 }
 
+enum UserRole {
+    ADMIN
+    ROUTE_SETTER
+    USER
+}
+
 model User {
     id              String            @id @default(cuid())
     username        String?           @unique
@@ -58,8 +64,7 @@ model User {
     communityGrades CommunityGrade[]
     stars           RouteStar[]
     badges          Badge[]
-    admin           Boolean           @default(false)
-    routeSetter     Boolean           @default(false)
+    role            UserRole          @default(USER)
     createdAt       DateTime          @default(now())
     updatedAt       DateTime          @updatedAt
     Account         Account[]

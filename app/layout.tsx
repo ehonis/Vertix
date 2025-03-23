@@ -6,7 +6,6 @@ import { NotificationProvider } from "./contexts/NotificationContext";
 import Notification from "./ui/notification";
 import { Analytics } from "@vercel/analytics/react";
 import { Tomorrow, Barlow } from "next/font/google";
-import { SessionProvider } from "next-auth/react";
 import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
 import { extractRouterConfig } from "uploadthing/server";
 import { ourFileRouter } from "./api/uploadthing/core";
@@ -53,7 +52,7 @@ export const metadata = {
   description: "The OTR Climbing tracker for ropes, boulders, and competitions",
 };
 
-export default function RootLayout({ children }) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${tomorrow.variable} ${barlow.variable}`}>
       <body

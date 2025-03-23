@@ -93,7 +93,7 @@ export default function HamburgerMenu({ user, status }) {
       extraStyles: "",
     },
   ];
-  if (user?.admin === true) {
+  if (user?.role === "ADMIN") {
     profileLinks.push({
       name: "Admin Center",
       url: `/admin`,

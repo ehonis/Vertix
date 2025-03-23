@@ -27,7 +27,7 @@ export default async function Page() {
   const user = session?.user || null;
   const routes = await getRoutes();
 
-  if (!user || user.admin === false) {
+  if (!user || user.role !== "ADMIN") {
     redirect("/signin");
   } else {
     try {

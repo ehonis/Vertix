@@ -1,20 +1,20 @@
 import { DefaultUser } from "next-auth";
 import { AdapterUser } from "@auth/prisma-adapter";
+import { UserRole } from "@prisma/client";
 
 declare module "next-auth" {
   interface User extends DefaultUser {
     id: string;
     username?: string;
-    admin: boolean;
-    routeSetter: boolean;
+    role: UserRole;
+
   }
 
   interface Session {
     user: User & {
       id: string;
       username?: string;
-      admin: boolean;
-      routeSetter: boolean;
+      role: UserRole;
     };
   }
 }
@@ -22,7 +22,7 @@ declare module "next-auth" {
 declare module "@auth/prisma-adapter" {
   interface AdapterUser {
     username?: string;
-    admin: boolean;
-    routeSetter: boolean;
+    role: UserRole;
+
   }
 } 

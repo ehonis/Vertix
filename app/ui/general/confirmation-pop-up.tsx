@@ -1,6 +1,17 @@
 "use client";
 import { useEffect, useState } from "react";
-export default function ConfirmationPopUp({ onConfirmation, onCancel, message, submessage }) {
+type ConfirmationPopUpProps = {
+  onConfirmation: () => void;
+  onCancel: () => void;
+  message: string;
+  submessage: string;
+};
+export default function ConfirmationPopUp({
+  onConfirmation,
+  onCancel,
+  message,
+  submessage,
+}: ConfirmationPopUpProps) {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {

@@ -75,16 +75,16 @@ export default async function AdminCenter() {
     },
   ];
 
-  if (!user || user?.admin === false) {
+  if (!user || user?.role !== "ADMIN") {
     redirect("/signin");
   } else {
     return (
       <div className="flex justify-center w-screen">
         <div className="flex p-5 flex-col w-full max-w-lg">
           <h1 className="text-white font-barlow font-bold text-3xl mb-3">Admin Center</h1>
-          <div className="flex flex-col bg-bg2 gap-3 rounded-md p-5 mb-10">
+          <div className="flex flex-col bg-bg1 gap-3 rounded-md p-5 mb-10">
             <Link
-              className="bg-bg1 flex p-2 items-center w-full rounded-sm outline outline-white"
+              className="purple-button flex p-2 items-center w-full rounded-sm"
               href={"/admin/create"}
             >
               <svg
@@ -107,12 +107,12 @@ export default async function AdminCenter() {
             </Link>
           </div>
           <h2 className="text-white font-barlow font-bold text-3xl mb-3">Content Manager</h2>
-          <div className="flex flex-col bg-bg2 gap-5 rounded-md p-5 mb-10">
+          <div className="flex flex-col bg-bg1 gap-5 rounded-md p-5 mb-10">
             {adminPanels.map((panel, index) => (
               <Link
                 key={index}
                 href={panel.url}
-                className="bg-bg1 flex p-2 items-center w-full rounded-sm outline outline-white"
+                className="purple-button flex p-2 items-center w-full rounded-sm  "
               >
                 {panel.svg}
                 <h3 className="text-white font-barlow font-bold text-2xl flex-1 text-center">

@@ -2,12 +2,6 @@ import prisma from "@/prisma";
 import { NextResponse } from "next/server";
 import { auth } from "@/auth";
 export async function POST(req) {
-  if (!req.auth) {
-    return NextResponse.json({ success: false, error: "Unauthorized" });
-  }
-  if (!req.auth.user.admin) {
-    return NextResponse.json({ success: false, error: "Unauthorized" });
-  }
   try {
     const { compId, isScoresAvailable } = await req.json();
     await prisma.MixerCompetition.update({

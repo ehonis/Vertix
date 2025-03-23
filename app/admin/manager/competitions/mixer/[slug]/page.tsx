@@ -6,28 +6,34 @@ import IndividualCompPageLoad from "@/app/ui/admin/competitions/mixer/individual
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 
-export default async function page({ params }) {
+// export async function generateStaticParams() {
+//   const ids = await prisma.mixerCompetition.findMany().then(comps => comps.map(comp => comp.id));
+//   return ids;
+// }
+
+export default async function page({ params }: { params: Promise<{ slug: string }> }) {
   const session = await auth();
   const user = session?.user || null;
-  if (!user || !user?.admin) {
+  if (!user || user.role !== "ADMIN") {
     redirect("/signin");
   }
   const { slug } = await params;
   const compId = slug;
+
   const [comp, compRoutes, compDivisions, compClimbers, compBoulderScores, compRopeScores] =
     await Promise.all([
-      prisma.MixerCompetition.findFirst({
+      prisma.mixerCompetition.findFirst({
         where: { id: compId },
       }),
-      prisma.MixerRoute.findMany({
+      prisma.mixerRoute.findMany({
         where: { competitionId: compId },
       }),
-      prisma.MixerDivision.findMany({
+      prisma.mixerDivision.findMany({
         where: { competitionId: compId },
         select: { id: true, name: true },
         orderBy: { level: "asc" },
       }),
-      prisma.MixerClimber.findMany({
+      prisma.mixerClimber.findMany({
         where: { competitionId: compId },
         select: {
           id: true,
@@ -37,11 +43,11 @@ export default async function page({ params }) {
           divisionId: true,
         },
       }),
-      prisma.MixerBoulderScore.findMany({
+      prisma.mixerBoulderScore.findMany({
         where: { competitionId: compId },
         select: { id: true, climberId: true, score: true, attempts: true },
       }),
-      prisma.MixerRopeScore.findMany({
+      prisma.mixerRopeScore.findMany({
         where: { competitionId: compId },
       }),
     ]);

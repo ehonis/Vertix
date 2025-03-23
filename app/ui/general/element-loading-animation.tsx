@@ -4,7 +4,11 @@ import { motion } from "framer-motion";
 
 import clsx from "clsx";
 
-export default function ElementLoadingAnimation({ size }) {
+type ElementLoadingAnimationProps = {
+  size?: number;
+};
+
+export default function ElementLoadingAnimation({ size }: ElementLoadingAnimationProps) {
   return (
     <motion.div
       animate={{ rotate: 360 }}

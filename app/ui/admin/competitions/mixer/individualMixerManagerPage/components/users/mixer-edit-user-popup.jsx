@@ -6,7 +6,7 @@ import Image from "next/image";
 import FindUserPopUp from "./mixer-find-user-popup";
 import { useNotification } from "@/app/contexts/NotificationContext";
 import { useRouter } from "next/navigation";
-import ConfirmationPopUp from "@/app/ui/admin/new_route/confirmation-pop-up";
+import ConfirmationPopUp from "@/app/ui/general/confirmation-pop-up";
 
 export default function EditUserPopUp({
   compId,

@@ -8,7 +8,7 @@ import { redirect } from "next/navigation";
 export default async function MixerManager() {
   const session = await auth();
   const user = session?.user;
-  if (!user || !user?.admin) {
+  if (!user || user.role !== "ADMIN") {
     redirect("/signin");
   }
   return (

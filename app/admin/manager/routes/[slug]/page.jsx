@@ -18,7 +18,7 @@ export default async function EditRoute({ params }) {
   const routeId = slug;
   const user = session?.user || null;
 
-  if (!user || user.admin === false) {
+  if (!user || user.role !== "ADMIN") {
     redirect("/dashboard");
   }
   return (

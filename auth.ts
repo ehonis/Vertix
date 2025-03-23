@@ -24,8 +24,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     async session({ session, user }) {
       // Add additional fields to the session object
       session.user.id = user.id; // Include user ID
-      session.user.admin = user.admin; // Include admin flag
-      session.user.routeSetter = user.routeSetter; // Include routeSetter flag
+      session.user.role = user.role; // Include admin flag
+      session.user.username = user.username; // Include routeSetter flag
+       // Include routeSetter flag
       return session;
     },
     async signIn({ user }) {

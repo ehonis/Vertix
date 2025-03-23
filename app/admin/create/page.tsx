@@ -6,7 +6,7 @@ export default async function Page() {
   const session = await auth();
   const user = session?.user || null;
 
-  if (!user || !session?.user?.admin) {
+  if (!user || user.role !== "ADMIN") {
     redirect("/signin");
   }
 

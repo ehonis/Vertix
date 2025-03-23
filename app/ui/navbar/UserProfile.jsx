@@ -4,8 +4,6 @@ import { useState, useRef, useEffect } from "react";
 import clsx from "clsx";
 import Link from "next/link";
 
-import SignOut from "../general/sign-out-button";
-
 export default function UserProfile({ user, status }) {
   const [isProfilePopUp, setIsProfilePopUp] = useState(false);
 
@@ -75,7 +73,7 @@ export default function UserProfile({ user, status }) {
         </>
       ),
     },
-    ...(user?.admin || user?.routeSetter
+    ...(user?.role === "ADMIN"
       ? [
           {
             href: "/admin",
