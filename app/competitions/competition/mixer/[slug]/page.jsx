@@ -72,7 +72,7 @@ export default async function page({ params }) {
                     Create an account with Vertix First
                   </p>
                   <Link
-                    href={`/signup`}
+                    href={`/signin`}
                     className="px-2 py-1 text-white bg-green-500 rounded-sm font-barlow font-bold text-center shadow-xl"
                   >
                     Create an Account with Vertix

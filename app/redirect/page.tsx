@@ -12,8 +12,9 @@ export default async function Redirect() {
       data: { username: user?.id },
     });
     redirect(`/profile/${user?.id}/settings`);
+  } else {
+    redirect(`/profile/${user?.username}/settings`);
   }
-  redirect(`/profile/${user?.id}/settings`);
 
   return (
     <div className="flex flex-col h-screen-of-screen w-screen items-center justify-center font-barlow font-bold text-2xl">

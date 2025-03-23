@@ -34,7 +34,7 @@ export default function UserProfile({ user, status }) {
 
   const menuItems = [
     {
-      href: `/profile/${user?.id}`,
+      href: `/profile/${user?.username}`,
       text: "Profile",
       icon: (
         <path
@@ -45,7 +45,7 @@ export default function UserProfile({ user, status }) {
       ),
     },
     {
-      href: `/profile/${user?.id}/dashboard`,
+      href: `/profile/${user?.username}/dashboard`,
       text: "Dashboard",
       icon: (
         <path
@@ -56,7 +56,7 @@ export default function UserProfile({ user, status }) {
       ),
     },
     {
-      href: `/profile/${user?.id}/settings`,
+      href: `/profile/${user?.username}/settings`,
       text: "Settings",
       icon: (
         <>

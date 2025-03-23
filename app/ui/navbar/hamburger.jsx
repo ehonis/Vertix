@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-
+import SignOut from "../general/sign-out-button";
 import Image from "next/image";
 import { motion, AnimatePresence } from "motion/react";
 import clsx from "clsx";
@@ -224,7 +224,7 @@ export default function HamburgerMenu({ user, status }) {
                   </motion.div>
                 )}
               </AnimatePresence>
-              <div className="w-full flex justify-between">
+              <div className="w-full flex justify-between items-center px-4">
                 <div className="flex items-center gap-2">
                   {user.image ? (
                     <Image
@@ -257,6 +257,9 @@ export default function HamburgerMenu({ user, status }) {
                     </p>
                     <p className="font-barlow font-thin">{user.email}</p>
                   </div>
+                </div>
+                <div>
+                  <SignOut />
                 </div>
               </div>
             </div>

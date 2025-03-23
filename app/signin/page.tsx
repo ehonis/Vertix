@@ -10,7 +10,7 @@ export default function SignInForm() {
 
   const [emailString, setEmailString] = useState("");
 
-  const handleSignIn = async provider => {
+  const handleSignIn = async (provider: string) => {
     if (provider === "google") {
       setIsGoogleloading(true);
     } else if (provider === "github") {
@@ -39,11 +39,11 @@ export default function SignInForm() {
   return (
     <div className="flex items-center flex-col justify-center mt-16">
       <h1 className="text-3xl text-white font-bold m-5">Login or Sign Up</h1>
-      <div className="bg-bg2 flex flex-col items-center justify-center p-5 px-10 md:w-96 w-80 rounded-lg shadow-md gap-3">
+      <div className="bg-bg1 flex flex-col items-center justify-center p-5 px-10 md:w-96 w-80 rounded-lg shadow-md gap-3">
         <div className="flex flex-col gap-4 w-full">
           <button onClick={() => handleSignIn("google")}>
             {!isGoogleLoading ? (
-              <div className=" w-full gap-3 items-center p-2 rounded-full text-white bg-white/25 outline-white outline grid grid-cols-3 font-barlow font-medium border-black ">
+              <div className=" w-full gap-3 items-center p-2 rounded-full text-white bg-white outline-black outline-2 grid grid-cols-3 font-barlow font-medium border- ">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   className="size-8 bg-white rounded-full"
@@ -66,7 +66,7 @@ export default function SignInForm() {
                     d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z"
                   ></path>
                 </svg>
-                <p className="font-barlow font-bold text-lg">Google</p>
+                <p className="font-barlow text-black font-bold text-lg">Google</p>
               </div>
             ) : (
               <div className="bg-white rounded-full w-full flex justify-center py-2">
@@ -77,7 +77,7 @@ export default function SignInForm() {
 
           <button onClick={() => handleSignIn("github")}>
             {!isGithubLoading ? (
-              <div className="bg-black/35 w-full grid grid-cols-3 gap-3 items-center p-2 rounded-full text-white outline outline-black ">
+              <div className="bg-black w-full grid grid-cols-3 gap-3 items-center p-2 rounded-full text-white outline-2 outline-white ">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   className="size-8"
@@ -107,7 +107,7 @@ export default function SignInForm() {
             placeholder="Email"
             value={emailString}
             onChange={e => setEmailString(e.target.value)}
-            className="text-white bg-bg1 rounded-sm px-2 py-1 font-barlow text-lg focus:outline-hidden"
+            className="text-white bg-bg2 rounded-sm px-2 py-1 font-barlow text-lg focus:outline-hidden"
           />
           <button
             onClick={() => handleSignIn("resend")}
@@ -139,7 +139,7 @@ export default function SignInForm() {
               </div>
             ) : (
               <div className="rounded-full w-44 flex justify-center py-2">
-                <ElementLoadingAnimation size={7} />
+                <ElementLoadingAnimation size={4} />
               </div>
             )}
           </button>
