@@ -5,7 +5,7 @@ import { unstable_cache } from "next/cache";
 import prisma from "@/prisma";
 import ConstructionBlur from "@/app/ui/general/construction-blur";
 
-const getAllRoutes = unstable_cache(async () => prisma.Route.findMany(), ["all-routes"], {
+const getAllRoutes = unstable_cache(async () => prisma.route.findMany(), ["all-routes"], {
   revalidate: 60,
 });
 

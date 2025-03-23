@@ -4,7 +4,7 @@ import { auth } from "@/auth";
 import prisma from "@/prisma";
 import SignOut from "@/app/ui/general/sign-out-button";
 
-export default async function Settings({ params }) {
+export default async function Settings({ params }: { params: Promise<{ slug: string }> }) {
   const session = await auth();
   const { slug } = await params;
 
@@ -48,7 +48,7 @@ export default async function Settings({ params }) {
         <div className="place-self-start w-full">
           <SettingsNavBar userData={user} />
         </div>
-        <div className="px-2 flex justify-end w-full mt-2">
+        <div className=" flex justify-end md:w-lg w-xs mt-3">
           <SignOut />
         </div>
       </div>

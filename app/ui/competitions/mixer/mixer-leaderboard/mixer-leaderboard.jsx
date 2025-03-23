@@ -58,7 +58,7 @@ export default function MixerLeaderBoard({
             </p>
             <button
               onClick={handleViewScores}
-              className="text-white bg-green-500 px-3 py-2 rounded-sm font-barlow font-bold w-44 text-2xl shadow-lg shadow-green-500 outline outline-2 outline-white"
+              className="text-white bg-green-500 px-3 py-2 rounded-sm font-barlow font-bold w-44 text-2xl shadow-lg shadow-green-500  outline-2 outline-white"
             >
               View Scores
             </button>
@@ -70,13 +70,48 @@ export default function MixerLeaderBoard({
       ) : (
         <div className="flex flex-col justify-center items-center">
           {/* top three */}
-          <div className="flex flex-col justify-center items-center p-3 mb-5">
+          <div className="flex flex-col justify-center items-center p-3 mb-2">
             <h1 className="text-white font-barlow font-bold text-3xl mb-3">Top 3 Overall</h1>
-            <div className="flex flex-col gap-4">
-              {combinedScores.slice(0, 3).map((score, index) => (
+            <div className="h-44 flex gap-2 items-end">
+              <div className="flex flex-col items-center">
+                <p className="text-white font-barlow font-bold mb-1 text-sm truncate ">
+                  {combinedScores[2].name}
+                </p>
+                <motion.div
+                  className="h-6 bg-orange-600 w-20 rounded"
+                  initial={{ height: 0 }}
+                  animate={{ height: "3rem" }}
+                  transition={{ duration: 0.75, delay: 0.4 }}
+                />
+              </div>
+              <div className="flex flex-col items-center">
+                <p className="text-white font-barlow font-bold mb-1 text-sm truncate ">
+                  {combinedScores[0].name}
+                </p>
+                <motion.div
+                  className="h-20 bg-amber-500 w-20 rounded"
+                  initial={{ height: 0 }}
+                  animate={{ height: "10rem" }}
+                  transition={{ duration: 0.75, delay: 0.2 }}
+                />
+              </div>
+              <div className="flex flex-col items-center">
+                <p className="text-white font-barlow font-bold mb-1 text-sm truncate ">
+                  {combinedScores[1].name}
+                </p>
+                <motion.div
+                  className="h-14 bg-gray-400 w-20 rounded"
+                  initial={{ height: 0 }}
+                  animate={{ height: "6rem" }}
+                  transition={{ duration: 0.75, delay: 0.3 }}
+                />
+              </div>
+            </div>
+
+            {/* {combinedScores.slice(0, 3).map((score, index) => (
                 <div
                   className={clsx(
-                    "flex w-80 rounded-lg justify-start p-2 px-4 items-center outline outline-white outline-2",
+                    "flex w-80 rounded-lg justify-start p-2 px-4 items-center  outline-white outline-2",
                     index === 0 && "bg-amber-500 shadow-lg shadow-amber-500", // Gold
                     index === 1 && "bg-gray-400 shadow-lg shadow-gray-400", // Silver
                     index === 2 && "bg-orange-600 shadow-lg shadow-orange-600" // Bronze
@@ -90,9 +125,9 @@ export default function MixerLeaderBoard({
                     {score.name}
                   </p>
                 </div>
-              ))}
-            </div>
+              ))} */}
           </div>
+
           {/* By Division */}
           <div className="flex flex-col gap-3 mb-8 px-6 w-full max-w-3xl">
             <h2 className="font-barlow font-bold text-3xl text-white text-start">By Division</h2>
@@ -103,7 +138,7 @@ export default function MixerLeaderBoard({
                   {/* Division Button */}
                   <button
                     className={clsx(
-                      "bg-bg1 flex w-full rounded-sm justify-center p-2 outline outline-1 outline-white",
+                      "bg-bg1 flex w-full rounded-sm justify-center p-2 outline outline-white",
                       openDivisions[divisionName] && "bg-bg2" // Change color when open
                     )}
                     onClick={() => handleToggleDivision(divisionName)}
@@ -115,7 +150,7 @@ export default function MixerLeaderBoard({
                   <AnimatePresence>
                     {openDivisions[divisionName] && (
                       <motion.div
-                        className="flex flex-col w-[95%] max-w-lg gap-1 justify-center items-center bg-bg2 outline outline-white outline-1 p-3 self-center rounded-sm"
+                        className="flex flex-col w-[95%] max-w-lg gap-1 justify-center items-center bg-bg2 outline outline-white  p-3 self-center rounded-sm"
                         initial={{ opacity: 0, y: -10, scale: 0.95 }}
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: -10, scale: 0.95 }}
@@ -172,7 +207,7 @@ export default function MixerLeaderBoard({
               {/* Ropes Button */}
               <button
                 className={clsx(
-                  "bg-bg1 flex w-full rounded-sm justify-center p-2 outline outline-1 outline-white",
+                  "bg-bg1 flex w-full rounded-sm justify-center p-2 outline-1 outline-white",
                   isRopes && "bg-bg2"
                 )}
                 onClick={handleRopeScores}
@@ -184,7 +219,7 @@ export default function MixerLeaderBoard({
               <AnimatePresence>
                 {isRopes && (
                   <motion.div
-                    className="flex flex-col w-[95%] max-w-lg gap-1 justify-center items-center bg-bg2 outline outline-white outline-1 p-3 self-center rounded-sm"
+                    className="flex flex-col w-[95%] max-w-lg gap-1 justify-center items-center bg-bg2  outline-white outline-1 p-3 self-center rounded-sm"
                     initial={{ opacity: 0, y: -10, scale: 0.95 }}
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: -10, scale: 0.95 }}
@@ -234,7 +269,7 @@ export default function MixerLeaderBoard({
               {/* Boulders Button */}
               <button
                 className={clsx(
-                  "bg-bg1 flex w-full rounded-sm justify-center p-2 outline outline-1 outline-white",
+                  "bg-bg1 flex w-full rounded-sm justify-center p-2  outline-1 outline-white",
                   isBoulders && "bg-bg2"
                 )}
                 onClick={handleBoulderScores}
@@ -246,7 +281,7 @@ export default function MixerLeaderBoard({
               <AnimatePresence>
                 {isBoulders && (
                   <motion.div
-                    className="flex flex-col w-[95%] max-w-lg gap-1 justify-center items-center bg-bg2 outline outline-white outline-1 p-3 self-center rounded-sm"
+                    className="flex flex-col w-[95%] max-w-lg gap-1 justify-center items-center bg-bg2  outline-white outline-1 p-3 self-center rounded-sm"
                     initial={{ opacity: 0, y: -10, scale: 0.95 }}
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: -10, scale: 0.95 }}
@@ -300,7 +335,7 @@ export default function MixerLeaderBoard({
             <div className="flex flex-col gap-2">
               <button
                 className={clsx(
-                  "bg-bg1 flex w-full rounded-sm justify-center p-2 outline outline-1 outline-white",
+                  "bg-bg1 flex w-full rounded-sm justify-center p-2  outline-1 outline-white",
                   isRopes && "bg-bg2"
                 )}
                 onClick={handleCombinedScores}
@@ -312,7 +347,7 @@ export default function MixerLeaderBoard({
               <AnimatePresence>
                 {isTotalCombinedScores && (
                   <motion.div
-                    className="flex flex-col w-[95%] max-w-lg gap-1 justify-center items-center bg-bg2 outline outline-white outline-1 p-3 self-center rounded-sm"
+                    className="flex flex-col w-[95%] max-w-lg gap-1 justify-center items-center bg-bg2  outline-white outline-1 p-3 self-center rounded-sm"
                     initial={{ opacity: 0, y: -10, scale: 0.95 }}
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: -10, scale: 0.95 }}

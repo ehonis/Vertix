@@ -3,6 +3,7 @@ import Link from "next/link";
 import { auth } from "@/auth";
 import SignUpForm from "@/app/ui/competitions/mixer/signup/sign-up-form";
 import { CompetitionStatus } from "@prisma/client";
+import { redirect } from "next/navigation";
 export default async function Signup({ params }) {
   const { slug } = await params;
   const session = await auth();
@@ -38,6 +39,7 @@ export default async function Signup({ params }) {
     );
   }
   if (climber) {
+    redirect(`/competitions/competition/mixer/${slug}`);
     return (
       <div className="flex flex-col items-center justify-center h-screen-offset text-white font-barlow font-bold gap-5">
         <p className="text-2xl text-center">You are already signed up for this competition</p>
