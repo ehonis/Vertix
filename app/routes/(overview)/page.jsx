@@ -21,7 +21,7 @@ export default async function RoutePage() {
 
   if (user) {
     try {
-      completions = await getRouteCompletions(user.id);
+      completions = await getRouteCompletions(user.username);
     } catch (error) {
       console.error("Error fetching completions:", error);
     }
