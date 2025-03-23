@@ -29,21 +29,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
        // Include routeSetter flag
       return session;
     },
-    async signIn({ user }) {
-      if (!user.username) {
-        try {
-          await prisma.user.update({
-            where: { id: user.id },
-            data: { username: user.id },
-          });
-        } catch (error) {
-          console.error("Error updating username:", error);
-          // Return false to reject the sign in, or handle as needed.
-          return false;
-        }
-      }
-      // Return true to allow sign in
-      return true;
-    },
+   
   },
 });
