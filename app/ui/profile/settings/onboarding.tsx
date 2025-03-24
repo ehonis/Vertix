@@ -6,32 +6,32 @@ import { useNotification } from "@/app/contexts/NotificationContext";
 import ImageUploaderPopUp from "./image-uploader-popup";
 import { useRouter } from "next/navigation";
 import clsx from "clsx";
+import { User } from "@prisma/client";
 
 // A debounce function that returns a cancel function for cleanup.
-const debounce = (func, delay) => {
-  let timeoutId;
-  const debouncedFunction = (...args) => {
+const debounce = <T extends (...args: unknown[]) => void>(func: T, wait: number): (() => void) => {
+  let timeoutId: NodeJS.Timeout;
+  return () => {
     clearTimeout(timeoutId);
-    timeoutId = setTimeout(() => {
-      func(...args);
-    }, delay);
+    timeoutId = setTimeout(() => func(), wait);
+    return () => clearTimeout(timeoutId);
   };
-  debouncedFunction.cancel = () => clearTimeout(timeoutId);
-  return debouncedFunction;
 };
 
-export default function Onboarding({ userData }) {
+export default function Onboarding({ user }: { user: User }) {
   const { showNotification } = useNotification();
   const router = useRouter();
 
-  const [name, setName] = useState(userData.name || "");
+  const [name, setName] = useState(user.name || "");
   const [username, setUsername] = useState("");
-  const [image, setImage] = useState(userData.image);
+  const [image, setImage] = useState(user.image);
   const [tag, setTag] = useState("boulder");
   const [isLoading, setIsLoading] = useState(false);
   const [isImageUploader, setIsImageUploader] = useState(false);
   const [isUsernameAvailable, setIsUsernameAvailable] = useState(true);
-
+  const [isUsernameValid, setIsUsernameValid] = useState(true);
+  const [usernameError, setUsernameError] = useState("");
+  const [hasUserTyped, setHasUserTyped] = useState(false);
   const checkUsername = useCallback(async () => {
     if (username.length > 0) {
       try {
@@ -47,15 +47,32 @@ export default function Onboarding({ userData }) {
   }, [username]);
 
   const debouncedCheckUsername = useCallback(() => {
-    const timeoutId = setTimeout(checkUsername, 2000);
+    const timeoutId = setTimeout(checkUsername, 500);
     return () => clearTimeout(timeoutId);
   }, [checkUsername]);
 
   // Effect to check username as user types with cleanup.
   useEffect(() => {
-    const cleanup = debouncedCheckUsername();
-    return cleanup;
-  }, [username, debouncedCheckUsername]);
+    if (username.length < 3 || username.length > 16) {
+      setIsUsernameValid(false);
+      setUsernameError("Username must be between 3 and 16 characters");
+    } else if (username.includes(" ")) {
+      setIsUsernameValid(false);
+      setUsernameError("Username cannot contain spaces");
+    } else if (/[^a-zA-Z0-9]/.test(username)) {
+      setIsUsernameValid(false);
+      setUsernameError("Username can only contain letters and numbers");
+    } else {
+      setIsUsernameValid(true);
+      setUsernameError("");
+      if (username.length > 0 && hasUserTyped && username !== user.username) {
+        const cleanup = debouncedCheckUsername();
+        return cleanup;
+      } else {
+        setHasUserTyped(false);
+      }
+    }
+  }, [username, debouncedCheckUsername, hasUserTyped, user.username]);
 
   const handleSave = async () => {
     setIsLoading(true);
@@ -77,21 +94,21 @@ export default function Onboarding({ userData }) {
     try {
       const response = await fetch("/api/user/settings/uploadOnboarding", {
         method: "POST",
-        body: JSON.stringify({ id: userData.id, name, username, tag }),
+        body: JSON.stringify({ id: user.id, name, username, tag }),
       });
-
       if (response.ok) {
         showNotification({
-          message: "Successfully updated profile",
+          message: "Successfully Onboarded",
           color: "green",
         });
+        router.push(`/profile/${username}`);
+        router.refresh();
       } else {
         showNotification({
           message: "Failed to update profile",
           color: "red",
         });
       }
-      router.refresh();
     } catch (error) {
       console.error("Save error:", error);
       showNotification({
@@ -105,11 +122,7 @@ export default function Onboarding({ userData }) {
   return (
     <div className="flex flex-col bg-black p-3 h-full w-full rounded-md rounded-tl-none font-barlow">
       {isImageUploader && (
-        <ImageUploaderPopUp
-          onCancel={() => setIsImageUploader(false)}
-          imageUrl={image}
-          userId={userData.id}
-        />
+        <ImageUploaderPopUp onCancel={() => setIsImageUploader(false)} userId={user.id} />
       )}
       <h2 className="text-white text-2xl font-bold text-center ">
         Let{"'"}s get to know you better
@@ -159,6 +172,7 @@ export default function Onboarding({ userData }) {
             placeholder={"First and Last Name"}
             onChange={e => setName(e.target.value)}
           />
+
           <p className="text-white text-xs text-start">
             This will be used to identify you in the community
           </p>
@@ -176,11 +190,17 @@ export default function Onboarding({ userData }) {
             <input
               type="text"
               className="text-white text-lg bg-bg2 rounded-r p-2 w-full focus:outline-none"
-              placeholder={userData.id}
-              onChange={e => setUsername(e.target.value)}
+              placeholder={user.id}
+              onChange={e => {
+                setUsername(e.target.value);
+                setHasUserTyped(true);
+              }}
             />
           </div>
-          {username.length > 0 && (
+          {!isUsernameValid && hasUserTyped && (
+            <p className="text-red-500 text-xs text-start">{usernameError}</p>
+          )}
+          {username.length > 0 && hasUserTyped && isUsernameValid && (
             <>
               {!isUsernameAvailable ? (
                 <p className="text-red-500 text-xs text-center">This username is already taken</p>

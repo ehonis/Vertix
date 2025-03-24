@@ -4,23 +4,23 @@ import { useState, useEffect } from "react";
 import ProfileSettingsPane from "./profile-settings-pane";
 import clsx from "clsx";
 import Onboarding from "./onboarding";
-
-export default function SettingsNavBar({ userData }) {
+import { User } from "@prisma/client";
+export default function SettingsNavBar({ user }: { user: User }) {
   const [activeTab, setActiveTab] = useState(
-    userData.isOnboarded ? "profile-settings" : "finish-onboarding"
+    user.isOnboarded ? "profile-settings" : "finish-onboarding"
   );
 
   useEffect(() => {
-    if (userData.isOnboarded) {
+    if (user.isOnboarded) {
       setActiveTab("profile-settings");
     }
-  }, [userData.isOnboarded]);
+  }, [user.isOnboarded]);
 
   return (
     <div className="w-full flex flex-col items-center">
       <div className="flex gap-2 items-center justify-self-start justify-between w-xs md:w-md md:max-w-md">
         <div className="flex items-center">
-          {!userData.isOnboarded && (
+          {!user.isOnboarded && (
             <button
               onClick={() => setActiveTab("finish-onboarding")}
               className={clsx(
@@ -45,8 +45,8 @@ export default function SettingsNavBar({ userData }) {
         <div className="flex justify-end"></div>
       </div>
       <div className="flex flex-col gap-2 max-w-xs md:max-w-md">
-        {activeTab === "finish-onboarding" && <Onboarding userData={userData} />}
-        {activeTab === "profile-settings" && <ProfileSettingsPane userData={userData} />}
+        {activeTab === "finish-onboarding" && <Onboarding user={user} />}
+        {activeTab === "profile-settings" && <ProfileSettingsPane user={user} />}
       </div>
     </div>
   );

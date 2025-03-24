@@ -46,7 +46,7 @@ export default async function Settings({ params }: { params: Promise<{ slug: str
         </div>
         <div className="h-1 md:w-lg w-xs bg-white rounded-full mb-3 mt-1" />
         <div className="place-self-start w-full">
-          <SettingsNavBar userData={user} />
+          <SettingsNavBar user={user} />
         </div>
         <div className=" flex justify-end md:w-lg w-xs mt-3">
           <SignOut />

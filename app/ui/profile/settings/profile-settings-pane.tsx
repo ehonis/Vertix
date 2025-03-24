@@ -6,24 +6,30 @@ import ImageUploaderPopUp from "./image-uploader-popup";
 import Image from "next/image";
 import { useCallback, useEffect } from "react";
 import ElementLoadingAnimation from "../../general/element-loading-animation";
+import { useRouter } from "next/navigation";
+import { User } from "@prisma/client";
 
 // A debounce function that returns a cancel function for cleanup.
-const debounce = (func, delay) => {
-  let timeoutId;
-  const debouncedFunction = (...args) => {
+const debounce = (
+  func: (username: string, hasUserTyped: boolean, userDataUsername: string) => void,
+  delay: number
+) => {
+  let timeoutId: NodeJS.Timeout;
+  const debouncedFunction = (username: string, hasUserTyped: boolean, userDataUsername: string) => {
     clearTimeout(timeoutId);
     timeoutId = setTimeout(() => {
-      func(...args);
+      func(username, hasUserTyped, userDataUsername);
     }, delay);
   };
   debouncedFunction.cancel = () => clearTimeout(timeoutId);
   return debouncedFunction;
 };
 
-export default function ProfileSettingsPane({ userData }) {
+export default function ProfileSettingsPane({ user }: { user: User }) {
   const { showNotification } = useNotification();
-  const [name, setName] = useState(userData.name || "");
-  const [username, setUsername] = useState(userData.username);
+  const router = useRouter();
+  const [name, setName] = useState<string>(user.name ?? "");
+  const [username, setUsername] = useState<string>(user.username ?? "");
   const [isImageUploaderOpen, setIsImageUploaderOpen] = useState(false);
   const [isUsernameAvailable, setIsUsernameAvailable] = useState(true);
   const [didUsernameChange, setDidUsernameChange] = useState(false);
@@ -33,10 +39,10 @@ export default function ProfileSettingsPane({ userData }) {
   const [hasUserTyped, setHasUserTyped] = useState(false);
   const [isNameValid, setIsNameValid] = useState(true);
   const [nameError, setNameError] = useState("");
-  const [tag, setTag] = useState(userData.tag || "none");
+  const [tag, setTag] = useState<string>(user.tag ?? "none");
 
   const checkUsername = useCallback(async () => {
-    if (username.length > 0 && hasUserTyped && username !== userData.username) {
+    if (username.length > 0 && hasUserTyped && username !== user.username) {
       try {
         const response = await fetch(
           `/api/user/settings/userNameCheck?username=${encodeURIComponent(username)}`
@@ -51,35 +57,46 @@ export default function ProfileSettingsPane({ userData }) {
           setIsUsernameValid(false);
         }
         setIsUsernameLoading(false);
-      } catch (error) {
-        console.error("Error checking username:", error);
+      } catch (error: unknown) {
+        if (error instanceof Error) {
+          console.error("Error checking username:", error.message);
+        } else {
+          console.error("Error checking username:", error);
+        }
         setIsUsernameLoading(false);
       }
-    } else if (username === userData.username) {
+    } else if (username === user.username) {
       setIsUsernameAvailable(true);
       setIsUsernameValid(true);
       setUsernameError("");
       setIsUsernameLoading(false);
     }
-  }, [username, hasUserTyped, userData.username]);
+  }, [username, hasUserTyped, user.username]);
 
   const debouncedCheckUsername = useCallback(() => {
-    const debouncedFn = debounce((username, hasUserTyped, userDataUsername) => {
-      if (username.length > 0 && hasUserTyped && username !== userDataUsername) {
-        checkUsername();
-      }
-    }, 1000);
+    const debouncedFn = debounce(
+      (username: string, hasUserTyped: boolean, userDataUsername: string) => {
+        if (username.length > 0 && hasUserTyped && username !== userDataUsername) {
+          checkUsername();
+        }
+      },
+      1000
+    );
     return debouncedFn;
   }, [checkUsername]);
 
   const handleSave = async () => {
     const data = {
-      id: userData.id,
+      id: user.id,
       name,
       username,
       tag,
     };
-    if (isNameValid && isUsernameValid && tag !== userData.tag) {
+    if (
+      isNameValid &&
+      isUsernameValid &&
+      (tag !== user.tag || username !== user.username || name !== user.name)
+    ) {
       try {
         const response = await fetch("/api/user/settings/uploadOnboarding", {
           method: "POST",
@@ -95,6 +112,8 @@ export default function ProfileSettingsPane({ userData }) {
             message: "Profile settings saved",
             color: "green",
           });
+          router.push(`/profile/${username}/settings`);
+          router.refresh();
         }
       } catch (error) {
         showNotification({
@@ -112,13 +131,14 @@ export default function ProfileSettingsPane({ userData }) {
   useEffect(() => {
     if (hasUserTyped) {
       setIsUsernameLoading(false);
-      if (username === userData.username) {
+      if (username === user.username) {
         setDidUsernameChange(false);
       } else {
         setDidUsernameChange(true);
         if (isUsernameValid) {
           setIsUsernameLoading(true);
-          debouncedCheckUsername()(username, hasUserTyped, userData.username);
+          const currentUsername = user.username ?? "";
+          debouncedCheckUsername()(username, hasUserTyped, currentUsername);
         }
       }
     }
@@ -126,9 +146,9 @@ export default function ProfileSettingsPane({ userData }) {
     return () => {
       debouncedCheckUsername().cancel();
     };
-  }, [username, debouncedCheckUsername, hasUserTyped, isUsernameValid, userData.username]);
+  }, [username, debouncedCheckUsername, hasUserTyped, isUsernameValid, user.username]);
 
-  const handleUsernameChange = e => {
+  const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setHasUserTyped(true);
     setUsername(e.target.value);
 
@@ -141,7 +161,7 @@ export default function ProfileSettingsPane({ userData }) {
     } else if (/[^a-zA-Z0-9]/.test(e.target.value)) {
       setIsUsernameValid(false);
       setUsernameError("Username can only contain letters and numbers");
-    } else if (e.target.value === userData.username) {
+    } else if (e.target.value === user.username) {
       setIsUsernameValid(true);
       setUsernameError("");
       setIsUsernameAvailable(true);
@@ -150,7 +170,7 @@ export default function ProfileSettingsPane({ userData }) {
       setUsernameError("");
     }
   };
-  const handleNameChange = e => {
+  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setHasUserTyped(true);
     setName(e.target.value);
     if (e.target.value.length < 0 || e.target.value.length > 50) {
@@ -168,7 +188,7 @@ export default function ProfileSettingsPane({ userData }) {
   return (
     <div className=" bg-bg1 p-5 w-xs md:w-md rounded-lg flex-col flex gap-3 font-barlow text-white rounded-tl-none">
       {isImageUploaderOpen && (
-        <ImageUploaderPopUp onCancel={() => setIsImageUploaderOpen(false)} userId={userData.id} />
+        <ImageUploaderPopUp onCancel={() => setIsImageUploaderOpen(false)} userId={user.id} />
       )}
       <div className="flex flex-col">
         <p className="text-lg font-bold">Profile Picture</p>
@@ -176,9 +196,9 @@ export default function ProfileSettingsPane({ userData }) {
           className="flex items-center gap-2 bg-bg2 rounded-md p-2"
           onClick={() => setIsImageUploaderOpen(true)}
         >
-          {userData.image ? (
+          {user.image ? (
             <Image
-              src={userData.image}
+              src={user.image}
               alt="profile"
               width={100}
               height={100}
