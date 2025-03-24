@@ -78,7 +78,7 @@ export default function MixerLeaderBoard({
                   {combinedScores[2].name}
                 </p>
                 <motion.div
-                  className="h-6 bg-orange-600 w-20 rounded"
+                  className="h-6 bg-orange-600 w-20 rounded shadow-lg shadow-orange-600"
                   initial={{ height: 0 }}
                   animate={{ height: "3rem" }}
                   transition={{ duration: 0.75, delay: 0.4 }}
@@ -89,7 +89,7 @@ export default function MixerLeaderBoard({
                   {combinedScores[0].name}
                 </p>
                 <motion.div
-                  className="h-20 bg-amber-500 w-20 rounded"
+                  className="h-20 bg-amber-500 w-20 rounded shadow-lg shadow-amber-500"
                   initial={{ height: 0 }}
                   animate={{ height: "10rem" }}
                   transition={{ duration: 0.75, delay: 0.2 }}
@@ -100,7 +100,7 @@ export default function MixerLeaderBoard({
                   {combinedScores[1].name}
                 </p>
                 <motion.div
-                  className="h-14 bg-gray-400 w-20 rounded"
+                  className="h-14 bg-gray-400 w-20 rounded shadow-lg shadow-gray-400"
                   initial={{ height: 0 }}
                   animate={{ height: "6rem" }}
                   transition={{ duration: 0.75, delay: 0.3 }}

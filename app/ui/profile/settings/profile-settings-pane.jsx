@@ -153,7 +153,7 @@ export default function ProfileSettingsPane({ userData }) {
   const handleNameChange = e => {
     setHasUserTyped(true);
     setName(e.target.value);
-    if (e.target.value.length < 0 || e.target.value.length > 16) {
+    if (e.target.value.length < 0 || e.target.value.length > 50) {
       setIsNameValid(false);
       setNameError("Name must be between 1 and 16 characters");
     } else if (/[^a-zA-Z0-9\s]/.test(e.target.value)) {

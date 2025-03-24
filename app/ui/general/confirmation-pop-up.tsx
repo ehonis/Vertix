@@ -30,13 +30,13 @@ export default function ConfirmationPopUp({
           isVisible ? "-translate-y-1/2 opacity-100" : "translate-y-full opacity-0"
         } transition-all duration-700 ease-out m-5 p-5 rounded shadow-lg`}
       >
-        <p className="font-bold">{message}</p>
-        <p className="text-red-500 underline">{submessage}</p>
+        <p className="font-bold text-xl text-center mb-3">{message}</p>
+        <p className="text-red-500 text-sm text-center">{submessage}</p>
         <div className="flex justify-between">
-          <button onClick={onConfirmation} className="mt-4 rounded-lg bg-blue-500 p-2 text-white">
+          <button onClick={onConfirmation} className="mt-4 rounded-lg blue-button p-2 text-white">
             Confirm
           </button>
-          <button onClick={onCancel} className="mt-4 rounded-lg bg-red-500 p-2 text-white">
+          <button onClick={onCancel} className="mt-4 rounded-lg red-button p-2 text-white">
             {" "}
             Cancel
           </button>

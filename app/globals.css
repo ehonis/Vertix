@@ -138,6 +138,11 @@
   outline: 1px solid #a78bfa;
   border-radius: 0.125rem;
 }
+@utility red-button {
+  background-color: rgba(239, 68, 68, 0.15);
+  outline: 1px solid #ef4444;
+  border-radius: 0.125rem;
+}
 
 @layer utilities {
   :root {
