@@ -78,8 +78,8 @@ export default function HomePageSwiper() {
             </div>
           </SwiperSlide>
           {content.map((content, index) => (
-            <SwiperSlide>
-              <div key={index} className="relative  w-full h-full  overflow-hidden">
+            <SwiperSlide key={index}>
+              <div className="relative  w-full h-full  overflow-hidden">
                 <div className="absolute inset-0 bg-linear-to-l from-black/100 to-transparent z-10 min-w-full" />
 
                 <Image
