@@ -1,15 +1,12 @@
 import Link from "next/link";
-
-export default function Announcement({}) {
+export default function SignUpPrompt() {
   return (
-    <Link
-      href="/competitions/competition/mixer/cm780exfs0002oi365hvzdtt2"
-      className="flex justify-between items-center blue-button rounded-lg p-2 px-4 w-4/5 md:w-md mt-3 "
-    >
-      <h2 className="font-barlow text-white text-lg font-semibold text-center ">
-        Sign ups are now open for Spring Mixer 2025!
-      </h2>
-      <div>
+    <div className="text-white font-barlow">
+      <Link
+        href={"/signin"}
+        className="bg-green-400/15 outline-green-400 flex justify-between gap-3 px-2 outline-3  py-1 rounded-md items-center"
+      >
+        <p className="text-xl font-medium">Sign up to start tracking!</p>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -24,7 +21,7 @@ export default function Announcement({}) {
             d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"
           />
         </svg>
-      </div>
-    </Link>
+      </Link>
+    </div>
   );
 }

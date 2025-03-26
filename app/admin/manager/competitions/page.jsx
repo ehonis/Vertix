@@ -45,7 +45,7 @@ export default async function Page() {
               {compTypes.map(type => (
                 <Link
                   href={type.url}
-                  className="bg-bg1 max-w-md grid grid-cols-3 font-barlow font-bold text-white p-3 rounded-sm outline outline-white outline-1"
+                  className="bg-bg1 max-w-md grid grid-cols-3 font-barlow font-bold text-white p-3 rounded-sm outline outline-white "
                   key={type.text}
                 >
                   <svg
