@@ -44,7 +44,7 @@ export default function RoutePieChart({ userData }) {
     });
 
     return (
-      <div className="w-72 h-72 bg-bg1 rounded-lg p-4 flex flex-col justify-between items-center">
+      <div className="w-72 h-72 bg-slate-900 rounded-lg p-4 flex flex-col justify-between items-center">
         <h2 className="text-white font-bold text-xl">Total Completed Routes</h2>
         <ResponsiveContainer width="100%" height="100%">
           <PieChart>
@@ -67,7 +67,7 @@ export default function RoutePieChart({ userData }) {
     );
   } else {
     return (
-      <div className="w-72 h-72 bg-bg1 rounded-lg p-4 flex flex-col justify-between items-center">
+      <div className="w-72 h-72 bg-slate-900 rounded-lg p-4 flex flex-col justify-between items-center">
         <h2 className="text-white font-bold text-xl">Total Completed Routes</h2>
         <p className="text-red-500 font-bold text-center">No Data to Display</p>
         <p className="text-white font-bold text-center">

@@ -348,7 +348,7 @@ export default function EditUserPopUp({
               value={entryMethod}
               onChange={handleEntryMethodChange}
               className={clsx(
-                "font-light bg-bg1 p-1 rounded-r text-center w-24",
+                "font-light bg-slate-900 p-1 rounded-r text-center w-24",
                 entryMethod === "MANUAL" ? "text-gray-300" : "text-green-400"
               )}
             >
@@ -369,7 +369,7 @@ export default function EditUserPopUp({
           ) : null}
           {connectedUser !== null && entryMethod === "APP" ? (
             <div className="flex justify-center">
-              <div className="flex bg-bg1 items-center p-2 rounded-sm w-72 justify-between">
+              <div className="flex bg-slate-900 items-center p-2 rounded-sm w-72 justify-between">
                 {/* user image */}
                 <div className="flex justify-between w-full gap-2">
                   <div className="flex gap-2">
@@ -424,7 +424,7 @@ export default function EditUserPopUp({
                 id=""
                 value={divisionId}
                 onChange={e => setDivisionId(e.target.value)}
-                className="bg-bg1 w-72 px-2 py-1 rounded-md text-center"
+                className="bg-slate-900 w-72 px-2 py-1 rounded-md text-center"
               >
                 <option value="none"></option>
                 {divisions.map(division => (
@@ -437,7 +437,7 @@ export default function EditUserPopUp({
           )}
 
           {/* boulder scores */}
-          <div className="flex flex-col bg-bg1 rounded-sm p-2 gap-2 w-72 place-self-center">
+          <div className="flex flex-col bg-slate-900 rounded-sm p-2 gap-2 w-72 place-self-center">
             <p>Boulder Scores Combined</p>
             <div className="flex gap-2 items-center">
               <label htmlFor="" className="text-sm">
@@ -469,7 +469,7 @@ export default function EditUserPopUp({
             </div>
           </div>
           {/* rope scores */}
-          <div className="flex flex-col bg-bg1 rounded-sm p-2 gap-2 w-72 place-self-center">
+          <div className="flex flex-col bg-slate-900 rounded-sm p-2 gap-2 w-72 place-self-center">
             <p>Ropes Scores Combined</p>
             <div className="flex gap-2 items-center">
               <label htmlFor="" className="text-sm">

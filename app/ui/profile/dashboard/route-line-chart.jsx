@@ -48,7 +48,7 @@ export default function RouteLineChart({ completedRoutes }) {
 
   if (lineCompletion.length > 0) {
     return (
-      <div className="grow bg-bg1 rounded-lg py-4 flex flex-col gap-3 justify-between items-center md:h-auto h-72">
+      <div className="grow bg-slate-900 rounded-lg py-4 flex flex-col gap-3 justify-between items-center md:h-auto h-72">
         <div className="flex justify-between items-center w-full px-7">
           <h2 className="text-white font-bold text-xl">
             Total Completed Routes By{" "}
@@ -99,7 +99,7 @@ export default function RouteLineChart({ completedRoutes }) {
     );
   } else {
     return (
-      <div className="grow bg-bg1 rounded-lg p-4 flex flex-col justify-between items-center">
+      <div className="grow bg-slate-900 rounded-lg p-4 flex flex-col justify-between items-center">
         <h2 className="text-white font-bold text-xl">Total Completed Routes Over Time</h2>
         <p className="text-red-500 font-bold ">No Data to Display</p>
         <p className="text-white font-bold text-center">

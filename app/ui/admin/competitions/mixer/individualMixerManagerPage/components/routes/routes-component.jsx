@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import EditRoutePopUp from "./mixer-edit-route-popup";
+import NewRoutePopUp from "./new-route-popop";
 import { clsx } from "clsx";
 
 export default function RoutesComponent({ routes }) {
@@ -38,9 +39,7 @@ export default function RoutesComponent({ routes }) {
   }; //route
   return (
     <div>
-      {isNewEditRoutePopUp && (
-        <EditRoutePopUp onCancel={() => setIsNewEditRoutePopup(false)} holds={null} />
-      )}
+      {isNewEditRoutePopUp && <NewRoutePopUp onCancel={() => setIsNewEditRoutePopup(false)} />}
       {isEditRoutePopup && (
         <EditRoutePopUp
           onCancel={() => setIsEditRoutePopup(false)}
@@ -52,7 +51,7 @@ export default function RoutesComponent({ routes }) {
       )}
       <div>
         <h3 className="text-3xl mt-3">Routes</h3>
-        <div className="bg-bg2 flex-col gap-2 flex p-3 rounded-sm w-full">
+        <div className="bg-slate-900 flex-col gap-2 flex p-3 rounded-sm w-full">
           {compRoutes.length > 0 ? (
             <div className="w-full flex-col flex gap-2">
               {compRoutes.map(route => (
@@ -68,7 +67,7 @@ export default function RoutesComponent({ routes }) {
                   )}
                   onClick={() => handleEditRoutePopUp(route.id)}
                 >
-                  <div className="grid bg-bg1 grid-cols-2 items-center p-1 px-2 w-full rounded-sm">
+                  <div className="grid bg-slate-900 grid-cols-2 items-center p-1 px-2 w-full rounded-sm">
                     <p className="text-xl place-self-start">{route.name}</p>
                     <p className="text-xl place-self-end">Holds: {route.holds.length}</p>
                   </div>
@@ -98,7 +97,30 @@ export default function RoutesComponent({ routes }) {
               </div>
             </div>
           ) : (
-            <div></div>
+            <div>
+              <div className="flex items-center gap-1">
+                <button
+                  className="bg-green-400 p-1 rounded-full max-w-fit"
+                  onClick={() => setIsNewEditRoutePopup(true)}
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={2}
+                    stroke="currentColor"
+                    className="size-7 "
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                    />
+                  </svg>
+                </button>
+                <p className="font-medium">Add Route</p>
+              </div>
+            </div>
           )}
         </div>
       </div>

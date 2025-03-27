@@ -129,7 +129,7 @@ export default function DivisionsComponent({ divisions, compId }) {
                   )}
                   <button
                     key={division.id}
-                    className="bg-bg1 w-full gap-3 rounded-sm flex p-2 justify-center items-center"
+                    className="bg-slate-900 w-full gap-3 rounded-sm flex p-2 justify-center items-center"
                     onClick={() => handleEditDivisionPopup(division.id)}
                   >
                     <p className="text-white font-barlow font-semibold text-xl">{division.name}</p>

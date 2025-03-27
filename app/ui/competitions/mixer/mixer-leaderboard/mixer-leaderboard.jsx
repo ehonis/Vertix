@@ -138,7 +138,7 @@ export default function MixerLeaderBoard({
                   {/* Division Button */}
                   <button
                     className={clsx(
-                      "bg-bg1 flex w-full rounded-sm justify-center p-2 outline outline-white",
+                      "bg-slate-900 flex w-full rounded-sm justify-center p-2 outline outline-white",
                       openDivisions[divisionName] && "bg-bg2" // Change color when open
                     )}
                     onClick={() => handleToggleDivision(divisionName)}
@@ -178,7 +178,7 @@ export default function MixerLeaderBoard({
                               index === 0 && "bg-amber-500 shadow-lg shadow-amber-500",
                               index === 1 && "bg-gray-400 shadow-lg shadow-gray-400",
                               index === 2 && "bg-orange-600 shadow-lg shadow-orange-600",
-                              index > 2 && "bg-bg1"
+                              index > 2 && "bg-slate-900"
                             )}
                             initial={{ opacity: 0, y: -5 }}
                             animate={{ opacity: 1, y: 0 }}
@@ -207,7 +207,7 @@ export default function MixerLeaderBoard({
               {/* Ropes Button */}
               <button
                 className={clsx(
-                  "bg-bg1 flex w-full rounded-sm justify-center p-2 outline-1 outline-white",
+                  "bg-slate-900 flex w-full rounded-sm justify-center p-2 outline-1 outline-white",
                   isRopes && "bg-bg2"
                 )}
                 onClick={handleRopeScores}
@@ -245,7 +245,7 @@ export default function MixerLeaderBoard({
                           climber.rank === 1 && "bg-amber-500 shadow-lg shadow-amber-500",
                           climber.rank === 2 && "bg-gray-400 shadow-lg shadow-gray-400",
                           climber.rank === 3 && "bg-orange-600 shadow-lg shadow-orange-600",
-                          climber.rank > 3 && "bg-bg1"
+                          climber.rank > 3 && "bg-slate-900"
                         )}
                         initial={{ opacity: 0, y: -5 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -269,7 +269,7 @@ export default function MixerLeaderBoard({
               {/* Boulders Button */}
               <button
                 className={clsx(
-                  "bg-bg1 flex w-full rounded-sm justify-center p-2  outline-1 outline-white",
+                  "bg-slate-900 flex w-full rounded-sm justify-center p-2  outline-1 outline-white",
                   isBoulders && "bg-bg2"
                 )}
                 onClick={handleBoulderScores}
@@ -307,7 +307,7 @@ export default function MixerLeaderBoard({
                           climber.rank === 1 && "bg-amber-500 shadow-lg shadow-amber-500",
                           climber.rank === 2 && "bg-gray-400 shadow-lg shadow-gray-400",
                           climber.rank === 3 && "bg-orange-600 shadow-lg shadow-orange-600",
-                          climber.rank > 3 && "bg-bg1"
+                          climber.rank > 3 && "bg-slate-900"
                         )}
                         initial={{ opacity: 0, y: -5 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -335,7 +335,7 @@ export default function MixerLeaderBoard({
             <div className="flex flex-col gap-2">
               <button
                 className={clsx(
-                  "bg-bg1 flex w-full rounded-sm justify-center p-2  outline-1 outline-white",
+                  "bg-slate-900 flex w-full rounded-sm justify-center p-2  outline-1 outline-white",
                   isRopes && "bg-bg2"
                 )}
                 onClick={handleCombinedScores}
@@ -374,7 +374,7 @@ export default function MixerLeaderBoard({
                           index === 0 && "bg-amber-500 shadow-lg shadow-amber-500",
                           index === 1 && "bg-gray-400 shadow-lg shadow-gray-400",
                           index === 2 && "bg-orange-600 shadow-lg shadow-orange-600",
-                          index > 2 && "bg-bg1"
+                          index > 2 && "bg-slate-900"
                         )}
                         initial={{ opacity: 0, y: -5 }}
                         animate={{ opacity: 1, y: 0 }}

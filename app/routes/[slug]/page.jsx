@@ -77,7 +77,7 @@ function RouteInfo({
 }) {
   return (
     <>
-      <div className="w-11/12 md:w-3/5 bg-bg1 rounded-xl h-max">
+      <div className="w-11/12 md:w-3/5 bg-slate-900 rounded-xl h-max">
         <div
           className={clsx("w-full h-8 rounded-t-xl", {
             "bg-green-400": route.color === "green",
@@ -126,7 +126,7 @@ function RouteInfo({
           </div>
         </div>
       </div>
-      <div className="flex mt-3 justify-center bg-bg1 rounded-xl p-3 w-11/12 md:w-3/5">
+      <div className="flex mt-3 justify-center bg-slate-900 rounded-xl p-3 w-11/12 md:w-3/5">
         {starRating === 0 ? (
           <div className="flex items-center gap-3">
             <p className="text-white font-barlow font-bold">
@@ -179,7 +179,7 @@ function RouteInfo({
 
 function StatCard({ value, label }) {
   return (
-    <div className="flex w-full flex-col items-center rounded-xl bg-bg1 p-4 shadow-lg">
+    <div className="flex w-full flex-col items-center rounded-xl bg-slate-900 p-4 shadow-lg">
       <h2 className="gradient-text-blue m-0 p-0 text-8xl font-bold">{value}</h2>
       <p className="m-0 p-0 text-lg font-semibold text-white">{label}</p>
     </div>

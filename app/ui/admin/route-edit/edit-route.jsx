@@ -169,7 +169,7 @@ export default function EditRoute({ route, images, daysOld, totalSends }) {
           </button>
         </div>
 
-        <div className="w-11/12 md:w-3/5 bg-bg1 h-max rounded-xl mt-5 justify-center">
+        <div className="w-11/12 md:w-3/5 bg-slate-900 h-max rounded-xl mt-5 justify-center">
           <div
             className={clsx(
               " w-full h-8 rounded-t-xl",
@@ -323,15 +323,15 @@ export default function EditRoute({ route, images, daysOld, totalSends }) {
             </button>
           ) : null}
         </div>
-        <div className="flex mt-3 justify-center bg-bg1 rounded-xl p-3 w-11/12 md:w-3/5">
+        <div className="flex mt-3 justify-center bg-slate-900 rounded-xl p-3 w-11/12 md:w-3/5">
           <StarRating rating={route.starRating} />
         </div>
         <div className="flex mt-3 justify-between w-11/12 md:w-3/5">
-          <div className="mr-3 flex w-full flex-col items-center rounded-xl bg-bg1 p-4 shadow-lg">
+          <div className="mr-3 flex w-full flex-col items-center rounded-xl bg-slate-900 p-4 shadow-lg">
             <h2 className="gradient-text-blue m-0 p-0 text-8xl font-bold">{totalSends}</h2>
             <p className="m-0 p-0 text-lg font-semibold text-white">Sends</p>
           </div>
-          <div className="ml-2 flex w-full flex-col items-center rounded-xl bg-bg1 p-4 shadow-lg">
+          <div className="ml-2 flex w-full flex-col items-center rounded-xl bg-slate-900 p-4 shadow-lg">
             <h2 className="gradient-text m-0 p-0 text-8xl font-bold">{daysOld}</h2>
             <p className="m-0 p-0 text-lg font-semibold text-white">
               days <span className="text-iconbg">(old)</span>

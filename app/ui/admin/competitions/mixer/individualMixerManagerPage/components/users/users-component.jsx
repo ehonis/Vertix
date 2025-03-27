@@ -67,7 +67,7 @@ export default function UsersComponent({ compId, climbers, ropeScores, boulderSc
                   className="w-full"
                   onClick={() => handleClimberClick(climber.id)}
                 >
-                  <div className="grid bg-bg1 grid-cols-[1fr_auto] items-center p-1 px-2 w-full max-w-full rounded-sm">
+                  <div className="grid bg-slate-900 grid-cols-[1fr_auto] items-center p-1 px-2 w-full max-w-full rounded-sm">
                     <p className="text-xl justify-self-start truncate max-w-[90%]">
                       {climber.name}
                     </p>

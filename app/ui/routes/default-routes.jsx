@@ -100,7 +100,7 @@ export default function DefaultRoutes({ ropes, boulders, user, completions, tota
   }
   return (
     <div className="flex md:flex-row flex-col gap-5 p-5">
-      <div className="bg-bg1 grow rounded-xl">
+      <div className="bg-slate-900 grow rounded-xl">
         <div className="p-3">
           <h2 className="text-white font-bold text-3xl">All Ropes</h2>
         </div>
@@ -194,7 +194,7 @@ export default function DefaultRoutes({ ropes, boulders, user, completions, tota
           </button>
         </div>
       </div>
-      <div className="bg-bg1 grow rounded-xl">
+      <div className="bg-slate-900 grow rounded-xl">
         <div className="p-3">
           <h2 className="text-white font-bold text-3xl">All Boulders</h2>
         </div>

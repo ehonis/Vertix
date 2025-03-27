@@ -16,7 +16,7 @@ export default async function UpcomingMixerCompetitions() {
       {competitions.map(comp => (
         <Link
           key={comp.id}
-          className="bg-bg1 w-full grid grid-cols-3 gap-3 font-barlow font-bold text-white p-2 rounded-sm outline outline-white outline-1"
+          className="bg-slate-900 w-full grid grid-cols-3 gap-3 font-barlow font-bold text-white p-2 rounded-sm outline outline-white outline-1"
           href={`/admin/manager/competitions/mixer/${comp.id}`}
         >
           {comp.imageUrl === null ? (

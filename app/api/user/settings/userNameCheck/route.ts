@@ -1,8 +1,8 @@
-// app/api/username/route.js (or route.ts if using TypeScript)
-import { NextResponse } from "next/server";
+
+import { NextResponse, NextRequest } from "next/server";
 import prisma from "@/prisma";
 
-export async function GET(request) {
+export async function GET(request : NextRequest) {
   const { searchParams } = new URL(request.url);
   const username = searchParams.get("username");
 

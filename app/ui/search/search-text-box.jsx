@@ -75,7 +75,7 @@ export default function SearchTextBox({ onDataFetch }) {
           />
         </div>
         <button
-          className="bg-bg1 flex justify-center items-center rounded-r-full pl-3 pr-4 outline outline-1 outline-gray-400 drop-shadow-customBlack"
+          className="bg-slate-900 flex justify-center items-center rounded-r-full pl-3 pr-4 outline outline-1 outline-gray-400 drop-shadow-customBlack"
           onClick={handleSubmit}
         >
           <svg

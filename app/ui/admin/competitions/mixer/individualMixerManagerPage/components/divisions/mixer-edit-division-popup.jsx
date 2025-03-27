@@ -137,7 +137,7 @@ export default function EditDivisionPopUp({
                 type="text"
                 value={tempDivision}
                 onChange={handleDivisionTextChange}
-                className="bg-bg1 text-white rounded-sm px-2 py-1 focus:outline-hidden"
+                className="bg-slate-900 text-white rounded-sm px-2 py-1 focus:outline-hidden"
                 placeholder="V# - V# / 5.# - 5.# or >V# / >5.#"
               />
               {isSaveButton ? (

@@ -39,7 +39,7 @@ export default function SignInForm() {
   return (
     <div className="flex items-center flex-col justify-center mt-16">
       <h1 className="text-3xl text-white font-bold m-5">Login or Sign Up</h1>
-      <div className="bg-bg1 flex flex-col items-center justify-center p-5 px-10 md:w-96 w-80 rounded-lg shadow-md gap-3">
+      <div className="bg-slate-900 flex flex-col items-center justify-center p-5 px-10 md:w-96 w-80 rounded-lg shadow-md gap-3">
         <div className="flex flex-col gap-4 w-full">
           <button onClick={() => handleSignIn("google")}>
             {!isGoogleLoading ? (
@@ -93,7 +93,7 @@ export default function SignInForm() {
                 <p className="font-barlow font-bold text-lg">GitHub</p>
               </div>
             ) : (
-              <div className="bg-bg1 rounded-full w-full flex justify-center py-2">
+              <div className="bg-slate-900 rounded-full w-full flex justify-center py-2">
                 <ElementLoadingAnimation size={7} />
               </div>
             )}

@@ -108,7 +108,7 @@ export default function FindUserPopUp({ onConnectUser, onCancel }) {
           <div className="flex justify-center items-center">
             <input
               type="text"
-              className="bg-bg1 rounded-l py-1 px-2 w- focus:outline-hidden"
+              className="bg-slate-900 rounded-l py-1 px-2 w- focus:outline-hidden"
               placeholder="User Search"
               value={searchText}
               onChange={handleSearchTextChange}
@@ -142,7 +142,7 @@ export default function FindUserPopUp({ onConnectUser, onCancel }) {
                     <div key={user.id} className="">
                       <button
                         className={clsx(
-                          "bg-bg1 p-1 w-full rounded-sm",
+                          "bg-slate-900 p-1 w-full rounded-sm",
                           user === selectedUser &&
                             "outline outline-blue-500 outline-1 shadow-md shadow-blue-500"
                         )}

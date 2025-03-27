@@ -102,7 +102,7 @@ export default function NewRoute({ id, onCommit, onUncommit }) {
               value={name}
               onChange={handleNameChange}
               placeholder="Name"
-              className="rounded-md bg-bg1 text-white py-1 px-2 max-w-min lg:h-14 lg:text-3xl font-barlow font-bold focus:outline-hidden"
+              className="rounded-md bg-slate-900 text-white py-1 px-2 max-w-min lg:h-14 lg:text-3xl font-barlow font-bold focus:outline-hidden"
             />
           </div>
           <div className="flex gap-1 items-center">
@@ -111,7 +111,7 @@ export default function NewRoute({ id, onCommit, onUncommit }) {
             </label>
             <button
               className={clsx(
-                "font-barlow font-bold px-2 py-1 rounded-lg bg-bg1 text-white",
+                "font-barlow font-bold px-2 py-1 rounded-lg bg-slate-900 text-white",
                 isToday && "bg-green-500"
               )}
               onClick={handleNowButton}
@@ -124,7 +124,7 @@ export default function NewRoute({ id, onCommit, onUncommit }) {
               name="date"
               value={selectedDate} // Controlled value
               onChange={handleDateChange} // Update state on change
-              className="p-1 rounded-lg bg-bg1 text-white cursor-pointer font-barlow font-bold focus:outline-hidden"
+              className="p-1 rounded-lg bg-slate-900 text-white cursor-pointer font-barlow font-bold focus:outline-hidden"
             />
           </div>
           <GradeSelect onGradeChange={handleGradeData} />
@@ -139,7 +139,7 @@ export default function NewRoute({ id, onCommit, onUncommit }) {
               id="color"
               value={color}
               onChange={handleColorChange}
-              className="bg-bg1 text-white font-barlow font-bold p-1 rounded-sm"
+              className="bg-slate-900 text-white font-barlow font-bold p-1 rounded-sm"
             >
               <option value=""></option>
               <option value="black">Black</option>
@@ -155,7 +155,7 @@ export default function NewRoute({ id, onCommit, onUncommit }) {
             </select>
           </div>
         </div>
-        <div className="bg-bg1 pl-3 pr-4  rounded-lg flex justify-center py-3">
+        <div className="bg-slate-900 pl-3 pr-4  rounded-lg flex justify-center py-3">
           <TopDown onData={handleWallData} />
         </div>
       </div>

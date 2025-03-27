@@ -120,7 +120,7 @@ export default function NewComp({ id, onCommit, onUncommit }) {
             value={name}
             onChange={handleNameChange}
             placeholder="Name"
-            className="max-w-min bg-bg1 text-white rounded-md px-2 py-1 focus:outline-hidden"
+            className="max-w-min bg-slate-900 text-white rounded-md px-2 py-1 focus:outline-hidden"
           />
         </div>
         <div className="flex gap-2">
@@ -132,7 +132,7 @@ export default function NewComp({ id, onCommit, onUncommit }) {
             id="type"
             value={compType}
             onChange={handleCompTypeChange}
-            className="max-w-min rounded-md bg-bg1 text-white px-2 py-1"
+            className="max-w-min rounded-md bg-slate-900 text-white px-2 py-1"
           >
             <option value="Mixer">Mixer</option>
           </select>
@@ -147,7 +147,7 @@ export default function NewComp({ id, onCommit, onUncommit }) {
             name="date"
             value={selectedDate} // Controlled value
             onChange={handleDateChange} // Update state on change
-            className="p-1 rounded-lg bg-bg1 text-white cursor-pointer font-barlow font-bold focus:outline-hidden"
+            className="p-1 rounded-lg bg-slate-900 text-white cursor-pointer font-barlow font-bold focus:outline-hidden"
           />
           <p className="text-xs text-white font-barlow font-bold">
             {"(this can be changed later)"}

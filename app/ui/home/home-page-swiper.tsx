@@ -71,7 +71,7 @@ export default function HomePageSwiper() {
         >
           <SwiperSlide>
             <div className="flex flex-col items-center justify-center w-full h-full bg-black">
-              <p className="font-tomorrow text-6xl font-bold italic">Vertix</p>
+              <p className="font-tomorrow text-7xl font-bold italic">Vertix</p>
               <p className="font-barlow font-thin text-md ">
                 All of your climbing data, in one place
               </p>
@@ -120,9 +120,9 @@ export default function HomePageSwiper() {
           ))}
         </Swiper>
 
-        <div className="z-20 text-5xl md:text-7xl font-barlow font-extralight text-start flex flex-col gap-1">
-          <p>A</p> <p>New</p> <p>Way</p> <p>To</p>
-          <span className="text-primary">
+        <div className="z-20 text-5xl md:text-7xl font-barlow font-thin text-start flex flex-col gap-2">
+          <p>A new</p> <p>way to</p>
+          <span className="text-primary font-semibold">
             {displayText}
             <span className="animate-flash-fast">|</span>
           </span>

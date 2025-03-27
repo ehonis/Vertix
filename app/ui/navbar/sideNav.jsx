@@ -114,7 +114,7 @@ export default function SideNav() {
       <div
         ref={navRef}
         className={clsx(
-          "z-50 fixed flex flex-col h-screen w-56 bg-bg1 top-16 left-0 transition-all duration-700 transform gap-3 p-3",
+          "z-50 fixed flex flex-col h-screen w-56 bg-slate-900 top-16 left-0 transition-all duration-700 transform gap-3 p-3",
           isNavbar ? "opacity-0 -translate-x-full" : "opacity-100 translate-x-0"
         )}
       >

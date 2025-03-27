@@ -199,7 +199,7 @@ export default function IndividualUserEdit({ user }: { user: User }) {
               Delete User
             </button>
           </div>
-          <div className="flex flex-col w-xs md:w-lg bg-bg1 rounded-md p-3 gap-3">
+          <div className="flex flex-col w-xs md:w-lg bg-slate-900 rounded-md p-3 gap-3">
             {/* name */}
             <div className="flex flex-col gap-1 w-full">
               <label className="font-bold text-lg">Name</label>

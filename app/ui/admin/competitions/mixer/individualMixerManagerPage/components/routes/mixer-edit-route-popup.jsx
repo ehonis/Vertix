@@ -68,12 +68,12 @@ export default function EditRoutePopUp({ onCancel, routeId, routeName, holds, up
             type="text"
             value={name}
             onChange={e => setName(e.target.value)}
-            className="bg-bg1 p-2 rounded-sm w-full focus:outline-hidden"
+            className="bg-slate-900 p-2 rounded-sm w-full focus:outline-hidden"
             placeholder="Route Name"
           />
 
           <div>
-            <div className="grid grid-cols-3 bg-bg1 rounded-sm px-1 mb-1">
+            <div className="grid grid-cols-3 bg-slate-900 rounded-sm px-1 mb-1">
               <p className="place-self-start">Hold #</p>
               <p className="place-self-center">TR Pts</p>
               <p className="place-self-end">Lead Pts</p>
@@ -87,7 +87,7 @@ export default function EditRoutePopUp({ onCancel, routeId, routeName, holds, up
                     <div
                       key={index}
                       className={clsx(
-                        "bg-bg1 p-1 rounded-sm w-full grid grid-cols-3 gap-2 items-center",
+                        "bg-slate-900 p-1 rounded-sm w-full grid grid-cols-3 gap-2 items-center",
                         index > 0 &&
                           tempHolds[index - 1]?.topRopePoints > hold.topRopePoints &&
                           "outline outline-red-500",

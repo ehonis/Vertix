@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+
 type ConfirmationPopUpProps = {
   onConfirmation: () => void;
   onCancel: () => void;

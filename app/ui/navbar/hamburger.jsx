@@ -176,7 +176,7 @@ export default function HamburgerMenu({ user, status }) {
             ))}
           </div>
           {!user ? (
-            <div className="w-full place-self-end bg-bg1 rounded-md h-20 flex p-3 items-center font-barlow font-bold text-white text-md justify-between">
+            <div className="w-full place-self-end bg-slate-900 rounded-md h-20 flex p-3 items-center font-barlow font-bold text-white text-md justify-between">
               <p className="text-lg">Not Signed in</p>
               <div className="flex gap-4">
                 <Link
@@ -196,7 +196,7 @@ export default function HamburgerMenu({ user, status }) {
               </div>
             </div>
           ) : (
-            <div className="w-full place-self-end bg-bg1 rounded-md h-fit flex flex-col py-3 px-2 items-center font-tomorrow font-bold text-white text-md justify-between">
+            <div className="w-full place-self-end bg-slate-900 rounded-md h-fit flex flex-col py-3 px-2 items-center font-tomorrow font-bold text-white text-md justify-between">
               <AnimatePresence>
                 {isProfileOpen && (
                   <motion.div

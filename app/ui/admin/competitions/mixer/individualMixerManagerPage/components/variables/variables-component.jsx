@@ -336,7 +336,7 @@ export default function VariablesComponent({
       <div className="bg-bg2 flex-col flex p-3 rounded-sm w-full">
         <div className="flex flex-col  gap-2">
           {/*Comp Image*/}
-          <div className="flex justify-between gap-2 bg-bg1 rounded-sm p-2 pr-3 items-center">
+          <div className="flex justify-between gap-2 bg-slate-900 rounded-sm p-2 pr-3 items-center">
             <div className="flex flex-col">
               <label htmlFor="" className="text-xl">
                 Comp Image
@@ -376,7 +376,7 @@ export default function VariablesComponent({
             </button>
           </div>
           {/* areScoresAvailable */}
-          <div className="flex gap-2 bg-bg1 rounded-sm p-2 justify-between items-center">
+          <div className="flex gap-2 bg-slate-900 rounded-sm p-2 justify-between items-center">
             <div className="flex items-center">
               <label htmlFor="" className="text-xl">
                 Scores:
@@ -405,7 +405,7 @@ export default function VariablesComponent({
                 value={isScoresAvailable}
                 onChange={handleAreScoresAvailableChange}
                 className={clsx(
-                  "px-1 py-1 bg-bg1 rounded-md text-center",
+                  "px-1 py-1 bg-slate-900 rounded-md text-center",
 
                   isScoresAvailable === false && "bg-red-500",
 
@@ -426,7 +426,7 @@ export default function VariablesComponent({
             </div>
           </div>
           {/* status */}
-          <div className="flex gap-2 bg-bg1 rounded-sm p-2 justify-between items-center">
+          <div className="flex gap-2 bg-slate-900 rounded-sm p-2 justify-between items-center">
             <div className="flex items-center">
               <label htmlFor="" className="text-xl">
                 Status:
@@ -455,7 +455,7 @@ export default function VariablesComponent({
                 value={statusOption}
                 onChange={handleStatusChange}
                 className={clsx(
-                  "px-1 py-1 bg-bg1 rounded-md",
+                  "px-1 py-1 bg-slate-900 rounded-md",
                   statusOption === CompetitionStatus.UPCOMING && "bg-blue-400",
                   statusOption === CompetitionStatus.INACTIVE && "bg-red-500",
                   statusOption === CompetitionStatus.IN_PROGRESS && "bg-green-500",
@@ -482,7 +482,7 @@ export default function VariablesComponent({
             </div>
           </div>
           {/* time alloted */}
-          <div className="flex gap-2 bg-bg1 rounded-sm p-2 justify-between items-center">
+          <div className="flex gap-2 bg-slate-900 rounded-sm p-2 justify-between items-center">
             <label htmlFor="" className="text-lg">
               Time Allotted
             </label>
@@ -511,7 +511,7 @@ export default function VariablesComponent({
             </div>
           </div>
           {/* comp day */}
-          <div className="flex gap-2 bg-bg1 rounded-sm p-2 justify-between items-center">
+          <div className="flex gap-2 bg-slate-900 rounded-sm p-2 justify-between items-center">
             <label htmlFor="" className="text-lg">
               Comp Day
             </label>
