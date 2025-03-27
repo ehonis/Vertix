@@ -41,7 +41,7 @@ export default async function MixerManager() {
           <h2 className="font-barlow font-bold text-2xl text-white mb-2">
             <span className="text-blue-500">Upcoming</span> Mixer Competitions
           </h2>
-          <div className="bg-bg2 w-full p-3 rounded-sm flex justify-center">
+          <div className="bg-slate-900 w-full p-3 rounded-sm flex justify-center">
             <Suspense fallback={<ElementLoadingAnimation />}>
               <UpcomingMixerCompetitions />
             </Suspense>
@@ -51,7 +51,7 @@ export default async function MixerManager() {
           <h2 className="font-barlow font-bold text-2xl text-white mb-2">
             <span className="text-green-500">Completed</span> Mixer Competitions
           </h2>
-          <div className="bg-bg2 w-full p-3 rounded-sm flex justify-center">
+          <div className="bg-slate-900 w-full p-3 rounded-sm flex justify-center">
             <Suspense fallback={<ElementLoadingAnimation />}>
               <CompletedMixerCompetitions />
             </Suspense>

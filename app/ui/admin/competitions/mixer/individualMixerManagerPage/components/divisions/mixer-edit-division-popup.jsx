@@ -81,7 +81,7 @@ export default function EditDivisionPopUp({
       if (!response.ok) {
         console.error(response.message);
       }
-      const responseData = await response.json();
+      // const responseData = await response.json();
 
       setIsLoading(false);
       showNotification({
@@ -112,7 +112,7 @@ export default function EditDivisionPopUp({
           animate={{ scale: 1 }}
           exit={{ scale: 0.8 }}
           transition={{ duration: 0.3 }}
-          className="bg-bg2 p-3 rounded-lg shadow-lg text-white max-w-sm w-full relative flex flex-col gap-2 z-30"
+          className="bg-slate-900 p-3 rounded-lg shadow-lg text-white max-w-sm w-full relative flex flex-col gap-2 z-30"
         >
           <button className="absolute top-2 right-2" onClick={onCancel}>
             <svg
@@ -137,7 +137,7 @@ export default function EditDivisionPopUp({
                 type="text"
                 value={tempDivision}
                 onChange={handleDivisionTextChange}
-                className="bg-slate-900 text-white rounded-sm px-2 py-1 focus:outline-hidden"
+                className="bg-gray-700 text-white rounded-sm px-2 py-1 focus:outline-hidden"
                 placeholder="V# - V# / 5.# - 5.# or >V# / >5.#"
               />
               {isSaveButton ? (

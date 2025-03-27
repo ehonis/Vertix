@@ -1,22 +1,22 @@
-import prisma from "@/prisma";
 import Link from "next/link";
+import prisma from "@/prisma";
 import Image from "next/image";
 import { CompetitionStatus } from "@prisma/client";
-export default async function UpComingCompetitions() {
-  const UpComingCompetitions = await prisma.MixerCompetition.findMany({
+export default async function UpcomingMixerCompetitions() {
+  const competitions = await prisma.mixerCompetition.findMany({
     where: {
       status: { in: [CompetitionStatus.INACTIVE, CompetitionStatus.UPCOMING] },
     },
+    orderBy: { compDay: "asc" },
     take: 3,
     select: { id: true, name: true, compDay: true, imageUrl: true },
   });
-
   return (
-    <div className="flex flex-col bg-bg2 gap-2 p-2 rounded-sm">
-      {UpComingCompetitions.map(comp => (
+    <div className="flex flex-col gap-2 w-full">
+      {competitions.map(comp => (
         <Link
           key={comp.id}
-          className="bg-slate-900 max-w-md grid-cols-3 grid font-barlow font-bold text-white p-3 rounded-sm outline outline-white items-center"
+          className="bg-gray-700 w-full grid grid-cols-3 gap-3 font-barlow font-bold text-white p-2 rounded-sm "
           href={`/admin/manager/competitions/mixer/${comp.id}`}
         >
           {comp.imageUrl === null ? (
@@ -26,7 +26,7 @@ export default async function UpComingCompetitions() {
               viewBox="0 0 24 24"
               strokeWidth={1.5}
               stroke="currentColor"
-              className="size-8 stroke-white"
+              className="size-10 stroke-white self-center"
             >
               <path
                 strokeLinecap="round"
@@ -37,14 +37,14 @@ export default async function UpComingCompetitions() {
           ) : (
             <Image
               src={comp.imageUrl}
-              height={100}
               width={100}
-              className="rounded-full size-14"
-              alt="pictue of competition"
+              height={100}
+              className="object-cover rounded-full size-12"
+              alt="comp image"
             />
           )}
-          <p className="text-sm text-center self-center">{comp.name}</p>
-          <p className="text-end">{comp.compDay.toLocaleDateString("en-US")}</p>
+          <p className=" text-center self-center">{comp.name}</p>
+          <p className="text-end self-center">{comp.compDay?.toLocaleDateString("en-US")}</p>
         </Link>
       ))}
     </div>

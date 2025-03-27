@@ -41,11 +41,11 @@ export default async function Page() {
           </div>
           <div className="flex flex-col gap-2 mb-3">
             <h2 className="font-barlow font-bold text-white text-2xl">Types</h2>
-            <div className="flex flex-col bg-bg2 gap-2 p-2 rounded-sm">
+            <div className="flex flex-col bg-slate-900 gap-2 p-2 rounded-sm">
               {compTypes.map(type => (
                 <Link
                   href={type.url}
-                  className="bg-slate-900 max-w-md grid grid-cols-3 font-barlow font-bold text-white p-3 rounded-sm outline outline-white "
+                  className="bg-gray-700 max-w-md grid grid-cols-3 font-barlow font-bold text-white p-3 rounded-sm  "
                   key={type.text}
                 >
                   <svg

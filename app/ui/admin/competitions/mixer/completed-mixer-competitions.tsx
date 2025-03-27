@@ -3,7 +3,7 @@ import prisma from "@/prisma";
 import Image from "next/image";
 import { CompetitionStatus } from "@prisma/client";
 export default async function CompletedMixerCompetitions() {
-  const competitions = await prisma.MixerCompetition.findMany({
+  const competitions = await prisma.mixerCompetition.findMany({
     where: {
       status: { in: [CompetitionStatus.COMPLETED, CompetitionStatus.DEMO] },
     },
@@ -16,7 +16,7 @@ export default async function CompletedMixerCompetitions() {
       {competitions.map(comp => (
         <Link
           key={comp.id}
-          className="bg-slate-900 w-full grid grid-cols-3 gap-3 font-barlow font-bold text-white p-2 rounded-sm outline outline-white outline-1"
+          className="bg-gray-700 w-full grid grid-cols-3 gap-3 font-barlow font-bold text-white p-2 rounded-sm"
           href={`/admin/manager/competitions/mixer/${comp.id}`}
         >
           {comp.imageUrl === null ? (
@@ -44,7 +44,7 @@ export default async function CompletedMixerCompetitions() {
             />
           )}
           <p className=" text-center self-center">{comp.name}</p>
-          <p className="text-end self-center">{comp.compDay.toLocaleDateString("en-US")}</p>
+          <p className="text-end self-center">{comp.compDay?.toLocaleDateString("en-US")}</p>
         </Link>
       ))}
     </div>

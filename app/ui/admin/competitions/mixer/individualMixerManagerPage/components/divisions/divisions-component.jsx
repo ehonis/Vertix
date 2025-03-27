@@ -96,7 +96,7 @@ export default function DivisionsComponent({ divisions, compId }) {
               <button
                 className={clsx(
                   " px-2 py-[2px] rounded-md mr-1",
-                  !isEdit ? "bg-gray-400/35 outline outline-gray-400 outline-1 " : "bg-gray-400"
+                  !isEdit ? "bg-gray-400/35 outline outline-gray-400  " : "bg-gray-400"
                 )}
                 onClick={() => setIsEdit(!isEdit)}
               >
@@ -113,7 +113,7 @@ export default function DivisionsComponent({ divisions, compId }) {
             </div>
           )}
         </div>
-        <div className="bg-bg2 flex-col gap-2 flex p-3 rounded-sm w-full">
+        <div className="bg-slate-900 flex-col gap-2 flex p-3 rounded-sm w-full">
           {compDivisions.length > 0 ? (
             <div className="flex flex-col gap-2">
               {compDivisions.map(division => (
@@ -129,7 +129,7 @@ export default function DivisionsComponent({ divisions, compId }) {
                   )}
                   <button
                     key={division.id}
-                    className="bg-slate-900 w-full gap-3 rounded-sm flex p-2 justify-center items-center"
+                    className="bg-gray-700 w-full gap-3 rounded-sm flex p-2 justify-center items-center"
                     onClick={() => handleEditDivisionPopup(division.id)}
                   >
                     <p className="text-white font-barlow font-semibold text-xl">{division.name}</p>

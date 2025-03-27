@@ -1,8 +1,7 @@
 "use client";
 
-import { motion } from "motion/react";
 import { useState, useEffect } from "react";
-import { Pagination, Autoplay } from "swiper/modules";
+import { Autoplay } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import Image from "next/image";
 import clsx from "clsx";
@@ -56,7 +55,7 @@ export default function HomePageSwiper() {
   ];
   return (
     <div className="relative flex justify-center w-full text-white p-5">
-      <div className="relative flex flex-col justify-between lg:w-3xl md:w-2xl w-full md:gap-5 gap-3 bg-black rounded-md z-10 overflow-hidden md:p-5 p-5">
+      <div className="relative flex flex-col justify-between lg:w-xl md:w-xl w-full md:gap-5 gap-3 bg-black rounded-md z-10 overflow-hidden md:p-5 p-5">
         {/* Radial gradient with center at bottom right corner */}
         <Swiper
           modules={[Autoplay]}
@@ -92,6 +91,7 @@ export default function HomePageSwiper() {
                     (index + 1) % 2 === 0 && "-rotate-12",
                     index === 1 && "-translate-y-2/3 scale-110"
                   )}
+                  loading="lazy"
                 />
 
                 <Link
