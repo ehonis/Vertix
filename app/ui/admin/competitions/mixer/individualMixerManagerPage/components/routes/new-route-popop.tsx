@@ -47,7 +47,7 @@ export default function NewRoutePopUp({ onCancel }: NewRoutePopUpProps) {
   }, [amountOfRoutes]);
 
   const initializeRoutes = () => {
-    let tempArray = ROUTENAMES.slice(0, amountOfRoutes);
+    const tempArray = ROUTENAMES.slice(0, amountOfRoutes);
     const tempRoutes: routeData[] = tempArray.map(name => ({
       name,
       color: "red",
