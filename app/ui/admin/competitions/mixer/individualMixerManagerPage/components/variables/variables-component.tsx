@@ -424,7 +424,7 @@ export default function VariablesComponent({
                 value={String(isScoresAvailable)}
                 onChange={handleAreScoresAvailableChange}
                 className={clsx(
-                  "px-1 py-1 bg-gray-700 rounded-md text-center",
+                  "px-1 py-1 rounded-md text-center",
 
                   isScoresAvailable === false && "bg-red-500",
 
@@ -474,7 +474,7 @@ export default function VariablesComponent({
                 value={statusOption}
                 onChange={handleStatusChange}
                 className={clsx(
-                  "px-1 py-1 bg-gray-700 rounded-md",
+                  "px-1 py-1 rounded-md",
                   statusOption === CompetitionStatus.UPCOMING && "bg-blue-400",
                   statusOption === CompetitionStatus.INACTIVE && "bg-red-500",
                   statusOption === CompetitionStatus.IN_PROGRESS && "bg-green-500",

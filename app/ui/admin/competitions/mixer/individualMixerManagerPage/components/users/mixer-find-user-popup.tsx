@@ -1,29 +1,38 @@
 "use client";
 
 import { motion } from "motion/react";
-import { useState, useCallback } from "react";
+import { useState, useCallback, useMemo } from "react";
 import ElementLoadingAnimation from "@/app/ui/general/element-loading-animation";
 import clsx from "clsx";
+import { User } from "@prisma/client";
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function debounce<T extends (...args: any[]) => void>(
+  func: T,
+  wait: number
+): (...args: Parameters<T>) => void {
+  let timeoutId: ReturnType<typeof setTimeout>;
+  return (...args: Parameters<T>) => {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => {
+      func(...args);
+    }, wait);
+  };
+}
 
-export default function FindUserPopUp({ onConnectUser, onCancel }) {
-  const [foundUsers, setFoundUsers] = useState([]);
+type FindUserPopUpData = {
+  onConnectUser: (user: User) => void;
+  onCancel: () => void;
+};
+export default function FindUserPopUp({ onConnectUser, onCancel }: FindUserPopUpData) {
+  const [foundUsers, setFoundUsers] = useState<User[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isSearched, setIsSearched] = useState(false);
   const [searchText, setSearchText] = useState("");
-  const [selectedUser, setSelectedUser] = useState({});
+  const [selectedUser, setSelectedUser] = useState<User>();
   const [isConnectButton, setIsConnectButton] = useState(false);
 
-  const debounce = useCallback((func, delay) => {
-    let timeout;
-    return function (...args) {
-      const context = this;
-      clearTimeout(timeout);
-      timeout = setTimeout(() => func.apply(context, args), delay);
-    };
-  }, []);
-
-  const findUsers = useCallback(async text => {
-    setSelectedUser({});
+  const findUsers = useCallback(async (text: string) => {
+    setSelectedUser(undefined);
     setIsConnectButton(false);
     if (!text) {
       // Don't search if the input is empty
@@ -42,7 +51,7 @@ export default function FindUserPopUp({ onConnectUser, onCancel }) {
         `/api/mixer/manager/user/findUserSearch?${queryData.toString()}`
       );
       if (!response.ok) {
-        console.error(response.message);
+        console.error("error finding users");
       }
       const result = await response.json();
       setFoundUsers(result.users);
@@ -53,13 +62,16 @@ export default function FindUserPopUp({ onConnectUser, onCancel }) {
     }
   }, []);
 
-  const debouncedFindUsers = useCallback(
-    debounce(text => findUsers(text), 300),
+  const debouncedFindUsers = useMemo(
+    () =>
+      debounce((text: string) => {
+        findUsers(text);
+      }, 300),
     [findUsers]
   );
 
   const handleSearchTextChange = useCallback(
-    e => {
+    (e: React.ChangeEvent<HTMLInputElement>) => {
       const text = e.target.value;
       setSearchText(text);
       debouncedFindUsers(text);
@@ -67,12 +79,12 @@ export default function FindUserPopUp({ onConnectUser, onCancel }) {
     [debouncedFindUsers]
   );
 
-  const handleUserClick = user => {
+  const handleUserClick = (user: User) => {
     setSelectedUser(user);
     setIsConnectButton(true);
   };
 
-  const handleConnect = user => {
+  const handleConnect = (user: User) => {
     onConnectUser(user);
     onCancel();
   };
@@ -144,7 +156,7 @@ export default function FindUserPopUp({ onConnectUser, onCancel }) {
                         className={clsx(
                           "bg-slate-900 p-1 w-full rounded-sm",
                           user === selectedUser &&
-                            "outline outline-blue-500 outline-1 shadow-md shadow-blue-500"
+                            "outline outline-blue-500  shadow-md shadow-blue-500"
                         )}
                         onClick={() => handleUserClick(user)}
                       >
@@ -156,7 +168,7 @@ export default function FindUserPopUp({ onConnectUser, onCancel }) {
               )}
             </div>
           )}
-          {isConnectButton && (
+          {isConnectButton && selectedUser && (
             <div className="flex justify-end">
               <button
                 className="bg-blue-500 px-2 py-1 rounded-sm"

@@ -7,6 +7,23 @@ import FindUserPopUp from "./mixer-find-user-popup";
 import { useNotification } from "@/app/contexts/NotificationContext";
 import { useRouter } from "next/navigation";
 import ConfirmationPopUp from "@/app/ui/general/confirmation-pop-up";
+import {
+  MixerClimber,
+  MixerDivision,
+  MixerBoulderScore,
+  MixerRopeScore,
+  User,
+} from "@prisma/client";
+
+type EditUserPopupData = {
+  compId: string;
+  type: string;
+  onCancel: () => void;
+  climber: MixerClimber | undefined;
+  boulderScore: MixerBoulderScore | undefined;
+  ropeScore: MixerRopeScore | undefined;
+  divisions: MixerDivision[];
+};
 
 export default function EditUserPopUp({
   compId,
@@ -16,14 +33,14 @@ export default function EditUserPopUp({
   boulderScore,
   ropeScore,
   divisions,
-}) {
+}: EditUserPopupData) {
   const { showNotification } = useNotification();
   const router = useRouter();
   //user data
   const [climberName, setClimberName] = useState(climber?.name || "");
   const [entryMethod, setEntryMethod] = useState(climber?.entryMethod || "MANUAL");
   const [divisionId, setDivisionId] = useState(climber?.divisionId || "none");
-  const [connectedUser, setConnectedUser] = useState(null);
+  const [connectedUser, setConnectedUser] = useState<User>();
 
   //user route data
   const [tempBoulderScore, setTempBoulderScore] = useState(boulderScore?.score || "");
@@ -38,9 +55,9 @@ export default function EditUserPopUp({
   // Fetch connected user if entry method is APP
   useEffect(() => {
     const getConnectUser = async () => {
-      const queryData = new URLSearchParams({
-        userId: climber.userId,
-      });
+      const queryData = new URLSearchParams(
+        climber && climber.userId ? { userId: climber.userId } : {}
+      );
       try {
         const response = await fetch(
           `/api/mixer/manager/user/getMixerUser?${queryData.toString()}`
@@ -59,7 +76,6 @@ export default function EditUserPopUp({
       if (entryMethod === "APP") {
         const user = await getConnectUser(); // Await the result
         setConnectedUser(user);
-        console.log(user);
       }
     };
     if (climber) {
@@ -98,33 +114,34 @@ export default function EditUserPopUp({
   ]);
 
   // Handle form changes
-  const handleNameChange = e => {
+  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setClimberName(e.target.value);
   };
 
-  const handleEntryMethodChange = e => {
-    setEntryMethod(e.target.value);
-    if (e.target.value === "MANUAL") {
-      setConnectedUser(null);
+  const handleEntryMethodChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const value = e.target.value as "APP" | "MANUAL";
+    setEntryMethod(value);
+    if (value === "MANUAL") {
+      setConnectedUser(undefined);
     }
   };
 
-  const handleBoulderScoreChange = e => {
+  const handleBoulderScoreChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.replace(/[^0-9]/g, ""); // Allow only numbers
     setTempBoulderScore(value);
   };
 
-  const handleBoulderAttemptsChange = e => {
+  const handleBoulderAttemptsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.replace(/[^0-9]/g, ""); // Allow only numbers
     setTempBoulderAttempts(value);
   };
 
-  const handleRopeScoreChange = e => {
+  const handleRopeScoreChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.replace(/[^0-9]/g, ""); // Allow only numbers
     setTempRopeScore(value);
   };
 
-  const handleRopeAttemptsChange = e => {
+  const handleRopeAttemptsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.replace(/[^0-9]/g, ""); // Allow only numbers
     setTempRopeAttempts(value);
   };
@@ -166,7 +183,7 @@ export default function EditUserPopUp({
     } else {
       const data = {
         compId,
-        userId: climber.id,
+        userId: climber?.id,
         name: climberName,
         ropeScore: tempRopeScore,
         boulderScore: tempBoulderScore,
@@ -191,18 +208,22 @@ export default function EditUserPopUp({
           onCancel();
         }
       } catch (error) {
-        showNotification({ message: error, color: "red" });
+        if (error instanceof Error) {
+          showNotification({ message: error.message, color: "red" });
+        } else {
+          showNotification({ message: "unknown error thrown", color: "red" });
+        }
       }
     }
   };
 
-  const handleUpdateConnectedUser = user => {
+  const handleUpdateConnectedUser = (user: User) => {
     setConnectedUser(user);
   };
 
   const handleDelete = async () => {
     setIsConfirmationPopUp(false);
-    const data = { climberId: climber.id };
+    const data = { climberId: climber?.id };
     try {
       const response = await fetch("/api/mixer/manager/user/deleteUser", {
         method: "POST",
@@ -281,7 +302,11 @@ export default function EditUserPopUp({
           onCancel();
         }
       } catch (error) {
-        showNotification({ message: error, color: "red" });
+        if (error instanceof Error) {
+          showNotification({ message: error.message, color: "red" });
+        } else {
+          showNotification({ message: "unknown error thrown", color: "red" });
+        }
       }
     }
   };
@@ -373,9 +398,9 @@ export default function EditUserPopUp({
                 {/* user image */}
                 <div className="flex justify-between w-full gap-2">
                   <div className="flex gap-2">
-                    {connectedUser.image !== null ? (
+                    {connectedUser?.image ? (
                       <Image
-                        src={connectedUser.image}
+                        src={connectedUser?.image}
                         width={48}
                         height={48}
                         className="rounded-full size-12 self-center"
@@ -398,9 +423,9 @@ export default function EditUserPopUp({
                       </svg>
                     )}
                     <div className="flex flex-col gap-0 self-center">
-                      <p className="text-lg truncate max-w-max w-[9.5rem]">{connectedUser.name}</p>
+                      <p className="text-lg truncate max-w-max w-[9.5rem]">{connectedUser?.name}</p>
                       <p className="text-sm text-gray-500 truncate w-24 -mt-2">
-                        @{connectedUser.id}
+                        @{connectedUser?.id}
                       </p>
                     </div>
                   </div>

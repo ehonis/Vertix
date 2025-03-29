@@ -3,20 +3,34 @@
 import { useEffect, useState } from "react";
 import { clsx } from "clsx";
 import EditUserPopUp from "./mixer-edit-user-popup";
+import { MixerClimber, MixerRopeScore, MixerBoulderScore, MixerDivision } from "@prisma/client";
+type UsersData = {
+  compId: string;
+  climbers: MixerClimber[];
+  ropeScores: MixerRopeScore[];
+  boulderScores: MixerBoulderScore[];
+  divisions: MixerDivision[];
+};
 
-export default function UsersComponent({ compId, climbers, ropeScores, boulderScores, divisions }) {
+export default function UsersComponent({
+  compId,
+  climbers,
+  ropeScores,
+  boulderScores,
+  divisions,
+}: UsersData) {
   const [compClimbers, setCompClimbers] = useState(climbers); //sets users for rendering
   const [showAllClimbers, setShowAllClimbers] = useState(false); //for user rendering
   const displayedClimbers = showAllClimbers ? compClimbers : compClimbers.slice(0, 10); //for users rendering
 
-  const [foundClimber, setFoundClimber] = useState({}); //for popup
-  const [foundRopeScore, setFoundRopeScore] = useState({}); //for popup
-  const [foundBoulderScore, setFoundBoulderScore] = useState({}); //for popup
+  const [foundClimber, setFoundClimber] = useState<MixerClimber>(); //for popup
+  const [foundRopeScore, setFoundRopeScore] = useState<MixerRopeScore>(); //for popup
+  const [foundBoulderScore, setFoundBoulderScore] = useState<MixerBoulderScore>(); //for popup
 
   const [isEditClimberPopUp, setIsEditClimberPopUp] = useState(false); //for popup rendering
   const [editUserType, setEditUserType] = useState("");
 
-  const handleClimberClick = climberId => {
+  const handleClimberClick = (climberId: string) => {
     //find functions
     const tempFoundClimber = compClimbers.find(climber => climber.id === climberId);
     const tempFoundRopeScore = ropeScores.find(score => score.climberId === climberId);
@@ -29,13 +43,15 @@ export default function UsersComponent({ compId, climbers, ropeScores, boulderSc
     setEditUserType("EDIT");
     setIsEditClimberPopUp(true);
   };
+
   const handleCancel = () => {
     setIsEditClimberPopUp(false);
   };
+
   const handleNewUser = () => {
-    setFoundRopeScore(null);
-    setFoundBoulderScore(null);
-    setFoundClimber(null);
+    setFoundRopeScore(undefined);
+    setFoundBoulderScore(undefined);
+    setFoundClimber(undefined);
     setEditUserType("NEW");
     setIsEditClimberPopUp(true);
   };
@@ -43,6 +59,7 @@ export default function UsersComponent({ compId, climbers, ropeScores, boulderSc
   useEffect(() => {
     setCompClimbers(climbers);
   }, [climbers]);
+
   return (
     <div>
       {isEditClimberPopUp && (
@@ -58,7 +75,7 @@ export default function UsersComponent({ compId, climbers, ropeScores, boulderSc
       )}
       <div>
         <h3 className="text-3xl mt-3">Climbers</h3>
-        <div className="bg-bg2 flex-col gap-2 flex p-3 rounded-sm w-full overflow-hidden">
+        <div className="bg-slate-900 flex-col gap-2 flex p-3 rounded-sm w-full overflow-hidden">
           {compClimbers.length > 0 && (
             <div className="w-full flex-col flex gap-2 overflow-hidden">
               {displayedClimbers.map(climber => (
@@ -67,7 +84,7 @@ export default function UsersComponent({ compId, climbers, ropeScores, boulderSc
                   className="w-full"
                   onClick={() => handleClimberClick(climber.id)}
                 >
-                  <div className="grid bg-slate-900 grid-cols-[1fr_auto] items-center p-1 px-2 w-full max-w-full rounded-sm">
+                  <div className="grid bg-gray-700 grid-cols-[1fr_auto] items-center p-1 px-2 w-full max-w-full rounded-sm">
                     <p className="text-xl justify-self-start truncate max-w-[90%]">
                       {climber.name}
                     </p>
