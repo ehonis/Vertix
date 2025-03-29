@@ -1,4 +1,4 @@
-import { createUploadthing } from "uploadthing/next";
+import { createUploadthing, type FileRouter } from "uploadthing/next";
 import { UploadThingError } from "uploadthing/server";
 import { auth } from "@/auth";
 const f = createUploadthing();
@@ -18,4 +18,6 @@ export const ourFileRouter = {
       console.log("File URL:", file.ufsUrl);
       return { uploadedBy: metadata.userId };
     }),
-};
+} satisfies FileRouter;
+
+export type OurFileRouter = typeof ourFileRouter;

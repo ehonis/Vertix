@@ -1,12 +1,9 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { useState } from "react";
-import { UploadDropzone } from "@/utils/uploadthing";
-import CustomUploadDropzoneComponent from "@/utils/uploadthing";
+import { UploadButton } from "@/utils/uploadthing";
 import { useNotification } from "@/app/contexts/NotificationContext";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
 
 export default function ImageUploaderPopUp({ onCancel, userId }) {
   const { showNotification } = useNotification();
@@ -107,13 +104,8 @@ export default function ImageUploaderPopUp({ onCancel, userId }) {
           </button>
           <h2 className="text-xl">Upload Image</h2>
 
-          <CustomUploadDropzoneComponent
-            appearance={{
-              button:
-                "ut-ready:bg-green-500 ut-uploading:cursor-not-allowed p-2 bg-red-500 bg-none after:bg-orange-400",
-              container: "flex-col rounded-md border-cyan-300 bg-slate-800",
-              allowedContent: "flex h-8 flex-col items-center justify-center px-2 text-white",
-            }}
+          <UploadButton
+            className="m-4 ut-button:bg-red-500 ut-button:ut-readying:bg-red-500/50 ut-allowed-content:text-white "
             endpoint="imageUploader"
             onClientUploadComplete={res => {
               handleImageUpload(res[0].ufsUrl);

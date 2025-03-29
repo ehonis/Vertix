@@ -2,20 +2,25 @@
 
 import { motion } from "framer-motion";
 import { useState } from "react";
-import { UploadDropzone } from "@/utils/uploadthing";
-import CustomUploadDropzoneComponent from "@/utils/uploadthing";
+import { UploadButton } from "@/utils/uploadthing";
 import { useNotification } from "@/app/contexts/NotificationContext";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 
-export default function EditRoutePopUp({ compId, onCancel, imageUrl }) {
+type ImageUploaderPopUp = {
+  compId: string;
+  onCancel: () => void;
+  imageUrl: string | null;
+};
+
+export default function ImageUploaderPopUp({ compId, onCancel, imageUrl }: ImageUploaderPopUp) {
   const { showNotification } = useNotification();
 
   const [isImageUploader, setIsImageUploader] = useState(imageUrl ? false : true);
 
   const router = useRouter();
 
-  const handleImageUpload = async url => {
+  const handleImageUpload = async (url: string) => {
     if (url) {
       const data = { newImage: url, compId };
 
@@ -41,7 +46,7 @@ export default function EditRoutePopUp({ compId, onCancel, imageUrl }) {
         showNotification({ message: "Could not upload image", color: "red" });
       }
     } else {
-      showNotification({ message: "could not find image on client" });
+      showNotification({ message: "could not find image on client", color: "red" });
     }
   };
 
@@ -75,19 +80,13 @@ export default function EditRoutePopUp({ compId, onCancel, imageUrl }) {
           </button>
           <h2 className="text-xl">Upload Image</h2>
           {isImageUploader ? (
-            <CustomUploadDropzoneComponent
-              appearance={{
-                button:
-                  "ut-ready:bg-green-500 ut-uploading:cursor-not-allowed p-2 bg-red-500 bg-none after:bg-orange-400",
-                container: "flex-col rounded-md border-cyan-300 bg-slate-800",
-                allowedContent: "flex h-8 flex-col items-center justify-center px-2 text-white",
-              }}
+            <UploadButton
+              className="m-4 ut-button:bg-red-500 ut-button:ut-readying:bg-red-500/50 ut-allowed-content:text-white "
               endpoint="imageUploader"
               onClientUploadComplete={res => {
                 handleImageUpload(res[0].ufsUrl);
               }}
-              onUploadError={error => {
-                console.log(error);
+              onUploadError={(error: Error) => {
                 showNotification({
                   message: "Could not uploaded image",
                   color: "red",
@@ -99,7 +98,7 @@ export default function EditRoutePopUp({ compId, onCancel, imageUrl }) {
               <div className="bg-bg2 outline-2 rounded-full my-1 overflow-hidden size-32">
                 {" "}
                 <Image
-                  src={imageUrl}
+                  src={imageUrl!}
                   width={200}
                   height={200}
                   className="size-full object-cover rounded-full"
