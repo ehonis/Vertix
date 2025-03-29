@@ -238,7 +238,7 @@ model MixerDivision {
 
 model MixerBoulderScore {
     id            String           @id @default(cuid())
-    climberId     String
+    climberId     String           @unique
     climber       MixerClimber     @relation(fields: [climberId], references: [id], onDelete: Cascade)
     score         Int
     attempts      Int
@@ -248,7 +248,7 @@ model MixerBoulderScore {
 
 model MixerRopeScore {
     id            String           @id @default(cuid())
-    climberId     String
+    climberId     String           @unique
     climber       MixerClimber     @relation(fields: [climberId], references: [id], onDelete: Cascade)
     score         Int
     attempts      Int

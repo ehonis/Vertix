@@ -1,13 +1,11 @@
 import { NextResponse, NextRequest } from "next/server";
 import prisma from "@/prisma";
 import { auth } from "@/auth";
-import { MixerRoute } from "@prisma/client";
-import { JsonValue } from "@prisma/client/runtime/library";
 
 
 export async function POST(req: NextRequest)  {
     const session = await auth();
-    
+
     if(!session){
         return NextResponse.json({ message: "Not Authenicated" },{ status: 403 });
     }

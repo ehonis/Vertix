@@ -1,11 +1,19 @@
 import prisma from "@/prisma";
-import { NextResponse } from "next/server";
+import { NextResponse, NextRequest } from "next/server";
 import { auth } from "@/auth";
-export async function POST(req) {
+export async function POST(req: NextRequest) {
+  const session = await auth();
+    
+    if(!session){
+        return NextResponse.json({ message: "Not Authenicated" },{ status: 403 });
+    }
+    if(session.user.role !== "ADMIN"){
+        return NextResponse.json({ message: "Not Authorized" },{ status: 403 });
+    }
   try {
     const { divisionName, divisionId } = await req.json();
 
-    await prisma.MixerDivision.update({
+    await prisma.mixerDivision.update({
       where: {
         id: divisionId,
       },

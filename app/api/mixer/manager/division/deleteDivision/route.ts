@@ -1,7 +1,15 @@
 import prisma from "@/prisma";
-import { NextResponse } from "next/server";
+import { NextResponse, NextRequest } from "next/server";
 import { auth } from "@/auth";
-export async function POST(req) {
+export async function POST(req: NextRequest) {
+  const session = await auth();
+    
+    if(!session){
+        return NextResponse.json({ message: "Not Authenicated" },{ status: 403 });
+    }
+    if(session.user.role !== "ADMIN"){
+        return NextResponse.json({ message: "Not Authorized" },{ status: 403 });
+    }
   try {
     const { divisionsToDelete } = await req.json();
     console.log(divisionsToDelete);
@@ -9,8 +17,8 @@ export async function POST(req) {
       return NextResponse.json({ message: "You cannot delete nothing" }, { status: 500 });
     }
 
-    divisionsToDelete.forEach(async id => {
-      await prisma.MixerDivision.delete({
+    divisionsToDelete.forEach(async (id: string) => {
+      await prisma.mixerDivision.delete({
         where: { id },
       });
     });
@@ -22,10 +30,10 @@ export async function POST(req) {
   } catch (error) {
     console.error(error);
     return NextResponse.json(
-      {
+     { message: "error deleting division in api" }, {
         status: 500,
       },
-      { message: "error deleting division in api" }
+      
     );
   }
 }

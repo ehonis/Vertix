@@ -1,7 +1,15 @@
-import { NextResponse } from "next/server";
+import { NextResponse, NextRequest } from "next/server";
 import prisma from "@/prisma";
 import { auth } from "@/auth";
-export async function POST(req) {
+export async function POST(req : NextRequest) {
+  const session = await auth();
+    
+    if(!session){
+        return NextResponse.json({ message: "Not Authenicated" },{ status: 403 });
+    }
+    if(session.user.role !== "ADMIN"){
+        return NextResponse.json({ message: "Not Authorized" },{ status: 403 });
+    }
   try {
     const {
       compId,
@@ -38,6 +46,7 @@ export async function POST(req) {
           },
         },
         entryMethod,
+        user,
       };
 
       // Add user connection if a user is provided
@@ -87,7 +96,7 @@ export async function POST(req) {
       };
     });
 
-    return NextResponse.json({ status: 200 }, { message: "Successfully Updated user" });
+    return NextResponse.json({ message: "Successfully Updated user" }, { status: 200 }, );
   } catch (error) {
     console.error(JSON.stringify(error, null, 2));
     return NextResponse.json(

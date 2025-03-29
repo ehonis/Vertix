@@ -1,12 +1,20 @@
 import prisma from "@/prisma";
-import { NextResponse } from "next/server";
-
-export async function GET(req) {
+import { NextResponse, NextRequest } from "next/server";
+import { auth } from "@/auth";
+export async function GET(req: NextRequest) {
+  
+  const session = await auth();
+    
+    if(!session){
+        return NextResponse.json({ message: "Not Authenicated" },{ status: 403 });
+    }
+    if(session.user.role !== "ADMIN"){
+        return NextResponse.json({ message: "Not Authorized" },{ status: 403 });
+    }
   try {
     const searchParams = req.nextUrl.searchParams;
 
-    const text = searchParams.get("text");
-    console.log(text);
+    const text = searchParams.get("text") || "";
 
     const users = await prisma.user.findMany({
       where: {
