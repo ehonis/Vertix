@@ -4,15 +4,20 @@ import { motion } from "framer-motion";
 import { UploadButton } from "@/utils/uploadthing";
 import { useNotification } from "@/app/contexts/NotificationContext";
 import { useRouter } from "next/navigation";
+import { User } from "@prisma/client";
 
-export default function ImageUploaderPopUp({ onCancel, userId }) {
+type ImageUploaderPopUpData = {
+  onCancel: () => void;
+  user: User;
+};
+export default function ImageUploaderPopUp({ onCancel, user }: ImageUploaderPopUpData) {
   const { showNotification } = useNotification();
 
   const router = useRouter();
 
-  const handleImageUpload = async url => {
+  const handleImageUpload = async (url: string) => {
     if (url) {
-      const data = { newImage: url, userId: userId };
+      const data = { newImage: url, userId: user.id };
 
       try {
         const response = await fetch("/api/user/settings/imageUpload", {
@@ -42,11 +47,11 @@ export default function ImageUploaderPopUp({ onCancel, userId }) {
         });
       }
     } else {
-      showNotification({ message: "could not find image on client" });
+      showNotification({ message: "could not find image on client", color: "red" });
     }
   };
   const handleRemoveImage = async () => {
-    const data = { userId: userId };
+    const data = { userId: user.id };
     try {
       const response = await fetch("/api/user/settings/removeImage", {
         method: "POST",
@@ -105,7 +110,7 @@ export default function ImageUploaderPopUp({ onCancel, userId }) {
           <h2 className="text-xl">Upload Image</h2>
 
           <UploadButton
-            className="m-4 ut-button:bg-red-500 ut-button:ut-readying:bg-red-500/50 ut-allowed-content:text-white "
+            className="m-4 ut-button:bg-blue-500/25 ut-button:outline-2 ut-button:outline-blue-500 ut-button:ut-readying:bg-blue-500-500/50 ut-allowed-content:text-white "
             endpoint="imageUploader"
             onClientUploadComplete={res => {
               handleImageUpload(res[0].ufsUrl);
@@ -118,12 +123,14 @@ export default function ImageUploaderPopUp({ onCancel, userId }) {
               });
             }}
           />
-          <button
-            className="bg-red-500 text-white p-2 rounded-md font-bold"
-            onClick={handleRemoveImage}
-          >
-            Remove Image
-          </button>
+          {user.image && (
+            <button
+              className="bg-red-500 text-white p-1 rounded-md font-bold"
+              onClick={handleRemoveImage}
+            >
+              Remove Current Image
+            </button>
+          )}
         </motion.div>
       </motion.div>
     </div>

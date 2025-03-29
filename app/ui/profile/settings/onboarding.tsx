@@ -122,7 +122,7 @@ export default function Onboarding({ user }: { user: User }) {
   return (
     <div className="flex flex-col bg-black p-3 h-full w-full rounded-md rounded-tl-none font-barlow">
       {isImageUploader && (
-        <ImageUploaderPopUp onCancel={() => setIsImageUploader(false)} userId={user.id} />
+        <ImageUploaderPopUp onCancel={() => setIsImageUploader(false)} user={user} />
       )}
       <h2 className="text-white text-2xl font-bold text-center ">
         Let{"'"}s get to know you better
