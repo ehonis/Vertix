@@ -30,22 +30,13 @@ export default async function page({ params }: { params: Promise<{ slug: string 
       }),
       prisma.mixerDivision.findMany({
         where: { competitionId: compId },
-        select: { id: true, name: true },
         orderBy: { level: "asc" },
       }),
       prisma.mixerClimber.findMany({
         where: { competitionId: compId },
-        select: {
-          id: true,
-          name: true,
-          entryMethod: true,
-          userId: true,
-          divisionId: true,
-        },
       }),
       prisma.mixerBoulderScore.findMany({
         where: { competitionId: compId },
-        select: { id: true, climberId: true, score: true, attempts: true },
       }),
       prisma.mixerRopeScore.findMany({
         where: { competitionId: compId },

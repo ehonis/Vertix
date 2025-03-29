@@ -3,21 +3,26 @@ import { useEffect, useState } from "react";
 import EditRoutePopUp from "./mixer-edit-route-popup";
 import NewRoutePopUp from "./new-route-popop";
 import { clsx } from "clsx";
+import { MixerRoute } from "@prisma/client";
 
-export default function RoutesComponent({ routes }) {
+type RoutesComponentData = {
+  routes: MixerRoute[];
+  compId: string;
+};
+export default function RoutesComponent({ routes, compId }: RoutesComponentData) {
   const [compRoutes, setCompRoutes] = useState(
     routes.map(route => ({
       ...route,
-      holds: JSON.parse(route.holds), // Convert holds JSON string to array
+      holds: JSON.parse(route.holds as string), // Convert holds JSON string to array
     }))
   ); // route
   const [isEditRoutePopup, setIsEditRoutePopup] = useState(false); //route
   const [isNewEditRoutePopUp, setIsNewEditRoutePopup] = useState(false); //route
   const [tempHolds, setTempHolds] = useState([]); //route
-  const [tempRouteId, setTempRouteId] = useState(null); //route
+  const [tempRouteId, setTempRouteId] = useState(""); //route
   const [tempRouteName, setTempRouteName] = useState(""); //route
 
-  const handleEditRoutePopUp = id => {
+  const handleEditRoutePopUp = (id: string) => {
     const tempRoute = compRoutes.find(route => route.id === id);
 
     if (tempRoute) {
@@ -30,16 +35,23 @@ export default function RoutesComponent({ routes }) {
     }
   }; //route
 
-  const updateRouteHolds = (routeId, newHolds, newName) => {
+  const updateRouteHolds = (routeId: string, newHolds: string, newName: string) => {
     setCompRoutes(prevRoutes =>
       prevRoutes.map(route =>
         route.id === routeId ? { ...route, holds: newHolds, name: newName } : route
       )
     );
   }; //route
+
+  useEffect(() => {
+    console.log(compRoutes);
+    console.log(typeof compRoutes[0].holds);
+  }, []);
   return (
     <div>
-      {isNewEditRoutePopUp && <NewRoutePopUp onCancel={() => setIsNewEditRoutePopup(false)} />}
+      {isNewEditRoutePopUp && (
+        <NewRoutePopUp onCancel={() => setIsNewEditRoutePopup(false)} compId={compId} />
+      )}
       {isEditRoutePopup && (
         <EditRoutePopUp
           onCancel={() => setIsEditRoutePopup(false)}
