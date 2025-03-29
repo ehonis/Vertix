@@ -5,6 +5,12 @@ import NewRoutePopUp from "./new-route-popop";
 import { clsx } from "clsx";
 import { MixerRoute } from "@prisma/client";
 
+type holdData = {
+  topRopePoints: number;
+  leadPoints: number;
+  holdNumber: number;
+};
+
 type RoutesComponentData = {
   routes: MixerRoute[];
   compId: string;
@@ -18,7 +24,7 @@ export default function RoutesComponent({ routes, compId }: RoutesComponentData)
   ); // route
   const [isEditRoutePopup, setIsEditRoutePopup] = useState(false); //route
   const [isNewEditRoutePopUp, setIsNewEditRoutePopup] = useState(false); //route
-  const [tempHolds, setTempHolds] = useState([]); //route
+  const [tempHolds, setTempHolds] = useState<holdData[]>([]); //route
   const [tempRouteId, setTempRouteId] = useState(""); //route
   const [tempRouteName, setTempRouteName] = useState(""); //route
 

@@ -4,15 +4,21 @@ import ElementLoadingAnimation from "@/app/ui/general/element-loading-animation"
 import { useNotification } from "@/app/contexts/NotificationContext";
 import { useRouter } from "next/navigation";
 
+type EditDivisionPopUpData = {
+  divisionId: string;
+  divisionText: string;
+  onCancel: () => void;
+  type: string;
+  compId: string;
+};
+
 export default function EditDivisionPopUp({
   divisionId,
   divisionText,
   onCancel,
-
   type,
-
   compId,
-}) {
+}: EditDivisionPopUpData) {
   const { showNotification } = useNotification();
   const router = useRouter();
   const [tempDivision, setTempDivision] = useState(divisionText ? divisionText : "");
@@ -21,7 +27,7 @@ export default function EditDivisionPopUp({
   const [infoText, setInfoText] = useState(
     "No Changes have been made. Edit the text above to update the division"
   );
-  const handleDivisionTextChange = e => {
+  const handleDivisionTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const tempText = e.target.value;
     setTempDivision(tempText);
     if (tempText === "") {
@@ -49,7 +55,7 @@ export default function EditDivisionPopUp({
         body: JSON.stringify(data),
       });
       if (!response.ok) {
-        console.error(response.message);
+        console.error("Update Failed");
       }
       showNotification({
         message: `Updated Division`,
@@ -79,7 +85,7 @@ export default function EditDivisionPopUp({
         body: JSON.stringify(data),
       });
       if (!response.ok) {
-        console.error(response.message);
+        console.error("Update Failed");
       }
       // const responseData = await response.json();
 
@@ -144,14 +150,14 @@ export default function EditDivisionPopUp({
                 <div className="w-full flex justify-end">
                   {type === "NEW" ? (
                     <button
-                      className="px-2 py-1 bg-green-500/35 outline outline-green-500 outline-1 rounded-sm text-white font-barlow"
+                      className="px-2 py-1 bg-green-500/35 outline outline-green-500 rounded-sm text-white font-barlow"
                       onClick={handleNewDivision}
                     >
                       Submit
                     </button>
                   ) : (
                     <button
-                      className="px-2 py-1 bg-green-500/35 outline outline-green-500 outline-1 rounded-sm text-white font-barlow"
+                      className="px-2 py-1 bg-green-500/35 outline outline-green-500 rounded-sm text-white font-barlow"
                       onClick={handleUpdateDivision}
                     >
                       Update Division

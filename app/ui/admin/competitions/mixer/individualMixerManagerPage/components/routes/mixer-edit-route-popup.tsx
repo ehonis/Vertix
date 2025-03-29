@@ -4,11 +4,31 @@ import { motion } from "framer-motion";
 import { useState } from "react";
 import clsx from "clsx";
 
-export default function EditRoutePopUp({ onCancel, routeId, routeName, holds, updateRouteHolds }) {
+type holdData = {
+  topRopePoints: number;
+  leadPoints: number;
+  holdNumber: number;
+};
+
+type EditRoutePopUpData = {
+  onCancel: () => void;
+  routeId: string;
+  routeName: string;
+  holds: holdData[];
+  updateRouteHolds: (routeId: string, newHolds: object, newName: string) => void;
+};
+
+export default function EditRoutePopUp({
+  onCancel,
+  routeId,
+  routeName,
+  holds,
+  updateRouteHolds,
+}: EditRoutePopUpData) {
   const [name, setName] = useState(routeName);
   const [tempHolds, setTempHolds] = useState([...holds]);
 
-  const handleHoldChange = (index, field, value) => {
+  const handleHoldChange = (index: number, field: string, value: string) => {
     const cleanedValue = Number(String(value).replace(/^0+/, "") || "0");
 
     setTempHolds(prevHolds => {
@@ -48,7 +68,7 @@ export default function EditRoutePopUp({ onCancel, routeId, routeName, holds, up
           animate={{ scale: 1 }}
           exit={{ scale: 0.8 }}
           transition={{ duration: 0.3 }}
-          className="bg-bg2 p-3 rounded-lg shadow-lg text-white max-w-xs w-full relative flex flex-col gap-2"
+          className="bg-slate-900 p-3 rounded-lg shadow-lg text-white max-w-xs w-full relative flex flex-col gap-2"
         >
           <button className="absolute top-2 right-2" onClick={onCancel}>
             <svg
@@ -68,12 +88,12 @@ export default function EditRoutePopUp({ onCancel, routeId, routeName, holds, up
             type="text"
             value={name}
             onChange={e => setName(e.target.value)}
-            className="bg-slate-900 p-2 rounded-sm w-full focus:outline-hidden"
+            className="bg-gray-700 p-2 rounded-sm w-full focus:outline-hidden"
             placeholder="Route Name"
           />
 
           <div>
-            <div className="grid grid-cols-3 bg-slate-900 rounded-sm px-1 mb-1">
+            <div className="grid grid-cols-3 bg-gray-700 rounded-sm px-1 mb-1">
               <p className="place-self-start">Hold #</p>
               <p className="place-self-center">TR Pts</p>
               <p className="place-self-end">Lead Pts</p>
@@ -87,7 +107,7 @@ export default function EditRoutePopUp({ onCancel, routeId, routeName, holds, up
                     <div
                       key={index}
                       className={clsx(
-                        "bg-slate-900 p-1 rounded-sm w-full grid grid-cols-3 gap-2 items-center",
+                        "bg-gray-700 p-1 rounded-sm w-full grid grid-cols-3 gap-2 items-center",
                         index > 0 &&
                           tempHolds[index - 1]?.topRopePoints > hold.topRopePoints &&
                           "outline outline-red-500",
@@ -102,14 +122,14 @@ export default function EditRoutePopUp({ onCancel, routeId, routeName, holds, up
                         type="number"
                         value={hold.topRopePoints}
                         onChange={e => handleHoldChange(index, "topRopePoints", e.target.value)}
-                        className="bg-bg2 p-1 rounded-sm w-3/4 text-center place-self-center focus:outline-hidden"
+                        className="bg-slate-900 p-1 rounded-sm w-3/4 text-center place-self-center focus:outline-hidden"
                       />
 
                       <input
                         type="number"
                         value={hold.leadPoints}
                         onChange={e => handleHoldChange(index, "leadPoints", e.target.value)}
-                        className="bg-bg2 p-1 rounded-sm w-3/4 text-center place-self-end focus:outline-hidden"
+                        className="bg-slate-900 p-1 rounded-sm w-3/4 text-center place-self-end focus:outline-hidden"
                       />
                     </div>
                   ))}

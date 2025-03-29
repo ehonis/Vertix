@@ -4,9 +4,15 @@ import EditDivisionPopUp from "./mixer-edit-division-popup";
 import { useEffect, useState } from "react";
 import { useNotification } from "@/app/contexts/NotificationContext";
 import { useRouter } from "next/navigation";
+import { MixerDivision } from "@prisma/client";
 import clsx from "clsx";
 
-export default function DivisionsComponent({ divisions, compId }) {
+type DivisionsComponentData = {
+  divisions: MixerDivision[];
+  compId: string;
+};
+
+export default function DivisionsComponent({ divisions, compId }: DivisionsComponentData) {
   const router = useRouter();
   const { showNotification } = useNotification();
   const [compDivisions, setCompDivisions] = useState(divisions); //division
@@ -15,9 +21,8 @@ export default function DivisionsComponent({ divisions, compId }) {
   const [tempDivisionId, setTempDivisionId] = useState(""); //division
   const [popupType, setPopupType] = useState("");
   const [isEdit, setIsEdit] = useState(false);
-  const [checkedDivisions, setCheckedDivisions] = useState([]);
-
-  const handleEditDivisionPopup = id => {
+  const [checkedDivisions, setCheckedDivisions] = useState<string[]>([]);
+  const handleEditDivisionPopup = (id: string) => {
     const tempDivision = compDivisions.find(division => division.id === id);
 
     if (tempDivision) {
@@ -37,7 +42,7 @@ export default function DivisionsComponent({ divisions, compId }) {
     setIsDivisionPopup(true);
   };
 
-  const handleDivisionCheck = (event, id) => {
+  const handleDivisionCheck = (event: React.ChangeEvent<HTMLInputElement>, id: string) => {
     if (event.target.checked) {
       // add the id if not already there
       setCheckedDivisions(prev => [...prev, id]);
@@ -70,7 +75,7 @@ export default function DivisionsComponent({ divisions, compId }) {
           router.refresh();
         }
       } catch (error) {
-        showNotification({ message: error, color: "red" });
+        showNotification({ message: "could not remove divisions", color: "red" });
       }
     }
   };
