@@ -9,6 +9,17 @@ import ImagePopUp from "./image-uploader-popup";
 import { useNotification } from "@/app/contexts/NotificationContext";
 import { useRouter } from "next/navigation";
 import { CompetitionStatus } from "@prisma/client";
+
+type VariableDataProps = {
+  compId: string;
+  name: string;
+  compDay: Date | null;
+  areScoresAvailable: boolean;
+  status: CompetitionStatus;
+  time: number;
+  imageUrl: string | null;
+};
+
 export default function VariablesComponent({
   compId,
   name,
@@ -17,12 +28,12 @@ export default function VariablesComponent({
   status,
   time,
   imageUrl,
-}) {
+}: VariableDataProps) {
   const { showNotification } = useNotification();
   const router = useRouter();
 
   const [compName, setCompName] = useState(name);
-  const [selectedDate, setSelectedDate] = useState(compDay.toISOString().split("T")[0]);
+  const [selectedDate, setSelectedDate] = useState(compDay?.toISOString().split("T")[0]);
   const [isScoresAvailable, setIsScoresAvailable] = useState(areScoresAvailable);
   const [compTime, setCompTime] = useState(time);
   const [statusOption, setStatusOption] = useState(status);
@@ -40,7 +51,7 @@ export default function VariablesComponent({
 
   useEffect(() => {
     setCompName(name);
-    setSelectedDate(compDay.toISOString().split("T")[0]);
+    setSelectedDate(compDay?.toISOString().split("T")[0]);
     setIsScoresAvailable(areScoresAvailable);
     setStatusOption(status);
     setCompTime(time);
@@ -101,7 +112,7 @@ export default function VariablesComponent({
     setIsScoresAvailableInfoPopUp(false);
     setIsImagePopUp(false);
   };
-  const handleNameChange = e => {
+  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const tempName = e.target.value;
     setCompName(tempName);
 
@@ -133,7 +144,7 @@ export default function VariablesComponent({
       showNotification({ message: "Could not update name", color: "red" });
     }
   };
-  const handleAreScoresAvailableChange = e => {
+  const handleAreScoresAvailableChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setIsScoresAvailable(e.target.value === "true");
     if ((e.target.value === "true") !== areScoresAvailable) {
       setIsScoresAvailableSave(true);
@@ -170,8 +181,15 @@ export default function VariablesComponent({
       });
     }
   };
-  const handleStatusChange = e => {
-    setStatusOption(e.target.value);
+  const handleStatusChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedValue = e.target.value as
+      | "INACTIVE"
+      | "UPCOMING"
+      | "IN_PROGRESS"
+      | "COMPLETED"
+      | "DEMO"
+      | "ARCHIVED";
+    setStatusOption(selectedValue);
 
     if (e.target.value !== status) {
       setIsStatusSave(true);
@@ -208,19 +226,20 @@ export default function VariablesComponent({
       });
     }
   };
-  const handleAlottedTimeChange = e => {
+  const handleAlottedTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     // Allow only digits
     const value = e.target.value;
     // Only update if it's empty or a valid number
     if (value === "" || /^\d+$/.test(value)) {
-      if (value > 300) {
+      const numericValue = Number(value);
+      if (numericValue > 300) {
         setCompTime(300);
       } else {
-        setCompTime(value);
+        setCompTime(numericValue);
       }
     }
-
-    if (value !== time) {
+    const numericValue = Number(value);
+    if (numericValue !== time) {
       setIsTimeAllottedSave(true);
     } else {
       setIsTimeAllottedSave(false);
@@ -262,17 +281,17 @@ export default function VariablesComponent({
       }
     }
   };
-  const handleDayChange = e => {
+  const handleDayChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSelectedDate(e.target.value);
 
-    if (e.target.value !== compDay.toISOString().split("T")[0]) {
+    if (e.target.value !== compDay?.toISOString().split("T")[0]) {
       setIsDaySave(true);
     } else {
       setIsDaySave(false);
     }
   };
   const handleDaySave = async () => {
-    const dateObject = new Date(selectedDate);
+    const dateObject = new Date(selectedDate ?? "");
 
     const data = { compId, dateObject };
 
@@ -333,10 +352,10 @@ export default function VariablesComponent({
         </div>
       </div>
 
-      <div className="bg-bg2 flex-col flex p-3 rounded-sm w-full">
+      <div className="bg-slate-900 flex-col flex p-3 rounded-sm w-full">
         <div className="flex flex-col  gap-2">
           {/*Comp Image*/}
-          <div className="flex justify-between gap-2 bg-slate-900 rounded-sm p-2 pr-3 items-center">
+          <div className="flex justify-between gap-2 bg-gray-700 rounded-sm p-2 pr-3 items-center">
             <div className="flex flex-col">
               <label htmlFor="" className="text-xl">
                 Comp Image
@@ -346,7 +365,7 @@ export default function VariablesComponent({
               </label>
             </div>
             <button
-              className="bg-bg2 outline-2 rounded-full my-1 overflow-hidden size-28 flex justify-center items-center"
+              className="bg-slate-900 outline-2 rounded-full my-1 overflow-hidden size-28 flex justify-center items-center"
               onClick={() => setIsImagePopUp(true)}
             >
               {imageUrl === null ? (
@@ -376,7 +395,7 @@ export default function VariablesComponent({
             </button>
           </div>
           {/* areScoresAvailable */}
-          <div className="flex gap-2 bg-slate-900 rounded-sm p-2 justify-between items-center">
+          <div className="flex gap-2 bg-gray-700 rounded-sm p-2 justify-between items-center">
             <div className="flex items-center">
               <label htmlFor="" className="text-xl">
                 Scores:
@@ -402,10 +421,10 @@ export default function VariablesComponent({
               <select
                 name=""
                 id=""
-                value={isScoresAvailable}
+                value={String(isScoresAvailable)}
                 onChange={handleAreScoresAvailableChange}
                 className={clsx(
-                  "px-1 py-1 bg-slate-900 rounded-md text-center",
+                  "px-1 py-1 bg-gray-700 rounded-md text-center",
 
                   isScoresAvailable === false && "bg-red-500",
 
@@ -426,7 +445,7 @@ export default function VariablesComponent({
             </div>
           </div>
           {/* status */}
-          <div className="flex gap-2 bg-slate-900 rounded-sm p-2 justify-between items-center">
+          <div className="flex gap-2 bg-gray-700 rounded-sm p-2 justify-between items-center">
             <div className="flex items-center">
               <label htmlFor="" className="text-xl">
                 Status:
@@ -455,7 +474,7 @@ export default function VariablesComponent({
                 value={statusOption}
                 onChange={handleStatusChange}
                 className={clsx(
-                  "px-1 py-1 bg-slate-900 rounded-md",
+                  "px-1 py-1 bg-gray-700 rounded-md",
                   statusOption === CompetitionStatus.UPCOMING && "bg-blue-400",
                   statusOption === CompetitionStatus.INACTIVE && "bg-red-500",
                   statusOption === CompetitionStatus.IN_PROGRESS && "bg-green-500",
@@ -482,21 +501,21 @@ export default function VariablesComponent({
             </div>
           </div>
           {/* time alloted */}
-          <div className="flex gap-2 bg-slate-900 rounded-sm p-2 justify-between items-center">
+          <div className="flex gap-2 bg-gray-700 rounded-sm p-2 justify-between items-center">
             <label htmlFor="" className="text-lg">
               Time Allotted
             </label>
             <div className="flex gap-2">
               <div className="flex gap-1 items-center">
                 <input
-                  type="text"
+                  type="number"
                   name=""
                   inputMode="numeric"
                   value={compTime}
                   pattern="[0-9]*"
                   onChange={handleAlottedTimeChange}
                   placeholder="#"
-                  className="bg-bg2 rounded-sm p-1 w-10 text-center hide-spinners focus:outline-hidden"
+                  className="bg-slate-900 rounded-sm p-1 w-10 text-center hide-spinners focus:outline-hidden"
                 />
                 <label htmlFor="">Min</label>
               </div>
@@ -511,7 +530,7 @@ export default function VariablesComponent({
             </div>
           </div>
           {/* comp day */}
-          <div className="flex gap-2 bg-slate-900 rounded-sm p-2 justify-between items-center">
+          <div className="flex gap-2 bg-gray-700 rounded-sm p-2 justify-between items-center">
             <label htmlFor="" className="text-lg">
               Comp Day
             </label>
@@ -522,7 +541,7 @@ export default function VariablesComponent({
                 name="date"
                 value={selectedDate} // Controlled value
                 onChange={handleDayChange} // Update state on change
-                className="p-1 rounded-lg bg-bg2 text-white cursor-pointer font-barlow font-bold focus:outline-hidden"
+                className="p-1 rounded-lg bg-slate-900 text-white cursor-pointer font-barlow font-bold focus:outline-hidden"
               />
               {isDaySave && (
                 <button

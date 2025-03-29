@@ -1,4 +1,3 @@
-import VariablesComponent from "./components/variables/variables-component";
 import DivisionsComponent from "./components/divisions/divisions-component";
 import RoutesComponent from "./components/routes/routes-component";
 import UsersComponent from "./components/users/users-component";
@@ -11,6 +10,7 @@ import {
   MixerRopeScore,
   MixerBoulder,
 } from "@prisma/client";
+import VariablesComponent from "./components/variables/variables-component";
 
 type inDividualCompPageProps = {
   compId: string;

@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import EditRoutePopUp from "./mixer-edit-route-popup";
 import NewRoutePopUp from "./new-route-popop";
 import { clsx } from "clsx";
@@ -35,7 +35,7 @@ export default function RoutesComponent({ routes, compId }: RoutesComponentData)
     }
   }; //route
 
-  const updateRouteHolds = (routeId: string, newHolds: string, newName: string) => {
+  const updateRouteHolds = (routeId: string, newHolds: object, newName: string) => {
     setCompRoutes(prevRoutes =>
       prevRoutes.map(route =>
         route.id === routeId ? { ...route, holds: newHolds, name: newName } : route
@@ -43,10 +43,6 @@ export default function RoutesComponent({ routes, compId }: RoutesComponentData)
     );
   }; //route
 
-  useEffect(() => {
-    console.log(compRoutes);
-    console.log(typeof compRoutes[0].holds);
-  }, []);
   return (
     <div>
       {isNewEditRoutePopUp && (
@@ -79,7 +75,7 @@ export default function RoutesComponent({ routes, compId }: RoutesComponentData)
                   )}
                   onClick={() => handleEditRoutePopUp(route.id)}
                 >
-                  <div className="grid bg-slate-900 grid-cols-2 items-center p-1 px-2 w-full rounded-sm">
+                  <div className="grid bg-gray-700 grid-cols-2 items-center p-1 px-2 w-full rounded-sm">
                     <p className="text-xl place-self-start">{route.name}</p>
                     <p className="text-xl place-self-end">Holds: {route.holds.length}</p>
                   </div>
