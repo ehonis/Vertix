@@ -4,12 +4,13 @@ import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { formatMultipleRoutesNotCalculated } from "@/lib/mixer";
 import { useNotification } from "@/app/contexts/NotificationContext";
-import clsx from "clsx";
+import { useRouter } from "next/navigation";
 
 type NewRoutePopUpProps = {
   onCancel: () => void;
   compId: string;
 };
+
 type routeData = {
   name: string;
   color: string;
@@ -19,6 +20,7 @@ type routeData = {
 const ROUTENAMES = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
 
 export default function NewRoutePopUp({ onCancel, compId }: NewRoutePopUpProps) {
+  const router = useRouter();
   const { showNotification } = useNotification();
   const [amountOfRoutes, setAmountOfroutes] = useState<number>(0);
   const [isAmountSave, setIsAmountSave] = useState(false);
@@ -69,10 +71,6 @@ export default function NewRoutePopUp({ onCancel, compId }: NewRoutePopUpProps) 
       return;
     } else if (newHolds < 0) {
       return;
-    } else if (Number.isNaN(newHolds)) {
-      const updatedRoutes = [...routes];
-      updatedRoutes[index] = { ...updatedRoutes[index], holds: 0 };
-      setRoutes(updatedRoutes);
     } else {
       const updatedRoutes = [...routes];
       updatedRoutes[index] = { ...updatedRoutes[index], holds: newHolds };
@@ -80,12 +78,32 @@ export default function NewRoutePopUp({ onCancel, compId }: NewRoutePopUpProps) 
     }
   };
 
-  const handleAddMultipleRoutes = () => {
+  const handleAddMultipleRoutes = async () => {
     if (isAutoCalculateScores) {
-      showNotification({ message: "autoCalculate is not supported at this time", color: "red" });
+      showNotification({ message: "Auto Calculate is not supported at this time", color: "red" });
     } else {
-      const result = formatMultipleRoutesNotCalculated(routes);
-      console.log(result);
+      const result = formatMultipleRoutesNotCalculated(routes, compId);
+      const data = { routeData: result };
+
+      try {
+        const response = await fetch("/api/mixer/manager/route/addRoutes", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data),
+        });
+        if (!response.ok) {
+          showNotification({ message: "could not add routes", color: "red" });
+        } else {
+          showNotification({
+            message: `Successfully added ${result.length} routes`,
+            color: "green",
+          });
+        }
+        router.refresh();
+        onCancel();
+      } catch (error) {
+        showNotification({ message: "could not add routes", color: "red" });
+      }
     }
   };
   return (
@@ -171,47 +189,50 @@ export default function NewRoutePopUp({ onCancel, compId }: NewRoutePopUpProps) 
             <div className="flex flex-col gap-2">
               {/* if the user has picked many routes and inputted how many routes they wanted */}
               <p>Route Information</p>
-
-              {routes.map((route, index) => (
-                <div className="flex flex-col gap-1" key={index}>
-                  <div className="p-2 bg-slate-700 rounded">
-                    <p>{route.name}</p>
-                    <div className="flex justify-between items-center">
-                      <div className="flex gap-2">
-                        <label htmlFor="">Color:</label>
-                        <select
-                          name=""
-                          id=""
-                          className="bg-bg1 px-2 p-1 rounded"
-                          value={route.color}
-                          onChange={e => handleColorChange(index, e.target.value)} // Corrected onChange handler
-                        >
-                          <option value="red">red</option>
-                          <option value="blue">blue</option>
-                          <option value="green">green</option>
-                          <option value="yellow">yellow</option>
-                          <option value="purple">purple</option>
-                          <option value="white">white</option>
-                          <option value="black">black</option>
-                          <option value="pink">pink</option>
-                          <option value="orange">orange</option>
-                        </select>
-                      </div>
-                      <div className="flex gap-2 items-center">
-                        <label htmlFor="">Holds</label>
-                        <input
-                          type="number"
-                          name=""
-                          id=""
-                          value={route.holds}
-                          onChange={e => handleHoldsChange(index, parseInt(e.target.value, 10))}
-                          className="bg-bg1 w-16 p-1 rounded "
-                        />
+              <div className="h-72 overflow-hidden overflow-y-auto flex flex-col gap-2">
+                {routes.map((route, index) => (
+                  <div className="flex flex-col gap-1" key={index}>
+                    <div className="p-2 bg-slate-700 rounded">
+                      <p>{route.name}</p>
+                      <div className="flex justify-between items-center">
+                        <div className="flex gap-2">
+                          <label htmlFor="">Color:</label>
+                          <select
+                            name=""
+                            id=""
+                            className="bg-bg1 px-2 p-1 rounded"
+                            value={route.color}
+                            onChange={e => handleColorChange(index, e.target.value)} // Corrected onChange handler
+                          >
+                            <option value="red">red</option>
+                            <option value="blue">blue</option>
+                            <option value="green">green</option>
+                            <option value="yellow">yellow</option>
+                            <option value="purple">purple</option>
+                            <option value="white">white</option>
+                            <option value="black">black</option>
+                            <option value="pink">pink</option>
+                            <option value="orange">orange</option>
+                          </select>
+                        </div>
+                        <div className="flex gap-2 items-center">
+                          <label htmlFor="">Holds</label>
+                          <input
+                            type="number"
+                            inputMode="numeric"
+                            pattern="[0-9]*"
+                            name=""
+                            id=""
+                            value={route.holds}
+                            onChange={e => handleHoldsChange(index, Number(e.target.value))}
+                            className="bg-bg1 w-16 p-1 rounded "
+                          />
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
               <div className="h-0.5 rounded w-full bg-white" />
               <div className="flex justify-between items-center bg-slate-700 p-2 rounded">
                 <p className="font-normal">Auto calculate scores?</p>

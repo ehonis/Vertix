@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import EditRoutePopUp from "./mixer-edit-route-popup";
 import NewRoutePopUp from "./new-route-popop";
 import { clsx } from "clsx";
@@ -49,6 +49,15 @@ export default function RoutesComponent({ routes, compId }: RoutesComponentData)
     );
   }; //route
 
+  useEffect(() => {
+    setCompRoutes(
+      routes.map(route => ({
+        ...route,
+        holds: JSON.parse(route.holds as string), // Convert holds JSON string to array
+      }))
+    );
+  }, [routes]);
+
   return (
     <div>
       {isNewEditRoutePopUp && (
@@ -77,7 +86,11 @@ export default function RoutesComponent({ routes, compId }: RoutesComponentData)
                     route.color === "blue" && "bg-blue-500",
                     route.color === "green" && "bg-green-400",
                     route.color === "orange" && "bg-orange-500",
-                    route.color === "yellow" && "bg-yellow-500"
+                    route.color === "yellow" && "bg-yellow-500",
+                    route.color === "pink" && "bg-pink-400",
+                    route.color === "purple" && "bg-purple-600",
+                    route.color === "white" && "bg-white",
+                    route.color === "black" && "bg-black"
                   )}
                   onClick={() => handleEditRoutePopUp(route.id)}
                 >
