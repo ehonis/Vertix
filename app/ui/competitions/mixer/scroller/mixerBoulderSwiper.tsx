@@ -1,37 +1,49 @@
 "use client";
 
 import { Swiper, SwiperSlide } from "swiper/react";
+import { Swiper as SwiperType } from "swiper/types";
 import { Virtual } from "swiper/modules";
 import clsx from "clsx";
 import { useState, useRef, useEffect } from "react";
 import "swiper/css";
 import { useNotification } from "@/app/contexts/NotificationContext";
+import { MixerBoulder } from "@prisma/client";
+type MixeBoulderScrollerData = {
+  mixerBoulders: MixerBoulder[];
+};
 
-export default function MixerBoulderScorer({ mixerBoulders, StartTime }) {
+export default function MixerBoulderScorer({ mixerBoulders }: MixeBoulderScrollerData) {
   const { showNotification } = useNotification();
 
+  type BoulderState = {
+    [key: string]: number;
+  };
+
+  type CompletionState = {
+    [key: string]: boolean;
+  };
   // Load initial state from localStorage or use default values
-  const [boulderAttempts, setBoulderAttempts] = useState(() => {
+  const [boulderAttempts, setBoulderAttempts] = useState<BoulderState>(() => {
     if (typeof window !== "undefined") {
       const savedAttempts = localStorage.getItem("boulderAttempts");
       if (savedAttempts) {
         return JSON.parse(savedAttempts);
       }
     }
-    return mixerBoulders.reduce((acc, panel) => {
+    return mixerBoulders.reduce((acc: BoulderState, panel) => {
       acc[panel.id] = 0;
       return acc;
     }, {});
   });
 
-  const [boulderCompletions, setBoulderCompletions] = useState(() => {
+  const [boulderCompletions, setBoulderCompletions] = useState<CompletionState>(() => {
     if (typeof window !== "undefined") {
       const savedCompletions = localStorage.getItem("boulderCompletions");
       if (savedCompletions) {
         return JSON.parse(savedCompletions);
       }
     }
-    return mixerBoulders.reduce((acc, panel) => {
+    return mixerBoulders.reduce((acc: CompletionState, panel) => {
       acc[panel.id] = false;
       return acc;
     }, {});
@@ -47,7 +59,7 @@ export default function MixerBoulderScorer({ mixerBoulders, StartTime }) {
   }, [boulderCompletions]);
 
   const [boulderRangeValue, setBoulderRangeValue] = useState(0);
-  const swiperBoulderRef = useRef(null);
+  const swiperBoulderRef = useRef<SwiperType | null>(null);
 
   const [showSwipeAnimation, setShowSwipeAnimation] = useState(true);
   const [showBlurBackground, setShowBlurBackground] = useState(true);
@@ -72,7 +84,7 @@ export default function MixerBoulderScorer({ mixerBoulders, StartTime }) {
     setShowBlurBackground(false); // Also hide blur on swipe
   };
 
-  const handleBoulderAttemptChange = (panelId, e) => {
+  const handleBoulderAttemptChange = (panelId: string, e: React.ChangeEvent<HTMLInputElement>) => {
     const inputValue = e.target.value;
     const sanitizedValue = inputValue.replace(/[^0-9]/g, "");
     setBoulderAttempts(prev => ({
@@ -81,28 +93,28 @@ export default function MixerBoulderScorer({ mixerBoulders, StartTime }) {
     }));
   };
 
-  const handlePlusBoulderAttempt = panelId => {
+  const handlePlusBoulderAttempt = (panelId: string) => {
     setBoulderAttempts(prev => ({
       ...prev,
       [panelId]: Math.min(prev[panelId] + 1, 20),
     }));
   };
 
-  const handleMinusBoulderAttempt = panelId => {
+  const handleMinusBoulderAttempt = (panelId: string) => {
     setBoulderAttempts(prev => ({
       ...prev,
       [panelId]: Math.max(prev[panelId] - 1, 0),
     }));
   };
 
-  const handleBoulderRangeChange = value => {
+  const handleBoulderRangeChange = (value: number) => {
     setBoulderRangeValue(value);
     if (swiperBoulderRef.current) {
       swiperBoulderRef.current.slideTo(value);
     }
   };
 
-  const handleBoulderCompletion = (panelId, attempts) => {
+  const handleBoulderCompletion = (panelId: string, attempts: number) => {
     if (attempts < 1) {
       showNotification({
         message: `1 Attempt Needed`,
@@ -116,7 +128,7 @@ export default function MixerBoulderScorer({ mixerBoulders, StartTime }) {
     }
   };
 
-  const handleBoulderUncompletion = panelId => {
+  const handleBoulderUncompletion = (panelId: string) => {
     setBoulderCompletions(prev => ({
       ...prev,
       [panelId]: false,

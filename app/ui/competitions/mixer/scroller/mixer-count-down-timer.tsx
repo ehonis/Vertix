@@ -2,7 +2,11 @@
 
 import { useState, useEffect } from "react";
 
-export default function MixerCountdownTimer({ startTime, timeAllotted }) {
+export default function MixerCountdownTimer({
+  timeAllotted,
+}: {
+  timeAllotted: number | undefined | null;
+}) {
   const [timeLeft, setTimeLeft] = useState(3 * 60 * 60); // Initialize with 3 hours in seconds
 
   useEffect(() => {
@@ -13,7 +17,7 @@ export default function MixerCountdownTimer({ startTime, timeAllotted }) {
     return () => clearInterval(timer); // Cleanup the interval on component unmount
   }, []);
 
-  const formatTime = seconds => {
+  const formatTime = (seconds: number) => {
     const hours = Math.floor(seconds / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);
     const secs = seconds % 60;
@@ -24,7 +28,7 @@ export default function MixerCountdownTimer({ startTime, timeAllotted }) {
   };
 
   return (
-    <div className="text-center font-bold text-black font-barlow  bg-white outline p-1 outline-black w-[4.5rem]  rounded">
+    <div className="text-center font-bold text-black font-barlow bg-white outline p-1 outline-black w-[4.5rem] rounded">
       {formatTime(timeLeft)}
     </div>
   );

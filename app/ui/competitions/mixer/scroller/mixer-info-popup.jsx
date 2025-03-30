@@ -4,17 +4,8 @@ import { motion } from "motion/react";
 import { getPointPrediction, getTopScores, getRouteNameById } from "@/lib/mixer";
 import { useEffect, useState } from "react";
 import clsx from "clsx";
-export default function MixerInfoPopup({
-  mixerRoutes,
-  mixerBoulders,
-  completions,
-  points,
-  routeId,
-  onCancel,
-}) {
+export default function MixerInfoPopup({ mixerRoutes, topScores, routeId, onCancel }) {
   const [predictedHoldsAndPoints, setPredictedHoldsAndPoints] = useState([]);
-
-  const topScores = getTopScores(completions, points);
 
   useEffect(() => {
     if (topScores.length > 0) {
@@ -45,7 +36,7 @@ export default function MixerInfoPopup({
         exit={{ opacity: 0, scale: 0.9 }}
         transition={{ duration: 0.3, ease: "easeInOut" }}
       >
-        <div className="relative bg-gray-700 rounded-lg p-5 w-[83%] max-w-md h-1/2 shadow-lg flex flex-col justify-between">
+        <div className="relative bg-slate-900 rounded-lg p-5 w-[83%] max-w-md h-1/2 shadow-lg flex flex-col justify-between">
           <button className="absolute top-0 right-0 p-2" onClick={onCancel}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -70,13 +61,13 @@ export default function MixerInfoPopup({
 
                 const color = foundRoute ? foundRoute.color : null;
                 return (
-                  <div className="flex flex-col bg-slate-900 p-2 rounded-sm" key={info.id}>
+                  <div className="flex flex-col bg-gray-700 p-2 rounded-sm" key={info.id}>
                     <p className="text-white font-barlow font-bold">
                       Tope Rope Hold:{" "}
                       <span className="font-stalinist gradient-text-blue-cyan">
                         {info.topRopetoBeat.hold}
                       </span>{" "}
-                      {" => "}
+                      {" → "}
                       <span className="font-stalinist gradient-text-red-orange">
                         {info.topRopetoBeat.topRopePts}pts
                       </span>
@@ -86,7 +77,7 @@ export default function MixerInfoPopup({
                       <span className="font-stalinist gradient-text-blue-cyan">
                         {info.leadToBeat.hold}
                       </span>
-                      {" => "}
+                      {" → "}
                       <span className="font-stalinist gradient-text-red-orange">
                         {info.leadToBeat.leadPts}pts
                       </span>

@@ -2,6 +2,8 @@ import prisma from "@/prisma";
 import SendsPlate from "@/app/ui/profile/profile-page/sends-plate";
 import ImageNamePlate from "@/app/ui/profile/profile-page/image-name-plate";
 import { getRouteCompletions } from "@/lib/routeCompletions";
+import { redirect } from "next/navigation";
+import { Badge } from "@prisma/client";
 // generate static pages
 export async function generateStaticParams() {
   const usernames = await prisma.user
@@ -10,7 +12,7 @@ export async function generateStaticParams() {
   return usernames;
 }
 
-export default async function ProfilePage({ params }) {
+export default async function ProfilePage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const username = slug;
 
@@ -19,7 +21,11 @@ export default async function ProfilePage({ params }) {
       username,
     },
   });
-  const totalCompletionsInt = (await getRouteCompletions(username)).length;
+
+  if (!user) {
+    redirect("/signin");
+  }
+  const totalCompletionsInt = (await getRouteCompletions(username))?.length;
   return (
     <div className="w-screen">
       <div className="w-full flex flex-col items-center ">
@@ -30,7 +36,7 @@ export default async function ProfilePage({ params }) {
           title={user.tag}
           id={user.id}
         />
-        <SendsPlate completions={totalCompletionsInt} highlightedBadge={null} />
+        <SendsPlate completions={totalCompletionsInt} highlightedBadge={undefined} />
       </div>
     </div>
   );

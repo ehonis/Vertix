@@ -1,13 +1,19 @@
-export default function SendsBadgePlate({ completions, highlightedBadge }) {
+import { Badge } from "@prisma/client";
+
+type SendsPlateBadge = {
+  completions: number | undefined;
+  highlightedBadge: Badge | undefined;
+};
+export default function SendsBadgePlate({ completions, highlightedBadge }: SendsPlateBadge) {
   return (
     <div className="flex gap-3 w-xs md:w-md">
-      <div className="w-1/2 bg-bg2 p-2 rounded-lg justify-center items-center flex flex-col gap-4">
+      <div className="w-1/2 bg-slate-900 p-2 rounded-lg justify-center items-center flex flex-col gap-4">
         <p className=" font-barlow font-bold gradient-text-purple-pink text-8xl drop-shadow-customBlack">
           {completions}
         </p>
         <p className="font-barlow font-bold text-white text-xl">Total Sends</p>
       </div>
-      <div className="w-1/2 p-2 bg-bg2 rounded-lg justify-center items-center flex flex-col gap-4">
+      <div className="w-1/2 p-2 bg-slate-900 rounded-lg justify-center items-center flex flex-col gap-4">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"

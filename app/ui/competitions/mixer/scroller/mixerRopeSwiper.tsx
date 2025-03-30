@@ -1,6 +1,7 @@
 "use client";
 
 import { Swiper, SwiperSlide } from "swiper/react";
+import { Swiper as SwiperType } from "swiper/types";
 import { Virtual } from "swiper/modules";
 import clsx from "clsx";
 import { useState, useRef, useEffect } from "react";
@@ -10,71 +11,102 @@ import TypeToggleSwitch from "./mixer-type-toggle";
 import { getPoints } from "@/lib/mixer";
 import MixerInfoPopup from "./mixer-info-popup";
 import SwipeAnimation from "@/app/ui/general/swipe-animation";
+import { getTopScores } from "@/lib/mixer";
+type RouteData = {
+  name: string;
+  id: string;
+  color: string;
+  holds: string;
+  competitionId: string;
+};
+type MixerRopeScrollerData = {
+  mixerRoutes: RouteData[];
+};
 
-export default function MixerRopeScorer({ mixerRoutes, StartTime }) {
+export default function MixerRopeScorer({ mixerRoutes }: MixerRopeScrollerData) {
   const [tempRouteId, setTempRouteId] = useState("");
   const { showNotification } = useNotification();
+  const [topScores, setTopScores] = useState({});
   const [isInfoPopup, setIsInfoPopup] = useState(false);
 
   // Helper function to safely get localStorage value
-  const getLocalStorageValue = key => {
+  const getLocalStorageValue = (key: string) => {
     if (typeof window !== "undefined") {
       return localStorage.getItem(key);
     }
     return null;
   };
 
+  type AttemptState = {
+    [key: string]: number;
+  };
+
+  type HoldState = {
+    [key: string]: number;
+  };
+
+  type CompletionState = {
+    [key: string]: boolean;
+  };
+
+  type PointState = {
+    [key: string]: number;
+  };
+  type TypeToggleState = {
+    [key: string]: string;
+  };
+
   // Load initial state from localStorage or use default values
-  const [attempts, setAttempts] = useState(() => {
+  const [attempts, setAttempts] = useState<AttemptState>(() => {
     const savedAttempts = getLocalStorageValue("mixerAttempts");
     if (savedAttempts) {
       return JSON.parse(savedAttempts);
     }
-    return mixerRoutes.reduce((acc, panel) => {
+    return mixerRoutes.reduce((acc: AttemptState, panel) => {
       acc[panel.id] = 0;
       return acc;
     }, {});
   });
 
-  const [hold, setHold] = useState(() => {
+  const [hold, setHold] = useState<HoldState>(() => {
     const savedHold = getLocalStorageValue("mixerHold");
     if (savedHold) {
       return JSON.parse(savedHold);
     }
-    return mixerRoutes.reduce((acc, panel) => {
+    return mixerRoutes.reduce((acc: HoldState, panel) => {
       acc[panel.id] = 0;
       return acc;
     }, {});
   });
 
-  const [completions, setCompletions] = useState(() => {
+  const [completions, setCompletions] = useState<CompletionState>(() => {
     const savedCompletions = getLocalStorageValue("mixerCompletions");
     if (savedCompletions) {
       return JSON.parse(savedCompletions);
     }
-    return mixerRoutes.reduce((acc, panel) => {
+    return mixerRoutes.reduce((acc: CompletionState, panel) => {
       acc[panel.id] = false;
       return acc;
     }, {});
   });
 
-  const [points, setPoints] = useState(() => {
+  const [points, setPoints] = useState<PointState>(() => {
     const savedPoints = getLocalStorageValue("mixerPoints");
     if (savedPoints) {
       return JSON.parse(savedPoints);
     }
-    return mixerRoutes.reduce((acc, panel) => {
-      acc[panel.id] = null;
+    return mixerRoutes.reduce((acc: PointState, panel) => {
+      acc[panel.id] = 0;
       return acc;
     }, {});
   });
 
-  const [typeToggles, setTypeToggles] = useState(() => {
+  const [typeToggles, setTypeToggles] = useState<TypeToggleState>(() => {
     const savedTypeToggles = getLocalStorageValue("mixerTypeToggles");
     if (savedTypeToggles) {
       return JSON.parse(savedTypeToggles);
     }
-    return mixerRoutes.reduce((acc, panel) => {
+    return mixerRoutes.reduce((acc: TypeToggleState, panel) => {
       acc[panel.id] = "TR";
       return acc;
     }, {});
@@ -112,7 +144,7 @@ export default function MixerRopeScorer({ mixerRoutes, StartTime }) {
   }, [typeToggles]);
 
   const [rangeValue, setRangeValue] = useState(0);
-  const swiperRef = useRef(null);
+  const swiperRef = useRef<SwiperType>(null);
 
   const [showSwipeAnimation, setShowSwipeAnimation] = useState(true);
   const [showBlurBackground, setShowBlurBackground] = useState(true);
@@ -137,7 +169,11 @@ export default function MixerRopeScorer({ mixerRoutes, StartTime }) {
     setShowBlurBackground(false); // Also hide blur on swipe
   };
 
-  const handleHoldChange = (panelId, maxHold, e) => {
+  const handleHoldChange = (
+    panelId: string,
+    maxHold: number,
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const inputValue = e.target.value;
     const sanitizedValue = inputValue.replace(/[^0-9]/g, "");
     const newHoldValue = Math.min(Number(sanitizedValue), maxHold);
@@ -156,7 +192,7 @@ export default function MixerRopeScorer({ mixerRoutes, StartTime }) {
     }));
   };
 
-  const handleAttemptChange = (panelId, e) => {
+  const handleAttemptChange = (panelId: string, e: React.ChangeEvent<HTMLInputElement>) => {
     const inputValue = e.target.value;
     const sanitizedValue = inputValue.replace(/[^0-9]/g, "");
     setAttempts(prev => ({
@@ -165,21 +201,21 @@ export default function MixerRopeScorer({ mixerRoutes, StartTime }) {
     }));
   };
 
-  const handlePlusAttempt = panelId => {
+  const handlePlusAttempt = (panelId: string) => {
     setAttempts(prev => ({
       ...prev,
       [panelId]: Math.min(prev[panelId] + 1, 20),
     }));
   };
 
-  const handleMinusAttempt = panelId => {
+  const handleMinusAttempt = (panelId: string) => {
     setAttempts(prev => ({
       ...prev,
       [panelId]: Math.max(prev[panelId] - 1, 0),
     }));
   };
 
-  const handlePlusHold = (panelId, maxHold) => {
+  const handlePlusHold = (panelId: string, maxHold: number) => {
     setHold(prev => {
       const newHoldValue = Math.min(prev[panelId] + 1, maxHold);
 
@@ -197,7 +233,7 @@ export default function MixerRopeScorer({ mixerRoutes, StartTime }) {
     });
   };
 
-  const handleMinusHold = panelId => {
+  const handleMinusHold = (panelId: string) => {
     setHold(prev => {
       const newHoldValue = Math.max(prev[panelId] - 1, 0);
 
@@ -217,7 +253,7 @@ export default function MixerRopeScorer({ mixerRoutes, StartTime }) {
     });
   };
 
-  const handleTypeChange = (panelId, value) => {
+  const handleTypeChange = (panelId: string, value: string) => {
     setTypeToggles(prev => {
       const newTypeValue = value;
 
@@ -234,14 +270,14 @@ export default function MixerRopeScorer({ mixerRoutes, StartTime }) {
     });
   };
 
-  const handleRangeChange = value => {
+  const handleRangeChange = (value: number) => {
     setRangeValue(value);
     if (swiperRef.current) {
       swiperRef.current.slideTo(value);
     }
   };
 
-  const handleCompletion = (panelId, attempts, points) => {
+  const handleCompletion = (panelId: string, attempts: number, points: number) => {
     if (attempts < 1) {
       showNotification({
         message: `1 Attempt Needed`,
@@ -260,15 +296,17 @@ export default function MixerRopeScorer({ mixerRoutes, StartTime }) {
     }
   };
 
-  const handleUncompletion = panelId => {
+  const handleUncompletion = (panelId: string) => {
     setCompletions(prev => ({
       ...prev,
       [panelId]: false,
     }));
   };
 
-  const handleInfoClick = routeId => {
+  const handleInfoClick = (routeId: string) => {
     setTempRouteId(routeId);
+    const tempTopScores = getTopScores(completions, points);
+    setTopScores(tempTopScores);
     setIsInfoPopup(!isInfoPopup);
   };
 
@@ -294,11 +332,8 @@ export default function MixerRopeScorer({ mixerRoutes, StartTime }) {
       >
         {isInfoPopup ? (
           <MixerInfoPopup
-            direction="vertical"
             mixerRoutes={mixerRoutes}
-            holds={hold}
-            points={points}
-            completions={completions}
+            topScores={topScores}
             onCancel={handleCancel}
             routeId={tempRouteId}
           />
@@ -345,12 +380,12 @@ export default function MixerRopeScorer({ mixerRoutes, StartTime }) {
                       viewBox="0 0 24 24"
                       strokeWidth={1.5}
                       stroke="currentColor"
-                      className="size-7 self-center align-middle"
+                      className="size-8"
                     >
                       <path
                         strokeLinecap="round"
                         strokeLinejoin="round"
-                        d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z"
+                        d="m3.75 13.5 10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75Z"
                       />
                     </svg>
                   </div>
@@ -440,7 +475,7 @@ export default function MixerRopeScorer({ mixerRoutes, StartTime }) {
                 </div>
                 <div className="flex flex-col">
                   <p className="font-stalinist gradient-text-yellow-red text-3xl text-center">
-                    {points[panel.id] > 0 ? points[panel.id] : 0}
+                    {points[panel.id] && points[panel.id] > 0 ? points[panel.id] : 0}
                   </p>
                   <p className="font-stalinist gradient-text-yellow-red text-base">Points</p>
                 </div>

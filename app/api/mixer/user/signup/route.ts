@@ -1,11 +1,16 @@
 import prisma from "@/prisma";
-import { NextResponse } from "next/server";
+import { NextResponse, NextRequest } from "next/server";
 import { auth } from "@/auth";
-export async function POST(req) {
+export async function POST(req: NextRequest) {
+  const session = await auth();
+    if(!session){
+        return NextResponse.json({ message: "Not Authenicated" },{ status: 403 });
+    }
+
   const { userId, climberName, selectedDivision, compId } = await req.json();
   console.log(userId, climberName, selectedDivision, compId);
   try {
-    const climber = await prisma.MixerClimber.create({
+    await prisma.mixerClimber.create({
       data: {
         user: {
           connect: {
@@ -30,6 +35,6 @@ export async function POST(req) {
       success: true,
     });
   } catch (error) {
-    return NextResponse.json({ success: false, error: error.message });
+    return NextResponse.json({ success: false, error: "failed to "});
   }
 }

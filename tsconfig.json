@@ -23,6 +23,6 @@
       "@/*": ["./*", "./app/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "lib/mixer.js"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "lib/mixer.js", "next.config.js"],
   "exclude": ["node_modules"]
 }

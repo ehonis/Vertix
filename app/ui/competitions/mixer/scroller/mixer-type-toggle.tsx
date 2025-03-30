@@ -2,7 +2,19 @@
 
 import { useState, useEffect } from "react";
 
-export default function TypeToggleSwitch({ leftLabel, rightLabel, value, onTypeSwitchValue }) {
+type TypeToggleSwitchData = {
+  leftLabel: string;
+  rightLabel: string;
+  value: string;
+  onTypeSwitchValue: (value: string) => void;
+};
+
+export default function TypeToggleSwitch({
+  leftLabel,
+  rightLabel,
+  value,
+  onTypeSwitchValue,
+}: TypeToggleSwitchData) {
   const [isLeftLabel, setIsLeftLabel] = useState(value); // Default to the passed value
 
   useEffect(() => {

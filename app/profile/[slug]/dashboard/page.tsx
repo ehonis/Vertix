@@ -10,7 +10,7 @@ import {
   getRouteCompletions,
 } from "@/lib/routeCompletions";
 
-export default async function Dashboard({ params }) {
+export default async function Dashboard({ params }: { params: Promise<{ slug: string }> }) {
   const session = await auth();
 
   if (!session?.user) {
