@@ -4,11 +4,30 @@ import { motion } from "motion/react";
 import { getPointPrediction, getTopScores, getRouteNameById } from "@/lib/mixer";
 import { useEffect, useState } from "react";
 import clsx from "clsx";
-export default function MixerInfoPopup({ mixerRoutes, topScores, routeId, onCancel }) {
-  const [predictedHoldsAndPoints, setPredictedHoldsAndPoints] = useState([]);
+import { MixerRoute } from "@prisma/client";
+
+interface PredictionInfo {
+  id: string;
+  topRopetoBeat: { hold: string; topRopePts: number };
+  leadToBeat: { hold: string; leadPts: number };
+}
+
+type MixerInfoPopUpData = {
+  mixerRoutes: MixerRoute[];
+  topScores: [string, number][] | undefined;
+  onCancel: () => void;
+  routeId: string;
+};
+export default function MixerInfoPopup({
+  mixerRoutes,
+  topScores,
+  routeId,
+  onCancel,
+}: MixerInfoPopUpData) {
+  const [predictedHoldsAndPoints, setPredictedHoldsAndPoints] = useState<PredictionInfo[]>([]);
 
   useEffect(() => {
-    if (topScores.length > 0) {
+    if (topScores && topScores.length > 0) {
       setPredictedHoldsAndPoints(getPointPrediction(mixerRoutes, topScores, routeId));
     }
   }, [mixerRoutes, topScores, routeId]);
@@ -54,7 +73,7 @@ export default function MixerInfoPopup({ mixerRoutes, topScores, routeId, onCanc
               These are holds you need to get too to improve your previous score(s)
             </p>
           </div>
-          {topScores.length > 0 ? (
+          {topScores && topScores.length > 0 ? (
             <div className="flex flex-col gap-2">
               {predictedHoldsAndPoints.map(info => {
                 const foundRoute = mixerRoutes.find(route => route.id === info.id);
@@ -94,7 +113,7 @@ export default function MixerInfoPopup({ mixerRoutes, topScores, routeId, onCanc
                           color === "red" ? "text-red-500" : null
                         )}
                       >
-                        {foundRoute.name}
+                        {foundRoute?.name}
                       </span>
                     </p>
                   </div>

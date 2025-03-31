@@ -26,7 +26,8 @@ type MixerRopeScrollerData = {
 export default function MixerRopeScorer({ mixerRoutes }: MixerRopeScrollerData) {
   const [tempRouteId, setTempRouteId] = useState("");
   const { showNotification } = useNotification();
-  const [topScores, setTopScores] = useState({});
+
+  const [topScores, setTopScores] = useState<[string, number][]>();
   const [isInfoPopup, setIsInfoPopup] = useState(false);
 
   // Helper function to safely get localStorage value
