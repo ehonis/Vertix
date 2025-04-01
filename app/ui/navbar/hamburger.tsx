@@ -24,6 +24,7 @@ export default function HamburgerMenu({ user }: HamburgerMenuData) {
     { name: "Home", href: "/" },
     { name: "Routes", href: "/routes" },
     { name: "Comps", href: "/competitions" },
+    { name: "FAQ", href: "/faq" },
     // { name: "Search", href: "/search" },
   ];
 

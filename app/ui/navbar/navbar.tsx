@@ -44,6 +44,12 @@ export default function NavBar() {
           >
             Comps
           </Link>
+          <Link
+            href={"/faq"}
+            className="hover:text-white transition-all duration-100 hover:scale-105 ease-in-out"
+          >
+            FAQ
+          </Link>
           {/* <Link
             href={"/search"}
             className="hover:text-white transition-all duration-100 hover:scale-105 ease-in-out"

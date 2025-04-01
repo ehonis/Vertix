@@ -129,7 +129,7 @@ export default function LandingComponent() {
                 height={500}
                 alt="picture of route page"
                 className={clsx(
-                  " w-[130%]  object-cover ",
+                  " w-full object-cover -translate-y-16",
                   index === 0 && "scale-150 rotate-12 translate-y-5"
                 )}
                 loading="lazy"

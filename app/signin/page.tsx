@@ -77,7 +77,7 @@ export default function SignInForm() {
 
           <button onClick={() => handleSignIn("github")}>
             {!isGithubLoading ? (
-              <div className="bg-black w-full grid grid-cols-3 gap-3 items-center p-2 rounded-full text-white outline-2 outline-white ">
+              <div className="bg-black w-full grid grid-cols-3 gap-3 items-center p-2 rounded-full text-white">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   className="size-8"
@@ -145,6 +145,10 @@ export default function SignInForm() {
           </button>
         </div>
       </div>
+      <p className="text-center italic font-barlow text-white text-xs mt-5">
+        Having trouble logging in? Please reach out by emailing{" "}
+        <span className="text-blue-700 underline">support@vertixclimb.com</span>
+      </p>
     </div>
   );
 }
