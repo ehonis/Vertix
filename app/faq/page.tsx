@@ -27,8 +27,8 @@ export default function FAQPage() {
       q: "Do I need to make an account?",
       a: (
         <p>
-          Yes, most of Vertix's features require an account to personalize your experience and track
-          your progress. Signing up is easy – just head to the{" "}
+          Yes, most of Vertix&apos;s features require an account to personalize your experience and
+          track your progress. Signing up is easy, just head to the{" "}
           <Link href={"/signin"} className="underline text-blue-500 hover:text-blue-400">
             sign in page
           </Link>{" "}
@@ -55,10 +55,10 @@ export default function FAQPage() {
       q: "Do I need to pay for anything?",
       a: (
         <p>
-          No, Vertix's core features are completely free. We plan to introduce an optional 'premium'
-          tier in the future using a 'Pay What You Want' model. This is primarily a way to support
-          the platform's development, but it will also unlock some additional features beyond the
-          free experience.
+          No, Vertix&apos;s core features are completely free. We plan to introduce an optional
+          &apos;premium&apos; tier in the future using a &apos;Pay What You Want&apos; model. This
+          is primarily a way to support the platform&apos;s development, but it will also unlock
+          some additional features beyond the free experience.
         </p>
       ),
     },

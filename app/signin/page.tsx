@@ -147,7 +147,12 @@ export default function SignInForm() {
       </div>
       <p className="text-center italic font-barlow text-white text-xs mt-5">
         Having trouble logging in? Please reach out by emailing{" "}
-        <span className="text-blue-700 underline">support@vertixclimb.com</span>
+        <a
+          href="mailto:support@vertixclimb.com"
+          className="underline text-blue-500 hover:text-blue-400"
+        >
+          support@vertixclimb.com
+        </a>
       </p>
     </div>
   );
