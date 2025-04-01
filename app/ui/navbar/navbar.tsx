@@ -3,7 +3,9 @@ import UserProfile from "./UserProfile";
 import HamburgerMenu from "./hamburger";
 import { auth } from "@/auth";
 import { Suspense } from "react";
+
 import ElementLoadingAnimation from "../general/element-loading-animation";
+import { User } from "@prisma/client";
 
 async function UserStuff() {
   const session = await auth();
@@ -11,10 +13,10 @@ async function UserStuff() {
   return (
     <div className="justify-self-end">
       <div className="self-center hidden md:block cursor-pointer">
-        <UserProfile user={user} />
+        <UserProfile user={user as User} />
       </div>
       <div className="md:hidden">
-        <HamburgerMenu user={user} />
+        <HamburgerMenu user={user as User} />
       </div>
     </div>
   );
@@ -42,12 +44,12 @@ export default function NavBar() {
           >
             Comps
           </Link>
-          <Link
+          {/* <Link
             href={"/search"}
             className="hover:text-white transition-all duration-100 hover:scale-105 ease-in-out"
           >
             Search
-          </Link>
+          </Link> */}
         </div>
         <Suspense
           fallback={

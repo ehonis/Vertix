@@ -4,23 +4,23 @@ import { auth } from "@/auth";
 import SignUpForm from "@/app/ui/competitions/mixer/signup/sign-up-form";
 import { CompetitionStatus } from "@prisma/client";
 import { redirect } from "next/navigation";
-export default async function Signup({ params }) {
+export default async function Signup({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const session = await auth();
   const user = session?.user || null;
 
-  const competition = await prisma.MixerCompetition.findUnique({
+  const competition = await prisma.mixerCompetition.findUnique({
     where: {
       id: slug,
     },
   });
-  const climber = await prisma.MixerClimber.findFirst({
+  const climber = await prisma.mixerClimber.findFirst({
     where: {
       competitionId: slug,
       userId: user?.id,
     },
   });
-  const divisions = await prisma.MixerDivision.findMany({
+  const divisions = await prisma.mixerDivision.findMany({
     where: {
       competitionId: slug,
     },
@@ -39,12 +39,12 @@ export default async function Signup({ params }) {
     );
   }
   if (climber) {
-    redirect(`/competitions/competition/mixer/${slug}`);
+    redirect(`/competitions/mixer/${slug}`);
     return (
       <div className="flex flex-col items-center justify-center h-screen-offset text-white font-barlow font-bold gap-5">
         <p className="text-2xl text-center">You are already signed up for this competition</p>
 
-        <Link href={`/competitions/competition/mixer/${slug}`} className="bg-blue-500 rounded p-2">
+        <Link href={`/competitions/mixer/${slug}`} className="bg-blue-500 rounded p-2">
           Back to Comp Page
         </Link>
       </div>

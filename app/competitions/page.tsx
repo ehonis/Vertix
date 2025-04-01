@@ -7,7 +7,7 @@ import clsx from "clsx";
 import ElementLoadingAnimation from "../ui/general/element-loading-animation";
 import { CompetitionStatus } from "@prisma/client";
 async function DemoComps() {
-  const demoCompetitions = await prisma.MixerCompetition.findMany({
+  const demoCompetitions = await prisma.mixerCompetition.findMany({
     where: {
       status: CompetitionStatus.DEMO,
     },
@@ -18,7 +18,7 @@ async function DemoComps() {
         {demoCompetitions.map(comp => (
           <Link
             key={comp.id}
-            href={`/competitions/competition/mixer/${comp.id}`}
+            href={`/competitions/mixer/${comp.id}`}
             className=" bg-yellow-500/15 rounded-lg  p-2 flex justify-between outline outline-yellow-400 place-items-center"
           >
             <div className="flex flex-col">
@@ -45,7 +45,7 @@ async function DemoComps() {
   );
 }
 async function UpComingComps() {
-  const mixerCompetitions = await prisma.MixerCompetition.findMany({
+  const mixerCompetitions = await prisma.mixerCompetition.findMany({
     where: {
       status: {
         in: [CompetitionStatus.UPCOMING, CompetitionStatus.INACTIVE],
@@ -59,7 +59,7 @@ async function UpComingComps() {
         {mixerCompetitions.map(comp => (
           <Link
             key={comp.id}
-            href={`/competitions/competition/mixer/${comp.id}`}
+            href={`/competitions/mixer/${comp.id}`}
             className={clsx(
               " bg-blue-500/15 rounded-lg  p-2 flex justify-between outline  place-items-center",
               comp.status === CompetitionStatus.INACTIVE && "outline-red-500 bg-red-500/15",

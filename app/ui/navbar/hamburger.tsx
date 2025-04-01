@@ -4,11 +4,15 @@ import { useState } from "react";
 import Link from "next/link";
 import SignOut from "../general/sign-out-button";
 import Image from "next/image";
-import { motion, AnimatePresence } from "motion/react";
+import { User, UserRole } from "@prisma/client";
+import { Session } from "@prisma/client";
 
-export default function HamburgerMenu({ user, status }) {
+type HamburgerMenuData = {
+  user: User | null | undefined;
+};
+
+export default function HamburgerMenu({ user }: HamburgerMenuData) {
   const [isOpen, setIsOpen] = useState(false);
-  const [isProfileOpen, setIsProfileOpen] = useState(true);
 
   const handleClick = () => {
     setIsOpen(!isOpen);
@@ -20,7 +24,7 @@ export default function HamburgerMenu({ user, status }) {
     { name: "Home", href: "/" },
     { name: "Routes", href: "/routes" },
     { name: "Comps", href: "/competitions" },
-    { name: "Search", href: "/search" },
+    // { name: "Search", href: "/search" },
   ];
 
   const profileLinks = [
@@ -151,13 +155,7 @@ export default function HamburgerMenu({ user, status }) {
                 className="flex flex-col gap-3"
               >
                 <div className="flex">
-                  <p
-                    href={link.href}
-                    onClick={closeMenu}
-                    className="text-white font-tomorrow text-5xl"
-                  >
-                    {link.name}
-                  </p>
+                  <p className="text-white font-tomorrow text-5xl">{link.name}</p>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
@@ -197,33 +195,24 @@ export default function HamburgerMenu({ user, status }) {
             </div>
           ) : (
             <div className="w-full place-self-end bg-slate-900 rounded-md h-fit flex flex-col py-3 px-2 items-center font-tomorrow font-bold text-white text-md justify-between">
-              <AnimatePresence>
-                {isProfileOpen && (
-                  <motion.div
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: "auto", opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.125, ease: "easeInOut" }}
-                    className="overflow-hidden mb-3 p-1"
-                  >
-                    <div className="grid grid-cols-2 grid-rows-2 gap-3 font-barlow items-center">
-                      {profileLinks.map(link => (
-                        <Link
-                          key={link.name}
-                          href={link.url}
-                          onClick={closeMenu}
-                          className={`grid grid-cols-3 w-full blue-button rounded-sm p-2 font-semibold text-center ${link.extraStyles}`}
-                        >
-                          <span>{link.icon}</span>
-                          <p className={`place-self-center w-full text-sm whitespace-nowrap`}>
-                            {link.name}
-                          </p>
-                        </Link>
-                      ))}
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
+              <div className="overflow-hidden mb-3 p-1">
+                <div className="grid grid-cols-2 grid-rows-2 gap-3 font-barlow items-center">
+                  {profileLinks.map(link => (
+                    <Link
+                      key={link.name}
+                      href={link.url}
+                      onClick={closeMenu}
+                      className={`grid grid-cols-3 w-full blue-button rounded-sm p-2 font-semibold text-center ${link.extraStyles}`}
+                    >
+                      <span>{link.icon}</span>
+                      <p className={`place-self-center w-full text-sm whitespace-nowrap`}>
+                        {link.name}
+                      </p>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+
               <div className="w-full flex justify-between items-center px-2">
                 <div className="flex items-center gap-2">
                   {user.image ? (

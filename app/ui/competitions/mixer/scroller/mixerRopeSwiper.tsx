@@ -253,6 +253,42 @@ export default function MixerRopeScorer({ mixerRoutes }: MixerRopeScrollerData) 
       };
     });
   };
+  const handleBottomHold = (panelId: string) => {
+    setHold(prev => {
+      const newHoldValue = 0;
+
+      // Update the points for the current hold value
+      if (newHoldValue >= 0) {
+        const type = typeToggles[panelId] === "TR" ? "topRopePoints" : "leadPoints";
+        setPoints(prevPoints => ({
+          ...prevPoints,
+          [panelId]: getPoints(mixerRoutes, panelId, newHoldValue, type),
+        }));
+      }
+
+      return {
+        ...prev,
+        [panelId]: newHoldValue,
+      };
+    });
+  };
+  const handleTopHold = (panelId: string, maxHold: number) => {
+    setHold(prev => {
+      const newHoldValue = maxHold;
+
+      // Update the points for the current hold value
+      const type = typeToggles[panelId] === "TR" ? "topRopePoints" : "leadPoints";
+      setPoints(prevPoints => ({
+        ...prevPoints,
+        [panelId]: getPoints(mixerRoutes, panelId, newHoldValue, type),
+      }));
+
+      return {
+        ...prev,
+        [panelId]: newHoldValue,
+      };
+    });
+  };
 
   const handleTypeChange = (panelId: string, value: string) => {
     setTypeToggles(prev => {
@@ -423,54 +459,80 @@ export default function MixerRopeScorer({ mixerRoutes }: MixerRopeScrollerData) 
                     <label htmlFor="" className="font-barlow font-bold text-xl text-white">
                       Hold {"#"}
                     </label>
-                    <div className="flex items-center gap-3 blue-button rounded-md p-2">
-                      <button
-                        className="rounded-full size-12 font-barlow font-bold bg-red-500/45 border-2 border-red-500 flex justify-center items-center"
-                        onClick={() => handleMinusHold(panel.id)}
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          strokeWidth={5}
-                          stroke="currentColor"
-                          className="size-4"
-                          style={{
-                            filter: "drop-shadow(0px 4px 6px rgba(0, 0, 0, 1))",
-                          }}
+                    <div className="flex gap-3 items-center">
+                      {hold[panel.id] !== 0 ? (
+                        <button
+                          className="bg-red-500 rounded p-2 text-sm font-barlow font-semibold"
+                          onClick={() => handleBottomHold(panel.id)}
                         >
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M5 12h14" />
-                        </svg>
-                      </button>
-                      <input
-                        type="text"
-                        value={hold[panel.id]}
-                        onChange={e => handleHoldChange(panel.id, panel.holds.length, e)}
-                        className="p-2 text-white font-barlow font-bold size-10 text-2xl rounded-sm text-center focus:outline-hidden border-none"
-                        placeholder="#"
-                      />
-                      <button
-                        className="rounded-full size-12 font-barlow font-bold bg-green-500/45 border-2 border-green-500 flex justify-center items-center"
-                        onClick={() => handlePlusHold(panel.id, panel.holds.length)}
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          strokeWidth={5}
-                          stroke="currentColor"
-                          className="size-4"
-                          style={{
-                            filter: "drop-shadow(0px 4px 6px rgba(0, 0, 0, 1))",
-                          }}
+                          MIN
+                        </button>
+                      ) : (
+                        <button className="bg-transparent text-black rounded p-2 text-sm font-barlow font-semibold cursor-none">
+                          MIN
+                        </button>
+                      )}
+                      <div className="flex items-center gap-3 blue-button rounded-md p-2">
+                        <button
+                          className="rounded-full size-12 font-barlow font-bold bg-red-500/45 border-2 border-red-500 flex justify-center items-center"
+                          onClick={() => handleMinusHold(panel.id)}
                         >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            d="M12 4.5v15m7.5-7.5h-15"
-                          />
-                        </svg>
-                      </button>
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            strokeWidth={5}
+                            stroke="currentColor"
+                            className="size-4"
+                            style={{
+                              filter: "drop-shadow(0px 4px 6px rgba(0, 0, 0, 1))",
+                            }}
+                          >
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M5 12h14" />
+                          </svg>
+                        </button>
+                        <input
+                          type="text"
+                          value={hold[panel.id]}
+                          onChange={e => handleHoldChange(panel.id, panel.holds.length, e)}
+                          className="p-2 text-white font-barlow font-bold size-10 text-2xl rounded-sm text-center focus:outline-hidden border-none"
+                          placeholder="#"
+                        />
+                        <button
+                          className="rounded-full size-12 font-barlow font-bold bg-green-500/45 border-2 border-green-500 flex justify-center items-center"
+                          onClick={() => handlePlusHold(panel.id, panel.holds.length)}
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            strokeWidth={5}
+                            stroke="currentColor"
+                            className="size-4"
+                            style={{
+                              filter: "drop-shadow(0px 4px 6px rgba(0, 0, 0, 1))",
+                            }}
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              d="M12 4.5v15m7.5-7.5h-15"
+                            />
+                          </svg>
+                        </button>
+                      </div>
+                      {hold[panel.id] !== panel.holds.length ? (
+                        <button
+                          className="bg-green-500 rounded p-2 text-sm font-barlow font-semibold"
+                          onClick={() => handleTopHold(panel.id, panel.holds.length)}
+                        >
+                          TOP
+                        </button>
+                      ) : (
+                        <button className="bg-transparent text-black rounded p-2 text-sm font-barlow font-semibold cursor-none">
+                          TOP
+                        </button>
+                      )}
                     </div>
                   </div>
                 </div>

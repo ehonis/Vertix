@@ -28,7 +28,13 @@ export default function MixerInfoPopup({
 
   useEffect(() => {
     if (topScores && topScores.length > 0) {
-      setPredictedHoldsAndPoints(getPointPrediction(mixerRoutes, topScores, routeId));
+      const predictedPoints = getPointPrediction(mixerRoutes, topScores, routeId);
+      console.log(predictedPoints);
+      if (predictedPoints.length === 0) {
+        setPredictedHoldsAndPoints([]);
+      } else {
+        setPredictedHoldsAndPoints(predictedPoints);
+      }
     }
   }, [mixerRoutes, topScores, routeId]);
 
@@ -55,7 +61,7 @@ export default function MixerInfoPopup({
         exit={{ opacity: 0, scale: 0.9 }}
         transition={{ duration: 0.3, ease: "easeInOut" }}
       >
-        <div className="relative bg-slate-900 rounded-lg p-5 w-[83%] max-w-md h-1/2 shadow-lg flex flex-col justify-between">
+        <div className="relative bg-slate-900 rounded-lg p-5 w-[90%] max-w-md h-1/2 shadow-lg flex flex-col justify-between">
           <button className="absolute top-0 right-0 p-2" onClick={onCancel}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -73,7 +79,7 @@ export default function MixerInfoPopup({
               These are holds you need to get too to improve your previous score(s)
             </p>
           </div>
-          {topScores && topScores.length > 0 ? (
+          {topScores && topScores.length > 0 && predictedHoldsAndPoints.length > 0 ? (
             <div className="flex flex-col gap-2">
               {predictedHoldsAndPoints.map(info => {
                 const foundRoute = mixerRoutes.find(route => route.id === info.id);
@@ -81,26 +87,35 @@ export default function MixerInfoPopup({
                 const color = foundRoute ? foundRoute.color : null;
                 return (
                   <div className="flex flex-col bg-gray-700 p-2 rounded-sm" key={info.id}>
-                    <p className="text-white font-barlow font-bold">
-                      Tope Rope Hold:{" "}
-                      <span className="font-stalinist gradient-text-blue-cyan">
-                        {info.topRopetoBeat.hold}
-                      </span>{" "}
-                      {" → "}
-                      <span className="font-stalinist gradient-text-red-orange">
-                        {info.topRopetoBeat.topRopePts}pts
-                      </span>
-                    </p>
-                    <p className="text-white font-barlow font-bold">
-                      Lead Hold:{" "}
-                      <span className="font-stalinist gradient-text-blue-cyan">
-                        {info.leadToBeat.hold}
-                      </span>
-                      {" → "}
-                      <span className="font-stalinist gradient-text-red-orange">
-                        {info.leadToBeat.leadPts}pts
-                      </span>
-                    </p>
+                    {info.topRopetoBeat.hold && (
+                      <div>
+                        <p className="text-white font-barlow font-bold">
+                          Tope Rope Hold:{" "}
+                          <span className="font-stalinist gradient-text-blue-cyan">
+                            {info.topRopetoBeat.hold}
+                          </span>{" "}
+                          {" → "}
+                          <span className="font-stalinist gradient-text-red-orange">
+                            {info.topRopetoBeat.topRopePts}pts
+                          </span>
+                        </p>
+                      </div>
+                    )}
+                    {info.leadToBeat.hold && (
+                      <div>
+                        <p className="text-white font-barlow font-bold">
+                          Lead Hold:{" "}
+                          <span className="font-stalinist gradient-text-blue-cyan">
+                            {info.leadToBeat.hold}
+                          </span>
+                          {" → "}
+                          <span className="font-stalinist gradient-text-red-orange">
+                            {info.leadToBeat.leadPts}pts
+                          </span>
+                        </p>
+                      </div>
+                    )}
+
                     <p className="text-white font-barlow font-bold">
                       To beat{" "}
                       <span
@@ -122,7 +137,8 @@ export default function MixerInfoPopup({
             </div>
           ) : (
             <p className="text-white font-barlow font-bold text-center">
-              You have not completed any routes. So there is nothing to predict yet
+              Either you have completed climbs that climbing this route would not affect your score,
+              or you have not climbed any routes.
             </p>
           )}
           <div></div>

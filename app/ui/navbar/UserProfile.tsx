@@ -3,22 +3,31 @@ import Image from "next/image";
 import { useState, useRef, useEffect } from "react";
 import clsx from "clsx";
 import Link from "next/link";
-
-export default function UserProfile({ user, status }) {
+import { User } from "@prisma/client";
+type UserProfileData = {
+  user: User | null | undefined;
+};
+export default function UserProfile({ user }: UserProfileData) {
   const [isProfilePopUp, setIsProfilePopUp] = useState(false);
 
-  const profileRef = useRef(null);
-  const buttonRef = useRef(null);
+  const profileRef = useRef<HTMLDivElement>(null);
+  const imageRef = useRef<HTMLImageElement>(null);
+  const svgRef = useRef<SVGSVGElement>(null);
 
   useEffect(() => {
-    const handleClickOutside = event => {
+    const handleClickOutside = (event: MouseEvent) => {
       if (
+        event.target instanceof Node &&
         profileRef.current &&
         !profileRef.current.contains(event.target) &&
-        !buttonRef.current.contains(event.target)
+        // Check imageRef and svgRef as needed
+        ((imageRef.current && imageRef.current.contains(event.target)) ||
+          (svgRef.current && svgRef.current.contains(event.target)))
       ) {
-        setIsProfilePopUp(false); // Close the navbar if click is outside
+        // Do nothing if click is inside
+        return;
       }
+      setIsProfilePopUp(false);
     };
     document.addEventListener("mousedown", handleClickOutside);
 
@@ -120,7 +129,7 @@ export default function UserProfile({ user, status }) {
             width={50}
             className="size-9 rounded-full"
             onClick={handleClick}
-            ref={buttonRef}
+            ref={imageRef}
           />
         ) : (
           <svg
@@ -131,7 +140,7 @@ export default function UserProfile({ user, status }) {
             stroke="white"
             className="size-8 cursor-pointer"
             onClick={handleClick}
-            ref={buttonRef}
+            ref={svgRef}
           >
             <path
               strokeLinecap="round"

@@ -20,15 +20,5 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       from: "no-reply@vertixclimb.com", // Use your verified domain
     }),
   ],
-  callbacks: {
-    async session({ session, user }) {
-      // Add additional fields to the session object
-      session.user.id = user.id; // Include user ID
-      session.user.role = user.role; // Include admin flag
-      session.user.username = user.username; // Include routeSetter flag
-       // Include routeSetter flag
-      return session;
-    },
-   
-  },
+
 });

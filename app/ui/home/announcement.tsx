@@ -3,7 +3,7 @@ import Link from "next/link";
 export default function Announcement({}) {
   return (
     <Link
-      href="/competitions/competition/mixer/cm780exfs0002oi365hvzdtt2"
+      href="/competitions/mixer/cm780exfs0002oi365hvzdtt2"
       className=" outline-3 rounded-lg gap-2 md:w-md  "
     >
       <h2 className="font-barlow text-white text-sm font-semibold text-center ">
