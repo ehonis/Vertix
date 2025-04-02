@@ -61,10 +61,10 @@ export default function LandingComponent() {
       <div className="md:hidden mt-16">
         <Announcement />
       </div>
-      <div className="z-20 text-6xl lg:text-8xl font-barlow font-light text-center flex flex-col gap-2 mt-8 md:mt-0 ">
-        <div>
+      <div className="z-20 text-5xl lg:text-8xl font-barlow font-light text-center flex flex-col gap-3 mt-8 md:mt-0 ">
+        <div className="flex flex-col">
           <p>A new </p> <p>way to</p>
-          <span className="text-primary font-semibold text-center">
+          <span className="text-primary font-semibold text-center mt-1">
             {displayText}
             <span className="animate-flash-fast">|</span>
           </span>
@@ -91,11 +91,11 @@ export default function LandingComponent() {
             background: "radial-gradient(circle at bottom right, #1d4ed8 0%, transparent 75%)",
           }}
         /> */}
-      <div className="flex gap-10 mt-10 md:hidden">
-        <Link href={"/signin"} className="blue-button p-2 text-2xl font-semibold z-20">
+      <div className="flex gap-10 mt-5 md:hidden">
+        <Link href={"/signin"} className="blue-button p-2 text-xl font-semibold z-20">
           Sign In
         </Link>
-        <Link href={"/signin"} className="purple-button p-2 text-2xl font-semibold z-20">
+        <Link href={"/signin"} className="purple-button p-2 text-xl font-semibold z-20">
           Sign Up
         </Link>
       </div>
@@ -108,7 +108,7 @@ export default function LandingComponent() {
         }}
         spaceBetween={30}
         pagination={{ clickable: true }}
-        className="h-86 md:h-96 w-full rounded-lg shadow-xl z-20 "
+        className="h-60 md:h-96 w-[85%] rounded-lg shadow-xl z-20 "
       >
         <SwiperSlide>
           <div className="flex flex-col items-center justify-center w-full h-full bg-black">

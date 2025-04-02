@@ -73,7 +73,7 @@ export default function Explainers() {
         }}
       />
       {/* Content Wrapper Layer */}
-      <div className="relative w-full h-svh md:h-auto flex items-center justify-center p-3 mt-20 md:mt-0">
+      <div className="relative w-full h-svh md:h-auto flex items-center justify-center p-3 mt-40 md:mt-0">
         {" "}
         {/* min-h-svh, flex centering, padding */}
         {/* Content Block */}
