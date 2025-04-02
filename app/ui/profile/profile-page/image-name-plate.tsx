@@ -16,13 +16,13 @@ export default function ImageNamePlate({ image, name, username, title, id }: Ima
     <>
       <div className="flex flex-col items-start px-4 py-4 relative">
         {/* Profile Picture */}
-        <div className="relative -mb-16 z-10">
+        <div className="relative -mb-16 z-10 ">
           {image === null ? (
             <Image
               src={"https://8jiyvthxbb.ufs.sh/f/bujx12z5cHJjhC8qChmfsrL6AEIclW7bn0CeSKix1gBohFRZ"}
               width={120}
               height={120}
-              className="rounded-full border-4 border-slate-900"
+              className="rounded-full border-4 border-slate-900 size-36 object-cover"
               alt="picture of user"
             />
           ) : (
@@ -30,7 +30,7 @@ export default function ImageNamePlate({ image, name, username, title, id }: Ima
               src={image}
               width={120}
               height={120}
-              className="rounded-full border-4 border-slate-900"
+              className="rounded-full border-4 border-slate-900 size-36 object-cover"
               alt="picture of user"
             />
           )}

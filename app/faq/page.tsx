@@ -37,6 +37,27 @@ export default function FAQPage() {
       ),
     },
     {
+      q: "How do I sign up for Comps?",
+      a: (
+        <p>
+          First, you need an account with Vertix. After creating an account with Vertix, head to the{" "}
+          <Link href={"/competitions"}>Competitions</Link> page and find the upcoming comp. All you
+          need is your name and pick what division you want to be in and click sign up.
+        </p>
+      ),
+    },
+    {
+      q: "What will a real time comp look like?",
+      a: (
+        <p>
+          After signing up for the upcoming comp, on the comp day, the comp page will change to in
+          progress and you can start submitting your points. After the comp time is up, all
+          unsubmitted points will be submitted and the point calculation will be done. After the
+          point calculation is done, the leaderboard will be released
+        </p>
+      ),
+    },
+    {
       q: "I found a bug, Can I report it?",
       a: (
         <p>
