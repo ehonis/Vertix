@@ -121,14 +121,6 @@ export default function page() {
             <h1 className="relative font-barlow italic font-bold text-white text-4xl z-10">
               Competitions
             </h1>
-
-            {/* <div
-            className="absolute inset-0 opacity-60"
-            style={{
-              background:
-                'radial-gradient(circle at right, #ef4444 0%, transparent 85%)',
-            }}
-          /> */}
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"

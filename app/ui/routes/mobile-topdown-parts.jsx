@@ -14,30 +14,48 @@ function useClickState(initialColor = "#FFFFFF", id, selectedPart, setSelectedPa
   return [fillColor, handleClick];
 }
 
-function MainWall1({ selectedPart, setSelectedPart }) {
-  const [fillColor, handleClick] = useClickState("#FFFFFF", "main1", selectedPart, setSelectedPart);
+function RopeSouthWest({ selectedPart, setSelectedPart }) {
+  const [fillColor, handleClick] = useClickState(
+    "#FFFFFF",
+    "ropeSouthWest",
+    selectedPart,
+    setSelectedPart
+  );
 
   return (
     <g className="cursor-pointer" fill={fillColor} onClick={handleClick}>
-      <rect id="mainwall1" width="10.0286111" height="22.150414" x="129.67314" y="279.68167" />
       <rect
-        id="mainwall1.1"
-        width="10.0286111"
-        height="18.150414"
-        x="-82.896011"
-        y="286.17474"
-        transform="rotate(-40)"
+        id="ropeSouthWest1"
+        width="10.0940994"
+        height="30.804611"
+        x="-287.1817"
+        y="-81.981021"
+        transform="matrix(-0.5700629,-0.82160105,0.94636629,-0.32309573,0,0)"
+        className=""
       />
       <rect
-        id="mainwall1.2"
+        id="ropeSouthWest2"
         width="10.0286111"
-        height="18.150414"
-        x="71.244453"
-        y="270.97891"
-        transform="rotate(-10)"
+        height="49.964146"
+        x="80.42158"
+        y="254.11948"
+        className=""
       />
+    </g>
+  );
+}
+
+function RopeSouthEast({ selectedPart, setSelectedPart }) {
+  const [fillColor, handleClick] = useClickState(
+    "#FFFFFF",
+    "ropeSouthEast",
+    selectedPart,
+    setSelectedPart
+  );
+  return (
+    <g className="cursor-pointer" fill={fillColor} onClick={handleClick}>
       <rect
-        id="mainwall1.3"
+        id="ropeSouthEast1"
         width="10.0286111"
         height="19.150414"
         x="-184.9083"
@@ -45,24 +63,51 @@ function MainWall1({ selectedPart, setSelectedPart }) {
         transform="rotate(-65)"
       />
       <rect
-        id="mainwall1.4"
-        width="10.0940994"
-        height="30.804611"
-        x="-287.1817"
-        y="-81.981021"
-        transform="matrix(-0.5700629,-0.82160105,0.94636629,-0.32309573,0,0)"
+        id="ropeSouthEast2"
+        width="10.0286111"
+        height="18.150414"
+        x="71.244453"
+        y="270.97891"
+        transform="rotate(-10)"
       />
-      <rect id="mainwall1.5" width="10.0286111" height="49.964146" x="80.42158" y="254.11948" />
+      <rect
+        id="ropeSouthEast3"
+        width="10.0286111"
+        height="18.150414"
+        x="-82.896011"
+        y="286.17474"
+        transform="rotate(-40)"
+      />
+      <rect id="ropeSouthEast4" width="10.0286111" height="22.150414" x="129.67314" y="279.68167" />
     </g>
   );
 }
 
-function ABWall({ selectedPart, setSelectedPart }) {
-  const [fillColor, handleClick] = useClickState("#FFFFFF", "AB", selectedPart, setSelectedPart);
+function ABWallNorth({ selectedPart, setSelectedPart }) {
+  const [fillColor, handleClick] = useClickState(
+    "#FFFFFF",
+    "ABWallNorth",
+    selectedPart,
+    setSelectedPart
+  );
 
   return (
     <g className="cursor-pointer" fill={fillColor} onClick={handleClick}>
-      <rect id="AB-1" width="10.5286111" height="49.551445" x="28.550168" y="253.75826" />
+      <rect id="AB-4" width="10.0286111" height="32.773054" x="20.347147" y="185.33461" />
+      <rect id="AB-3" width="10.0286111" height="30.990782" x="20.334927" y="215.87732" />
+    </g>
+  );
+}
+
+function ABWallSouth({ selectedPart, setSelectedPart }) {
+  const [fillColor, handleClick] = useClickState(
+    "#FFFFFF",
+    "ABWallSouth",
+    selectedPart,
+    setSelectedPart
+  );
+  return (
+    <g className="cursor-pointer" fill={fillColor} onClick={handleClick}>
       <rect
         id="AB-2"
         width="10.97174382"
@@ -71,14 +116,18 @@ function ABWall({ selectedPart, setSelectedPart }) {
         y="241.1954"
         transform="matrix(0.91670591,-0.39956261,0.60747614,0.79433792,0,0)"
       />
-      <rect id="AB-3" width="10.0286111" height="30.990782" x="20.334927" y="215.87732" />
-      <rect id="AB-4" width="10.0286111" height="32.773054" x="20.347147" y="185.33461" />
+
+      <rect id="AB-1" width="10.5286111" height="53.551445" x="28.550168" y="253.75826" />
     </g>
   );
 }
-
-function MainWall2({ selectedPart, setSelectedPart }) {
-  const [fillColor, handleClick] = useClickState("#FFFFFF", "main2", selectedPart, setSelectedPart);
+function RopeNorthWest({ selectedPart, setSelectedPart }) {
+  const [fillColor, handleClick] = useClickState(
+    "#FFFFFF",
+    "ropeNorthWest",
+    selectedPart,
+    setSelectedPart
+  );
 
   return (
     <g className="cursor-pointer" fill={fillColor} onClick={handleClick}>
@@ -106,6 +155,18 @@ function MainWall2({ selectedPart, setSelectedPart }) {
         y="29.96077"
         transform="rotate(-90)"
       />
+    </g>
+  );
+}
+function RopeNorth({ selectedPart, setSelectedPart }) {
+  const [fillColor, handleClick] = useClickState(
+    "#FFFFFF",
+    "ropeNorth",
+    selectedPart,
+    setSelectedPart
+  );
+  return (
+    <g className="cursor-pointer" fill={fillColor} onClick={handleClick}>
       <rect
         id="main2"
         width="10.0286111"
@@ -124,14 +185,6 @@ function MainWall2({ selectedPart, setSelectedPart }) {
         transform="rotate(-90)"
       />
       <rect
-        id="main5"
-        width="10.0286111"
-        height="29.795843"
-        x="-181.1843"
-        y="106.23439"
-        transform="rotate(-90)"
-      />
-      <rect
         id="main6"
         width="10.0157199"
         height="29.28586"
@@ -139,6 +192,27 @@ function MainWall2({ selectedPart, setSelectedPart }) {
         y="146.72034"
         transform="matrix(0.97818502,0.20773555,-0.32026895,0.94732666,0,0)"
       />
+    </g>
+  );
+}
+function RopeNorthEast({ selectedPart, setSelectedPart }) {
+  const [fillColor, handleClick] = useClickState(
+    "#FFFFFF",
+    "ropeNorthEast",
+    selectedPart,
+    setSelectedPart
+  );
+  return (
+    <g className="cursor-pointer" fill={fillColor} onClick={handleClick}>
+      <rect
+        id="main5"
+        width="10.0286111"
+        height="29.795843"
+        x="-181.1843"
+        y="106.23439"
+        transform="rotate(-90)"
+      />
+
       <rect
         id="main7"
         width="9.0286111"
@@ -150,11 +224,40 @@ function MainWall2({ selectedPart, setSelectedPart }) {
     </g>
   );
 }
-
-function Boulder1({ selectedPart, setSelectedPart }) {
+function BoulderNorthCave({ selectedPart, setSelectedPart }) {
   const [fillColor, handleClick] = useClickState(
     "#FFFFFF",
-    "boulder1",
+    "boulderNorthCave",
+    selectedPart,
+    setSelectedPart
+  );
+
+  return (
+    <g className="cursor-pointer" fill={fillColor} onClick={handleClick}>
+      <rect
+        id="cave"
+        width="10.0286111"
+        height="36.054012"
+        x="-204.5097"
+        y="-208.62723"
+        transform="scale(-1)"
+      />
+
+      <rect
+        id="vert1"
+        width="10.0286111"
+        height="43.094456"
+        x="-209.01407"
+        y="161.36197"
+        transform="rotate(-90)"
+      />
+    </g>
+  );
+}
+function BoulderNorthSlab({ selectedPart, setSelectedPart }) {
+  const [fillColor, handleClick] = useClickState(
+    "#FFFFFF",
+    "boulderNorthSlab",
     selectedPart,
     setSelectedPart
   );
@@ -178,14 +281,6 @@ function Boulder1({ selectedPart, setSelectedPart }) {
         transform="rotate(-90)"
       />
       <rect
-        id="cave"
-        width="10.0286111"
-        height="36.054012"
-        x="-204.5097"
-        y="-208.62723"
-        transform="scale(-1)"
-      />
-      <rect
         id="sideofcave"
         width="10.0286111"
         height="8.6745148"
@@ -193,14 +288,19 @@ function Boulder1({ selectedPart, setSelectedPart }) {
         y="195.73088"
         transform="rotate(-90)"
       />
-      <rect
-        id="vert1"
-        width="10.0286111"
-        height="43.094456"
-        x="-209.01407"
-        y="161.36197"
-        transform="rotate(-90)"
-      />
+    </g>
+  );
+}
+function BoulderMiddle({ selectedPart, setSelectedPart }) {
+  const [fillColor, handleClick] = useClickState(
+    "#FFFFFF",
+    "boulderMiddle",
+    selectedPart,
+    setSelectedPart
+  );
+
+  return (
+    <g className="cursor-pointer" fill={fillColor} onClick={handleClick}>
       <rect
         id="vert2"
         width="10.0286111"
@@ -209,20 +309,6 @@ function Boulder1({ selectedPart, setSelectedPart }) {
         y="-234.32622"
         transform="scale(-1)"
       />
-    </g>
-  );
-}
-
-function Boulder2({ selectedPart, setSelectedPart }) {
-  const [fillColor, handleClick] = useClickState(
-    "#FFFFFF",
-    "boulder2",
-    selectedPart,
-    setSelectedPart
-  );
-
-  return (
-    <g className="cursor-pointer" fill={fillColor} onClick={handleClick}>
       <rect
         id="rect6-7-5-5-0"
         width="10.0286111"
@@ -247,6 +333,19 @@ function Boulder2({ selectedPart, setSelectedPart }) {
         y="180.27415"
         transform="rotate(-90)"
       />
+    </g>
+  );
+}
+function BoulderSouth({ selectedPart, setSelectedPart }) {
+  const [fillColor, handleClick] = useClickState(
+    "#FFFFFF",
+    "boulderSouth",
+    selectedPart,
+    setSelectedPart
+  );
+
+  return (
+    <g className="cursor-pointer" fill={fillColor} onClick={handleClick}>
       <rect
         id="rect6-7-5-5-06"
         width="10.0286111"
@@ -283,11 +382,17 @@ export default function MobileTopdownParts({ onData }) {
   }, [selectedPart, onData]);
   return (
     <>
-      <MainWall1 selectedPart={selectedPart} setSelectedPart={setSelectedPart} />
-      <ABWall selectedPart={selectedPart} setSelectedPart={setSelectedPart} />
-      <MainWall2 selectedPart={selectedPart} setSelectedPart={setSelectedPart} />
-      <Boulder1 selectedPart={selectedPart} setSelectedPart={setSelectedPart} />
-      <Boulder2 selectedPart={selectedPart} setSelectedPart={setSelectedPart} />
+      <RopeSouthWest selectedPart={selectedPart} setSelectedPart={setSelectedPart} />
+      <RopeSouthEast selectedPart={selectedPart} setSelectedPart={setSelectedPart} />
+      <ABWallNorth selectedPart={selectedPart} setSelectedPart={setSelectedPart} />
+      <ABWallSouth selectedPart={selectedPart} setSelectedPart={setSelectedPart} />
+      <RopeNorthWest selectedPart={selectedPart} setSelectedPart={setSelectedPart} />
+      <RopeNorth selectedPart={selectedPart} setSelectedPart={setSelectedPart} />
+      <RopeNorthEast selectedPart={selectedPart} setSelectedPart={setSelectedPart} />
+      <BoulderNorthCave selectedPart={selectedPart} setSelectedPart={setSelectedPart} />
+      <BoulderNorthSlab selectedPart={selectedPart} setSelectedPart={setSelectedPart} />
+      <BoulderMiddle selectedPart={selectedPart} setSelectedPart={setSelectedPart} />
+      <BoulderSouth selectedPart={selectedPart} setSelectedPart={setSelectedPart} />
     </>
   );
 }
