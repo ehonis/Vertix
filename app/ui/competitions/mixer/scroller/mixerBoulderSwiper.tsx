@@ -173,7 +173,7 @@ export default function MixerBoulderScorer({ mixerBoulders }: MixeBoulderScrolle
                   <div className="flex flex-col gap-2">
                     <h1
                       className={clsx(
-                        "font-orbitron font-bold text-6xl text-center",
+                        "font-tomorrow font-bold text-6xl text-center",
                         panel.color === "blue" ? "text-blue-500" : null,
                         panel.color === "green" ? "text-green-400" : null,
                         panel.color === "orange" ? "text-orange-500" : null,
@@ -293,7 +293,7 @@ export default function MixerBoulderScorer({ mixerBoulders }: MixeBoulderScrolle
                   <div className="z-30">
                     <h1
                       className={clsx(
-                        "font-orbitron font-bold text-6xl text-center mb-2 drop-shadow-customBlack",
+                        "font-tomorrow font-bold text-6xl text-center mb-2 drop-shadow-customBlack",
                         panel.color === "blue" ? "text-blue-500" : null,
                         panel.color === "green" ? "text-green-400" : null,
                         panel.color === "orange" ? "text-orange-500" : null,
@@ -308,7 +308,7 @@ export default function MixerBoulderScorer({ mixerBoulders }: MixeBoulderScrolle
                     >
                       {panel.points}
                     </h1>
-                    <p className="font-orbitron font-bold gradient-text-green-lime text-center">
+                    <p className="font-tomorrow font-bold gradient-text-green-lime text-center">
                       Completed
                     </p>
                   </div>

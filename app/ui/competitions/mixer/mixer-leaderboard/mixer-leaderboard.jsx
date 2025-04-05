@@ -118,7 +118,7 @@ export default function MixerLeaderBoard({
                   )}
                   key={index}
                 >
-                  <p className="text-white font-jersey drop-shadow-customBlack text-3xl">
+                  <p className="text-white font-tomorrow drop-shadow-customBlack text-3xl">
                     {index + 1}
                   </p>
                   <p className="text-white text-lg font-barlow font-bold flex-1 text-center drop-shadow-customBlack">
@@ -184,9 +184,9 @@ export default function MixerLeaderBoard({
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.1 * index, duration: 0.2 }}
                           >
-                            <p className="text-white font-jersey">{index + 1}</p>
-                            <p className="text-white font-jersey">{climber.name}</p>
-                            <p className="text-white font-jersey">{climber.combinedRank}</p>
+                            <p className="text-white font-tomorrow">{index + 1}</p>
+                            <p className="text-white font-tomorrow">{climber.name}</p>
+                            <p className="text-white font-tomorrow">{climber.combinedRank}</p>
                           </motion.div>
                         ))}
                       </motion.div>
@@ -254,10 +254,10 @@ export default function MixerLeaderBoard({
                           duration: 0.2,
                         }}
                       >
-                        <p className="text-white font-jersey">{climber.rank}</p>
-                        <p className="text-white font-jersey text-sm">{climber.name}</p>
-                        <p className="text-white font-jersey">{climber.attempts}</p>
-                        <p className="text-white font-jersey">{climber.score}</p>
+                        <p className="text-white font-tomorrow">{climber.rank}</p>
+                        <p className="text-white font-tomorrow text-sm">{climber.name}</p>
+                        <p className="text-white font-tomorrow">{climber.attempts}</p>
+                        <p className="text-white font-tomorrow">{climber.score}</p>
                       </motion.div>
                     ))}
                   </motion.div>
@@ -316,10 +316,10 @@ export default function MixerLeaderBoard({
                           duration: 0.2,
                         }}
                       >
-                        <p className="text-white font-jersey">{climber.rank}</p>
-                        <p className="text-white font-jersey text-sm">{climber.name}</p>
-                        <p className="text-white font-jersey">{climber.attempts}</p>
-                        <p className="text-white font-jersey">{climber.score}</p>
+                        <p className="text-white font-tomorrow">{climber.rank}</p>
+                        <p className="text-white font-tomorrow text-sm">{climber.name}</p>
+                        <p className="text-white font-tomorrow">{climber.attempts}</p>
+                        <p className="text-white font-tomorrow">{climber.score}</p>
                       </motion.div>
                     ))}
                   </motion.div>
@@ -383,11 +383,11 @@ export default function MixerLeaderBoard({
                           duration: 0.2,
                         }}
                       >
-                        <p className="text-white font-jersey">{index + 1}</p>
-                        <p className="text-white font-jersey text-sm">{climber.name}</p>
-                        <p className="text-white font-jersey">{climber.boulderRank}</p>
-                        <p className="text-white font-jersey">{climber.ropeRank}</p>
-                        <p className="text-white font-jersey">{climber.combinedRank}</p>
+                        <p className="text-white font-tomorrow">{index + 1}</p>
+                        <p className="text-white font-tomorrow text-sm">{climber.name}</p>
+                        <p className="text-white font-tomorrow">{climber.boulderRank}</p>
+                        <p className="text-white font-tomorrow">{climber.ropeRank}</p>
+                        <p className="text-white font-tomorrow">{climber.combinedRank}</p>
                       </motion.div>
                     ))}
                   </motion.div>

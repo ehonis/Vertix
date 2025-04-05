@@ -156,7 +156,7 @@ export default function CompetitionScoreTraker() {
                   {/* header */}
                   <h1
                     className={clsx(
-                      "font-stalinist text-6xl text-center mb-5",
+                      "font-mono text-6xl text-center mb-5",
                       panel.color === "blue" ? "text-blue-500" : null,
                       panel.color === "orange" ? "text-orange-500" : null,
                       panel.color === "yellow" ? "text-yellow-300" : null,
@@ -258,7 +258,7 @@ export default function CompetitionScoreTraker() {
                 >
                   <h1
                     className={clsx(
-                      "font-stalinist text-6xl text-center mb-5 drop-shadow-customBlack",
+                      "font-mono text-6xl text-center mb-5 drop-shadow-customBlack",
                       panel.color === "blue" ? "text-blue-500" : null,
                       panel.color === "orange" ? "text-orange-500" : null,
                       panel.color === "yellow" ? "text-yellow-300" : null,
