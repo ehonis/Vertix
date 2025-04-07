@@ -4,14 +4,11 @@ import { useState } from "react";
 import Link from "next/link";
 import SignOut from "../general/sign-out-button";
 import Image from "next/image";
-import { User, UserRole } from "@prisma/client";
-import { Session } from "@prisma/client";
+import { useSession } from "next-auth/react";
 
-type HamburgerMenuData = {
-  user: User | null | undefined;
-};
-
-export default function HamburgerMenu({ user }: HamburgerMenuData) {
+export default function HamburgerMenu() {
+  const { data: session } = useSession();
+  const user = session?.user;
   const [isOpen, setIsOpen] = useState(false);
 
   const handleClick = () => {
@@ -146,7 +143,7 @@ export default function HamburgerMenu({ user }: HamburgerMenuData) {
         </div>
       </button>
       {isOpen && (
-        <div className="fixed top-0 left-0 -z-10 bg-black h-svh w-screen px-5 pb-5 flex flex-col justify-between">
+        <div className="fixed top-0 left-0 -z-10 bg-black h-svh w-screen px-5 pb-5 flex flex-col justify-between font-barlow">
           <div className="mt-24 flex flex-col gap-12 ">
             {links.map(link => (
               <Link
@@ -195,7 +192,7 @@ export default function HamburgerMenu({ user }: HamburgerMenuData) {
               </div>
             </div>
           ) : (
-            <div className="w-full place-self-end bg-slate-900 rounded-md h-fit flex flex-col py-3 px-2 items-center font-tomorrow font-bold text-white text-md justify-between">
+            <div className="w-full place-self-end bg-slate-900 rounded-md h-fit flex flex-col py-3 px-2 items-center font-barlow font-bold text-white text-md justify-between">
               <div className="overflow-hidden mb-3 p-1">
                 <div className="grid grid-cols-2 grid-rows-2 gap-3 font-barlow items-center">
                   {profileLinks.map(link => (
