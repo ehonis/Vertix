@@ -34,7 +34,7 @@ export const metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${tomorrow.variable} ${barlow.variable}`}>
+    <html lang="en">
       <body
         className={` ${geistMono.variable} ${tomorrow.variable} ${barlow.variable}antialiased bg-black`}
       >
