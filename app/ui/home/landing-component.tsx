@@ -61,7 +61,7 @@ export default function LandingComponent() {
       <div className="md:hidden mt-16">
         <Announcement />
       </div>
-      <div className="z-20 text-5xl lg:text-8xl font-barlow font-light text-center flex flex-col gap-3 mt-8 md:mt-0 ">
+      <div className="z-20 text-6xl lg:text-8xl font-barlow font-light text-center flex flex-col gap-3 mt-8 md:mt-0 ">
         <div className="flex flex-col">
           <p>A new </p> <p>way to</p>
           <span className="text-primary font-semibold text-center mt-1">
@@ -92,10 +92,10 @@ export default function LandingComponent() {
           }}
         /> */}
       <div className="flex gap-10 mt-5 md:hidden">
-        <Link href={"/signin"} className="blue-button p-2 text-xl font-semibold z-20">
+        <Link href={"/signin"} className="blue-button p-2 text-2xl font-semibold z-20">
           Sign In
         </Link>
-        <Link href={"/signin"} className="purple-button p-2 text-xl font-semibold z-20">
+        <Link href={"/signin"} className="purple-button p-2 text-2xl font-semibold z-20">
           Sign Up
         </Link>
       </div>

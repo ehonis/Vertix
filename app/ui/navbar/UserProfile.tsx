@@ -3,11 +3,11 @@ import Image from "next/image";
 import { useState, useRef, useEffect } from "react";
 import clsx from "clsx";
 import Link from "next/link";
-import { User } from "@prisma/client";
-type UserProfileData = {
-  user: User | null | undefined;
-};
-export default function UserProfile({ user }: UserProfileData) {
+import { useSession } from "next-auth/react";
+
+export default function UserProfile() {
+  const { data: session } = useSession();
+  const user = session?.user;
   const [isProfilePopUp, setIsProfilePopUp] = useState(false);
 
   const profileRef = useRef<HTMLDivElement>(null);

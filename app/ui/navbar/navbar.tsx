@@ -1,22 +1,22 @@
 import Link from "next/link";
 import UserProfile from "./UserProfile";
 import HamburgerMenu from "./hamburger";
-import { auth } from "@/auth";
+import { SessionProvider } from "next-auth/react";
 import { Suspense } from "react";
-
 import ElementLoadingAnimation from "../general/element-loading-animation";
-import { User } from "@prisma/client";
 
 async function UserStuff() {
-  const session = await auth();
-  const user = session?.user || null;
   return (
     <div className="justify-self-end">
       <div className="self-center hidden md:block cursor-pointer">
-        <UserProfile user={user as User} />
+        <SessionProvider>
+          <UserProfile />
+        </SessionProvider>
       </div>
       <div className="md:hidden">
-        <HamburgerMenu user={user as User} />
+        <SessionProvider>
+          <HamburgerMenu />
+        </SessionProvider>
       </div>
     </div>
   );

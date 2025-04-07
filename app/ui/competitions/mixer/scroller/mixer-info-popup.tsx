@@ -91,11 +91,11 @@ export default function MixerInfoPopup({
                       <div>
                         <p className="text-white font-barlow font-bold">
                           Tope Rope Hold:{" "}
-                          <span className="font-stalinist gradient-text-blue-cyan">
+                          <span className="font-mono gradient-text-blue-cyan">
                             {info.topRopetoBeat.hold}
                           </span>{" "}
                           {" → "}
-                          <span className="font-stalinist gradient-text-red-orange">
+                          <span className="font-mono gradient-text-red-orange">
                             {info.topRopetoBeat.topRopePts}pts
                           </span>
                         </p>
@@ -105,11 +105,11 @@ export default function MixerInfoPopup({
                       <div>
                         <p className="text-white font-barlow font-bold">
                           Lead Hold:{" "}
-                          <span className="font-stalinist gradient-text-blue-cyan">
+                          <span className="font-mono gradient-text-blue-cyan">
                             {info.leadToBeat.hold}
                           </span>
                           {" → "}
-                          <span className="font-stalinist gradient-text-red-orange">
+                          <span className="font-mono gradient-text-red-orange">
                             {info.leadToBeat.leadPts}pts
                           </span>
                         </p>
@@ -120,7 +120,7 @@ export default function MixerInfoPopup({
                       To beat{" "}
                       <span
                         className={clsx(
-                          "font-orbitron font-bold text-2xl",
+                          "font-mono font-bold text-2xl",
                           color === "blue" ? "text-blue-500" : null,
                           color === "green" ? "text-green-400" : null,
                           color === "orange" ? "text-orange-500" : null,

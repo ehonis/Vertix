@@ -174,16 +174,7 @@
     min-height: 100%;
     font-family: Arial, Helvetica, sans-serif;
   }
-  .font-jersey {
-    font-family: var(--font-jersey), Arial, sans-serif; /* Fallback fonts */
-  }
 
-  .font-stalinist {
-    font-family: var(--font-stalinist), Arial, Helvetica, sans-serif;
-  }
-  .font-orbitron {
-    font-family: var(--font-orbitron), Arial, Helvetica, sans-serif;
-  }
   .hide-spinners::-webkit-outer-spin-button,
   .hide-spinners::-webkit-inner-spin-button {
     -webkit-appearance: none;

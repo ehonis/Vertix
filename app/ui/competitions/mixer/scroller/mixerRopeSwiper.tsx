@@ -432,7 +432,7 @@ export default function MixerRopeScorer({ mixerRoutes }: MixerRopeScrollerData) 
                   <div className="flex flex-col gap-2">
                     <h1
                       className={clsx(
-                        "font-orbitron font-bold text-5xl text-center ",
+                        "font-tomorrow font-bold text-5xl text-center ",
                         panel.color === "blue" ? "text-blue-500" : null,
                         panel.color === "green" ? "text-green-400" : null,
                         panel.color === "orange" ? "text-orange-500" : null,
@@ -537,10 +537,10 @@ export default function MixerRopeScorer({ mixerRoutes }: MixerRopeScrollerData) 
                   </div>
                 </div>
                 <div className="flex flex-col">
-                  <p className="font-stalinist gradient-text-yellow-red text-3xl text-center">
+                  <p className="font-mono gradient-text-yellow-red text-3xl text-center">
                     {points[panel.id] && points[panel.id] > 0 ? points[panel.id] : 0}
                   </p>
-                  <p className="font-stalinist gradient-text-yellow-red text-base">Points</p>
+                  <p className="font-mono gradient-text-yellow-red text-base">Points</p>
                 </div>
 
                 {/* attempts */}
@@ -645,7 +645,7 @@ export default function MixerRopeScorer({ mixerRoutes }: MixerRopeScrollerData) 
                   <div className="z-30">
                     <h1
                       className={clsx(
-                        "font-orbitron font-bold text-6xl text-center mb-2 drop-shadow-customBlack",
+                        "font-tomorrow font-bold text-6xl text-center mb-2 drop-shadow-customBlack",
                         panel.color === "blue" ? "text-blue-500" : null,
                         panel.color === "green" ? "text-green-400" : null,
                         panel.color === "orange" ? "text-orange-500" : null,
@@ -660,7 +660,7 @@ export default function MixerRopeScorer({ mixerRoutes }: MixerRopeScrollerData) 
                     >
                       {panel.name}
                     </h1>
-                    <p className="font-orbitron font-bold gradient-text-green-lime text-center">
+                    <p className="font-tomorrow font-bold gradient-text-green-lime text-center">
                       Completed
                     </p>
                   </div>
@@ -668,10 +668,10 @@ export default function MixerRopeScorer({ mixerRoutes }: MixerRopeScrollerData) 
                     {typeToggles[panel.id] === "TR" ? "Top Rope" : "Lead"}
                   </p>
                   <div className="flex flex-col gap-2">
-                    <p className="font-stalinist gradient-text-yellow-red text-6xl text-center drop-shadow-customBlack">
+                    <p className="font-mono gradient-text-yellow-red text-6xl text-center drop-shadow-customBlack">
                       {points[panel.id]}
                     </p>
-                    <p className="font-stalinist gradient-text-yellow-red text-xl text-center drop-shadow-customBlack">
+                    <p className="font-mono gradient-text-yellow-red text-xl text-center drop-shadow-customBlack">
                       Points
                     </p>
                   </div>
