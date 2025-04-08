@@ -30,6 +30,8 @@
     "motion": "^11.18.2",
     "next": "^15.2.2",
     "next-auth": "^5.0.0-beta.25",
+    "posthog-js": "^1.235.0",
+    "posthog-node": "^4.11.3",
     "react": "^18.3.1",
     "react-datepicker": "^7.5.0",
     "react-dom": "^18.3.1",

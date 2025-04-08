@@ -9,6 +9,7 @@ import { Tomorrow, Barlow } from "next/font/google";
 import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
 import { extractRouterConfig } from "uploadthing/server";
 import { ourFileRouter } from "./api/uploadthing/core";
+import { PostHogProvider } from "../components/PostHogProvider";
 
 const barlow = Barlow({
   subsets: ["latin"],
@@ -40,23 +41,24 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body
         className={` ${geistMono.variable} ${tomorrow.variable} ${barlow.variable}antialiased bg-black`}
       >
-        <NotificationProvider>
-          <NextSSRPlugin
-            /**
-             * The `extractRouterConfig` will extract **only** the route configs
-             * from the router to prevent additional information from being
-             * leaked to the client. The data passed to the client is the same
-             * as if you were to fetch `/api/uploadthing` directly.
-             */
-            routerConfig={extractRouterConfig(ourFileRouter)}
-          />
-          <Notification />
-          <NavBar />
-          <SpeedInsights />
-          <Analytics />
+        <PostHogProvider>
+          <NotificationProvider>
+            <NextSSRPlugin
+              /**
+               * The `extractRouterConfig` will extract **only** the route configs
+               * from the router to prevent additional information from being
+               * leaked to the client. The data passed to the client is the same
+               * as if you were to fetch `/api/uploadthing` directly.
+               */
+              routerConfig={extractRouterConfig(ourFileRouter)}
+            />
+            <Notification />
+            <NavBar />
+            <SpeedInsights />
 
-          <main className="">{children}</main>
-        </NotificationProvider>
+            <main className="">{children}</main>
+          </NotificationProvider>
+        </PostHogProvider>
       </body>
     </html>
   );
