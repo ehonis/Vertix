@@ -8,6 +8,20 @@ datasource db {
     directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
 }
 
+enum Locations {
+    ropeNorthWest
+    ropeNorth
+    ropeNorthEast
+    ABWallNorth
+    ABWallSouth
+    ropeSouthWest
+    ropeSouthEast
+    boulderSouth
+    boulderMiddle
+    boulderNorthCave
+    boulderNorthSlab
+}
+
 model Route {
     id              String            @id @default(cuid())
     title           String
@@ -20,7 +34,7 @@ model Route {
     isArchive       Boolean           @default(false)
     completions     RouteCompletion[] // One-to-many relationship with RouteCompletion
     attempts        RouteAttempt[] // One-to-many relationship with RouteAttempt
-    location        String            @default("Boulder1")
+    location        Locations         @default(boulderSouth)
     stars           RouteStar[]
 }
 

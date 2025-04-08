@@ -1,20 +1,41 @@
 "use client";
 
-import { randomColor } from "@/lib/utils";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 
-function useClickState(initialColor = "#FFFFFF", id, selectedPart, setSelectedPart) {
+interface WallProps {
+  selectedPart: string | null; // Or a more specific type if you know the possible values
+  setSelectedPart: React.Dispatch<React.SetStateAction<string | null>>; // Correct type for the setter
+}
+
+function useClickState(
+  initialColor: string,
+  id: string,
+  selectedPart: string | null,
+  setSelectedPart: React.Dispatch<React.SetStateAction<string | null>>
+): [string, () => void] {
+  const [fillColor, setFillColor] = useState<string>(initialColor);
   const isActive = selectedPart === id;
-  const fillColor = isActive ? randomColor() : initialColor;
 
-  const handleClick = () => {
-    setSelectedPart(isActive ? null : id); // Toggle selection
-  };
+  const handleClick = useCallback(() => {
+    setFillColor(prevFillColor => {
+      const newFillColor = isActive ? initialColor : "#2B7FFF";
+      return newFillColor;
+    });
+
+    setSelectedPart(prevSelectedPart => {
+      const newSelectedPart = isActive ? null : id;
+      return newSelectedPart;
+    });
+  }, [initialColor, id, isActive, setSelectedPart]);
+
+  useEffect(() => {
+    setFillColor(isActive ? "#2B7FFF" : initialColor);
+  }, [isActive, initialColor]);
 
   return [fillColor, handleClick];
 }
 
-function RopeSouthWest({ selectedPart, setSelectedPart }) {
+function RopeSouthWest({ selectedPart, setSelectedPart }: WallProps) {
   const [fillColor, handleClick] = useClickState(
     "#FFFFFF",
     "ropeSouthWest",
@@ -45,7 +66,7 @@ function RopeSouthWest({ selectedPart, setSelectedPart }) {
   );
 }
 
-function RopeSouthEast({ selectedPart, setSelectedPart }) {
+function RopeSouthEast({ selectedPart, setSelectedPart }: WallProps) {
   const [fillColor, handleClick] = useClickState(
     "#FFFFFF",
     "ropeSouthEast",
@@ -83,7 +104,7 @@ function RopeSouthEast({ selectedPart, setSelectedPart }) {
   );
 }
 
-function ABWallNorth({ selectedPart, setSelectedPart }) {
+function ABWallNorth({ selectedPart, setSelectedPart }: WallProps) {
   const [fillColor, handleClick] = useClickState(
     "#FFFFFF",
     "ABWallNorth",
@@ -99,7 +120,7 @@ function ABWallNorth({ selectedPart, setSelectedPart }) {
   );
 }
 
-function ABWallSouth({ selectedPart, setSelectedPart }) {
+function ABWallSouth({ selectedPart, setSelectedPart }: WallProps) {
   const [fillColor, handleClick] = useClickState(
     "#FFFFFF",
     "ABWallSouth",
@@ -121,7 +142,7 @@ function ABWallSouth({ selectedPart, setSelectedPart }) {
     </g>
   );
 }
-function RopeNorthWest({ selectedPart, setSelectedPart }) {
+function RopeNorthWest({ selectedPart, setSelectedPart }: WallProps) {
   const [fillColor, handleClick] = useClickState(
     "#FFFFFF",
     "ropeNorthWest",
@@ -158,7 +179,7 @@ function RopeNorthWest({ selectedPart, setSelectedPart }) {
     </g>
   );
 }
-function RopeNorth({ selectedPart, setSelectedPart }) {
+function RopeNorth({ selectedPart, setSelectedPart }: WallProps) {
   const [fillColor, handleClick] = useClickState(
     "#FFFFFF",
     "ropeNorth",
@@ -195,7 +216,7 @@ function RopeNorth({ selectedPart, setSelectedPart }) {
     </g>
   );
 }
-function RopeNorthEast({ selectedPart, setSelectedPart }) {
+function RopeNorthEast({ selectedPart, setSelectedPart }: WallProps) {
   const [fillColor, handleClick] = useClickState(
     "#FFFFFF",
     "ropeNorthEast",
@@ -224,7 +245,7 @@ function RopeNorthEast({ selectedPart, setSelectedPart }) {
     </g>
   );
 }
-function BoulderNorthCave({ selectedPart, setSelectedPart }) {
+function BoulderNorthCave({ selectedPart, setSelectedPart }: WallProps) {
   const [fillColor, handleClick] = useClickState(
     "#FFFFFF",
     "boulderNorthCave",
@@ -254,7 +275,7 @@ function BoulderNorthCave({ selectedPart, setSelectedPart }) {
     </g>
   );
 }
-function BoulderNorthSlab({ selectedPart, setSelectedPart }) {
+function BoulderNorthSlab({ selectedPart, setSelectedPart }: WallProps) {
   const [fillColor, handleClick] = useClickState(
     "#FFFFFF",
     "boulderNorthSlab",
@@ -291,7 +312,7 @@ function BoulderNorthSlab({ selectedPart, setSelectedPart }) {
     </g>
   );
 }
-function BoulderMiddle({ selectedPart, setSelectedPart }) {
+function BoulderMiddle({ selectedPart, setSelectedPart }: WallProps) {
   const [fillColor, handleClick] = useClickState(
     "#FFFFFF",
     "boulderMiddle",
@@ -336,7 +357,7 @@ function BoulderMiddle({ selectedPart, setSelectedPart }) {
     </g>
   );
 }
-function BoulderSouth({ selectedPart, setSelectedPart }) {
+function BoulderSouth({ selectedPart, setSelectedPart }: WallProps) {
   const [fillColor, handleClick] = useClickState(
     "#FFFFFF",
     "boulderSouth",
@@ -374,12 +395,13 @@ function BoulderSouth({ selectedPart, setSelectedPart }) {
   );
 }
 
-export default function MobileTopdownParts({ onData }) {
-  const [selectedPart, setSelectedPart] = useState(null);
+export default function MobileTopdownParts({ onData }: { onData: (data: string | null) => void }) {
+  const [selectedPart, setSelectedPart] = useState<string | null>(null);
 
   useEffect(() => {
     onData(selectedPart); // Call onData when selectedPart changes
   }, [selectedPart, onData]);
+
   return (
     <>
       <RopeSouthWest selectedPart={selectedPart} setSelectedPart={setSelectedPart} />

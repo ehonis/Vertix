@@ -14,11 +14,13 @@ const barlow = Barlow({
   subsets: ["latin"],
   weight: ["100", "200", "300", "400", "500", "600", "700"],
   variable: "--font-barlow",
+  display: "swap",
 });
 const tomorrow = Tomorrow({
   subsets: ["latin"],
-  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
+  weight: ["400", "700"],
   variable: "--font-tomorrow",
+  display: "swap",
 });
 
 const geistMono = localFont({
