@@ -1,6 +1,7 @@
 import { auth } from "@/auth";
 import RoutesPage from "../ui/routes/routes-page";
 import { User } from "@prisma/client";
+import ConstructionBlur from "../ui/general/construction-blur";
 
 // const getCurrentRoutes = unstable_cache(
 //   async () =>
@@ -19,6 +20,7 @@ export default async function RoutePage() {
 
   return (
     <>
+      <ConstructionBlur />
       <RoutesPage user={user as User | null | undefined} />
     </>
   );
