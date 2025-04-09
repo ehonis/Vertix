@@ -1,17 +1,18 @@
 "use client";
 
+import { Locations } from "@prisma/client";
 import { useState, useEffect, useCallback } from "react";
 
 interface WallProps {
   selectedPart: string | null; // Or a more specific type if you know the possible values
-  setSelectedPart: React.Dispatch<React.SetStateAction<string | null>>; // Correct type for the setter
+  setSelectedPart: React.Dispatch<React.SetStateAction<Locations | null>>; // Correct type for the setter
 }
 
 function useClickState(
   initialColor: string,
   id: string,
   selectedPart: string | null,
-  setSelectedPart: React.Dispatch<React.SetStateAction<string | null>>
+  setSelectedPart: React.Dispatch<React.SetStateAction<Locations | null>>
 ): [string, () => void] {
   const [fillColor, setFillColor] = useState<string>(initialColor);
   const isActive = selectedPart === id;
@@ -23,7 +24,7 @@ function useClickState(
     });
 
     setSelectedPart(prevSelectedPart => {
-      const newSelectedPart = isActive ? null : id;
+      const newSelectedPart = isActive ? null : (id as Locations);
       return newSelectedPart;
     });
   }, [initialColor, id, isActive, setSelectedPart]);
@@ -395,8 +396,12 @@ function BoulderSouth({ selectedPart, setSelectedPart }: WallProps) {
   );
 }
 
-export default function MobileTopdownParts({ onData }: { onData: (data: string | null) => void }) {
-  const [selectedPart, setSelectedPart] = useState<string | null>(null);
+export default function MobileTopdownParts({
+  onData,
+}: {
+  onData: (data: Locations | null) => void;
+}) {
+  const [selectedPart, setSelectedPart] = useState<Locations | null>(null);
 
   useEffect(() => {
     onData(selectedPart); // Call onData when selectedPart changes

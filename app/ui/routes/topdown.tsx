@@ -2,8 +2,9 @@
 
 import { useState, useEffect } from "react";
 import MobileTopdownParts from "./mobile-topdown-parts";
+import { Locations } from "@prisma/client";
 
-export default function TopDown({ onData }) {
+export default function TopDown({ onData }: { onData: (data: Locations | null) => void }) {
   return (
     <>
       <svg

@@ -676,15 +676,9 @@ export default function MixerRopeScorer({ mixerRoutes }: MixerRopeScrollerData) 
                     </p>
                   </div>
                   <div className="flex flex-col gap-5">
-                    {attempts[panel.id] !== 1 ? (
-                      <p className="font-barlow font-bold text-white text-2xl text-center drop-shadow-customBlack">
-                        {attempts[panel.id]} attempts
-                      </p>
-                    ) : (
-                      <p className="font-barlow font-bold text-white text-4xl text-center drop-shadow-customBlack">
-                        Flash!
-                      </p>
-                    )}
+                    <p className="font-barlow font-bold text-white text-2xl text-center drop-shadow-customBlack">
+                      {attempts[panel.id]} attempt{"(s)"}
+                    </p>
                   </div>
 
                   <div className="flex flex-col items-center gap-3">

@@ -7,9 +7,10 @@ import ElementLoadingAnimation from "../general/element-loading-animation";
 interface WallRoutesProps {
   wall: string | null;
   user: User;
+  onData: (routeId: string, name: string, grade: string, color: string) => void;
 }
 
-export default function WallRoutes({ wall, user }: WallRoutesProps) {
+export default function WallRoutes({ wall, user, onData }: WallRoutesProps) {
   const { showNotification } = useNotification();
   const [routes, setRoutes] = useState<Route[]>([]);
   const [page, setPage] = useState(1); // Initialize as an empty array
@@ -70,6 +71,7 @@ export default function WallRoutes({ wall, user }: WallRoutesProps) {
               id={route.id}
               isArchived={route.isArchive}
               isSearched={false}
+              onData={onData}
             />
           ))
         ) : (

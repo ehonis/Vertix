@@ -8,6 +8,7 @@ import SearchRoutes from "./search-routes";
 import { Locations } from "@prisma/client";
 import { motion } from "framer-motion";
 import { AnimatePresence } from "framer-motion";
+import RoutePopUp from "./route-pop-up";
 
 export default function RoutesPage({ user }: { user: User | null | undefined }) {
   const [wall, setWall] = useState<string | null>(null);
@@ -15,7 +16,13 @@ export default function RoutesPage({ user }: { user: User | null | undefined }) 
   const [isSearch, setIsSearch] = useState(false);
   const [searchText, setSearchText] = useState<string>("");
 
-  const handleTopDownChange = (data: Locations) => {
+  const [isRoutePopUp, setIsRoutePopUp] = useState(false);
+  const [routePopUpId, setRoutePopUpId] = useState<string>("");
+  const [routePopUpName, setRoutePopUpName] = useState<string>("");
+  const [routePopUpGrade, setRoutePopUpGrade] = useState<string>("");
+  const [routePopUpColor, setRoutePopUpColor] = useState<string>("");
+
+  const handleTopDownChange = (data: Locations | null) => {
     if (data === null) {
       setIsTopDownActive(false);
       setWall(data);
@@ -69,8 +76,34 @@ export default function RoutesPage({ user }: { user: User | null | undefined }) 
     setIsSearch(!isSearch);
     setIsTopDownActive(false);
   };
+  const handleRoutePopUp = (routeId: string, name: string, grade: string, color: string) => {
+    setRoutePopUpId(routeId);
+    setRoutePopUpName(name);
+    setRoutePopUpGrade(grade);
+    setRoutePopUpColor(color);
+    setIsRoutePopUp(true);
+  };
+  const handleRoutePopUpCancel = () => {
+    setRoutePopUpId("");
+    setRoutePopUpName("");
+    setRoutePopUpGrade("");
+    setRoutePopUpColor("");
+    setIsRoutePopUp(false);
+  };
   return (
     <div className="w-full  font-barlow text-white flex justify-center">
+      {isRoutePopUp && (
+        <AnimatePresence>
+          <RoutePopUp
+            onCancel={handleRoutePopUpCancel}
+            id={routePopUpId}
+            name={routePopUpName}
+            grade={routePopUpGrade}
+            user={user}
+            color={routePopUpColor}
+          />
+        </AnimatePresence>
+      )}
       <div className="flex flex-col w-xs md:w-md h-full items-center mt-6">
         <div className="flex flex-col gap-1 w-full mb-3">
           <div className="flex gap-2 w-full justify-between items-center">
@@ -129,7 +162,7 @@ export default function RoutesPage({ user }: { user: User | null | undefined }) 
         </div>
         {isSearch && (
           <div>
-            <SearchRoutes searchText={searchText} />
+            <SearchRoutes searchText={searchText} onData={handleRoutePopUp} />
           </div>
         )}
         <AnimatePresence>
@@ -153,7 +186,7 @@ export default function RoutesPage({ user }: { user: User | null | undefined }) 
         <AnimatePresence>
           {isTopDownActive && (
             <motion.div variants={topDownVariants} animate="visible" exit="exit" className="mt-2">
-              <WallRoutes wall={wall} user={user as User} />
+              <WallRoutes wall={wall} user={user as User} onData={handleRoutePopUp} />
             </motion.div>
           )}
         </AnimatePresence>

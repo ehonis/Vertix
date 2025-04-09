@@ -8,7 +8,13 @@ import { AnimatePresence } from "framer-motion";
 import RouteTile from "./route-tile";
 import { useDebounce } from "use-debounce"; // Import useDebounce
 
-export default function SearchRoutes({ searchText }: { searchText: string }) {
+export default function SearchRoutes({
+  searchText,
+  onData,
+}: {
+  searchText: string;
+  onData: (routeId: string, name: string, grade: string, color: string) => void;
+}) {
   const [routes, setRoutes] = useState<Route[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [hasMore, setHasMore] = useState(false);
@@ -110,6 +116,7 @@ export default function SearchRoutes({ searchText }: { searchText: string }) {
                     id={route.id}
                     isArchived={route.isArchive}
                     isSearched={true}
+                    onData={onData}
                   />
                 </motion.div>
               </AnimatePresence>
