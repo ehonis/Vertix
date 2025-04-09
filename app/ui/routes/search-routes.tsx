@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
-import { Route } from "@prisma/client";
+import { Route, User } from "@prisma/client";
 import ElementLoadingAnimation from "../general/element-loading-animation";
 import { motion } from "framer-motion";
 import { AnimatePresence } from "framer-motion";
@@ -11,11 +11,19 @@ import { useDebounce } from "use-debounce"; // Import useDebounce
 export default function SearchRoutes({
   searchText,
   onData,
+  user,
 }: {
   searchText: string;
-  onData: (routeId: string, name: string, grade: string, color: string) => void;
+  onData: (
+    routeId: string,
+    name: string,
+    grade: string,
+    color: string,
+    isCompleted: boolean
+  ) => void;
+  user: User;
 }) {
-  const [routes, setRoutes] = useState<Route[]>([]);
+  const [routes, setRoutes] = useState<(Route & { completed: boolean })[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [hasMore, setHasMore] = useState(false);
   const [take] = useState<number>(10); // We'll use a constant "take" for each new page load
@@ -39,6 +47,7 @@ export default function SearchRoutes({
         skip: "0",
         take: take.toString(),
         text: debouncedSearchText,
+        userId: user.id,
       });
       try {
         const response = await fetch(`/api/routes/search-routes?${queryData}`);
@@ -117,6 +126,7 @@ export default function SearchRoutes({
                     isArchived={route.isArchive}
                     isSearched={true}
                     onData={onData}
+                    isCompleted={route.completed}
                   />
                 </motion.div>
               </AnimatePresence>

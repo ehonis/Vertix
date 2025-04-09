@@ -7,12 +7,18 @@ import ElementLoadingAnimation from "../general/element-loading-animation";
 interface WallRoutesProps {
   wall: string | null;
   user: User;
-  onData: (routeId: string, name: string, grade: string, color: string) => void;
+  onData: (
+    routeId: string,
+    name: string,
+    grade: string,
+    color: string,
+    isCompleted: boolean
+  ) => void;
 }
 
 export default function WallRoutes({ wall, user, onData }: WallRoutesProps) {
   const { showNotification } = useNotification();
-  const [routes, setRoutes] = useState<Route[]>([]);
+  const [routes, setRoutes] = useState<(Route & { completed: boolean })[]>([]);
   const [page, setPage] = useState(1); // Initialize as an empty array
   const [isLoading, setIsLoading] = useState(true);
 
@@ -25,6 +31,7 @@ export default function WallRoutes({ wall, user, onData }: WallRoutesProps) {
       const queryData = new URLSearchParams({
         wall: wall,
         page: page.toString(),
+        userId: user.id,
       });
       try {
         const response = await fetch(
@@ -41,6 +48,7 @@ export default function WallRoutes({ wall, user, onData }: WallRoutesProps) {
         const data = json.data;
         if (Array.isArray(data)) {
           setRoutes(data);
+          console.log(data);
         } else {
           showNotification({ message: `Invalid data format for wall : ${wall}`, color: "red" });
         }
@@ -72,6 +80,7 @@ export default function WallRoutes({ wall, user, onData }: WallRoutesProps) {
               isArchived={route.isArchive}
               isSearched={false}
               onData={onData}
+              isCompleted={route.completed}
             />
           ))
         ) : (

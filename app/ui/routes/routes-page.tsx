@@ -21,6 +21,7 @@ export default function RoutesPage({ user }: { user: User | null | undefined }) 
   const [routePopUpName, setRoutePopUpName] = useState<string>("");
   const [routePopUpGrade, setRoutePopUpGrade] = useState<string>("");
   const [routePopUpColor, setRoutePopUpColor] = useState<string>("");
+  const [routePopUpIsCompleted, setRoutePopUpIsCompleted] = useState<boolean>(false);
 
   const handleTopDownChange = (data: Locations | null) => {
     if (data === null) {
@@ -76,11 +77,18 @@ export default function RoutesPage({ user }: { user: User | null | undefined }) 
     setIsSearch(!isSearch);
     setIsTopDownActive(false);
   };
-  const handleRoutePopUp = (routeId: string, name: string, grade: string, color: string) => {
+  const handleRoutePopUp = (
+    routeId: string,
+    name: string,
+    grade: string,
+    color: string,
+    isCompleted: boolean
+  ) => {
     setRoutePopUpId(routeId);
     setRoutePopUpName(name);
     setRoutePopUpGrade(grade);
     setRoutePopUpColor(color);
+    setRoutePopUpIsCompleted(isCompleted);
     setIsRoutePopUp(true);
   };
   const handleRoutePopUpCancel = () => {
@@ -88,6 +96,7 @@ export default function RoutesPage({ user }: { user: User | null | undefined }) 
     setRoutePopUpName("");
     setRoutePopUpGrade("");
     setRoutePopUpColor("");
+    setRoutePopUpIsCompleted(false);
     setIsRoutePopUp(false);
   };
   return (
@@ -101,6 +110,7 @@ export default function RoutesPage({ user }: { user: User | null | undefined }) 
             grade={routePopUpGrade}
             user={user}
             color={routePopUpColor}
+            isCompleted={routePopUpIsCompleted}
           />
         </AnimatePresence>
       )}
@@ -162,7 +172,7 @@ export default function RoutesPage({ user }: { user: User | null | undefined }) 
         </div>
         {isSearch && (
           <div>
-            <SearchRoutes searchText={searchText} onData={handleRoutePopUp} />
+            <SearchRoutes searchText={searchText} onData={handleRoutePopUp} user={user as User} />
           </div>
         )}
         <AnimatePresence>

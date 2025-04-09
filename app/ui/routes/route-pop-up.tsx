@@ -15,6 +15,7 @@ export default function RoutePopUp({
   onCancel,
   user,
   color,
+  isCompleted,
 }: {
   id: string;
   grade: string;
@@ -22,12 +23,13 @@ export default function RoutePopUp({
   onCancel: () => void;
   user: User | null | undefined;
   color: string;
+  isCompleted: boolean;
 }) {
   const { showNotification } = useNotification();
   const router = useRouter();
 
   return (
-    <AnimatePresence>
+    <div>
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -68,23 +70,21 @@ export default function RoutePopUp({
             </svg>
           </button>
           <div className="flex gap-2 items-center">
+            {isCompleted && (
+              <div className="bg-green-400 rounded-full size-8 flex justify-center items-center ">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                  className="size-6 stroke-3"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+                </svg>
+              </div>
+            )}
             <p className="text-2xl font-barlow font-bold max-w-2/3 truncate">{name}</p>
-            <Link href={`/routes/${id}`}>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={1.5}
-                stroke="currentColor"
-                className="size-7 stroke-2"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"
-                />
-              </svg>
-            </Link>
           </div>
 
           {!user ? (
@@ -122,6 +122,6 @@ export default function RoutePopUp({
           </div>
         </motion.div>
       </motion.div>
-    </AnimatePresence>
+    </div>
   );
 }

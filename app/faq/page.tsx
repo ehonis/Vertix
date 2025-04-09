@@ -14,12 +14,17 @@ export default function FAQPage() {
 
   const faqContent: FAQItem[] = [
     {
-      q: "What is Vertix?",
+      q: "What is Vertix alpha?",
       a: (
         <p>
-          Vertix is an interactive web application designed to enhance your climbing gym experience
-          by providing detailed route tracking, community features like grades and ratings, and
-          engaging real-time competitions.
+          <span className="font-tomorrow font-bold italic text-purple-500">Vertix</span> is an
+          interactive web application designed to enhance your climbing gym experience by providing
+          detailed route tracking, community features like grades and ratings, and engaging
+          real-time competitions.
+          <br />
+          <br /> <span className="text-red-500 font-tomorrow">alpha </span>refers to the stage of
+          development of Vertix. Right now very little features are actually included in the alpha
+          stage. Many more features to come in the beta and full release
         </p>
       ),
     },
