@@ -126,7 +126,10 @@ model RouteAttempt {
     userId      String
     route       Route    @relation(fields: [routeId], references: [id])
     routeId     String
+    attempts    Int      @default(1)
     attemptDate DateTime @default(now())
+
+    @@unique([userId, routeId])
 }
 
 model Account {
