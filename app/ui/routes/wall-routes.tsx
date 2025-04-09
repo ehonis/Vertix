@@ -48,7 +48,6 @@ export default function WallRoutes({ wall, user, onData }: WallRoutesProps) {
         const data = json.data;
         if (Array.isArray(data)) {
           setRoutes(data);
-          console.log(data);
         } else {
           showNotification({ message: `Invalid data format for wall : ${wall}`, color: "red" });
         }
