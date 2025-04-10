@@ -291,9 +291,10 @@ model MixerCompletion {
     mixerRoute     MixerRoute?   @relation(fields: [mixerRouteId], references: [id])
     mixerBoulderId String?
     mixerBoulder   MixerBoulder? @relation(fields: [mixerBoulderId], references: [id])
-
+    attempts       Int
     points         Int // Points awarded for this specific completion
-    completionDate DateTime @default(now()) // Corrected typo
+    holdNumber     Int?
+    completionDate DateTime      @default(now()) // Corrected typo
 
     // Ensure a climber completes a specific route/boulder only once per competition
     @@unique([climberId, mixerRouteId])

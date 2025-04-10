@@ -30,7 +30,7 @@ async function InactiveComps() {
             {InactiveCompetitions.map(comp => (
               <Link
                 key={comp.id}
-                href={`/competitions/demo/${comp.id}`}
+                href={`/competitions/mixer/${comp.id}`}
                 className=" bg-red-500/15 rounded-lg  p-2 flex justify-between outline outline-red-400 place-items-center"
               >
                 <div className="flex flex-col">

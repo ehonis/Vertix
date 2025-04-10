@@ -6,6 +6,7 @@ import TypeToggleSwitch from "./type-toggle";
 import MixerRopeScorer from "./rope-swiper";
 import MixerBoulderScorer from "./boulder-swiper";
 import { MixerBoulder } from "@prisma/client";
+import { User } from "@prisma/client";
 type RouteData = {
   name: string;
   id: string;
@@ -16,6 +17,7 @@ type RouteData = {
 type MixerScoreScoller = {
   mixerRoutes: RouteData[];
   mixerBoulders: MixerBoulder[];
+  user: User;
 };
 
 export default function MixerScoreScroller({ mixerRoutes, mixerBoulders }: MixerScoreScoller) {

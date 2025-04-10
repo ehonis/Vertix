@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import EditRoutePopUp from "./mixer-edit-route-popup";
 import NewRoutePopUp from "./new-route-popop";
 import { clsx } from "clsx";
+import { useNotification } from "@/app/contexts/NotificationContext";
 import { MixerRoute } from "@prisma/client";
 
 type holdData = {
@@ -16,6 +17,7 @@ type RoutesComponentData = {
   compId: string;
 };
 export default function RoutesComponent({ routes, compId }: RoutesComponentData) {
+  const { showNotification } = useNotification();
   const [compRoutes, setCompRoutes] = useState(
     routes.map(route => ({
       ...route,
@@ -41,12 +43,42 @@ export default function RoutesComponent({ routes, compId }: RoutesComponentData)
     }
   }; //route
 
-  const updateRouteHolds = (routeId: string, newHolds: object, newName: string) => {
+  const updateRouteHolds = async (routeId: string, newHolds: object, newName: string) => {
     setCompRoutes(prevRoutes =>
       prevRoutes.map(route =>
         route.id === routeId ? { ...route, holds: newHolds, name: newName } : route
       )
     );
+    try {
+      const data = {
+        routeId,
+        newHolds,
+        newName,
+        compId,
+      };
+
+      const response = await fetch("/api/mixer/manager/route/add-route-holds", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+      if (!response.ok) {
+        showNotification({
+          message: "response was not okay, could not updated route holds and/or name",
+          color: "red",
+        });
+      } else {
+        showNotification({
+          message: "succesfully updated route holds and/or name",
+          color: "green",
+        });
+      }
+    } catch (error) {
+      showNotification({
+        message: "response was not okay, could not updated route holds and/or name",
+        color: "red",
+      });
+    }
   }; //route
 
   useEffect(() => {

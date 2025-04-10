@@ -50,7 +50,7 @@ export default async function Signup({ params }: { params: Promise<{ slug: strin
       </div>
     );
   }
-  if (!competition || competition.status === CompetitionStatus.INACTIVE) {
+  if (!competition) {
     return (
       <div className="flex flex-col items-center justify-center h-screen-offset text-white font-barlow font-bold gap-5">
         <p className="text-white font-barlow font-bold text-2xl">Competition not found</p>
