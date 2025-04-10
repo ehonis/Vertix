@@ -34,7 +34,7 @@ export default function RoutePopUp({
     if (!user) {
       showNotification({
         message:
-          "Not sure how would got here, but we cant complete this route because your not signed in",
+          "Not sure how you  got here, but you cant complete this route because your not signed in",
         color: "red",
       });
       return;
@@ -68,7 +68,7 @@ export default function RoutePopUp({
     if (!user) {
       showNotification({
         message:
-          "Not sure how would got here, but we cant complete this route because your not signed in",
+          "Not sure how you got here, but you cant attempt this route because your not signed in",
         color: "red",
       });
       return;
@@ -93,7 +93,7 @@ export default function RoutePopUp({
         router.refresh();
       }
     } catch (error) {
-      showNotification({ message: "Error trying to complete route", color: "red" });
+      showNotification({ message: "Error trying to attempt route", color: "red" });
     } finally {
       setIsAttemptLoading(false);
     }

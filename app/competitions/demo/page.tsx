@@ -1,10 +1,9 @@
 import Link from "next/link";
-import TrophyIcon from "../ui/competitions/trophy-icon";
 import Image from "next/image";
 import prisma from "@/prisma";
 import { Suspense } from "react";
 import clsx from "clsx";
-import ElementLoadingAnimation from "../ui/general/element-loading-animation";
+import ElementLoadingAnimation from "@/app/ui/general/element-loading-animation";
 import { CompetitionStatus } from "@prisma/client";
 async function DemoComps() {
   const demoCompetitions = await prisma.mixerCompetition.findMany({
@@ -18,7 +17,7 @@ async function DemoComps() {
         {demoCompetitions.map(comp => (
           <Link
             key={comp.id}
-            href={`/competitions/demo/${comp.id}`}
+            href={`/competitions/mixer/${comp.id}`}
             className=" bg-yellow-500/15 rounded-lg  p-2 flex justify-between outline outline-yellow-400 place-items-center"
           >
             <div className="flex flex-col">

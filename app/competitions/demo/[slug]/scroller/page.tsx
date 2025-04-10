@@ -1,4 +1,4 @@
-import MixerScoreScroller from "@/app/ui/competitions/mixer/scroller/mixer-score-scroller";
+import MixerScoreScroller from "@/app/ui/competitions/demo/mixer-demo/scroller/mixer-score-scroller";
 import prisma from "@/prisma";
 
 export default async function Mixer({ params }: { params: Promise<{ slug: string }> }) {

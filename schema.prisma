@@ -171,8 +171,6 @@ model VerificationToken {
     @@id([identifier, token])
 }
 
-// mixer competition 
-// Enum to denote whether a climber's entry was via the app or manually entered.
 enum EntryMethod {
     APP
     MANUAL
@@ -201,26 +199,29 @@ model MixerCompetition {
     divisions          MixerDivision[]
     boulderScores      MixerBoulderScore[]
     ropeScores         MixerRopeScore[]
+    completions        MixerCompletion[]
     createdAt          DateTime            @default(now())
     updatedAt          DateTime            @updatedAt
     areScoresAvailable Boolean             @default(false)
 }
 
 model MixerRoute {
-    id            String           @id @default(cuid())
+    id            String            @id @default(cuid())
     name          String
     color         String
     holds         Json // Store hold data as JSON (Array of { holdNumber, topRopePoints, leadPoints })
     competitionId String
-    competition   MixerCompetition @relation(fields: [competitionId], references: [id], onDelete: Cascade)
+    completions   MixerCompletion[]
+    competition   MixerCompetition  @relation(fields: [competitionId], references: [id], onDelete: Cascade)
 }
 
 model MixerBoulder {
-    id            String           @id @default(cuid())
+    id            String            @id @default(cuid())
     points        Int
     color         String
     competitionId String
-    competition   MixerCompetition @relation(fields: [competitionId], references: [id], onDelete: Cascade)
+    completions   MixerCompletion[]
+    competition   MixerCompetition  @relation(fields: [competitionId], references: [id], onDelete: Cascade)
 }
 
 model MixerClimber {
@@ -232,12 +233,11 @@ model MixerClimber {
     ropeScores    MixerRopeScore[]
     competitionId String
     competition   MixerCompetition    @relation(fields: [competitionId], references: [id], onDelete: Cascade)
+    completions   MixerCompletion[]
+    registeredAt  DateTime            @default(now()) // signup time
+    checkedIn     Boolean             @default(false) // set to true on comp day if participant shows up
+    entryMethod   EntryMethod         @default(MANUAL) // APP if linked to a user account
 
-    registeredAt DateTime    @default(now()) // signup time
-    checkedIn    Boolean     @default(false) // set to true on comp day if participant shows up
-    entryMethod  EntryMethod @default(MANUAL) // APP if linked to a user account
-
-    // Optional relation to an existing User. If not linked, entry is considered manual.
     userId    String?
     user      User?    @relation(fields: [userId], references: [id])
     createdAt DateTime @default(now())
@@ -271,4 +271,31 @@ model MixerRopeScore {
     attempts      Int
     competitionId String
     competition   MixerCompetition @relation(fields: [competitionId], references: [id], onDelete: Cascade)
+}
+
+enum CompletionType {
+    BOULDER
+    ROPE
+}
+
+model MixerCompletion {
+    id            String           @id @default(cuid())
+    climberId     String
+    climber       MixerClimber     @relation(fields: [climberId], references: [id], onDelete: Cascade)
+    competitionId String
+    competition   MixerCompetition @relation(fields: [competitionId], references: [id], onDelete: Cascade)
+    type          CompletionType // BOULDER or ROPE
+
+    // Link to the specific item completed
+    mixerRouteId   String?
+    mixerRoute     MixerRoute?   @relation(fields: [mixerRouteId], references: [id])
+    mixerBoulderId String?
+    mixerBoulder   MixerBoulder? @relation(fields: [mixerBoulderId], references: [id])
+
+    points         Int // Points awarded for this specific completion
+    completionDate DateTime @default(now()) // Corrected typo
+
+    // Ensure a climber completes a specific route/boulder only once per competition
+    @@unique([climberId, mixerRouteId])
+    @@unique([climberId, mixerBoulderId])
 }

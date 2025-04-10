@@ -1,7 +1,7 @@
 import prisma from "@/prisma";
 import { formatMixerDataFromDatabase, calculateScores } from "@/lib/mixer";
 import { unstable_cache } from "next/cache";
-import MixerLeaderBoard from "@/app/ui/competitions/mixer/mixer-leaderboard/mixer-leaderboard";
+import MixerLeaderBoard from "@/app/ui/competitions/demo/mixer-demo/mixer-leaderboard/mixer-leaderboard";
 import { auth } from "@/auth";
 
 const getBoulderScores = async id => {
