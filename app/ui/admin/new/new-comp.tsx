@@ -5,19 +5,33 @@ import ErrorPopUp from "./error-pop-up";
 import OnOffSwitch from "../../general/on-off-switch";
 import InformationalPopUp from "../../general/informational-pop-up";
 import { AnimatePresence } from "framer-motion";
-
-export default function NewComp({ id, onCommit, onUncommit }) {
+import { CompetitionStatus } from "@prisma/client";
+type compData = {
+  id: string;
+  title: string;
+  compType: string;
+  status: CompetitionStatus;
+  selectedDate: string;
+  type: string;
+};
+export default function NewComp({
+  id,
+  onCommit,
+  onUncommit,
+}: {
+  id: string;
+  onCommit: (data: compData) => void;
+  onUncommit: (id: string) => void;
+}) {
   const [commitText, setCommitText] = useState("Commit");
 
   const [name, SetName] = useState("");
   const [compType, setCompType] = useState("Mixer");
   const [selectedDate, setSelectedDate] = useState("");
-  const [isActive, setIsActive] = useState(false);
 
   const [isError, setIsError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [isInformationalPopUp, setIsInformationalPopUp] = useState(false);
-  const [informationalPopUpText, setInformationalPopUpText] = useState("");
 
   const handleCommit = () => {
     const today = new Date();
@@ -41,7 +55,7 @@ export default function NewComp({ id, onCommit, onUncommit }) {
           id: id,
           title: name,
           compType: compType,
-          isActive: isActive,
+          status: CompetitionStatus.INACTIVE,
           selectedDate: selectedDate,
           type: "comp",
         });
@@ -54,60 +68,25 @@ export default function NewComp({ id, onCommit, onUncommit }) {
     }
   };
 
-  const handleDateChange = event => {
+  const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSelectedDate(event.target.value);
   };
 
-  const handleNameChange = event => {
+  const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     SetName(event.target.value);
   };
   const handleCancel = () => {
     setIsError(false);
   };
-  const handleActiveSwitchChange = value => {
-    setIsActive(value);
-  };
-  const handleCompTypeChange = event => {
+  const handleCompTypeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setCompType(event.target.value);
   };
   const handleInformationalCancel = () => {
     setIsInformationalPopUp(false);
   };
-  const handleInfoButton = () => {
-    setInformationalPopUpText(
-      <div className="font-barlow font-bold text-white flex-col flex gap-2 text-sm">
-        <div>
-          <p>
-            <span className="text-green-500 text-lg">Active:</span> This comp will show in the
-            competitions page and people will be able to sign up
-          </p>
-        </div>
-        <div>
-          <p>
-            <span className="text-red-500 text-lg">InActive:</span> This comp will not show in the
-            competitions page and people will not be able to sign up
-          </p>
-        </div>
-        <div className="w-full h-[2px] bg-white"></div>
-        <p>
-          Either Active or inactive, the comp will still show in the comp manager for extra
-          detailing
-        </p>
-      </div>
-    );
-    setIsInformationalPopUp(true);
-  };
+
   return (
     <div>
-      {isInformationalPopUp && (
-        <AnimatePresence>
-          <InformationalPopUp
-            html={informationalPopUpText}
-            type={"basic"}
-            onCancel={handleInformationalCancel}
-          />
-        </AnimatePresence>
-      )}
       {isError && <ErrorPopUp message={errorMessage} onCancel={handleCancel} />}
       <div className="bg-bg2 w-full rounded-lg flex flex-col p-3 gap-2">
         <h2 className="text-white font-barlow font-bold text-2xl">Competition</h2>
@@ -153,31 +132,13 @@ export default function NewComp({ id, onCommit, onUncommit }) {
             {"(this can be changed later)"}
           </p>
         </div>
-        <div className="flex gap-2">
-          <label htmlFor="" className="text-white font-barlow font-bold text-lg">
-            Is Active:
-          </label>
-          <OnOffSwitch value={isActive} onTypeSwitchValue={handleActiveSwitchChange} />
-          <button onClick={handleInfoButton}>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={1.5}
-              stroke="currentColor"
-              className="size-6 stroke-white stroke-2"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z"
-              />
-            </svg>
-          </button>
-        </div>
+        <p className="text-white font-barlow">
+          Status will automatically be <span className="text-red-500 italic">inactive</span> upon
+          creation
+        </p>
         <div className="w-full h-[2px] bg-white"></div>
         <p className="text-white font-barlow font-bold italic text-sm">
-          Divisions, Points, and other variables will be determined in the Comp Manager Page
+          Divisions, Points, status and other variables will be determined in the Comp Manager Page
         </p>
       </div>
       <div className="flex gap-1 items-center justify-end mt-2">

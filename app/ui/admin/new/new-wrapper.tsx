@@ -7,18 +7,37 @@ import ErrorPopUp from "./error-pop-up";
 import { useNotification } from "@/app/contexts/NotificationContext";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { Locations } from "@prisma/client";
+import { CompetitionStatus } from "@prisma/client";
 
+type compData = {
+  id: string;
+  title: string;
+  compType: string;
+  status: CompetitionStatus;
+  selectedDate: string;
+  type: string;
+};
+type routeData = {
+  id: string;
+  title: string;
+  setDate: string;
+  grade: string;
+  color: string;
+  wall: Locations;
+  type: string;
+};
 export default function NewWrapper() {
   const { showNotification } = useNotification();
   const router = useRouter();
   const options = ["Route", "Comp"];
-  const [table, setTable] = useState([]);
-  const [data, setData] = useState([]);
+  const [table, setTable] = useState<React.ReactNode[]>([]);
+  const [data, setData] = useState<(routeData | compData)[]>([]);
 
   const [isError, setIsError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
-  const handleNewOption = optionText => {
+  const handleNewOption = (optionText: string) => {
     if (optionText === "Route") {
       const newId = uuidv4();
       setTable(prevTable => [
@@ -35,7 +54,7 @@ export default function NewWrapper() {
     }
   };
 
-  const handleCommit = data => {
+  const handleCommit = (data: routeData | compData) => {
     setData(prevData => [...prevData, data]);
   };
 
@@ -51,7 +70,7 @@ export default function NewWrapper() {
           body: JSON.stringify(data),
         });
         if (!response.ok) {
-          console.error(response.message);
+          console.error("error");
         }
         showNotification({
           message: `Successfully added new Item(s)`,
@@ -69,7 +88,7 @@ export default function NewWrapper() {
   const handleCancel = () => {
     setIsError(false);
   };
-  const handleUncommit = id => {
+  const handleUncommit = (id: string) => {
     // Use functional update to ensure latest state is used
     setData(prevData => {
       const newData = prevData.filter(item => item.id !== id);

@@ -1,11 +1,63 @@
 import Link from "next/link";
-import TrophyIcon from "../ui/competitions/trophy-icon";
+
 import Image from "next/image";
 import prisma from "@/prisma";
 import { Suspense } from "react";
 import clsx from "clsx";
 import ElementLoadingAnimation from "../ui/general/element-loading-animation";
 import { CompetitionStatus } from "@prisma/client";
+import { auth } from "@/auth";
+import { UserRole } from "@prisma/client";
+async function InactiveComps() {
+  const session = await auth();
+  const user = session?.user;
+
+  if (user?.role !== UserRole.ADMIN) {
+    return null;
+  } else {
+    const InactiveCompetitions = await prisma.mixerCompetition.findMany({
+      where: {
+        status: CompetitionStatus.INACTIVE,
+      },
+    });
+    if (InactiveCompetitions.length === 0) {
+      return null;
+    } else {
+      return (
+        <div className="flex flex-col justify-center ">
+          <h1 className="font-barlow text-2xl text-white font-semibold mb-1">Unavailable</h1>
+          <div className="flex flex-col gap-3 w-full">
+            {InactiveCompetitions.map(comp => (
+              <Link
+                key={comp.id}
+                href={`/competitions/demo/${comp.id}`}
+                className=" bg-red-500/15 rounded-lg  p-2 flex justify-between outline outline-red-400 place-items-center"
+              >
+                <div className="flex flex-col">
+                  <p className="font-barlow  text-white text-xl text-center whitespace-nowrap">
+                    {comp.name}
+                  </p>
+
+                  <p className="text-red-400 text-sm italic ">Inactive</p>
+                </div>
+                {comp.status === CompetitionStatus.INACTIVE && (
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="#000000"
+                    viewBox="0 0 256 256"
+                    className="size-12 stroke-white fill-white relative z-10 self-center place-self-start"
+                  >
+                    <path d="M221.69,199.77,160,96.92V40h8a8,8,0,0,0,0-16H88a8,8,0,0,0,0,16h8V96.92L34.31,199.77A16,16,0,0,0,48,224H208a16,16,0,0,0,13.72-24.23ZM110.86,103.25A7.93,7.93,0,0,0,112,99.14V40h32V99.14a7.93,7.93,0,0,0,1.14,4.11L183.36,167c-12,2.37-29.07,1.37-51.75-10.11-15.91-8.05-31.05-12.32-45.22-12.81ZM48,208l28.54-47.58c14.25-1.74,30.31,1.85,47.82,10.72,19,9.61,35,12.88,48,12.88a69.89,69.89,0,0,0,19.55-2.7L208,208Z"></path>
+                  </svg>
+                )}
+              </Link>
+            ))}
+          </div>
+        </div>
+      );
+    }
+  }
+}
 async function DemoComps() {
   const demoCompetitions = await prisma.mixerCompetition.findMany({
     where: {
@@ -13,7 +65,8 @@ async function DemoComps() {
     },
   });
   return (
-    <div className="flex justify-center ">
+    <div className="flex flex-col justify-center ">
+      <h1 className="font-barlow text-2xl text-white font-semibold mb-1">Demo</h1>
       <div className="flex flex-col gap-3 w-full">
         {demoCompetitions.map(comp => (
           <Link
@@ -48,13 +101,14 @@ async function UpComingComps() {
   const mixerCompetitions = await prisma.mixerCompetition.findMany({
     where: {
       status: {
-        in: [CompetitionStatus.UPCOMING, CompetitionStatus.INACTIVE],
+        in: [CompetitionStatus.UPCOMING, CompetitionStatus.IN_PROGRESS],
       },
     },
   });
 
   return (
-    <div className="flex justify-center ">
+    <div className="flex flex-col justify-center ">
+      <h1 className="font-barlow text-2xl text-white font-semibold mb-1">Active or Upcoming</h1>
       <div className="flex flex-col gap-3 w-full">
         {mixerCompetitions.map(comp => (
           <Link
@@ -62,9 +116,7 @@ async function UpComingComps() {
             href={`/competitions/mixer/${comp.id}`}
             className={clsx(
               " bg-blue-500/15 rounded-lg  p-2 flex justify-between outline  place-items-center",
-              comp.status === CompetitionStatus.INACTIVE && "outline-red-500 bg-red-500/15",
-              comp.status === CompetitionStatus.UPCOMING && "outline-blue-500 bg-blue-500/15",
-              comp.status === CompetitionStatus.IN_PROGRESS && "outline-green-500 bg-green-500/15"
+              comp.status === CompetitionStatus.UPCOMING && "outline-blue-500 bg-blue-500/15"
             )}
           >
             <div className="flex flex-col">
@@ -112,7 +164,7 @@ async function UpComingComps() {
   );
 }
 
-export default function page() {
+export default async function page() {
   return (
     <div className="w-screen">
       <div className="px-4 pt-4 flex flex-col gap-4 items-center w-full">
@@ -137,7 +189,6 @@ export default function page() {
           <div className="md:w-lg w-xs h-1 rounded-full bg-white" />
         </div>
         <div className="w-xs md:w-lg">
-          <h1 className="font-barlow text-2xl text-white font-semibold mb-1">Active or Upcoming</h1>
           <Suspense
             fallback={
               <div className="flex justify-center mt-2">
@@ -149,7 +200,6 @@ export default function page() {
           </Suspense>
         </div>
         <div className="w-xs md:w-lg">
-          <h1 className="font-barlow text-2xl text-white font-semibold mb-1">Demo</h1>
           <Suspense
             fallback={
               <div className="flex justify-center mt-2">
@@ -160,6 +210,19 @@ export default function page() {
             <DemoComps />
           </Suspense>
         </div>
+
+        <div className="w-xs md:w-lg">
+          <Suspense
+            fallback={
+              <div className="flex justify-center mt-2">
+                <ElementLoadingAnimation />
+              </div>
+            }
+          >
+            <InactiveComps />
+          </Suspense>
+        </div>
+
         <div
           className="absolute inset-0 opacity-40 -z-20"
           style={{

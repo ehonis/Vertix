@@ -3,8 +3,26 @@ import clsx from "clsx";
 import GradeSelect from "../new_route/grade-select";
 import TopDown from "../../routes/topdown";
 import ErrorPopUp from "./error-pop-up";
+import { Locations } from "@prisma/client";
+type routeData = {
+  id: string;
+  title: string;
+  setDate: string;
+  grade: string;
+  color: string;
+  wall: Locations;
+  type: string;
+};
 
-export default function NewRoute({ id, onCommit, onUncommit }) {
+export default function NewRoute({
+  id,
+  onCommit,
+  onUncommit,
+}: {
+  id: string;
+  onCommit: (data: routeData) => void;
+  onUncommit: (id: string) => void;
+}) {
   const [commitText, setCommitText] = useState("Commit");
   const [isToday, setIsToday] = useState(false);
 
@@ -12,15 +30,15 @@ export default function NewRoute({ id, onCommit, onUncommit }) {
   const [selectedDate, setSelectedDate] = useState("");
   const [grade, setGrade] = useState("");
   const [color, setColor] = useState("");
-  const [wall, setWall] = useState(null);
+  const [wall, setWall] = useState<Locations | null>(null);
 
   const [isError, setIsError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
-  const handleNameChange = event => {
+  const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     SetName(event.target.value);
   };
-  const handleDateChange = event => {
+  const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSelectedDate(event.target.value);
   };
   const handleNowButton = () => {
@@ -29,13 +47,13 @@ export default function NewRoute({ id, onCommit, onUncommit }) {
     const formattedDate = date.toISOString().split("T")[0];
     setSelectedDate(formattedDate);
   };
-  const handleColorChange = event => {
+  const handleColorChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setColor(event.target.value);
   };
-  const handleWallData = data => {
+  const handleWallData = (data: Locations | null) => {
     setWall(data);
   };
-  const handleGradeData = data => {
+  const handleGradeData = (data: string) => {
     setGrade(data);
   };
 

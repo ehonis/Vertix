@@ -1,11 +1,54 @@
 import prisma from "@/prisma";
-import { NextResponse } from "next/server";
+import { NextResponse, NextRequest } from "next/server";
 import { parseDateString } from "@/lib/dates";
+import { Locations } from "@prisma/client";
+import { CompetitionStatus } from "@prisma/client";
 
-export async function POST(request) {
+type compData = {
+  id: string;
+  title: string;
+  compType: string;
+  status: CompetitionStatus;
+  selectedDate: string;
+  type: string;
+};
+type routeData = {
+  id: string;
+  title: string;
+  setDate: string;
+  grade: string;
+  color: string;
+  wall: Locations;
+  type: string;
+};
+
+function isRouteData(item: compData | routeData): item is routeData {
+  return (
+    typeof item === 'object' &&
+    item !== null &&
+    'setDate' in item &&
+    'grade' in item &&
+    'color' in item &&
+    'wall' in item
+  );
+}
+
+// Type guard for compData
+function isCompData(item: compData | routeData): item is compData {
+  return (
+    typeof item === 'object' &&
+    item !== null &&
+    'compType' in item &&
+    'status' in item &&
+    'selectedDate' in item
+  );
+}
+
+export async function POST(request: NextRequest) {
   try {
     const res = await request.json();
-    const data = res;
+
+    const data: (routeData | compData)[] = res;
 
     if (!data || data.length === 0) {
       return NextResponse.json({ message: "No data to commit", status: 500 });
@@ -16,7 +59,7 @@ export async function POST(request) {
     console.log(data);
     const results = await Promise.all(
       data.map(async element => {
-        if (element.type === "route") {
+        if (isRouteData(element)) {
           let routeType = "";
           if (element.grade.startsWith("v")) {
             routeType = "boulder";
@@ -27,7 +70,7 @@ export async function POST(request) {
           const dateObject = parseDateString(element.setDate);
 
           // Create a route in the database
-          return prisma.Route.create({
+          return prisma.route.create({
             data: {
               title: element.title,
               grade: element.grade,
@@ -37,21 +80,16 @@ export async function POST(request) {
               location: element.wall,
             },
           });
-        } else if (element.type === "comp") {
+        } else if (isCompData(element)) {
           if (element.compType === "Mixer") {
             const dateObject = parseDateString(element.selectedDate);
             const year = dateObject.getFullYear();
-            let status = "";
-            if (element.isActive) {
-              status = "upcoming";
-            } else {
-              status = "unavailable";
-            }
-            return prisma.MixerCompetition.create({
+            
+            return prisma.mixerCompetition.create({
               data: {
                 name: element.title,
                 year: year,
-                status: status,
+                status: CompetitionStatus.INACTIVE,
               },
             });
           }
@@ -68,7 +106,6 @@ export async function POST(request) {
     console.error("Error committing routes:", error);
     return NextResponse.json({
       message: "An error occurred",
-      error: error.message,
       status: 500,
     });
   }

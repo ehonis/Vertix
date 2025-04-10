@@ -1,7 +1,13 @@
 "use client";
 import { useEffect, useState } from "react";
 
-export default function ErrorPopUp({ onCancel, message }) {
+export default function ErrorPopUp({
+  onCancel,
+  message,
+}: {
+  onCancel: () => void;
+  message: string;
+}) {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {

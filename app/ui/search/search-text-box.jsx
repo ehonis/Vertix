@@ -46,7 +46,7 @@ export default function SearchTextBox({ onDataFetch }) {
         <div className="flex gap-3">
           <button
             className={clsx(
-              "bg-bg2 outline outline-1 outline-gray-400 px-2 py-1 rounded-full ",
+              "bg-bg2 outline  outline-gray-400 px-2 py-1 rounded-full ",
               routesBool ? "bg-green-400 outline-hidden" : null
             )}
             onClick={handleRoutesButtonChange}
@@ -55,7 +55,7 @@ export default function SearchTextBox({ onDataFetch }) {
           </button>
           <button
             className={clsx(
-              "bg-bg2 outline outline-1 outline-gray-400 px-2 py-1 rounded-full text-white font-barlow font-bold drop-shadow-customBlack",
+              "bg-bg2 outline  outline-gray-400 px-2 py-1 rounded-full text-white font-barlow font-bold drop-shadow-customBlack",
               profilesBool ? "bg-green-400 outline-hidden" : null
             )}
             onClick={handleProfilesButtonChange}
@@ -65,7 +65,7 @@ export default function SearchTextBox({ onDataFetch }) {
         </div>
       </div>
       <div className="flex justify-center mt-3">
-        <div className="bg-bg2 outline outline-1 outline-gray-400 rounded-l-full w-9/12 md:w-1/2 h-12 flex items-center justify-between px-5 text-white font-barlow font-bold drop-shadow-customBlack">
+        <div className="bg-bg2 outline outline-gray-400 rounded-l-full w-9/12 md:w-1/2 h-12 flex items-center justify-between px-5 text-white font-barlow font-bold drop-shadow-customBlack">
           <input
             type="text"
             className="bg-transparent w-full font-barlow font-bold text-white focus:outline-hidden"
@@ -75,7 +75,7 @@ export default function SearchTextBox({ onDataFetch }) {
           />
         </div>
         <button
-          className="bg-slate-900 flex justify-center items-center rounded-r-full pl-3 pr-4 outline outline-1 outline-gray-400 drop-shadow-customBlack"
+          className="bg-slate-900 flex justify-center items-center rounded-r-full pl-3 pr-4 outline  outline-gray-400 drop-shadow-customBlack"
           onClick={handleSubmit}
         >
           <svg
