@@ -20,28 +20,44 @@ export default async function page({ params }: { params: Promise<{ slug: string 
   const { slug } = await params;
   const compId = slug;
 
-  const [comp, compRoutes, compDivisions, compClimbers, compBoulderScores, compRopeScores] =
-    await Promise.all([
-      prisma.mixerCompetition.findFirst({
-        where: { id: compId },
-      }),
-      prisma.mixerRoute.findMany({
-        where: { competitionId: compId },
-      }),
-      prisma.mixerDivision.findMany({
-        where: { competitionId: compId },
-        orderBy: { level: "asc" },
-      }),
-      prisma.mixerClimber.findMany({
-        where: { competitionId: compId },
-      }),
-      prisma.mixerBoulderScore.findMany({
-        where: { competitionId: compId },
-      }),
-      prisma.mixerRopeScore.findMany({
-        where: { competitionId: compId },
-      }),
-    ]);
+  const [
+    comp,
+    compRoutes,
+    compBoulders,
+    compDivisions,
+    compClimbers,
+    compBoulderScores,
+    compRopeScores,
+  ] = await Promise.all([
+    prisma.mixerCompetition.findFirst({
+      where: { id: compId },
+    }),
+    prisma.mixerRoute.findMany({
+      where: { competitionId: compId },
+      orderBy: {
+        name: "asc", // 'asc' for ascending
+      },
+    }),
+    prisma.mixerBoulder.findMany({
+      where: { competitionId: compId },
+      orderBy: {
+        points: "asc", // 'asc' for ascending
+      },
+    }),
+    prisma.mixerDivision.findMany({
+      where: { competitionId: compId },
+      orderBy: { level: "asc" },
+    }),
+    prisma.mixerClimber.findMany({
+      where: { competitionId: compId },
+    }),
+    prisma.mixerBoulderScore.findMany({
+      where: { competitionId: compId },
+    }),
+    prisma.mixerRopeScore.findMany({
+      where: { competitionId: compId },
+    }),
+  ]);
 
   if (!comp) {
     return (
@@ -81,6 +97,7 @@ export default async function page({ params }: { params: Promise<{ slug: string 
             areScoresAvailable={comp.areScoresAvailable}
             time={comp.time}
             routes={compRoutes}
+            boulders={compBoulders}
             divisions={compDivisions}
             climbers={compClimbers}
             ropeScores={compRopeScores}

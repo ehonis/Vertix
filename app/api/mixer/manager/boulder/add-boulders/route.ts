@@ -14,17 +14,12 @@ export async function POST(req: NextRequest)  {
     }
 
   try {
-    const {routeId,
-      newHolds,
-      newName,
-      compId} = await req.json();
- 
-      const jsonHolds = JSON.stringify(newHolds);
+    const {boulderData} = await req.json();
 
+    console.log(boulderData)
 
-    const result = await prisma.mixerRoute.update({
-        where: {id:routeId as string, competitionId:compId as string},
-        data: {name:newName, holds:jsonHolds}
+    const result = await prisma.mixerBoulder.createMany({
+        data: boulderData,
     })
 
   

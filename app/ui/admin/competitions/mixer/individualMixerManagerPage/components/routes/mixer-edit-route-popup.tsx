@@ -14,20 +14,22 @@ type EditRoutePopUpData = {
   onCancel: () => void;
   routeId: string;
   routeName: string;
+  routeColor: string;
   holds: holdData[];
-  updateRouteHolds: (routeId: string, newHolds: object, newName: string) => void;
+  updateRouteHolds: (routeId: string, newHolds: object, newName: string, newColor: string) => void;
 };
 
 export default function EditRoutePopUp({
   onCancel,
   routeId,
   routeName,
+  routeColor,
   holds,
   updateRouteHolds,
 }: EditRoutePopUpData) {
   const [name, setName] = useState(routeName);
   const [tempHolds, setTempHolds] = useState([...holds]);
-
+  const [color, setColor] = useState(routeColor);
   const handleHoldChange = (index: number, field: string, value: string) => {
     const cleanedValue = Number(String(value).replace(/^0+/, "") || "0");
 
@@ -50,7 +52,7 @@ export default function EditRoutePopUp({
   };
 
   const handleSaveChanges = () => {
-    updateRouteHolds(routeId, tempHolds, name);
+    updateRouteHolds(routeId, tempHolds, name, color);
     onCancel(); // Close the popup
   };
 
@@ -91,6 +93,24 @@ export default function EditRoutePopUp({
             className="bg-gray-700 p-2 rounded-sm w-full focus:outline-hidden"
             placeholder="Route Name"
           />
+
+          <select
+            name=""
+            id=""
+            className="bg-gray-700 px-2 p-1 rounded"
+            value={color}
+            onChange={e => setColor(e.target.value)} // Corrected onChange handler
+          >
+            <option value="red">red</option>
+            <option value="blue">blue</option>
+            <option value="green">green</option>
+            <option value="yellow">yellow</option>
+            <option value="purple">purple</option>
+            <option value="white">white</option>
+            <option value="black">black</option>
+            <option value="pink">pink</option>
+            <option value="orange">orange</option>
+          </select>
 
           <div>
             <div className="grid grid-cols-3 bg-gray-700 rounded-sm px-1 mb-1">

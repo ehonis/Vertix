@@ -29,6 +29,7 @@ export default function RoutesComponent({ routes, compId }: RoutesComponentData)
   const [tempHolds, setTempHolds] = useState<holdData[]>([]); //route
   const [tempRouteId, setTempRouteId] = useState(""); //route
   const [tempRouteName, setTempRouteName] = useState(""); //route
+  const [tempRouteColor, setTempRouteColor] = useState("");
 
   const handleEditRoutePopUp = (id: string) => {
     const tempRoute = compRoutes.find(route => route.id === id);
@@ -37,16 +38,22 @@ export default function RoutesComponent({ routes, compId }: RoutesComponentData)
       setTempHolds(tempRoute.holds);
       setTempRouteId(tempRoute.id);
       setTempRouteName(tempRoute.name);
+      setTempRouteColor(tempRoute.color);
       setIsEditRoutePopup(true);
     } else {
       console.error(`Route with ID ${id} not found`);
     }
   }; //route
 
-  const updateRouteHolds = async (routeId: string, newHolds: object, newName: string) => {
+  const updateRouteHolds = async (
+    routeId: string,
+    newHolds: object,
+    newName: string,
+    newColor: string
+  ) => {
     setCompRoutes(prevRoutes =>
       prevRoutes.map(route =>
-        route.id === routeId ? { ...route, holds: newHolds, name: newName } : route
+        route.id === routeId ? { ...route, holds: newHolds, name: newName, color: newColor } : route
       )
     );
     try {
@@ -54,10 +61,11 @@ export default function RoutesComponent({ routes, compId }: RoutesComponentData)
         routeId,
         newHolds,
         newName,
+        newColor,
         compId,
       };
 
-      const response = await fetch("/api/mixer/manager/route/add-route-holds", {
+      const response = await fetch("/api/mixer/manager/route/update-route-holds", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
@@ -102,6 +110,7 @@ export default function RoutesComponent({ routes, compId }: RoutesComponentData)
           routeName={tempRouteName}
           routeId={tempRouteId}
           updateRouteHolds={updateRouteHolds}
+          routeColor={tempRouteColor}
         />
       )}
       <div>

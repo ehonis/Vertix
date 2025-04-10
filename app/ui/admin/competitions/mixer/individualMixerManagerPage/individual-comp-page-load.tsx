@@ -11,6 +11,7 @@ import {
   MixerBoulder,
 } from "@prisma/client";
 import VariablesComponent from "./components/variables/variables-component";
+import BoulderComponent from "./components/boulders/boulders-component";
 
 type inDividualCompPageProps = {
   compId: string;
@@ -18,6 +19,7 @@ type inDividualCompPageProps = {
   imageUrl: string | null;
   climbers: MixerClimber[];
   routes: MixerRoute[];
+  boulders: MixerBoulder[];
   areScoresAvailable: boolean;
   compDay: Date | null;
   time: number;
@@ -32,6 +34,7 @@ export default function IndividualCompPageLoad({
   imageUrl,
   climbers,
   routes,
+  boulders,
   areScoresAvailable,
   compDay,
   time,
@@ -53,6 +56,7 @@ export default function IndividualCompPageLoad({
       />
       <DivisionsComponent divisions={divisions} compId={compId} />
       <RoutesComponent routes={routes} compId={compId} />
+      <BoulderComponent boulders={boulders} compId={compId} />
       <UsersComponent
         compId={compId}
         climbers={climbers}
