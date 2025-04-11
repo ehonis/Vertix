@@ -13,19 +13,31 @@ import MixerInfoPopup from "./info-popup";
 import SwipeAnimation from "@/app/ui/general/swipe-animation";
 import { getTopScores } from "@/lib/mixer";
 import { MixerCompletion } from "@prisma/client";
+type routeHold = {
+  holdNumber: number;
+  topRopePoints: number;
+  leadPoints: number;
+};
 type RouteData = {
   name: string;
   id: string;
   color: string;
-  holds: string;
+  holds: routeHold[];
   competitionId: string;
 };
 type MixerRopeScrollerData = {
   mixerRoutes: RouteData[];
   ropeCompletions: MixerCompletion[];
+  compId: string;
+  climberId: string;
 };
 
-export default function MixerRopeScorer({ mixerRoutes, ropeCompletions }: MixerRopeScrollerData) {
+export default function MixerRopeScorer({
+  mixerRoutes,
+  ropeCompletions,
+  compId,
+  climberId,
+}: MixerRopeScrollerData) {
   const [tempRouteId, setTempRouteId] = useState("");
   const { showNotification } = useNotification();
 
@@ -33,12 +45,6 @@ export default function MixerRopeScorer({ mixerRoutes, ropeCompletions }: MixerR
   const [isInfoPopup, setIsInfoPopup] = useState(false);
 
   // Helper function to safely get localStorage value
-  const getLocalStorageValue = (key: string) => {
-    if (typeof window !== "undefined") {
-      return localStorage.getItem(key);
-    }
-    return null;
-  };
 
   type AttemptState = {
     [key: string]: number;
@@ -61,10 +67,6 @@ export default function MixerRopeScorer({ mixerRoutes, ropeCompletions }: MixerR
 
   // Load initial state from localStorage or use default values
   const [attempts, setAttempts] = useState<AttemptState>(() => {
-    const savedAttempts = getLocalStorageValue("mixerAttempts");
-    if (savedAttempts) {
-      return JSON.parse(savedAttempts);
-    }
     return mixerRoutes.reduce((acc: AttemptState, panel) => {
       acc[panel.id] = 0;
       return acc;
@@ -72,32 +74,13 @@ export default function MixerRopeScorer({ mixerRoutes, ropeCompletions }: MixerR
   });
 
   const [hold, setHold] = useState<HoldState>(() => {
-    const savedHold = getLocalStorageValue("mixerHold");
-    if (savedHold) {
-      return JSON.parse(savedHold);
-    }
     return mixerRoutes.reduce((acc: HoldState, panel) => {
       acc[panel.id] = 0;
       return acc;
     }, {});
   });
 
-  const [completions, setCompletions] = useState<CompletionState>(() => {
-    const savedCompletions = getLocalStorageValue("mixerCompletions");
-    if (savedCompletions) {
-      return JSON.parse(savedCompletions);
-    }
-    return mixerRoutes.reduce((acc: CompletionState, panel) => {
-      acc[panel.id] = false;
-      return acc;
-    }, {});
-  });
-
   const [points, setPoints] = useState<PointState>(() => {
-    const savedPoints = getLocalStorageValue("mixerPoints");
-    if (savedPoints) {
-      return JSON.parse(savedPoints);
-    }
     return mixerRoutes.reduce((acc: PointState, panel) => {
       acc[panel.id] = 0;
       return acc;
@@ -105,46 +88,45 @@ export default function MixerRopeScorer({ mixerRoutes, ropeCompletions }: MixerR
   });
 
   const [typeToggles, setTypeToggles] = useState<TypeToggleState>(() => {
-    const savedTypeToggles = getLocalStorageValue("mixerTypeToggles");
-    if (savedTypeToggles) {
-      return JSON.parse(savedTypeToggles);
-    }
     return mixerRoutes.reduce((acc: TypeToggleState, panel) => {
       acc[panel.id] = "TR";
       return acc;
     }, {});
   });
 
+  const [completions, setCompletions] = useState<CompletionState>(() => {
+    // Initialize completions from database completions, with fallback for undefined
+    return mixerRoutes.reduce((acc: CompletionState, panel) => {
+      // Check if this boulder is in the database completions
+      // If boulderCompletions is undefined or empty, default to false
+      const isCompleted =
+        ropeCompletions?.some(completion => completion.mixerRouteId === panel.id) ?? false;
+      if (isCompleted) {
+        // If boulder is completed, get the attempts from boulderCompletions
+        const completion = ropeCompletions.find(c => c.mixerRouteId === panel.id);
+        // Update attempts state with the stored value
+        attempts[panel.id] = completion?.attempts || 0;
+
+        points[panel.id] = completion?.points || 0;
+
+        const route = mixerRoutes.find(route => route.id === panel.id);
+        const hold = route?.holds?.find(
+          hold =>
+            hold.leadPoints === completion?.points || hold.topRopePoints === completion?.points
+        );
+
+        if (hold) {
+          setHold(prev => ({
+            ...prev,
+            [panel.id]: hold.holdNumber,
+          }));
+        }
+      }
+      acc[panel.id] = isCompleted;
+      return acc;
+    }, {});
+  });
   // Save state to localStorage whenever it changes
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      localStorage.setItem("mixerAttempts", JSON.stringify(attempts));
-    }
-  }, [attempts]);
-
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      localStorage.setItem("mixerHold", JSON.stringify(hold));
-    }
-  }, [hold]);
-
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      localStorage.setItem("mixerCompletions", JSON.stringify(completions));
-    }
-  }, [completions]);
-
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      localStorage.setItem("mixerPoints", JSON.stringify(points));
-    }
-  }, [points]);
-
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      localStorage.setItem("mixerTypeToggles", JSON.stringify(typeToggles));
-    }
-  }, [typeToggles]);
 
   const [rangeValue, setRangeValue] = useState(0);
   const swiperRef = useRef<SwiperType>(null);
@@ -316,30 +298,100 @@ export default function MixerRopeScorer({ mixerRoutes, ropeCompletions }: MixerR
     }
   };
 
-  const handleCompletion = (panelId: string, attempts: number, points: number) => {
+  const handleCompletion = async (
+    panelId: string,
+    attempts: number,
+    points: number,
+    name: string
+  ) => {
     if (attempts < 1) {
       showNotification({
         message: `1 Attempt Needed`,
         color: "red",
       });
-    } else if (points === null) {
+    } else {
+      try {
+        // Update local state
+        setCompletions(prev => ({
+          ...prev,
+          [panelId]: true,
+        }));
+
+        // Update database
+
+        const response = await fetch("/api/mixer/comp/route-completions", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            mixerRouteId: panelId,
+            climberId: climberId,
+            compId: compId,
+            attempts: attempts,
+            points: points,
+            type: "ROPE",
+          }),
+        });
+
+        if (!response.ok) {
+          showNotification({
+            message: `Oops! Failed to save completion, uncompleting... please try again`,
+            color: "red",
+          });
+        }
+
+        showNotification({
+          message: `Rope ${name} completion saved successfully!`,
+          color: "green",
+        });
+      } catch (error) {
+        showNotification({
+          message: `Oops! Failed to save completion, uncompleting... please try again`,
+          color: "red",
+        });
+        // Revert local state on error
+        setCompletions(prev => ({
+          ...prev,
+          [panelId]: false,
+        }));
+      }
+    }
+  };
+
+  const handleUncompletion = async (panelId: string) => {
+    try {
+      // Update local state
+      setCompletions(prev => ({
+        ...prev,
+        [panelId]: false,
+      }));
+
+      // Delete from database
+      const response = await fetch(
+        `/api/mixer/comp/route-completions?mixerRouteId=${panelId}&climberId=${climberId}`,
+        {
+          method: "DELETE",
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to delete completion");
+      }
+
       showNotification({
-        message: `1 Hold Needed`,
+        message: "Uncompleted saved successfully!",
+        color: "green",
+      });
+    } catch (error) {
+      showNotification({
+        message: "Failed to uncomplete boulder",
         color: "red",
       });
-    } else {
+      // Revert local state on error
       setCompletions(prev => ({
         ...prev,
         [panelId]: true,
       }));
     }
-  };
-
-  const handleUncompletion = (panelId: string) => {
-    setCompletions(prev => ({
-      ...prev,
-      [panelId]: false,
-    }));
   };
 
   const handleInfoClick = (routeId: string) => {
@@ -470,9 +522,9 @@ export default function MixerRopeScorer({ mixerRoutes, ropeCompletions }: MixerR
                           MIN
                         </button>
                       ) : (
-                        <button className="bg-transparent text-black rounded p-2 text-sm font-barlow font-semibold cursor-none">
+                        <div className="bg-transparent text-black rounded p-2 text-sm font-barlow font-semibold ">
                           MIN
-                        </button>
+                        </div>
                       )}
                       <div className="flex items-center gap-3 blue-button rounded-md p-2">
                         <button
@@ -497,7 +549,7 @@ export default function MixerRopeScorer({ mixerRoutes, ropeCompletions }: MixerR
                           type="text"
                           value={hold[panel.id]}
                           onChange={e => handleHoldChange(panel.id, panel.holds.length, e)}
-                          className="p-2 text-white font-barlow font-bold size-10 text-2xl rounded-sm text-center focus:outline-hidden border-none"
+                          className="p-2 text-white font-barlow font-bold size-11 text-2xl rounded-sm text-center focus:outline-hidden border-none"
                           placeholder="#"
                         />
                         <button
@@ -531,9 +583,9 @@ export default function MixerRopeScorer({ mixerRoutes, ropeCompletions }: MixerR
                           TOP
                         </button>
                       ) : (
-                        <button className="bg-transparent text-black rounded p-2 text-sm font-barlow font-semibold cursor-none">
+                        <div className="bg-transparent text-black rounded p-2 text-sm font-barlow font-semibold">
                           TOP
-                        </button>
+                        </div>
                       )}
                     </div>
                   </div>
@@ -605,7 +657,9 @@ export default function MixerRopeScorer({ mixerRoutes, ropeCompletions }: MixerR
                 <div className="flex flex-col gap-3 items-center">
                   <button
                     className="bg-green-500/45 border-2 border-green-500 rounded-full size-16 flex justify-center items-center"
-                    onClick={() => handleCompletion(panel.id, attempts[panel.id], points[panel.id])}
+                    onClick={() =>
+                      handleCompletion(panel.id, attempts[panel.id], points[panel.id], panel.name)
+                    }
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -679,7 +733,13 @@ export default function MixerRopeScorer({ mixerRoutes, ropeCompletions }: MixerR
                   </div>
                   <div className="flex flex-col gap-5">
                     <p className="font-barlow font-bold text-white text-2xl text-center drop-shadow-customBlack">
-                      {attempts[panel.id]} attempt{"(s)"}
+                      Hold {hold[panel.id]} / {panel.holds.length}
+                    </p>
+                  </div>
+
+                  <div className="flex flex-col gap-5">
+                    <p className="font-barlow font-bold text-white text-2xl text-center drop-shadow-customBlack">
+                      {attempts[panel.id]} Attempt{"(s)"}
                     </p>
                   </div>
 

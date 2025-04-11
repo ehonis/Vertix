@@ -7,16 +7,20 @@ import MixerRopeScorer from "./rope-swiper";
 import MixerBoulderScorer from "./boulder-swiper";
 import { MixerBoulder, MixerClimber, MixerCompletion } from "@prisma/client";
 import { User } from "@prisma/client";
+type routeHold = {
+  holdNumber: number;
+  topRopePoints: number;
+  leadPoints: number;
+};
 type RouteData = {
   name: string;
   id: string;
   color: string;
-  holds: string;
+  holds: routeHold[];
   competitionId: string;
 };
 type MixerScoreScoller = {
   compId: string;
-
   mixerRoutes: RouteData[];
   mixerBoulders: MixerBoulder[];
   climber: MixerClimber;
@@ -26,7 +30,6 @@ type MixerScoreScoller = {
 
 export default function MixerScoreScroller({
   compId,
-
   mixerRoutes,
   mixerBoulders,
   climber,
@@ -52,14 +55,19 @@ export default function MixerScoreScroller({
           />
           <button className="text-sm flex items-center justify-center gap-1 text-white font-barlow font-semibold">
             <div className="bg-green-500 rounded px-2 py-2">
-              <p>Submit</p>
+              <p>Finish</p>
             </div>
           </button>
         </div>
       </div>
 
       <div className={category === "Rope" ? "block" : "hidden"}>
-        <MixerRopeScorer mixerRoutes={mixerRoutes} ropeCompletions={ropeCompletions} />
+        <MixerRopeScorer
+          mixerRoutes={mixerRoutes}
+          ropeCompletions={ropeCompletions}
+          compId={compId}
+          climberId={climber.id}
+        />
       </div>
       <div className={category === "Boulder" ? "block" : "hidden"}>
         <MixerBoulderScorer

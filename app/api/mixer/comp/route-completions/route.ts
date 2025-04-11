@@ -7,10 +7,10 @@ export async function POST(req: NextRequest) {
   if (!session) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
-  const { climberId, compId, type, mixerBoulderId, attempts, points } =
+  const { climberId, compId, type, mixerRouteId, attempts, points } =
     await req.json();
 
-  if (!climberId || !compId || !type || !mixerBoulderId || !attempts || !points) {
+  if (!climberId || !compId || !type || !mixerRouteId || !attempts || !points) {
     return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
   }
  try {
@@ -19,7 +19,7 @@ export async function POST(req: NextRequest) {
       climberId,
       competitionId: compId,
       type,
-      mixerBoulderId,
+      mixerRouteId,
       attempts,
       points,
     },
@@ -39,18 +39,18 @@ export async function DELETE(req: NextRequest) {
 
   const climberId = searchParams.get("climberId");
   const compId = searchParams.get("compId");
-  const mixerBoulderId = searchParams.get("mixerBoulderId");
+  const mixerRouteId = searchParams.get("mixerRouteId");
 
-  if (!climberId || !mixerBoulderId) {
+  if (!climberId || !mixerRouteId) {
     return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
   }
 
   try {
     await prisma.mixerCompletion.delete({
       where: {
-        climberId_mixerBoulderId: { 
+        climberId_mixerRouteId: { 
           climberId: climberId,
-          mixerBoulderId: mixerBoulderId,
+          mixerRouteId: mixerRouteId,
         },
       },
     });
@@ -58,9 +58,5 @@ export async function DELETE(req: NextRequest) {
   } catch (error) {
     return NextResponse.json({ error: "Failed to delete completion" }, { status: 500 });
   }
-
-
-
-
   
 }

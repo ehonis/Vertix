@@ -63,9 +63,14 @@ export default async function Mixer({ params }: { params: Promise<{ slug: string
     },
   });
 
+  type routeHold = {
+    holdNumber: number;
+    topRopePoints: number;
+    leadPoints: number;
+  };
   const parsedData = routes.map(route => ({
     ...route, // Spread the route object
-    holds: JSON.parse(route.holds as string), // Parse the holds string
+    holds: JSON.parse(route.holds as string) as routeHold[], // Parse the holds string
   }));
 
   return (
