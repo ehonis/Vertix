@@ -12,6 +12,7 @@ import { getPoints } from "@/lib/mixer";
 import MixerInfoPopup from "./info-popup";
 import SwipeAnimation from "@/app/ui/general/swipe-animation";
 import { getTopScores } from "@/lib/mixer";
+import { MixerCompletion } from "@prisma/client";
 type RouteData = {
   name: string;
   id: string;
@@ -21,9 +22,10 @@ type RouteData = {
 };
 type MixerRopeScrollerData = {
   mixerRoutes: RouteData[];
+  ropeCompletions: MixerCompletion[];
 };
 
-export default function MixerRopeScorer({ mixerRoutes }: MixerRopeScrollerData) {
+export default function MixerRopeScorer({ mixerRoutes, ropeCompletions }: MixerRopeScrollerData) {
   const [tempRouteId, setTempRouteId] = useState("");
   const { showNotification } = useNotification();
 

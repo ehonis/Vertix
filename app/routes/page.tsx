@@ -9,7 +9,7 @@ export default async function RoutePage() {
 
   return (
     <>
-      <ConstructionBlur />
+      {/* <ConstructionBlur /> */}
       <RoutesPage user={user as User | null | undefined} />
     </>
   );

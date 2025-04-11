@@ -5,7 +5,7 @@ import MixerCountdownTimer from "./count-down-timer";
 import TypeToggleSwitch from "./type-toggle";
 import MixerRopeScorer from "./rope-swiper";
 import MixerBoulderScorer from "./boulder-swiper";
-import { MixerBoulder } from "@prisma/client";
+import { MixerBoulder, MixerClimber, MixerCompletion } from "@prisma/client";
 import { User } from "@prisma/client";
 type RouteData = {
   name: string;
@@ -15,12 +15,24 @@ type RouteData = {
   competitionId: string;
 };
 type MixerScoreScoller = {
+  compId: string;
+
   mixerRoutes: RouteData[];
   mixerBoulders: MixerBoulder[];
-  user: User;
+  climber: MixerClimber;
+  boulderCompletions: MixerCompletion[];
+  ropeCompletions: MixerCompletion[];
 };
 
-export default function MixerScoreScroller({ mixerRoutes, mixerBoulders }: MixerScoreScoller) {
+export default function MixerScoreScroller({
+  compId,
+
+  mixerRoutes,
+  mixerBoulders,
+  climber,
+  boulderCompletions,
+  ropeCompletions,
+}: MixerScoreScoller) {
   const [category, setCategory] = useState("Rope");
 
   const handleCategoryChange = (value: string) => {
@@ -47,10 +59,15 @@ export default function MixerScoreScroller({ mixerRoutes, mixerBoulders }: Mixer
       </div>
 
       <div className={category === "Rope" ? "block" : "hidden"}>
-        <MixerRopeScorer mixerRoutes={mixerRoutes} />
+        <MixerRopeScorer mixerRoutes={mixerRoutes} ropeCompletions={ropeCompletions} />
       </div>
       <div className={category === "Boulder" ? "block" : "hidden"}>
-        <MixerBoulderScorer mixerBoulders={mixerBoulders} />
+        <MixerBoulderScorer
+          compId={compId}
+          climberId={climber.id}
+          mixerBoulders={mixerBoulders}
+          boulderCompletions={boulderCompletions}
+        />
       </div>
     </div>
   );

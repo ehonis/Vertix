@@ -7,12 +7,21 @@ import clsx from "clsx";
 import { useState, useRef, useEffect } from "react";
 import "swiper/css";
 import { useNotification } from "@/app/contexts/NotificationContext";
-import { MixerBoulder } from "@prisma/client";
+import { MixerBoulder, MixerCompletion } from "@prisma/client";
+
 type MixeBoulderScrollerData = {
+  compId: string;
+  climberId: string;
   mixerBoulders: MixerBoulder[];
+  boulderCompletions: MixerCompletion[];
 };
 
-export default function MixerBoulderScorer({ mixerBoulders }: MixeBoulderScrollerData) {
+export default function MixerBoulderScorer({
+  compId,
+  climberId,
+  mixerBoulders,
+  boulderCompletions,
+}: MixeBoulderScrollerData) {
   const { showNotification } = useNotification();
 
   type BoulderState = {
@@ -22,67 +31,35 @@ export default function MixerBoulderScorer({ mixerBoulders }: MixeBoulderScrolle
   type CompletionState = {
     [key: string]: boolean;
   };
+
   // Load initial state from localStorage or use default values
   const [boulderAttempts, setBoulderAttempts] = useState<BoulderState>(() => {
-    if (typeof window !== "undefined") {
-      const savedAttempts = localStorage.getItem("boulderAttempts");
-      if (savedAttempts) {
-        return JSON.parse(savedAttempts);
-      }
-    }
     return mixerBoulders.reduce((acc: BoulderState, panel) => {
       acc[panel.id] = 0;
       return acc;
     }, {});
   });
 
-  const [boulderCompletions, setBoulderCompletions] = useState<CompletionState>(() => {
-    if (typeof window !== "undefined") {
-      const savedCompletions = localStorage.getItem("boulderCompletions");
-      if (savedCompletions) {
-        return JSON.parse(savedCompletions);
-      }
-    }
+  const [completions, setCompletions] = useState<CompletionState>(() => {
+    // Initialize completions from database completions, with fallback for undefined
     return mixerBoulders.reduce((acc: CompletionState, panel) => {
-      acc[panel.id] = false;
+      // Check if this boulder is in the database completions
+      // If boulderCompletions is undefined or empty, default to false
+      const isCompleted =
+        boulderCompletions?.some(completion => completion.mixerBoulderId === panel.id) ?? false;
+      if (isCompleted) {
+        // If boulder is completed, get the attempts from boulderCompletions
+        const completion = boulderCompletions.find(c => c.mixerBoulderId === panel.id);
+        // Update attempts state with the stored value
+        boulderAttempts[panel.id] = completion?.attempts || 0;
+      }
+      acc[panel.id] = isCompleted;
       return acc;
     }, {});
   });
 
-  // Save to localStorage whenever attempts or completions change
-  useEffect(() => {
-    localStorage.setItem("boulderAttempts", JSON.stringify(boulderAttempts));
-  }, [boulderAttempts]);
-
-  useEffect(() => {
-    localStorage.setItem("boulderCompletions", JSON.stringify(boulderCompletions));
-  }, [boulderCompletions]);
-
-  const [boulderRangeValue, setBoulderRangeValue] = useState(0);
+  const [boulderRangeValue, setBoulderRangeValue] = useState<number>(0);
   const swiperBoulderRef = useRef<SwiperType | null>(null);
-
-  const [showSwipeAnimation, setShowSwipeAnimation] = useState(true);
-  const [showBlurBackground, setShowBlurBackground] = useState(true);
-
-  useEffect(() => {
-    const animationTimer = setTimeout(() => {
-      setShowSwipeAnimation(false);
-    }, 3400); // Animation disappears after 3.4 seconds
-
-    const blurTimer = setTimeout(() => {
-      setShowBlurBackground(false);
-    }, 3400); // Blur disappears after 3.4 seconds
-
-    return () => {
-      clearTimeout(animationTimer);
-      clearTimeout(blurTimer);
-    }; // Clear timeouts on unmount
-  }, []);
-
-  const handleSwiperInteraction = () => {
-    setShowSwipeAnimation(false);
-    setShowBlurBackground(false); // Also hide blur on swipe
-  };
 
   const handleBoulderAttemptChange = (panelId: string, e: React.ChangeEvent<HTMLInputElement>) => {
     const inputValue = e.target.value;
@@ -108,31 +85,103 @@ export default function MixerBoulderScorer({ mixerBoulders }: MixeBoulderScrolle
   };
 
   const handleBoulderRangeChange = (value: number) => {
-    setBoulderRangeValue(value);
+    // Ensure value is a valid number
+    const newValue = typeof value === "number" ? value : 0;
+    setBoulderRangeValue(newValue);
     if (swiperBoulderRef.current) {
-      swiperBoulderRef.current.slideTo(value);
+      swiperBoulderRef.current.slideTo(newValue);
     }
   };
 
-  const handleBoulderCompletion = (panelId: string, attempts: number) => {
+  const handleBoulderCompletion = async (panelId: string, attempts: number, points: number) => {
     if (attempts < 1) {
       showNotification({
         message: `1 Attempt Needed`,
         color: "red",
       });
     } else {
-      setBoulderCompletions(prev => ({
+      try {
+        // Update local state
+        setCompletions(prev => ({
+          ...prev,
+          [panelId]: true,
+        }));
+
+        // Update database
+
+        const response = await fetch("/api/mixer/comp/boulder-completions", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            mixerBoulderId: panelId,
+            climberId: climberId,
+            compId: compId,
+            attempts: attempts,
+            points: points,
+            type: "BOULDER",
+          }),
+        });
+
+        if (!response.ok) {
+          showNotification({
+            message: `Oops! Failed to save completion, uncompleting... please try again`,
+            color: "red",
+          });
+        }
+
+        showNotification({
+          message: `Boulder ${points} completion saved successfully!`,
+          color: "green",
+        });
+      } catch (error) {
+        showNotification({
+          message: `Oops! Failed to save completion, uncompleting... please try again`,
+          color: "red",
+        });
+        // Revert local state on error
+        setCompletions(prev => ({
+          ...prev,
+          [panelId]: false,
+        }));
+      }
+    }
+  };
+
+  const handleBoulderUncompletion = async (panelId: string) => {
+    try {
+      // Update local state
+      setCompletions(prev => ({
+        ...prev,
+        [panelId]: false,
+      }));
+
+      // Delete from database
+      const response = await fetch(
+        `/api/mixer/comp/boulder-completions?mixerBoulderId=${panelId}&climberId=${climberId}`,
+        {
+          method: "DELETE",
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to delete completion");
+      }
+
+      showNotification({
+        message: "Uncompleted saved successfully!",
+        color: "green",
+      });
+    } catch (error) {
+      showNotification({
+        message: "Failed to uncomplete boulder",
+        color: "red",
+      });
+      // Revert local state on error
+      setCompletions(prev => ({
         ...prev,
         [panelId]: true,
       }));
     }
-  };
-
-  const handleBoulderUncompletion = (panelId: string) => {
-    setBoulderCompletions(prev => ({
-      ...prev,
-      [panelId]: false,
-    }));
   };
 
   return (
@@ -141,8 +190,7 @@ export default function MixerBoulderScorer({ mixerBoulders }: MixeBoulderScrolle
         direction="vertical"
         grabCursor={true}
         onSwiper={swiper => (swiperBoulderRef.current = swiper)}
-        onSlideChange={swiper => setBoulderRangeValue(swiper.activeIndex)}
-        onTap={handleSwiperInteraction}
+        onSlideChange={swiper => setBoulderRangeValue(swiper.activeIndex ?? 0)}
         className="h-[calc(100vh-16rem)] max-w-sm md:max-w-lg rounded-sm"
         modules={[Virtual]}
         virtual
@@ -152,7 +200,7 @@ export default function MixerBoulderScorer({ mixerBoulders }: MixeBoulderScrolle
       >
         {mixerBoulders.map((panel, index) => (
           <SwiperSlide key={panel.id} virtualIndex={index} className="p-8 pt-2 rounded-lg">
-            {boulderCompletions[panel.id] === false ? (
+            {completions[panel.id] === false ? (
               <div
                 className={clsx(
                   "relative flex flex-col p-5 pt-6 items-center h-full rounded-lg bg-black shadow-lg text-white text-2xl gap-3 justify-between",
@@ -251,7 +299,9 @@ export default function MixerBoulderScorer({ mixerBoulders }: MixeBoulderScrolle
                 <div className="flex flex-col gap-3 items-center">
                   <button
                     className="bg-green-500/45 border-2 border-green-500 rounded-full size-16 flex justify-center items-center"
-                    onClick={() => handleBoulderCompletion(panel.id, boulderAttempts[panel.id])}
+                    onClick={() =>
+                      handleBoulderCompletion(panel.id, boulderAttempts[panel.id], panel.points)
+                    }
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"

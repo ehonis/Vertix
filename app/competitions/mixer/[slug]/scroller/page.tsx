@@ -4,6 +4,7 @@ import { auth } from "@/auth";
 import { useNotification } from "@/app/contexts/NotificationContext";
 import { redirect } from "next/navigation";
 import { User } from "@prisma/client";
+import { MixerClimber } from "@prisma/client";
 
 export default async function Mixer({ params }: { params: Promise<{ slug: string }> }) {
   const session = await auth();
@@ -14,18 +15,52 @@ export default async function Mixer({ params }: { params: Promise<{ slug: string
   }
 
   const compId = (await params).slug;
+  // Fetch competition data, climber info, routes, and boulders in parallel for better performance
+  const [comp, climber, routes, boulders] = await Promise.all([
+    // Get competition details
+    prisma.mixerCompetition.findUnique({
+      where: { id: compId },
+    }),
 
-  const comp = await prisma.mixerCompetition.findUnique({
-    where: { id: compId },
+    // Get climber info for current user
+    prisma.mixerClimber.findFirst({
+      where: {
+        competitionId: compId,
+        userId: user?.id,
+      },
+    }),
+
+    // Get all routes sorted by name
+    prisma.mixerRoute.findMany({
+      where: { competitionId: compId },
+      orderBy: {
+        name: "asc",
+      },
+    }),
+
+    // Get all boulders sorted by points
+    prisma.mixerBoulder.findMany({
+      where: { competitionId: compId },
+      orderBy: {
+        points: "asc",
+      },
+    }),
+  ]);
+
+  const boulderCompletions = await prisma.mixerCompletion.findMany({
+    where: {
+      competitionId: compId,
+      climberId: climber?.id,
+      type: "BOULDER",
+    },
   });
-  const climber = await prisma.mixerClimber.findFirst({
-    where: { competitionId: compId, userId: user?.id },
-  });
-  const routes = await prisma.mixerRoute.findMany({
-    where: { competitionId: compId },
-  });
-  const boulders = await prisma.mixerBoulder.findMany({
-    where: { competitionId: compId },
+
+  const ropeCompletions = await prisma.mixerCompletion.findMany({
+    where: {
+      competitionId: compId,
+      climberId: climber?.id,
+      type: "ROPE",
+    },
   });
 
   const parsedData = routes.map(route => ({
@@ -35,7 +70,14 @@ export default async function Mixer({ params }: { params: Promise<{ slug: string
 
   return (
     <>
-      <MixerScoreScroller mixerRoutes={parsedData} mixerBoulders={boulders} user={user as User} />
+      <MixerScoreScroller
+        compId={compId}
+        mixerRoutes={parsedData}
+        mixerBoulders={boulders}
+        climber={climber as MixerClimber}
+        boulderCompletions={boulderCompletions}
+        ropeCompletions={ropeCompletions}
+      />
     </>
   );
 }
