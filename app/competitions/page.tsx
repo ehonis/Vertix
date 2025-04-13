@@ -8,48 +8,59 @@ import ElementLoadingAnimation from "../ui/general/element-loading-animation";
 import { CompetitionStatus } from "@prisma/client";
 import { auth } from "@/auth";
 import { UserRole } from "@prisma/client";
-async function InactiveComps() {
+async function TestComps() {
   const session = await auth();
   const user = session?.user;
 
   if (user?.role !== UserRole.ADMIN) {
     return null;
   } else {
-    const InactiveCompetitions = await prisma.mixerCompetition.findMany({
+    const testCompetitions = await prisma.mixerCompetition.findMany({
       where: {
-        status: CompetitionStatus.INACTIVE,
+        isTestCompetition: true,
       },
     });
-    if (InactiveCompetitions.length === 0) {
+    if (testCompetitions.length === 0) {
       return null;
     } else {
       return (
         <div className="flex flex-col justify-center ">
-          <h1 className="font-barlow text-2xl text-white font-semibold mb-1">Unavailable</h1>
+          <h1 className="font-barlow text-2xl text-white font-semibold mb-1">Tests</h1>
           <div className="flex flex-col gap-3 w-full">
-            {InactiveCompetitions.map(comp => (
+            {testCompetitions.map(comp => (
               <Link
                 key={comp.id}
                 href={`/competitions/mixer/${comp.id}`}
-                className=" bg-red-500/15 rounded-lg  p-2 flex justify-between outline outline-red-400 place-items-center"
+                className={clsx(
+                  " bg-red-500/15 rounded-lg  p-2 flex justify-between outline outline-red-400 place-items-center",
+                  comp.status === CompetitionStatus.INACTIVE && "outline-red-400 bg-red-500/15",
+                  comp.status === CompetitionStatus.UPCOMING && "outline-blue-400 bg-blue-500/15",
+                  comp.status === CompetitionStatus.IN_PROGRESS &&
+                    "outline-green-400 bg-green-500/15",
+                  comp.status === CompetitionStatus.COMPLETED && "outline-green-400 bg-green-500/15"
+                )}
               >
                 <div className="flex flex-col">
-                  <p className="font-barlow  text-white text-xl text-center whitespace-nowrap">
+                  <p className="font-barlow  text-white text-xl  whitespace-nowrap text-start">
                     {comp.name}
                   </p>
 
-                  <p className="text-red-400 text-sm italic ">Inactive</p>
+                  <p className="text-red-400 text-sm italic ">
+                    {comp.status === CompetitionStatus.INACTIVE && "Inactive"}
+                    {comp.status === CompetitionStatus.UPCOMING && "Upcoming"}
+                    {comp.status === CompetitionStatus.IN_PROGRESS && "In Progress"}
+                    {comp.status === CompetitionStatus.COMPLETED && "Completed"}
+                  </p>
                 </div>
-                {comp.status === CompetitionStatus.INACTIVE && (
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="#000000"
-                    viewBox="0 0 256 256"
-                    className="size-12 stroke-white fill-white relative z-10 self-center place-self-start"
-                  >
-                    <path d="M221.69,199.77,160,96.92V40h8a8,8,0,0,0,0-16H88a8,8,0,0,0,0,16h8V96.92L34.31,199.77A16,16,0,0,0,48,224H208a16,16,0,0,0,13.72-24.23ZM110.86,103.25A7.93,7.93,0,0,0,112,99.14V40h32V99.14a7.93,7.93,0,0,0,1.14,4.11L183.36,167c-12,2.37-29.07,1.37-51.75-10.11-15.91-8.05-31.05-12.32-45.22-12.81ZM48,208l28.54-47.58c14.25-1.74,30.31,1.85,47.82,10.72,19,9.61,35,12.88,48,12.88a69.89,69.89,0,0,0,19.55-2.7L208,208Z"></path>
-                  </svg>
-                )}
+
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="#000000"
+                  viewBox="0 0 256 256"
+                  className="size-12 stroke-white fill-white relative z-10 self-center place-self-start"
+                >
+                  <path d="M221.69,199.77,160,96.92V40h8a8,8,0,0,0,0-16H88a8,8,0,0,0,0,16h8V96.92L34.31,199.77A16,16,0,0,0,48,224H208a16,16,0,0,0,13.72-24.23ZM110.86,103.25A7.93,7.93,0,0,0,112,99.14V40h32V99.14a7.93,7.93,0,0,0,1.14,4.11L183.36,167c-12,2.37-29.07,1.37-51.75-10.11-15.91-8.05-31.05-12.32-45.22-12.81ZM48,208l28.54-47.58c14.25-1.74,30.31,1.85,47.82,10.72,19,9.61,35,12.88,48,12.88a69.89,69.89,0,0,0,19.55-2.7L208,208Z"></path>
+                </svg>
               </Link>
             ))}
           </div>
@@ -62,6 +73,7 @@ async function DemoComps() {
   const demoCompetitions = await prisma.mixerCompetition.findMany({
     where: {
       status: CompetitionStatus.DEMO,
+      isTestCompetition: false,
     },
   });
   return (
@@ -103,6 +115,7 @@ async function UpComingComps() {
       status: {
         in: [CompetitionStatus.UPCOMING, CompetitionStatus.IN_PROGRESS],
       },
+      isTestCompetition: false,
     },
   });
 
@@ -220,7 +233,7 @@ export default async function page() {
               </div>
             }
           >
-            <InactiveComps />
+            <TestComps />
           </Suspense>
         </div>
 

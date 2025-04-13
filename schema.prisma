@@ -211,6 +211,7 @@ model MixerCompetition {
     createdAt          DateTime            @default(now())
     updatedAt          DateTime            @updatedAt
     areScoresAvailable Boolean             @default(false)
+    isTestCompetition  Boolean             @default(false)
 }
 
 model MixerRoute {
