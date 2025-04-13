@@ -9,6 +9,7 @@ import SignOut from "../general/sign-out-button";
 export default function UserProfile() {
   const { data: session } = useSession();
   const user = session?.user;
+
   const [isProfilePopUp, setIsProfilePopUp] = useState(false);
 
   const profileRef = useRef<HTMLDivElement>(null);

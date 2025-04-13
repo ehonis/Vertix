@@ -12,7 +12,7 @@ export default async function MixerCompetitions({ compStatus }: { compStatus: Co
     take: 3,
     select: { id: true, name: true, compDay: true, imageUrl: true, status: true },
   });
-  console.log(competitions);
+
   if (competitions.length === 0) {
     return <div></div>;
   }

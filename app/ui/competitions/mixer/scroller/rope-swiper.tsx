@@ -302,7 +302,8 @@ export default function MixerRopeScorer({
     panelId: string,
     attempts: number,
     points: number,
-    name: string
+    name: string,
+    holdNumber: number
   ) => {
     if (attempts < 1) {
       showNotification({
@@ -329,6 +330,7 @@ export default function MixerRopeScorer({
             attempts: attempts,
             points: points,
             type: "ROPE",
+            holdNumber: holdNumber,
           }),
         });
 
@@ -658,7 +660,13 @@ export default function MixerRopeScorer({
                   <button
                     className="bg-green-500/45 border-2 border-green-500 rounded-full size-16 flex justify-center items-center"
                     onClick={() =>
-                      handleCompletion(panel.id, attempts[panel.id], points[panel.id], panel.name)
+                      handleCompletion(
+                        panel.id,
+                        attempts[panel.id],
+                        points[panel.id],
+                        panel.name,
+                        hold[panel.id]
+                      )
                     }
                   >
                     <svg

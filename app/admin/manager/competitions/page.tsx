@@ -68,7 +68,7 @@ export default async function Page() {
           </div>
 
           <div className="flex flex-col gap-2">
-            <h2 className="font-barlow font-bold text-white text-2xl">Upcoming Competitions</h2>
+            <h2 className="font-barlow font-bold text-white text-2xl">Quick Access Comps</h2>
             <Suspense fallback={<ElementLoadingAnimation />}>
               <UpComingCompetitions />
             </Suspense>

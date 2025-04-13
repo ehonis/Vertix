@@ -7,7 +7,7 @@ export async function POST(req: NextRequest) {
   if (!session) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
-  const { climberId, compId, type, mixerRouteId, attempts, points } =
+  const { climberId, compId, type, mixerRouteId, attempts, points, holdNumber } =
     await req.json();
 
   if (!climberId || !compId || !type || !mixerRouteId || !attempts || !points) {
@@ -22,6 +22,7 @@ export async function POST(req: NextRequest) {
       mixerRouteId,
       attempts,
       points,
+      holdNumber,
     },
   });
 

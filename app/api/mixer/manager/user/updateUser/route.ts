@@ -1,6 +1,8 @@
 import { NextResponse, NextRequest } from "next/server";
 import prisma from "@/prisma";
 import { auth } from "@/auth";
+import { ClimberStatus } from "@prisma/client";
+
 export async function POST(req : NextRequest) {
   const session = await auth();
     
@@ -22,14 +24,28 @@ export async function POST(req : NextRequest) {
       user,
       divisionId,
       entryMethod,
+      climberStatus,
     } = await req.json();
 
-    // Convert string values to integers
-    const parsedRopeScore = parseInt(ropeScore, 10);
-    const parsedBoulderScore = parseInt(boulderScore, 10);
-    const parsedRopeAttempts = parseInt(ropeAttempts, 10);
-    const parsedBoulderAttempts = parseInt(boulderAttempts, 10);
+    // Convert string values to integers only if they are provided
+    let parsedRopeScore = ropeScore !== null ? parseInt(ropeScore, 10) : null;
+    let parsedBoulderScore = boulderScore !== null ? parseInt(boulderScore, 10) : null;
+    let parsedRopeAttempts = ropeAttempts !== null ? parseInt(ropeAttempts, 10) : null;
+    let parsedBoulderAttempts = boulderAttempts !== null ? parseInt(boulderAttempts, 10) : null;
 
+    console.log(parsedRopeScore, parsedBoulderScore, parsedRopeAttempts, parsedBoulderAttempts);
+    if(isNaN(parsedRopeScore as number)){
+      parsedRopeScore = null;
+    }
+    if(isNaN(parsedBoulderScore as number)){
+      parsedBoulderScore = null;
+    }
+    if(isNaN(parsedRopeAttempts as number)){
+      parsedRopeAttempts = null;
+    }
+    if(isNaN(parsedBoulderAttempts as number)){
+      parsedBoulderAttempts = null;
+    }
     // Use a transaction to ensure all operations succeed or fail together
     const result = await prisma.$transaction(async tx => {
       // Create the climber first
@@ -47,6 +63,7 @@ export async function POST(req : NextRequest) {
         },
         entryMethod,
         user,
+        climberStatus,
       };
 
       // Add user connection if a user is provided
@@ -67,27 +84,33 @@ export async function POST(req : NextRequest) {
         data: climberData,
       });
 
-      // Create rope score
-      const ropeScoreData = {
-        score: parsedRopeScore,
-        attempts: parsedRopeAttempts,
-      };
+      // Only update rope score if both score and attempts are provided
+      let updatedRopeScore = null;
+      if (parsedRopeScore !== null && parsedRopeAttempts !== null) {
+        const ropeScoreData = {
+          score: parsedRopeScore,
+          attempts: parsedRopeAttempts,
+        };
 
-      const updatedRopeScore = await tx.mixerRopeScore.update({
-        where: { climberId: userId },
-        data: ropeScoreData,
-      });
+        updatedRopeScore = await tx.mixerRopeScore.update({
+          where: { climberId: userId },
+          data: ropeScoreData,
+        });
+      }
 
-      // Create boulder score
-      const boulderScoreData = {
-        score: parsedBoulderScore,
-        attempts: parsedBoulderAttempts,
-      };
+      // Only update boulder score if both score and attempts are provided
+      let updatedBoulderScore = null;
+      if (parsedBoulderScore !== null && parsedBoulderAttempts !== null) {
+        const boulderScoreData = {
+          score: parsedBoulderScore,
+          attempts: parsedBoulderAttempts,
+        };
 
-      const updatedBoulderScore = await tx.mixerBoulderScore.update({
-        where: { climberId: userId },
-        data: boulderScoreData,
-      });
+        updatedBoulderScore = await tx.mixerBoulderScore.update({
+          where: { climberId: userId },
+          data: boulderScoreData,
+        });
+      }
 
       return {
         climber: climber,

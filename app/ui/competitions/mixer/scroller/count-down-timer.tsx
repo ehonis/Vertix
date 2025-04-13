@@ -15,7 +15,7 @@ export default function MixerCountdownTimer({
   const { showNotification } = useNotification();
   // Calculate initial time left when component mounts
   const calculateInitialTimeLeft = () => {
-    if (!startedAt || !timeAllotted) return 0;
+    if (!startedAt || !timeAllotted) return 1800;
 
     // Convert timeAllotted from minutes to seconds
     const timeAllottedInSeconds = timeAllotted * 60;
@@ -91,7 +91,7 @@ export default function MixerCountdownTimer({
   };
 
   return (
-    <div className="text-center font-bold text-black font-barlow bg-white outline p-1 outline-black w-[4.5rem] rounded">
+    <div className="text-center font-bold text-black font-barlow bg-white outline p-1 rounded flex justify-center items-center">
       {formatTime(timeLeft)}
     </div>
   );

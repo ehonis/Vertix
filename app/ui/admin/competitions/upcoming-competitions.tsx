@@ -6,7 +6,9 @@ import { CompetitionStatus } from "@prisma/client";
 export default async function UpComingCompetitions() {
   const UpComingCompetitions = await prisma.mixerCompetition.findMany({
     where: {
-      status: { in: [CompetitionStatus.INACTIVE, CompetitionStatus.UPCOMING] },
+      status: {
+        in: [CompetitionStatus.INACTIVE, CompetitionStatus.UPCOMING, CompetitionStatus.IN_PROGRESS],
+      },
     },
     take: 3,
     select: { id: true, name: true, compDay: true, imageUrl: true, status: true },
@@ -20,7 +22,9 @@ export default async function UpComingCompetitions() {
           className={clsx(
             " max-w-md grid-cols-3 grid font-barlow font-bold text-white p-3 rounded-sm  items-center",
             comp.status === CompetitionStatus.INACTIVE && "bg-red-500/25 outline outline-red-500",
-            comp.status === CompetitionStatus.UPCOMING && "bg-blue-500/25 outline outline-blue-500"
+            comp.status === CompetitionStatus.UPCOMING && "bg-blue-500/25 outline outline-blue-500",
+            comp.status === CompetitionStatus.IN_PROGRESS &&
+              "bg-green-500/25 outline outline-green-500"
           )}
           href={`/admin/manager/competitions/mixer/${comp.id}`}
         >

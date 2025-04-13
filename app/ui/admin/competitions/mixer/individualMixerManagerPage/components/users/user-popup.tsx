@@ -3,10 +3,12 @@ import { useState, useEffect } from "react";
 import { motion } from "motion/react";
 import clsx from "clsx";
 import Image from "next/image";
-import FindUserPopUp from "./mixer-find-user-popup";
+import FindUserPopUp from "./find-user-popup";
 import { useNotification } from "@/app/contexts/NotificationContext";
 import { useRouter } from "next/navigation";
 import ConfirmationPopUp from "@/app/ui/general/confirmation-pop-up";
+import { ClimberStatus } from "@prisma/client";
+import AllCompletionsPopUp from "./all-completions-popup";
 import {
   MixerClimber,
   MixerDivision,
@@ -47,10 +49,12 @@ export default function EditUserPopUp({
   const [tempRopeScore, setTempRopeScore] = useState(ropeScore?.score || "");
   const [tempBoulderAttempts, setTempBoulderAttempts] = useState(boulderScore?.attempts || "");
   const [tempRopeAttempts, setTempRopeAttempts] = useState(ropeScore?.attempts || "");
+  const [climberStatus, setClimberStatus] = useState(climber?.climberStatus || "NOT_STARTED");
 
   const [isSaveButton, setIsSaveButton] = useState(false);
   const [isUserSearchPopUp, setIsUserSearchPopUp] = useState(false);
   const [isConfirmationPopUp, setIsConfirmationPopUp] = useState(false);
+  const [isAllCompletionsPopUp, setIsAllCompletionsPopUp] = useState(false);
 
   // Fetch connected user if entry method is APP
   useEffect(() => {
@@ -150,26 +154,6 @@ export default function EditUserPopUp({
   const handleSubmit = async () => {
     if (climberName === "") {
       showNotification({ message: "Cannot Submit: No Name", color: "red" });
-    } else if (tempBoulderScore === "") {
-      showNotification({
-        message: "Cannot Submit: No Boulder Score",
-        color: "red",
-      });
-    } else if (tempBoulderAttempts === "") {
-      showNotification({
-        message: "Cannot Submit: No boulder attempts",
-        color: "red",
-      });
-    } else if (tempRopeScore === "") {
-      showNotification({
-        message: "Cannot Submit: No rope score",
-        color: "red",
-      });
-    } else if (tempRopeAttempts === "") {
-      showNotification({
-        message: "Cannot Submit: No rope attempts",
-        color: "red",
-      });
     } else if (entryMethod === "APP" && !connectedUser) {
       showNotification({
         message: "Cannot Submit: No selected user",
@@ -190,6 +174,7 @@ export default function EditUserPopUp({
         boulderAttempts: tempBoulderAttempts,
         ropeAttempts: tempRopeAttempts,
         user: connectedUser,
+        climberStatus,
         divisionId,
         entryMethod,
       };
@@ -327,6 +312,12 @@ export default function EditUserPopUp({
           onConnectUser={handleUpdateConnectedUser}
         />
       )}
+      {isAllCompletionsPopUp && (
+        <AllCompletionsPopUp
+          onCancel={() => setIsAllCompletionsPopUp(false)}
+          climber={climber as MixerClimber}
+        />
+      )}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -339,7 +330,7 @@ export default function EditUserPopUp({
           animate={{ scale: 1 }}
           exit={{ scale: 0.8 }}
           transition={{ duration: 0.3 }}
-          className="bg-bg2 p-3 rounded-lg shadow-lg text-white max-w-xs w-full relative flex flex-col gap-2"
+          className="bg-slate-900 p-3 rounded-lg shadow-lg text-white max-w-xs w-full relative flex flex-col gap-2"
         >
           <button className="absolute top-2 right-2" onClick={onCancel}>
             <svg
@@ -364,7 +355,7 @@ export default function EditUserPopUp({
               name=""
               id=""
               onChange={handleNameChange}
-              className="text-white rounded-l bg-bg0 px-2 py-1 w-48 focus:outline-hidden"
+              className="text-white rounded-l bg-gray-600 px-2 py-1 w-48 focus:outline-hidden"
               placeholder="Climber Name"
             />
             <select
@@ -373,7 +364,7 @@ export default function EditUserPopUp({
               value={entryMethod}
               onChange={handleEntryMethodChange}
               className={clsx(
-                "font-light bg-slate-900 p-1 rounded-r text-center w-24",
+                "font-light bg-gray-700 p-1 rounded-r text-center w-24",
                 entryMethod === "MANUAL" ? "text-gray-300" : "text-green-400"
               )}
             >
@@ -394,7 +385,7 @@ export default function EditUserPopUp({
           ) : null}
           {connectedUser !== null && entryMethod === "APP" ? (
             <div className="flex justify-center">
-              <div className="flex bg-slate-900 items-center p-2 rounded-sm w-72 justify-between">
+              <div className="flex bg-gray-700 items-center p-2 rounded-sm w-72 justify-between">
                 {/* user image */}
                 <div className="flex justify-between w-full gap-2">
                   <div className="flex gap-2">
@@ -424,8 +415,8 @@ export default function EditUserPopUp({
                     )}
                     <div className="flex flex-col gap-0 self-center">
                       <p className="text-lg truncate max-w-max w-[9.5rem]">{connectedUser?.name}</p>
-                      <p className="text-sm text-gray-500 truncate w-24 -mt-2">
-                        @{connectedUser?.id}
+                      <p className="text-sm text-gray-400 truncate w-24 -mt-2">
+                        @{connectedUser?.username}
                       </p>
                     </div>
                   </div>
@@ -440,7 +431,21 @@ export default function EditUserPopUp({
               </div>
             </div>
           ) : null}
-
+          <div className="w-full flex flex-col items-center">
+            <p className="place-self-start ml-1">Climber Status</p>
+            <select
+              name=""
+              id=""
+              className="bg-gray-700 w-72 px-2 py-1 rounded-md text-center"
+              value={climberStatus}
+              onChange={e => setClimberStatus(e.target.value as ClimberStatus)}
+            >
+              <option value="COMPLETED">Completed</option>
+              <option value="IN_PROGRESS">In Progress</option>
+              <option value="NOT_STARTED">Not Started</option>
+            </select>
+          </div>
+          {/* division */}
           {divisions.length !== 0 && (
             <div className="w-full flex flex-col items-center">
               <p className="place-self-start ml-1">Division</p>
@@ -449,7 +454,7 @@ export default function EditUserPopUp({
                 id=""
                 value={divisionId}
                 onChange={e => setDivisionId(e.target.value)}
-                className="bg-slate-900 w-72 px-2 py-1 rounded-md text-center"
+                className="bg-gray-700 w-72 px-2 py-1 rounded-md text-center"
               >
                 <option value="none"></option>
                 {divisions.map(division => (
@@ -460,71 +465,82 @@ export default function EditUserPopUp({
               </select>
             </div>
           )}
+          <div className="flex flex-col">
+            <p className="place-self-start ml-1 gap-0">Completions & Scores</p>
+            {connectedUser !== null && entryMethod === "APP" ? (
+              <button
+                className="bg-blue-600 text-white px-2 py-1 rounded-sm mx-1"
+                onClick={() => setIsAllCompletionsPopUp(true)}
+              >
+                View All Completions
+              </button>
+            ) : null}
+            {/* boulder scores */}
+            <div className="flex flex-col bg-gray-700 rounded-sm p-2 gap-2 w-72 place-self-center my-2">
+              <p>Boulder Scores Combined</p>
+              <div className="flex gap-2 items-center">
+                <label htmlFor="" className="text-sm">
+                  Score:
+                </label>
+                <input
+                  type="text"
+                  name=""
+                  id=""
+                  value={tempBoulderScore}
+                  onChange={handleBoulderScoreChange}
+                  className="w-16 bg-white text-bg1 rounded-sm px-2  text-sm focus:outline-hidden"
+                  inputMode="numeric" // Show numeric keyboard on mobile
+                  pattern="[0-9]*" // Optional: For better mobile support
+                />
+                <label htmlFor=" " className="text-sm">
+                  Attempts:
+                </label>
+                <input
+                  type="text"
+                  name=""
+                  id=""
+                  value={tempBoulderAttempts}
+                  onChange={handleBoulderAttemptsChange}
+                  className="w-10 bg-white text-bg1 rounded-sm px-2 text-sm focus:outline-hidden"
+                  inputMode="numeric" // Show numeric keyboard on mobile
+                  pattern="[0-9]*" // Optional: For better mobile support
+                />
+              </div>
+            </div>
+            {/* rope scores */}
+            <div className="flex flex-col bg-gray-700 rounded-sm p-2 gap-2 w-72 place-self-center">
+              <p>Ropes Scores Combined</p>
+              <div className="flex gap-2 items-center">
+                <label htmlFor="" className="text-sm">
+                  Score:
+                </label>
+                <input
+                  type="text"
+                  name=""
+                  id=""
+                  value={tempRopeScore}
+                  onChange={handleRopeScoreChange}
+                  className="w-16 bg-white text-bg1 rounded-sm px-2 text-sm focus:outline-hidden"
+                  inputMode="numeric" // Show numeric keyboard on mobile
+                  pattern="[0-9]*" // Optional: For better mobile support
+                />
+                <label htmlFor="" className="text-sm">
+                  Attempts:
+                </label>
+                <input
+                  type="text"
+                  name=""
+                  id=""
+                  value={tempRopeAttempts}
+                  onChange={handleRopeAttemptsChange}
+                  className="w-10 bg-white text-bg1 rounded-sm px-2 text-sm focus:outline-hidden "
+                  inputMode="numeric" // Show numeric keyboard on mobile
+                  pattern="[0-9]*" // Optional: For better mobile support
+                />
+              </div>
+            </div>
+          </div>
 
-          {/* boulder scores */}
-          <div className="flex flex-col bg-slate-900 rounded-sm p-2 gap-2 w-72 place-self-center">
-            <p>Boulder Scores Combined</p>
-            <div className="flex gap-2 items-center">
-              <label htmlFor="" className="text-sm">
-                Score:
-              </label>
-              <input
-                type="text"
-                name=""
-                id=""
-                value={tempBoulderScore}
-                onChange={handleBoulderScoreChange}
-                className="w-16 bg-white text-bg1 rounded-sm px-2  text-sm focus:outline-hidden"
-                inputMode="numeric" // Show numeric keyboard on mobile
-                pattern="[0-9]*" // Optional: For better mobile support
-              />
-              <label htmlFor=" " className="text-sm">
-                Attempts:
-              </label>
-              <input
-                type="text"
-                name=""
-                id=""
-                value={tempBoulderAttempts}
-                onChange={handleBoulderAttemptsChange}
-                className="w-10 bg-white text-bg1 rounded-sm px-2 text-sm focus:outline-hidden"
-                inputMode="numeric" // Show numeric keyboard on mobile
-                pattern="[0-9]*" // Optional: For better mobile support
-              />
-            </div>
-          </div>
-          {/* rope scores */}
-          <div className="flex flex-col bg-slate-900 rounded-sm p-2 gap-2 w-72 place-self-center">
-            <p>Ropes Scores Combined</p>
-            <div className="flex gap-2 items-center">
-              <label htmlFor="" className="text-sm">
-                Score:
-              </label>
-              <input
-                type="text"
-                name=""
-                id=""
-                value={tempRopeScore}
-                onChange={handleRopeScoreChange}
-                className="w-16 bg-white text-bg1 rounded-sm px-2 text-sm focus:outline-hidden"
-                inputMode="numeric" // Show numeric keyboard on mobile
-                pattern="[0-9]*" // Optional: For better mobile support
-              />
-              <label htmlFor="" className="text-sm">
-                Attempts:
-              </label>
-              <input
-                type="text"
-                name=""
-                id=""
-                value={tempRopeAttempts}
-                onChange={handleRopeAttemptsChange}
-                className="w-10 bg-white text-bg1 rounded-sm px-2 text-sm focus:outline-hidden "
-                inputMode="numeric" // Show numeric keyboard on mobile
-                pattern="[0-9]*" // Optional: For better mobile support
-              />
-            </div>
-          </div>
           <div className="flex justify-between">
             {type === "EDIT" && (
               <button

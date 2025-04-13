@@ -1,7 +1,6 @@
 import MixerScoreScroller from "@/app/ui/competitions/mixer/scroller/score-scroller";
 import prisma from "@/prisma";
 import { auth } from "@/auth";
-import { useNotification } from "@/app/contexts/NotificationContext";
 import { redirect } from "next/navigation";
 import { ClimberStatus, MixerCompetition, MixerClimber } from "@prisma/client";
 
@@ -53,10 +52,10 @@ export default async function Mixer({ params }: { params: Promise<{ slug: string
     redirect("/competitions/mixer/" + compId + "/leaderboard");
   }
 
-  if (climber.climberStatus === ClimberStatus.IN_PROGRESS) {
+  if (climber.climberStatus === ClimberStatus.NOT_STARTED) {
     await prisma.mixerClimber.update({
       where: { id: climber.id },
-      data: { climberStatus: ClimberStatus.COMPLETED },
+      data: { climberStatus: ClimberStatus.IN_PROGRESS },
     });
   }
 

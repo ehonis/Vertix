@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { clsx } from "clsx";
-import EditUserPopUp from "./mixer-edit-user-popup";
+import EditUserPopUp from "./user-popup";
 import { MixerClimber, MixerRopeScore, MixerBoulderScore, MixerDivision } from "@prisma/client";
 type UsersData = {
   compId: string;
@@ -35,7 +35,6 @@ export default function UsersComponent({
     const tempFoundClimber = compClimbers.find(climber => climber.id === climberId);
     const tempFoundRopeScore = ropeScores.find(score => score.climberId === climberId);
     const tempFoundBoulderScore = boulderScores.find(score => score.climberId === climberId);
-    console.log(tempFoundClimber);
     //set functions
     setFoundRopeScore(tempFoundRopeScore);
     setFoundBoulderScore(tempFoundBoulderScore);
