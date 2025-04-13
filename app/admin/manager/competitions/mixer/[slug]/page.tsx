@@ -2,14 +2,13 @@ export const dynamic = "force-dynamic";
 
 import Link from "next/link";
 import prisma from "@/prisma";
-import IndividualCompPageLoad from "@/app/ui/admin/competitions/mixer/individualMixerManagerPage/individual-comp-page-load";
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
-
-// export async function generateStaticParams() {
-//   const ids = await prisma.mixerCompetition.findMany().then(comps => comps.map(comp => comp.id));
-//   return ids;
-// }
+import VariablesComponent from "@/app/ui/admin/competitions/mixer/individualMixerManagerPage/components/variables/variables-component";
+import RoutesComponent from "@/app/ui/admin/competitions/mixer/individualMixerManagerPage/components/routes/routes-component";
+import BoulderComponent from "@/app/ui/admin/competitions/mixer/individualMixerManagerPage/components/boulders/boulders-component";
+import UsersComponent from "@/app/ui/admin/competitions/mixer/individualMixerManagerPage/components/users/users-component";
+import DivisionsComponent from "@/app/ui/admin/competitions/mixer/individualMixerManagerPage/components/divisions/divisions-component";
 
 export default async function page({ params }: { params: Promise<{ slug: string }> }) {
   const session = await auth();
@@ -69,7 +68,7 @@ export default async function page({ params }: { params: Promise<{ slug: string 
   }
   return (
     <div className="w-full max-w-full py-5 flex flex-col items-center font-barlow font-bold text-white">
-      <div className="max-w-md flex-col overflow-hidden">
+      <div className="max-w-md md:max-w-full flex-col overflow-hidden">
         <Link href={"/admin/manager/competitions/mixer"} className="flex gap-1 items-center ">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -87,23 +86,27 @@ export default async function page({ params }: { params: Promise<{ slug: string 
           </svg>
           <p className="font-barlow font-bold text-xs text-white">Mixer Manager</p>
         </Link>
-        <div className="w-full overflow-hidden">
-          <IndividualCompPageLoad
+        <div className="w-full flex flex-col md:flex-row md:gap-10 md:flex-wrap ">
+          <VariablesComponent
+            passcode={comp.passcode}
             compId={compId}
             name={comp.name}
-            status={comp.status}
             compDay={comp.compDay}
-            imageUrl={comp.imageUrl}
             areScoresAvailable={comp.areScoresAvailable}
+            status={comp.status}
             time={comp.time}
-            routes={compRoutes}
-            boulders={compBoulders}
-            divisions={compDivisions}
+            imageUrl={comp.imageUrl}
+          />
+          <UsersComponent
+            compId={compId}
             climbers={compClimbers}
             ropeScores={compRopeScores}
             boulderScores={compBoulderScores}
-            passcode={comp.passcode}
+            divisions={compDivisions}
           />
+          <DivisionsComponent divisions={compDivisions} compId={compId} />
+          <RoutesComponent routes={compRoutes} compId={compId} />
+          <BoulderComponent boulders={compBoulders} compId={compId} />
         </div>
       </div>
     </div>
