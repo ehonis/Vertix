@@ -47,7 +47,8 @@ export default function SearchRoutes({
         skip: "0",
         take: take.toString(),
         text: debouncedSearchText,
-        userId: user.id,
+        // Only include userId if it exists
+        ...(user?.id && { userId: user.id }),
       });
       try {
         const response = await fetch(`/api/routes/search-routes?${queryData}`);
@@ -67,7 +68,7 @@ export default function SearchRoutes({
     };
 
     fetchRoutes();
-  }, [debouncedSearchText, take]);
+  }, [debouncedSearchText, take, user?.id]);
 
   // LoadMore function: fetch additional routes and append them.
   const loadMore = async () => {
@@ -78,15 +79,17 @@ export default function SearchRoutes({
       skip: currentCount.toString(),
       take: take.toString(), // load next "page" of routes
       text: debouncedSearchText,
+      // Only include userId if it exists
+      ...(user?.id && { userId: user.id }),
     });
     try {
       const response = await fetch(`/api/routes/search-routes?${queryData}`);
       if (!response.ok) {
-        console.error("Error fetching more routes");
+        console.error("Error fetching routes");
         return;
       }
       const result = await response.json();
-      // Instead of replacing routes, append the new routes.
+      // Append new routes to the existing list.
       setRoutes(prevRoutes => [...prevRoutes, ...result.data]);
       setHasMore(result.hasMore);
     } catch (error) {

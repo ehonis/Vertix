@@ -38,8 +38,8 @@ export default function SignInForm() {
   };
   return (
     <div className="flex items-center flex-col justify-center mt-16">
-      <h1 className="text-3xl text-white font-bold m-5">Login or Sign Up</h1>
-      <div className="bg-slate-900 flex flex-col items-center justify-center p-5 px-10 md:w-96 w-80 rounded-lg shadow-md gap-3">
+      <h1 className="text-3xl text-white font-bold m-5 z-10">Login or Sign Up</h1>
+      <div className="bg-slate-900 flex flex-col items-center justify-center p-5 px-10 md:w-96 w-80 rounded-lg shadow-md gap-3 z-10">
         <div className="flex flex-col gap-4 w-full">
           <button onClick={() => handleSignIn("google")}>
             {!isGoogleLoading ? (
@@ -99,15 +99,15 @@ export default function SignInForm() {
             )}
           </button>
         </div>
-        <div className="h-1 w-full bg-white rounded-sm" />
+        <div className="h-0.5 w-full bg-white rounded-sm" />
         <div className="flex flex-col gap-3 w-full">
           <input
-            type="text"
+            type="email"
             name="email"
             placeholder="Email"
             value={emailString}
             onChange={e => setEmailString(e.target.value)}
-            className="text-white bg-bg2 rounded-sm px-2 py-1 font-barlow text-lg focus:outline-hidden"
+            className="text-white bg-gray-700 rounded-sm px-2 py-1 font-barlow text-lg focus:outline-hidden"
           />
           <button
             onClick={() => handleSignIn("resend")}
@@ -115,7 +115,7 @@ export default function SignInForm() {
           >
             {!isMagicLinkLoading ? (
               <div className="rounded-full flex justify-between">
-                <p>Send Magic Link</p>
+                <p>Send Email Magic Link</p>
                 <svg
                   viewBox="0 0 48 48"
                   xmlns="http://www.w3.org/2000/svg"
@@ -145,7 +145,7 @@ export default function SignInForm() {
           </button>
         </div>
       </div>
-      <p className="text-center italic font-barlow text-white text-xs mt-5">
+      <p className="text-center italic font-barlow text-white text-xs mt-5 z-10">
         Having trouble logging in? Please reach out by emailing{" "}
         <a
           href="mailto:support@vertixclimb.com"
@@ -154,6 +154,18 @@ export default function SignInForm() {
           support@vertixclimb.com
         </a>
       </p>
+      <div
+        className="absolute inset-0 opacity-60"
+        style={{
+          background: "radial-gradient(circle at top left, #8200DB 0%, transparent 75%)",
+        }}
+      />
+      <div
+        className="absolute inset-0 opacity-60"
+        style={{
+          background: "radial-gradient(circle at bottom right, #1447E6 0%, transparent 75%)",
+        }}
+      />
     </div>
   );
 }

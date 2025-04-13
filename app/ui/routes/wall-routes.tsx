@@ -31,7 +31,7 @@ export default function WallRoutes({ wall, user, onData }: WallRoutesProps) {
       const queryData = new URLSearchParams({
         wall: wall,
         page: page.toString(),
-        userId: user.id,
+        ...(user?.id && { userId: user.id }),
       });
       try {
         const response = await fetch(
