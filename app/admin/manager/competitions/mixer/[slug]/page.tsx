@@ -102,6 +102,7 @@ export default async function page({ params }: { params: Promise<{ slug: string 
             climbers={compClimbers}
             ropeScores={compRopeScores}
             boulderScores={compBoulderScores}
+            passcode={comp.passcode}
           />
         </div>
       </div>

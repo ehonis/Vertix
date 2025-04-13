@@ -27,6 +27,7 @@ type inDividualCompPageProps = {
   divisions: MixerDivision[];
   ropeScores: MixerRopeScore[];
   boulderScores: MixerBoulderScore[];
+  passcode: string | null;
 };
 export default function IndividualCompPageLoad({
   compId,
@@ -42,10 +43,12 @@ export default function IndividualCompPageLoad({
   divisions,
   ropeScores,
   boulderScores,
+  passcode,
 }: inDividualCompPageProps) {
   return (
     <div className="w-full overflow-hidden">
       <VariablesComponent
+        passcode={passcode}
         compId={compId}
         name={name}
         compDay={compDay}

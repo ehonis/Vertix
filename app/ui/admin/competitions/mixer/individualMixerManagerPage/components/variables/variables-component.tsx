@@ -18,6 +18,7 @@ type VariableDataProps = {
   status: CompetitionStatus;
   time: number;
   imageUrl: string | null;
+  passcode: string | null;
 };
 
 export default function VariablesComponent({
@@ -28,6 +29,7 @@ export default function VariablesComponent({
   status,
   time,
   imageUrl,
+  passcode,
 }: VariableDataProps) {
   const { showNotification } = useNotification();
   const router = useRouter();
@@ -37,6 +39,7 @@ export default function VariablesComponent({
   const [isScoresAvailable, setIsScoresAvailable] = useState(areScoresAvailable);
   const [compTime, setCompTime] = useState(time);
   const [statusOption, setStatusOption] = useState(status);
+  const [compPasscode, setCompPasscode] = useState(passcode);
 
   const [infoPopUpHtml, setInfoPopUpHtml] = useState(<div></div>);
   const [isScoresAvailableInfoPopUp, setIsScoresAvailableInfoPopUp] = useState(false);
@@ -321,6 +324,44 @@ export default function VariablesComponent({
       });
     }
   };
+  const [isCompPasscodeSave, setIsCompPasscodeSave] = useState(false);
+  const handleCompPasscodeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setCompPasscode(e.target.value);
+    if (e.target.value !== passcode) {
+      setIsCompPasscodeSave(true);
+    } else {
+      setIsCompPasscodeSave(false);
+    }
+  };
+
+  const handleCompPasscodeSave = async () => {
+    const data = { compId, compPasscode };
+    try {
+      const response = await fetch("/api/mixer/manager/variables/passcodeUpdate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+      if (!response.ok) {
+        showNotification({
+          message: "Could not update comp passcode",
+          color: "red",
+        });
+      } else {
+        showNotification({
+          message: "Successfully updated comp passcode",
+          color: "green",
+        });
+        setIsCompPasscodeSave(false);
+        router.refresh();
+      }
+    } catch (error) {
+      showNotification({
+        message: "Could not update comp passcode",
+        color: "red",
+      });
+    }
+  };
 
   return (
     <div>
@@ -552,6 +593,29 @@ export default function VariablesComponent({
                 </button>
               )}
             </div>
+          </div>
+          {/* comp passcode */}
+          <div className="flex gap-2 bg-gray-700 rounded-sm p-2 justify-between items-center">
+            <label htmlFor="" className="text-lg truncate">
+              Passcode
+            </label>
+            <input
+              type="text"
+              name=""
+              id=""
+              placeholder="Enter Passcode"
+              value={compPasscode || ""}
+              onChange={handleCompPasscodeChange}
+              className="bg-slate-900 rounded-sm p-1 w-32 text-center hide-spinners focus:outline-hidden"
+            />
+            {isCompPasscodeSave && (
+              <button
+                className="bg-green-500 px-2 py-1 rounded-md font-normal"
+                onClick={handleCompPasscodeSave}
+              >
+                Save
+              </button>
+            )}
           </div>
         </div>
       </div>
