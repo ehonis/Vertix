@@ -17,6 +17,7 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
 
   const showNotification = ({ message, color }: Notification) => {
     setNotification({ message, color });
+    console.log("notification triggered");
     setTimeout(() => setNotification(null), 7000);
   };
 

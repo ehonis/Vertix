@@ -161,7 +161,13 @@ export default async function page({ params }: { params: Promise<{ slug: string 
                   Resume Competition
                 </Link>
               ) : (
-                <PasscodeValidation passcode={competition.passcode} compId={compId} />
+                <div className="flex flex-col gap-2">
+                  <p className="text-white font-barlow font-bold text-xs bg-green-500/25 border-green-500 border rounded-md p-2">
+                    The Comp has started! Enter the passcode announced to start recording your
+                    points
+                  </p>
+                  <PasscodeValidation passcode={competition.passcode} compId={compId} />
+                </div>
               )}
             </div>
           )}
