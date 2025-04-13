@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import clsx from "clsx";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
+import SignOut from "../general/sign-out-button";
 
 export default function UserProfile() {
   const { data: session } = useSession();
@@ -186,7 +187,9 @@ export default function UserProfile() {
             </Link>
           ))}
 
-          <div className="flex justify-end"></div>
+          <div className="flex justify-end">
+            <SignOut />
+          </div>
         </div>
       </div>
     );

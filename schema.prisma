@@ -176,6 +176,12 @@ enum EntryMethod {
     MANUAL
 }
 
+enum ClimberStatus {
+    NOT_STARTED
+    IN_PROGRESS
+    COMPLETED
+}
+
 enum CompetitionStatus {
     INACTIVE
     UPCOMING
@@ -189,10 +195,11 @@ model MixerCompetition {
     id                 String              @id @default(cuid())
     name               String
     year               Int
-    status             CompetitionStatus   @default(INACTIVE) // inactive, upcoming, In Progress, completed
+    status             CompetitionStatus   @default(INACTIVE)
     imageUrl           String?
     time               Int                 @default(180)
     compDay            DateTime?
+    passcode           String?
     mixerRoutes        MixerRoute[]
     boulder            MixerBoulder[]
     climbers           MixerClimber[]
@@ -209,7 +216,7 @@ model MixerRoute {
     id            String            @id @default(cuid())
     name          String
     color         String
-    holds         Json // Store hold data as JSON (Array of { holdNumber, topRopePoints, leadPoints })
+    holds         Json // Array of { holdNumber, topRopePoints, leadPoints }
     competitionId String
     completions   MixerCompletion[]
     competition   MixerCompetition  @relation(fields: [competitionId], references: [id], onDelete: Cascade)
@@ -235,13 +242,12 @@ model MixerClimber {
     competition   MixerCompetition    @relation(fields: [competitionId], references: [id], onDelete: Cascade)
     completions   MixerCompletion[]
     registeredAt  DateTime            @default(now()) // signup time
-    checkedIn     Boolean             @default(false) // set to true on comp day if participant shows up
     entryMethod   EntryMethod         @default(MANUAL) // APP if linked to a user account
-
-    userId    String?
-    user      User?    @relation(fields: [userId], references: [id])
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+    climberStatus ClimberStatus       @default(NOT_STARTED) // not started, in progress, completed
+    userId        String?
+    user          User?               @relation(fields: [userId], references: [id])
+    createdAt     DateTime            @default(now())
+    updatedAt     DateTime            @updatedAt
 }
 
 model MixerDivision {
