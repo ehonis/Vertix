@@ -1,10 +1,11 @@
 import Link from "next/link";
 import { Suspense } from "react";
 import ElementLoadingAnimation from "@/app/ui/general/element-loading-animation";
-import UpcomingMixerCompetitions from "@/app/ui/admin/competitions/mixer/upcoming-mixer-competitions";
-import CompletedMixerCompetitions from "@/app/ui/admin/competitions/mixer/completed-mixer-competitions";
+import { CompetitionStatus } from "@prisma/client";
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
+import MixerCompetitions from "@/app/ui/admin/competitions/mixer/mixer-competitions";
+
 export default async function MixerManager() {
   const session = await auth();
   const user = session?.user;
@@ -37,23 +38,31 @@ export default async function MixerManager() {
             <div className="h-[2px] w-full bg-white"></div>
           </div>
         </div>
-        <div className="mb-3">
-          <h2 className="font-barlow font-bold text-2xl text-white mb-2">
-            <span className="text-blue-500">Upcoming</span> Mixer Competitions
-          </h2>
-          <div className="bg-slate-900 w-full p-3 rounded-sm flex justify-center">
+        <div className="flex flex-col gap-3">
+          <div>
             <Suspense fallback={<ElementLoadingAnimation />}>
-              <UpcomingMixerCompetitions />
+              <MixerCompetitions compStatus={CompetitionStatus.IN_PROGRESS} />
             </Suspense>
           </div>
-        </div>
-        <div>
-          <h2 className="font-barlow font-bold text-2xl text-white mb-2">
-            <span className="text-green-500">Completed</span> Mixer Competitions
-          </h2>
-          <div className="bg-slate-900 w-full p-3 rounded-sm flex justify-center">
+          <div>
             <Suspense fallback={<ElementLoadingAnimation />}>
-              <CompletedMixerCompetitions />
+              <MixerCompetitions compStatus={CompetitionStatus.UPCOMING} />
+            </Suspense>
+          </div>
+          <div>
+            <Suspense fallback={<ElementLoadingAnimation />}>
+              <MixerCompetitions compStatus={CompetitionStatus.COMPLETED} />
+            </Suspense>
+          </div>
+          <div>
+            <Suspense fallback={<ElementLoadingAnimation />}>
+              <MixerCompetitions compStatus={CompetitionStatus.INACTIVE} />
+            </Suspense>
+          </div>
+
+          <div>
+            <Suspense fallback={<ElementLoadingAnimation />}>
+              <MixerCompetitions compStatus={CompetitionStatus.DEMO} />
             </Suspense>
           </div>
         </div>

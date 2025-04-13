@@ -1,6 +1,7 @@
 import prisma from "@/prisma";
 import Link from "next/link";
 import Image from "next/image";
+import clsx from "clsx";
 import { CompetitionStatus } from "@prisma/client";
 export default async function UpComingCompetitions() {
   const UpComingCompetitions = await prisma.mixerCompetition.findMany({
@@ -8,15 +9,19 @@ export default async function UpComingCompetitions() {
       status: { in: [CompetitionStatus.INACTIVE, CompetitionStatus.UPCOMING] },
     },
     take: 3,
-    select: { id: true, name: true, compDay: true, imageUrl: true },
+    select: { id: true, name: true, compDay: true, imageUrl: true, status: true },
   });
 
   return (
-    <div className="flex flex-col bg-slate-900 gap-2 p-2 rounded-sm">
+    <div className="flex flex-col gap-2 rounded-sm">
       {UpComingCompetitions.map(comp => (
         <Link
           key={comp.id}
-          className="bg-gray-700 max-w-md grid-cols-3 grid font-barlow font-bold text-white p-3 rounded-sm  items-center"
+          className={clsx(
+            " max-w-md grid-cols-3 grid font-barlow font-bold text-white p-3 rounded-sm  items-center",
+            comp.status === CompetitionStatus.INACTIVE && "bg-red-500/25 outline outline-red-500",
+            comp.status === CompetitionStatus.UPCOMING && "bg-blue-500/25 outline outline-blue-500"
+          )}
           href={`/admin/manager/competitions/mixer/${comp.id}`}
         >
           {comp.imageUrl === null ? (
@@ -26,7 +31,7 @@ export default async function UpComingCompetitions() {
               viewBox="0 0 24 24"
               strokeWidth={1.5}
               stroke="currentColor"
-              className="size-8 stroke-white"
+              className="size-10 stroke-white"
             >
               <path
                 strokeLinecap="round"
@@ -39,7 +44,7 @@ export default async function UpComingCompetitions() {
               src={comp.imageUrl}
               height={100}
               width={100}
-              className="rounded-full size-14"
+              className="rounded-full size-10"
               alt="pictue of competition"
             />
           )}

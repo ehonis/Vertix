@@ -207,6 +207,7 @@ model MixerCompetition {
     boulderScores      MixerBoulderScore[]
     ropeScores         MixerRopeScore[]
     completions        MixerCompletion[]
+    startedAt          DateTime?
     createdAt          DateTime            @default(now())
     updatedAt          DateTime            @updatedAt
     areScoresAvailable Boolean             @default(false)

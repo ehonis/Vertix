@@ -116,11 +116,12 @@ async function UpComingComps() {
             href={`/competitions/mixer/${comp.id}`}
             className={clsx(
               " bg-blue-500/15 rounded-lg  p-2 flex justify-between outline  place-items-center",
-              comp.status === CompetitionStatus.UPCOMING && "outline-blue-500 bg-blue-500/15"
+              comp.status === CompetitionStatus.UPCOMING && "outline-blue-500 bg-blue-500/15",
+              comp.status === CompetitionStatus.IN_PROGRESS && "outline-green-500 bg-green-500/15"
             )}
           >
             <div className="flex flex-col">
-              <p className="font-barlow  text-white text-xl text-center whitespace-nowrap">
+              <p className="font-barlow  text-white text-xl text-start whitespace-nowrap">
                 {comp.name}
               </p>
               {comp.status === CompetitionStatus.UPCOMING && (

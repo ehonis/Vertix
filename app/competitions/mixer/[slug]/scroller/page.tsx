@@ -3,8 +3,7 @@ import prisma from "@/prisma";
 import { auth } from "@/auth";
 import { useNotification } from "@/app/contexts/NotificationContext";
 import { redirect } from "next/navigation";
-import { User } from "@prisma/client";
-import { MixerClimber } from "@prisma/client";
+import { ClimberStatus, MixerCompetition, MixerClimber } from "@prisma/client";
 
 export default async function Mixer({ params }: { params: Promise<{ slug: string }> }) {
   const session = await auth();
@@ -46,6 +45,20 @@ export default async function Mixer({ params }: { params: Promise<{ slug: string
       },
     }),
   ]);
+  if (!climber) {
+    redirect("/competitions/mixer/" + compId + "/signup");
+  }
+
+  if (climber?.climberStatus === ClimberStatus.COMPLETED) {
+    redirect("/competitions/mixer/" + compId + "/leaderboard");
+  }
+
+  if (climber.climberStatus === ClimberStatus.IN_PROGRESS) {
+    await prisma.mixerClimber.update({
+      where: { id: climber.id },
+      data: { climberStatus: ClimberStatus.COMPLETED },
+    });
+  }
 
   const boulderCompletions = await prisma.mixerCompletion.findMany({
     where: {
@@ -76,7 +89,7 @@ export default async function Mixer({ params }: { params: Promise<{ slug: string
   return (
     <>
       <MixerScoreScroller
-        compId={compId}
+        comp={comp as MixerCompetition}
         mixerRoutes={parsedData}
         mixerBoulders={boulders}
         climber={climber as MixerClimber}

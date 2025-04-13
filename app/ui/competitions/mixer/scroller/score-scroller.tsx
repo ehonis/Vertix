@@ -5,8 +5,16 @@ import MixerCountdownTimer from "./count-down-timer";
 import TypeToggleSwitch from "./type-toggle";
 import MixerRopeScorer from "./rope-swiper";
 import MixerBoulderScorer from "./boulder-swiper";
-import { MixerBoulder, MixerClimber, MixerCompletion } from "@prisma/client";
-import { User } from "@prisma/client";
+import {
+  MixerBoulder,
+  MixerClimber,
+  MixerCompletion,
+  MixerCompetition,
+  ClimberStatus,
+} from "@prisma/client";
+import { useRouter } from "next/navigation";
+import { useNotification } from "@/app/contexts/NotificationContext";
+import ConfirmationPopUp from "@/app/ui/general/confirmation-pop-up";
 type routeHold = {
   holdNumber: number;
   topRopePoints: number;
@@ -20,7 +28,7 @@ type RouteData = {
   competitionId: string;
 };
 type MixerScoreScoller = {
-  compId: string;
+  comp: MixerCompetition;
   mixerRoutes: RouteData[];
   mixerBoulders: MixerBoulder[];
   climber: MixerClimber;
@@ -29,7 +37,7 @@ type MixerScoreScoller = {
 };
 
 export default function MixerScoreScroller({
-  compId,
+  comp,
   mixerRoutes,
   mixerBoulders,
   climber,
@@ -37,23 +45,68 @@ export default function MixerScoreScroller({
   ropeCompletions,
 }: MixerScoreScoller) {
   const [category, setCategory] = useState("Rope");
+  const { showNotification } = useNotification();
+  const router = useRouter();
 
   const handleCategoryChange = (value: string) => {
     setCategory(value);
   };
+  const [showFinishConfirmation, setShowFinishConfirmation] = useState(false);
+
+  const handleFinish = async () => {
+    try {
+      const response = await fetch("/api/mixer/comp/finish", {
+        method: "POST",
+        body: JSON.stringify({
+          compId: comp.id,
+          climberId: climber.id,
+        }),
+      });
+      if (response.ok) {
+        showNotification({
+          message: "You have finished the competition",
+          color: "green",
+        });
+        router.push(`/competitions/mixer/${comp.id}/leaderboard`);
+      } else {
+        showNotification({
+          message: "Failed to finish competition",
+          color: "red",
+        });
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <div className="w-screen">
+      {showFinishConfirmation && (
+        <ConfirmationPopUp
+          message="Are you sure you want to finish the competition?"
+          submessage="You will not be able to continue scoring after finishing"
+          onConfirmation={handleFinish}
+          onCancel={() => setShowFinishConfirmation(false)}
+        />
+      )}
       <div className="flex flex-col p-5 pt-3 pb-1">
         <div className="mb-1 flex justify-between max-w-md gap-5 md:max-w-lg place-self-center">
-          <MixerCountdownTimer timeAllotted={undefined} />
+          <MixerCountdownTimer
+            timeAllotted={comp.time}
+            startedAt={comp.startedAt}
+            onFinish={handleFinish}
+          />
           <TypeToggleSwitch
             leftLabel={"Boulder"}
             rightLabel={"Rope"}
             value={category}
             onTypeSwitchValue={handleCategoryChange}
           />
-          <button className="text-sm flex items-center justify-center gap-1 text-white font-barlow font-semibold">
+
+          <button
+            onClick={() => setShowFinishConfirmation(true)}
+            className="text-sm flex items-center justify-center gap-1 text-white font-barlow font-semibold"
+          >
             <div className="bg-green-500 rounded px-2 py-2">
               <p>Finish</p>
             </div>
@@ -65,13 +118,13 @@ export default function MixerScoreScroller({
         <MixerRopeScorer
           mixerRoutes={mixerRoutes}
           ropeCompletions={ropeCompletions}
-          compId={compId}
+          compId={comp.id}
           climberId={climber.id}
         />
       </div>
       <div className={category === "Boulder" ? "block" : "hidden"}>
         <MixerBoulderScorer
-          compId={compId}
+          compId={comp.id}
           climberId={climber.id}
           mixerBoulders={mixerBoulders}
           boulderCompletions={boulderCompletions}
