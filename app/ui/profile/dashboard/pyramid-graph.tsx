@@ -3,20 +3,45 @@
 import { RouteCompletion, RouteType } from "@prisma/client";
 import { useState, useEffect } from "react";
 import { splitRoutesByType, getRouteGradeCounts } from "@/lib/dashboard";
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from "recharts";
 import clsx from "clsx";
+type TooltipPayload = {
+  name: string;
+  value: number;
+  payload: {
+    grade: string;
+    count: number;
+  };
+}[];
 
+// Define the props type for CustomTooltip
+type CustomTooltipProps = {
+  active?: boolean;
+  payload?: TooltipPayload;
+};
+
+function CustomTooltip({ active, payload }: CustomTooltipProps) {
+  if (active && payload && payload.length && payload[0].payload.count > 0) {
+    const { grade, count } = payload[0].payload;
+    return (
+      <div className="px-4 py-1 rounded-lg bg-blue-700/45 outline outline-blue-700 text-center">
+        <p className="text-white font-bold">{grade}</p>
+        <p className="text-white">{count} ticks</p>
+      </div>
+    );
+  }
+  return null;
+}
 export default function PyramidGraph({
-  pyramidData,
+  completionData,
 }: {
-  pyramidData: (RouteCompletion & { route: { type: RouteType; grade: string } })[];
+  completionData: (RouteCompletion & { route: { type: RouteType; grade: string } })[];
 }) {
-  const [selectedRouteType, setSelectedRouteType] = useState<RouteType>(RouteType.BOULDER);
   const [displayedGradeCounts, setDisplayedGradeCounts] = useState<
     { grade: string; count: number }[]
   >([]);
   const [isBoulder, setIsBoulder] = useState(true);
-  const { boulderRoutes, ropeRoutes } = splitRoutesByType(pyramidData);
+  const { boulderRoutes, ropeRoutes } = splitRoutesByType(completionData);
   const { boulderGradeCounts, ropeGradeCounts } = getRouteGradeCounts(ropeRoutes, boulderRoutes);
 
   const handleRouteTypeChange = (isBoulder: boolean) => {
@@ -42,7 +67,7 @@ export default function PyramidGraph({
           id=""
           value={isBoulder ? "boulder" : "rope"}
           onChange={e => handleRouteTypeChange(e.target.value === "boulder")}
-          className="bg-green-500/15 outline outline-green-500 text-white rounded-full px-3 py-1 cursor-pointer"
+          className="bg-blue-600/15 outline outline-blue-600 text-white rounded-lg px-3 py-1 cursor-pointer"
         >
           <option value="boulder">Boulder</option>
           <option value="rope">Rope</option>
@@ -51,10 +76,15 @@ export default function PyramidGraph({
 
       <ResponsiveContainer width="100%" height={200}>
         <BarChart data={displayedGradeCounts}>
+          <CartesianGrid strokeDasharray="3 3" stroke="#364153" />
           <XAxis dataKey="grade" tickFormatter={value => value.toUpperCase()} />
-          <YAxis dataKey="count" width={25} />
+          <YAxis
+            dataKey="count"
+            width={25}
+            allowDecimals={false} // Ensure only whole number ticks
+          />
           <Bar dataKey="count" fill="#155DFC" />
-          <Tooltip />
+          <Tooltip content={<CustomTooltip />} />
         </BarChart>
       </ResponsiveContainer>
     </div>

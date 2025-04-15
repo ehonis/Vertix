@@ -19,7 +19,7 @@ interface WallRoutesProps {
 export default function WallRoutes({ wall, user, onData }: WallRoutesProps) {
   const { showNotification } = useNotification();
   const [routes, setRoutes] = useState<(Route & { completed: boolean })[]>([]);
-  const [page, setPage] = useState(1); // Initialize as an empty array
+  // const [page, setPage] = useState(1); // Initialize as an empty array
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -30,7 +30,7 @@ export default function WallRoutes({ wall, user, onData }: WallRoutesProps) {
 
       const queryData = new URLSearchParams({
         wall: wall,
-        page: page.toString(),
+        page: "1",
         ...(user?.id && { userId: user.id }),
       });
       try {
