@@ -1,7 +1,7 @@
 import prisma from "@/prisma";
 import { NextResponse, NextRequest } from "next/server";
 import { parseDateString } from "@/lib/dates";
-import { Locations } from "@prisma/client";
+import { Locations, RouteType } from "@prisma/client";
 import { CompetitionStatus } from "@prisma/client";
 
 type compData = {
@@ -60,11 +60,11 @@ export async function POST(request: NextRequest) {
     const results = await Promise.all(
       data.map(async element => {
         if (isRouteData(element)) {
-          let routeType = "";
+          let routeType: RouteType;
           if (element.grade.startsWith("v")) {
-            routeType = "boulder";
+            routeType = RouteType.BOULDER;
           } else {
-            routeType = "rope";
+            routeType = RouteType.ROPE;
           }
 
           const dateObject = parseDateString(element.setDate);

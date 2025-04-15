@@ -4,22 +4,14 @@ import Link from "next/link";
 import RoutePanels from "../../../ui/admin/route-panels";
 import { redirect } from "next/navigation";
 import { auth } from "@/auth";
-
+import prisma from "@/prisma";
 const getRoutes = async () => {
-  try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/get-route`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        "Cache-Control": "no-store",
-      },
-      next: { revalidate: 1 }, // Move cache inside the options object
-    });
-
-    return response.json();
-  } catch (error) {
-    console.error(error);
-  }
+  const routes = await prisma.route.findMany({
+    where: {
+      isArchive: false,
+    },
+  });
+  return routes;
 };
 
 export default async function Page() {
@@ -31,8 +23,8 @@ export default async function Page() {
     redirect("/signin");
   } else {
     try {
-      const boulderRoutes = routes.data.filter(route => route.type === "boulder");
-      const ropeRoutes = routes.data.filter(route => route.type === "rope");
+      const boulderRoutes = routes.filter(route => route.type === "BOULDER");
+      const ropeRoutes = routes.filter(route => route.type === "ROPE");
 
       return (
         <>
