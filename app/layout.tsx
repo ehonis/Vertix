@@ -9,6 +9,7 @@ import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
 import { extractRouterConfig } from "uploadthing/server";
 import { ourFileRouter } from "./api/uploadthing/core";
 import { PostHogProvider } from "../components/PostHogProvider";
+import Footer from "./ui/general/footer";
 
 const barlow = Barlow({
   subsets: ["latin"],
@@ -38,7 +39,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body
-        className={` ${geistMono.variable} ${tomorrow.variable} ${barlow.variable}antialiased bg-black`}
+        className={`${geistMono.variable} ${tomorrow.variable} ${barlow.variable} antialiased bg-black min-h-screen flex flex-col`}
       >
         <PostHogProvider>
           <NotificationProvider>
@@ -47,7 +48,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <NavBar />
             <SpeedInsights />
 
-            <main className="">{children}</main>
+            <main className="flex-1">{children}</main>
+            <Footer />
           </NotificationProvider>
         </PostHogProvider>
       </body>

@@ -1,0 +1,61 @@
+import { Route, RouteType } from "@prisma/client";
+function splitRoutesByType(routes: Route[]){
+    const boulderRoutes = routes.filter((route) => route.type === RouteType.BOULDER);
+    const ropeRoutes = routes.filter((route) => route.type === RouteType.ROPE);
+    return {boulderRoutes, ropeRoutes};
+}
+export function getGradeCounts(routes: Route[]){
+    const {boulderRoutes, ropeRoutes} = splitRoutesByType(routes);
+    const boulderGradeCounts = [
+        { grade: "vb", count: 0 },
+        { grade: "v0", count: 0 },
+        { grade: "v1", count: 0 },
+        { grade: "v2", count: 0 },
+        { grade: "v3", count: 0 },
+        { grade: "v4", count: 0 },
+        { grade: "v5", count: 0 },
+        { grade: "v6", count: 0 },
+        { grade: "v7", count: 0 },
+        { grade: "v8", count: 0 },
+
+    ];
+    const ropeGradeCounts = [
+        { grade: "5.B", count: 0 },
+        { grade: "5.7", count: 0 },
+        { grade: "5.8-", count: 0 },
+        { grade: "5.8", count: 0 },
+        { grade: "5.8+", count: 0 },
+        { grade: "5.9-", count: 0 },
+        { grade: "5.9", count: 0 },
+        { grade: "5.9+", count: 0 },
+        { grade: "5.10-", count: 0 },
+        { grade: "5.10", count: 0 },
+        { grade: "5.10+", count: 0 },
+        { grade: "5.11-", count: 0 },
+        { grade: "5.11", count: 0 },
+        { grade: "5.11+", count: 0 },
+        { grade: "5.12-", count: 0 },
+        { grade: "5.12", count: 0 },
+        { grade: "5.12+", count: 0 },
+
+    ];
+
+    boulderRoutes.forEach(route => {
+        const grade = route.grade;
+        const gradeCount = boulderGradeCounts.find(g => g.grade === grade);
+        if (gradeCount) {
+            gradeCount.count++;
+        }
+    });
+    ropeRoutes.forEach(route => {
+        const grade = route.grade;
+        const gradeCount = ropeGradeCounts.find(g => g.grade === grade);
+        if (gradeCount) {
+            gradeCount.count++;
+        }
+    });
+    const ropeTotal = ropeRoutes.length
+    const boulderTotal = boulderRoutes.length
+    return {boulderGradeCounts, ropeGradeCounts, ropeTotal, boulderTotal};
+
+}

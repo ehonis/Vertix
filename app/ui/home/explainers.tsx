@@ -62,35 +62,31 @@ const explainersData = [
 
 export default function Explainers() {
   return (
-    <div className="relative font-barlow text-white w-full">
+    <div className="relative font-barlow text-white w-full p-5 md:py-20 bg-black">
       {" "}
       {/* Removed h-svh, flex, items-center, justify-center */}
       {/* Gradient Background Layer */}
       <div
-        className="absolute inset-0 w-full h-svh opacity-60 -z-10" // Full viewport height, behind content
+        className="absolute inset-0 w-full  opacity-60 -z-10" // Full viewport height, behind content
         style={{
           background: "radial-gradient(circle at top right, #1447E6 0%, transparent 80%)",
         }}
       />
-      {/* Content Wrapper Layer */}
-      <div className="relative w-full h-svh md:h-auto flex items-center justify-center p-3 mt-40 md:mt-0">
-        {" "}
-        {/* min-h-svh, flex centering, padding */}
-        {/* Content Block */}
-        <div className="flex flex-col md:flex-row md:justify-center gap-5 md:gap-20 items-center w-full max-w-screen-lg">
-          {/* Map over the data array */}
-          {explainersData.map((explainer, index) => (
-            <div key={index} className="flex flex-col gap-3 items-center text-center">
-              <div className="bg-slate-900 rounded-full p-8 flex items-center justify-center z-10">
-                {" "}
-                {/* Ensure icons are above gradient */}
-                {explainer.icon}
-              </div>
-              <h2 className="font-extrabold text-purple-600 text-3xl z-10">{explainer.title}</h2>
-              <p className="font-normal z-10 w-xs">{explainer.description}</p>
+      {/* Content Wrapper Layer */} {/* min-h-svh, flex centering, padding */}
+      {/* Content Block */}
+      <div className="flex flex-col md:flex-row md:justify-center gap-5 md:gap-20 items-center w-full md:items-center">
+        {/* Map over the data array */}
+        {explainersData.map((explainer, index) => (
+          <div key={index} className="flex flex-col gap-3 items-center text-center">
+            <div className="bg-slate-900 rounded-full p-8 flex items-center justify-center z-10">
+              {" "}
+              {/* Ensure icons are above gradient */}
+              {explainer.icon}
             </div>
-          ))}
-        </div>
+            <h2 className="font-extrabold text-purple-600 text-3xl z-10">{explainer.title}</h2>
+            <p className="font-normal z-10 w-xs">{explainer.description}</p>
+          </div>
+        ))}
       </div>
     </div>
   );
