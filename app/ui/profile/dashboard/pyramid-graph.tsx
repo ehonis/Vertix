@@ -75,13 +75,15 @@ export default function PyramidGraph({
       </div>
 
       <ResponsiveContainer width="100%" height={200}>
-        <BarChart data={displayedGradeCounts}>
+        <BarChart data={displayedGradeCounts} layout="vertical">
           <CartesianGrid strokeDasharray="3 3" stroke="#364153" />
-          <XAxis dataKey="grade" tickFormatter={value => value.toUpperCase()} />
+          <XAxis type="number" dataKey="count" allowDecimals={false} />
           <YAxis
-            dataKey="count"
-            width={25}
-            allowDecimals={false} // Ensure only whole number ticks
+            type="category"
+            dataKey="grade"
+            tickFormatter={value => value.toUpperCase()}
+            width={35}
+            reversed={true}
           />
           <Bar dataKey="count" fill="#155DFC" />
           <Tooltip content={<CustomTooltip />} />

@@ -15,6 +15,20 @@ export async function getCompletionData(userId:string) {
     })
     return completedRoutes
 }
+export async function getAttemptsData(userId:string) {
+    const attempts = await prisma.routeAttempt.findMany({
+        where: {userId: userId},
+        include: {
+            route:{
+                select:{
+                    type:true,
+                    grade:true,
+                }
+            }
+        }
+    })
+    return attempts
+}
 export function splitRoutesByType(routes: (RouteCompletion & {route: {type: RouteType , grade: string}})[]) {
     const boulderRoutes = routes.filter((route) => route.route.type === RouteType.BOULDER);
     const ropeRoutes = routes.filter((route) => route.route.type === RouteType.ROPE);
