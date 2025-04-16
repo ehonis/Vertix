@@ -98,7 +98,8 @@ export default function EditUserPopUp({
         tempBoulderAttempts !== boulderScore?.attempts ||
         tempRopeScore !== ropeScore?.score ||
         tempRopeAttempts !== ropeScore?.attempts ||
-        divisionId !== climber.divisionId;
+        divisionId !== climber.divisionId ||
+        climberStatus !== climber.climberStatus;
 
       setIsSaveButton(hasChanges);
     }
@@ -115,6 +116,7 @@ export default function EditUserPopUp({
     boulderScore?.attempts,
     ropeScore?.score,
     ropeScore?.attempts,
+    climberStatus,
   ]);
 
   // Handle form changes
@@ -269,6 +271,7 @@ export default function EditUserPopUp({
         boulderAttempts: tempBoulderAttempts,
         ropeAttempts: tempRopeAttempts,
         user: connectedUser,
+        climberStatus,
         divisionId,
         entryMethod,
       };

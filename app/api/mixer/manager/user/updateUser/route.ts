@@ -90,11 +90,16 @@ export async function POST(req : NextRequest) {
         const ropeScoreData = {
           score: parsedRopeScore,
           attempts: parsedRopeAttempts,
+          competitionId: compId,
         };
 
-        updatedRopeScore = await tx.mixerRopeScore.update({
+        updatedRopeScore = await tx.mixerRopeScore.upsert({
           where: { climberId: userId },
-          data: ropeScoreData,
+          update: ropeScoreData,
+          create: {
+            ...ropeScoreData,
+            climberId: userId,
+          },
         });
       }
 
@@ -104,11 +109,16 @@ export async function POST(req : NextRequest) {
         const boulderScoreData = {
           score: parsedBoulderScore,
           attempts: parsedBoulderAttempts,
+          competitionId: compId,
         };
 
-        updatedBoulderScore = await tx.mixerBoulderScore.update({
+        updatedBoulderScore = await tx.mixerBoulderScore.upsert({
           where: { climberId: userId },
-          data: boulderScoreData,
+          update: boulderScoreData,
+          create: {
+            ...boulderScoreData,
+            climberId: userId,
+          },
         });
       }
 

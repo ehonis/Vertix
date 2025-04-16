@@ -4,8 +4,8 @@ import { unstable_cache } from "next/cache";
 import MixerLeaderBoard from "../../../../ui/competitions/mixer/leaderboard/mixer-leaderboard";
 import { auth } from "@/auth";
 
-const getBoulderScores = async id => {
-  return await prisma.MixerBoulderScore.findMany({
+const getBoulderScores = async (id: string) => {
+  return await prisma.mixerBoulderScore.findMany({
     where: { competitionId: id },
     select: {
       climber: { select: { name: true, id: true, userId: true } },
@@ -14,8 +14,8 @@ const getBoulderScores = async id => {
     },
   });
 };
-const getRopeScores = async id => {
-  return await prisma.MixerRopeScore.findMany({
+const getRopeScores = async (id: string) => {
+  return await prisma.mixerRopeScore.findMany({
     where: { competitionId: id },
     select: {
       climber: { select: { name: true, id: true, userId: true } },
@@ -24,8 +24,8 @@ const getRopeScores = async id => {
     },
   });
 };
-const getDivisions = async id => {
-  return await prisma.MixerDivision.findMany({
+const getDivisions = async (id: string) => {
+  return await prisma.mixerDivision.findMany({
     where: { competitionId: id },
     select: {
       name: true,
@@ -44,14 +44,18 @@ const getCachedDivisions = unstable_cache(getDivisions, ["divisions-cache"], {
   revalidate: 200,
 });
 
-export default async function MixerDemoLeaderboard({ params }) {
+export default async function MixerDemoLeaderboard({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
   const { slug } = await params;
 
-  const isScoresAvailable = await prisma.MixerCompetition.findFirst({
+  const isScoresAvailable = await prisma.mixerCompetition.findFirst({
     where: { id: slug },
     select: { areScoresAvailable: true },
   });
-  if (!isScoresAvailable.areScoresAvailable) {
+  if (!isScoresAvailable?.areScoresAvailable) {
     return (
       <div className="flex flex-col h-screen-offset justify-center items-center">
         <h1 className="text-white font-barlow font-bold text-3xl text-center">

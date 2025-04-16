@@ -21,6 +21,7 @@ export async function POST(req: NextRequest) {
       user,
       divisionId,
       entryMethod,
+      climberStatus,
     } = await req.json();
     // Convert string values to integers
     const parsedRopeScore = parseInt(ropeScore, 10);
@@ -45,6 +46,7 @@ export async function POST(req: NextRequest) {
         },
         entryMethod,
         user,
+        climberStatus,
       };
 
       // Add user connection if a user is provided
