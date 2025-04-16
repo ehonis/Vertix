@@ -1,7 +1,8 @@
 "use client";
 
 import clsx from "clsx";
-import Link from "next/link";
+import { useEffect, useState } from "react";
+import { getBoulderGradeMapping } from "@/lib/route";
 export default function RouteTile({
   id,
   color,
@@ -26,6 +27,15 @@ export default function RouteTile({
   ) => void;
   isCompleted: boolean;
 }) {
+  const [gradeMapped, setGradeMapped] = useState("");
+  useEffect(() => {
+    if (grade.startsWith("v")) {
+      setGradeMapped(getBoulderGradeMapping(grade));
+    } else {
+      setGradeMapped(grade);
+    }
+  }, [grade]);
+
   return (
     <button
       onClick={() => onData(id, name, grade, color, isCompleted)}
@@ -43,7 +53,7 @@ export default function RouteTile({
     >
       <div className="flex flex-col font-barlow max-w-[70%]">
         <p className="text-white text-xl font-bold  truncate ">{name}</p>
-        <p className="text-md italic place-self-start">{grade}</p>
+        <p className="text-md italic place-self-start">{gradeMapped}</p>
       </div>
       <div className="flex gap-2">
         {isArchived && (

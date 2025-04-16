@@ -14,9 +14,9 @@ export default function Footer() {
   return (
     // The footer will be positioned at the bottom of the content
     // mt-auto ensures it pushes to the bottom of the flex container
-    <footer className="bg-slate-900 text-white py-2">
+    <footer className="bg-black text-white py-2">
       <div className="container mx-auto px-3">
-        <p className="text-start text-sm text-gray-500">© 2025 Vertix. All rights reserved.</p>
+        <p className="text-start text-sm text-gray-500">© 2025 Vertix</p>
         {/* <p>
           <Link href="/terms" className="text-gray-400 text-sm">
             Terms
