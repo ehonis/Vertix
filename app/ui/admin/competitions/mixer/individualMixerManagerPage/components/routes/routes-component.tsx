@@ -122,7 +122,7 @@ export default function RoutesComponent({ routes, compId }: RoutesComponentData)
                 <button
                   key={route.id}
                   className={clsx(
-                    " flex p-1 rounded-sm justify-between p-2",
+                    " flex rounded-sm justify-between p-2",
                     route.color === "red" && "bg-red-500/25 outline outline-red-500",
                     route.color === "blue" && "bg-blue-500/25 outline outline-blue-500",
                     route.color === "green" && "bg-green-400/25 outline outline-green-400",

@@ -9,7 +9,7 @@ import ImagePopUp from "./image-uploader-popup";
 import { useNotification } from "@/app/contexts/NotificationContext";
 import { useRouter } from "next/navigation";
 import { CompetitionStatus } from "@prisma/client";
-
+import type { MixerRopeScore, MixerBoulderScore } from "@prisma/client";
 type VariableDataProps = {
   compId: string;
   name: string;
@@ -431,6 +431,15 @@ export default function VariablesComponent({
       });
     }
   };
+  const handleExportStandings = async () => {
+    const responnse = await fetch("/api/mixer/manager/variables/export-standings", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ compId: compId }),
+    });
+  };
 
   return (
     <div>
@@ -706,6 +715,16 @@ export default function VariablesComponent({
               UnCalaculate Scores
             </button>
           )}
+        </div>
+      )}
+      {isScoresCalculated && (
+        <div className="flex w-full py-2 px-1">
+          <button
+            className="bg-green-500 px-2 py-1 rounded-md font-bold w-full"
+            onClick={handleExportStandings}
+          >
+            Export Standings to Spreadsheet
+          </button>
         </div>
       )}
     </div>

@@ -49,6 +49,9 @@ export default async function page({ params }: { params: Promise<{ slug: string 
     }),
     prisma.mixerClimber.findMany({
       where: { competitionId: compId },
+      orderBy: {
+        name: "asc", // 'asc' for ascending
+      },
     }),
     prisma.mixerBoulderScore.findMany({
       where: { competitionId: compId },
