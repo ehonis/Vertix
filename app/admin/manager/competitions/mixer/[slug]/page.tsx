@@ -96,6 +96,7 @@ export default async function page({ params }: { params: Promise<{ slug: string 
             status={comp.status}
             time={comp.time}
             imageUrl={comp.imageUrl}
+            hasScoresBeenCalculated={comp.hasScoresBeenCalculated}
           />
           <UsersComponent
             compId={compId}

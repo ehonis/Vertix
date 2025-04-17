@@ -3,6 +3,7 @@ import { formatMixerDataFromDatabase, calculateScores } from "@/lib/mixer";
 import { unstable_cache } from "next/cache";
 import MixerLeaderBoard from "../../../../ui/competitions/mixer/leaderboard/mixer-leaderboard";
 import { auth } from "@/auth";
+import ThreeDotLoading from "@/app/ui/general/three-dot-loading";
 
 const getBoulderScores = async (id: string) => {
   return await prisma.mixerBoulderScore.findMany({
@@ -58,12 +59,17 @@ export default async function MixerDemoLeaderboard({
   if (!isScoresAvailable?.areScoresAvailable) {
     return (
       <div className="flex flex-col h-screen-offset justify-center items-center">
-        <h1 className="text-white font-barlow font-bold text-3xl text-center">
-          Scores Not Yet Available
+        <h1 className="text-white font-barlow font-bold text-xl text-center mb-5">
+          You have successfully completed the competition!
         </h1>
+        <h2 className="text-white font-barlow font-bold text-3xl text-center">
+          Scores Not Yet Available
+        </h2>
+
         <p className="text-white font-barlow font-bold text-sm text-center">
-          Please wait until Scores are being announced and refresh
+          Please wait until the competition is over and scores are being announced, then refresh.
         </p>
+        <ThreeDotLoading />
       </div>
     );
   }

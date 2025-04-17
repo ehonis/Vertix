@@ -97,22 +97,20 @@ export default function BoulderComponent({ boulders, compId }: BouldersComponent
                 <button
                   key={boulder.id}
                   className={clsx(
-                    " flex p-1 rounded-sm",
-                    boulder.color === "red" && "bg-red-500",
-                    boulder.color === "blue" && "bg-blue-500",
-                    boulder.color === "green" && "bg-green-400",
-                    boulder.color === "orange" && "bg-orange-500",
-                    boulder.color === "yellow" && "bg-yellow-500",
-                    boulder.color === "pink" && "bg-pink-400",
-                    boulder.color === "purple" && "bg-purple-600",
-                    boulder.color === "white" && "bg-white",
-                    boulder.color === "black" && "bg-black"
+                    " flex  rounded-sm justify-center p-2",
+                    boulder.color === "red" && "bg-red-500/25 outline outline-red-500",
+                    boulder.color === "blue" && "bg-blue-500/25 outline outline-blue-500",
+                    boulder.color === "green" && "bg-green-400/25 outline outline-green-400",
+                    boulder.color === "orange" && "bg-orange-500/25 outline outline-orange-500",
+                    boulder.color === "yellow" && "bg-yellow-500/25 outline outline-yellow-500",
+                    boulder.color === "pink" && "bg-pink-400/25 outline outline-pink-400",
+                    boulder.color === "purple" && "bg-purple-600/25 outline outline-purple-600",
+                    boulder.color === "white" && "bg-white/25 outline outline-white",
+                    boulder.color === "black" && "bg-black/25 outline outline-white"
                   )}
                   onClick={() => handleEditBoulderPopUp(boulder.id)}
                 >
-                  <div className="grid bg-gray-700 grid-cols-2 items-center p-1 px-2 w-full rounded-sm">
-                    <p className="text-xl place-self-start">{boulder.points}</p>
-                  </div>
+                  <p className="text-xl t">{boulder.points}</p>
                 </button>
               ))}
               <div className="flex items-center gap-1">

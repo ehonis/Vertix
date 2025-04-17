@@ -113,7 +113,7 @@ export default function RoutesComponent({ routes, compId }: RoutesComponentData)
           routeColor={tempRouteColor}
         />
       )}
-      <div>
+      <div className="md:w-48">
         <h3 className="text-3xl mt-3">Routes</h3>
         <div className="bg-slate-900 flex-col gap-2 flex p-3 rounded-sm w-full">
           {compRoutes.length > 0 ? (
@@ -122,23 +122,21 @@ export default function RoutesComponent({ routes, compId }: RoutesComponentData)
                 <button
                   key={route.id}
                   className={clsx(
-                    " flex p-1 rounded-sm",
-                    route.color === "red" && "bg-red-500",
-                    route.color === "blue" && "bg-blue-500",
-                    route.color === "green" && "bg-green-400",
-                    route.color === "orange" && "bg-orange-500",
-                    route.color === "yellow" && "bg-yellow-500",
-                    route.color === "pink" && "bg-pink-400",
-                    route.color === "purple" && "bg-purple-600",
-                    route.color === "white" && "bg-white",
-                    route.color === "black" && "bg-black"
+                    " flex p-1 rounded-sm justify-between p-2",
+                    route.color === "red" && "bg-red-500/25 outline outline-red-500",
+                    route.color === "blue" && "bg-blue-500/25 outline outline-blue-500",
+                    route.color === "green" && "bg-green-400/25 outline outline-green-400",
+                    route.color === "orange" && "bg-orange-500/25 outline outline-orange-500",
+                    route.color === "yellow" && "bg-yellow-500/25 outline outline-yellow-500",
+                    route.color === "pink" && "bg-pink-400/25 outline outline-pink-400",
+                    route.color === "purple" && "bg-purple-600/25 outline outline-purple-600",
+                    route.color === "white" && "bg-white/25 outline outline-white",
+                    route.color === "black" && "bg-black/25 outline outline-white"
                   )}
                   onClick={() => handleEditRoutePopUp(route.id)}
                 >
-                  <div className="grid bg-gray-700 grid-cols-2 items-center p-1 px-2 w-full rounded-sm">
-                    <p className="text-xl place-self-start">{route.name}</p>
-                    <p className="text-xl place-self-end">Holds: {route.holds.length}</p>
-                  </div>
+                  <p className="text-xl place-self-start">{route.name}</p>
+                  <p className="text-xl place-self-end">Holds: {route.holds.length}</p>
                 </button>
               ))}
               <div className="flex items-center gap-1">

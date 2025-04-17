@@ -197,26 +197,27 @@ enum CompetitionStatus {
 }
 
 model MixerCompetition {
-    id                 String              @id @default(cuid())
-    name               String
-    year               Int
-    status             CompetitionStatus   @default(INACTIVE)
-    imageUrl           String?
-    time               Int                 @default(180)
-    compDay            DateTime?
-    passcode           String?
-    mixerRoutes        MixerRoute[]
-    boulder            MixerBoulder[]
-    climbers           MixerClimber[]
-    divisions          MixerDivision[]
-    boulderScores      MixerBoulderScore[]
-    ropeScores         MixerRopeScore[]
-    completions        MixerCompletion[]
-    startedAt          DateTime?
-    createdAt          DateTime            @default(now())
-    updatedAt          DateTime            @updatedAt
-    areScoresAvailable Boolean             @default(false)
-    isTestCompetition  Boolean             @default(false)
+    id                      String              @id @default(cuid())
+    name                    String
+    year                    Int
+    status                  CompetitionStatus   @default(INACTIVE)
+    imageUrl                String?
+    time                    Int                 @default(180)
+    compDay                 DateTime?
+    passcode                String?
+    mixerRoutes             MixerRoute[]
+    boulder                 MixerBoulder[]
+    climbers                MixerClimber[]
+    divisions               MixerDivision[]
+    boulderScores           MixerBoulderScore[]
+    ropeScores              MixerRopeScore[]
+    completions             MixerCompletion[]
+    startedAt               DateTime?
+    createdAt               DateTime            @default(now())
+    updatedAt               DateTime            @updatedAt
+    areScoresAvailable      Boolean             @default(false)
+    isTestCompetition       Boolean             @default(false)
+    hasScoresBeenCalculated Boolean             @default(false)
 }
 
 model MixerRoute {
@@ -274,6 +275,8 @@ model MixerBoulderScore {
     attempts      Int
     competitionId String
     competition   MixerCompetition @relation(fields: [competitionId], references: [id], onDelete: Cascade)
+
+    @@unique([climberId, competitionId])
 }
 
 model MixerRopeScore {
@@ -284,6 +287,8 @@ model MixerRopeScore {
     attempts      Int
     competitionId String
     competition   MixerCompetition @relation(fields: [competitionId], references: [id], onDelete: Cascade)
+
+    @@unique([climberId, competitionId])
 }
 
 enum CompletionType {

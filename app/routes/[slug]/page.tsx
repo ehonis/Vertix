@@ -17,7 +17,6 @@ import { auth } from "@/auth";
 import Link from "next/link";
 import prisma from "@/prisma";
 import StarRating from "@/app/ui/general/star-rating";
-import ImageSlider from "@/app/ui/routes/individualRoutePage/route-image-slider";
 import FunctionButton from "@/app/ui/routes/individualRoutePage/function-button";
 import { Route, RouteType, User } from "@prisma/client";
 

@@ -19,6 +19,7 @@ type VariableDataProps = {
   time: number;
   imageUrl: string | null;
   passcode: string | null;
+  hasScoresBeenCalculated: boolean;
 };
 
 export default function VariablesComponent({
@@ -30,6 +31,7 @@ export default function VariablesComponent({
   time,
   imageUrl,
   passcode,
+  hasScoresBeenCalculated,
 }: VariableDataProps) {
   const { showNotification } = useNotification();
   const router = useRouter();
@@ -40,7 +42,7 @@ export default function VariablesComponent({
   const [compTime, setCompTime] = useState(time);
   const [statusOption, setStatusOption] = useState(status);
   const [compPasscode, setCompPasscode] = useState(passcode);
-
+  const [isScoresCalculated, setIsScoresCalculated] = useState(hasScoresBeenCalculated);
   const [infoPopUpHtml, setInfoPopUpHtml] = useState(<div></div>);
   const [isScoresAvailableInfoPopUp, setIsScoresAvailableInfoPopUp] = useState(false);
   const [isImagePopUp, setIsImagePopUp] = useState(false);
@@ -58,7 +60,8 @@ export default function VariablesComponent({
     setIsScoresAvailable(areScoresAvailable);
     setStatusOption(status);
     setCompTime(time);
-  }, [name, compDay, areScoresAvailable, status, time]);
+    setIsScoresCalculated(hasScoresBeenCalculated);
+  }, [name, compDay, areScoresAvailable, status, time, hasScoresBeenCalculated]);
 
   const handleScoresAvailableButtonClick = () => {
     setIsScoresAvailableInfoPopUp(true);
@@ -148,11 +151,25 @@ export default function VariablesComponent({
     }
   };
   const handleAreScoresAvailableChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setIsScoresAvailable(e.target.value === "true");
-    if ((e.target.value === "true") !== areScoresAvailable) {
-      setIsScoresAvailableSave(true);
+    if (statusOption !== "COMPLETED") {
+      showNotification({
+        message:
+          "The comp has not been completed. Releasing scores without the comp being completed will not work",
+        color: "red",
+      });
+    } else if (!isScoresCalculated) {
+      showNotification({
+        message:
+          "Scores has not been calculated. Releasing scores without the comp being completed will not work",
+        color: "red",
+      });
     } else {
-      setIsScoresAvailableSave(false);
+      setIsScoresAvailable(e.target.value === "true");
+      if ((e.target.value === "true") !== areScoresAvailable) {
+        setIsScoresAvailableSave(true);
+      } else {
+        setIsScoresAvailableSave(false);
+      }
     }
   };
   const handleAreScoresAvailableSave = async () => {
@@ -358,6 +375,58 @@ export default function VariablesComponent({
     } catch (error) {
       showNotification({
         message: "Could not update comp passcode",
+        color: "red",
+      });
+    }
+  };
+  const handleScoreCalculation = async () => {
+    try {
+      const response = await fetch("/api/mixer/manager/variables/calculate-scores", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ compId: compId }),
+      });
+      if (response.ok) {
+        showNotification({
+          message: "Scores calculated successfully",
+          color: "green",
+        });
+        router.refresh();
+      } else {
+        showNotification({
+          message: "Failed to calculate scores in api",
+          color: "red",
+        });
+      }
+    } catch (error) {
+      showNotification({
+        message: "Failed to calculate scores in frontend",
+        color: "red",
+      });
+    }
+  };
+  const handleScoreUnCalculation = async () => {
+    try {
+      const response = await fetch("/api/mixer/manager/variables/uncalculate-scores", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ compId: compId }),
+      });
+      if (response.ok) {
+        showNotification({
+          message: "Scores uncalculated successfully",
+          color: "green",
+        });
+        router.refresh();
+      } else {
+        showNotification({
+          message: "Failed to uncalculate scores in api",
+          color: "red",
+        });
+      }
+    } catch (error) {
+      showNotification({
+        message: "Failed to uncalculate scores in frontend",
         color: "red",
       });
     }
@@ -619,6 +688,26 @@ export default function VariablesComponent({
           </div>
         </div>
       </div>
+
+      {status === CompetitionStatus.COMPLETED && (
+        <div className="flex w-full py-2 px-1">
+          {!isScoresCalculated ? (
+            <button
+              className="bg-green-500 px-2 py-1 rounded-md font-bold w-full"
+              onClick={handleScoreCalculation}
+            >
+              Calculate Scores
+            </button>
+          ) : (
+            <button
+              className="bg-red-500 px-2 py-1 rounded-md font-bold w-full"
+              onClick={handleScoreUnCalculation}
+            >
+              UnCalaculate Scores
+            </button>
+          )}
+        </div>
+      )}
     </div>
   );
 }
