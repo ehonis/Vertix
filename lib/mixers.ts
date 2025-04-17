@@ -366,6 +366,8 @@ export const calculateStandings = async (compId: string) => {
         previousAttempts = score.attempts;
     });
 
+    console.log(climberPlaces);
+
     // Calculate overall standings
     const overallStandings = Array.from(climberPlaces.entries()).map(([climberName, places]) => {
         const division = sortedBoulderScores.find(s => s.climberName === climberName)?.division || 'No Division';
