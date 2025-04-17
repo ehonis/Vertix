@@ -9,12 +9,33 @@ import { Locations } from "@prisma/client";
 import { motion } from "framer-motion";
 import { AnimatePresence } from "framer-motion";
 import RoutePopUp from "./route-pop-up";
+import clsx from "clsx";
+import TagRoutes from "./tag-routes";
 
 export default function RoutesPage({ user }: { user: User | null | undefined }) {
+  const tags = [
+    "Dyno",
+    "Static",
+    "Crimpy",
+    "Roof",
+    "Chimney",
+    "Arete",
+    "Slab",
+    "Steep",
+    "Cave",
+    "Pinchy",
+    "Dihedral",
+    "Compression",
+    "Vert",
+    "Pockets",
+    "Dualtex",
+    "Burly",
+  ];
   const [wall, setWall] = useState<string | null>(null);
   const [isTopDownActive, setIsTopDownActive] = useState(false);
   const [isSearch, setIsSearch] = useState(false);
   const [searchText, setSearchText] = useState<string>("");
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
 
   const [isRoutePopUp, setIsRoutePopUp] = useState(false);
   const [routePopUpId, setRoutePopUpId] = useState<string>("");
@@ -99,6 +120,14 @@ export default function RoutesPage({ user }: { user: User | null | undefined }) 
     setRoutePopUpIsCompleted(false);
     setIsRoutePopUp(false);
   };
+  const handleTagClick = (tag: string) => {
+    if (selectedTags.includes(tag)) {
+      setSelectedTags(prev => prev.filter(t => t !== tag));
+    } else {
+      setSelectedTags(prev => [...prev, tag]);
+    }
+    console.log(selectedTags);
+  };
   return (
     <div className="w-full  font-barlow text-white flex justify-center">
       {isRoutePopUp && (
@@ -115,6 +144,25 @@ export default function RoutesPage({ user }: { user: User | null | undefined }) 
         </AnimatePresence>
       )}
       <div className="flex flex-col w-xs md:w-md h-full items-center mt-6">
+        {!isSearch && (
+          <div className="flex gap-4 rounded-full w-xs md:md overflow-x-auto scrol p-2 scrollbar-hidden ">
+            {tags.map(tag => (
+              <button
+                key={tag}
+                className={clsx(
+                  "  px-2 py-1 rounded-full font-normal text-center",
+                  selectedTags.includes(tag)
+                    ? " bg-green-500 "
+                    : "bg-black/25 outline-white outline"
+                )}
+                onClick={() => handleTagClick(tag)}
+              >
+                {tag}
+              </button>
+            ))}
+          </div>
+        )}
+
         <div className="flex flex-col gap-1 w-full mb-3">
           <div className="flex gap-2 w-full justify-between items-center">
             {!isSearch && (
@@ -172,7 +220,12 @@ export default function RoutesPage({ user }: { user: User | null | undefined }) 
         </div>
         {isSearch && (
           <div>
-            <SearchRoutes searchText={searchText} onData={handleRoutePopUp} user={user as User} />
+            <SearchRoutes
+              searchText={searchText}
+              onData={handleRoutePopUp}
+              user={user as User}
+              tags={selectedTags}
+            />
           </div>
         )}
         <AnimatePresence>
@@ -196,7 +249,21 @@ export default function RoutesPage({ user }: { user: User | null | undefined }) 
         <AnimatePresence>
           {isTopDownActive && (
             <motion.div variants={topDownVariants} animate="visible" exit="exit" className="mt-2">
-              <WallRoutes wall={wall} user={user as User} onData={handleRoutePopUp} />
+              <WallRoutes
+                wall={wall}
+                user={user as User}
+                onData={handleRoutePopUp}
+                selectedTags={selectedTags}
+              />
+            </motion.div>
+          )}
+          {selectedTags.length > 0 && !isTopDownActive && (
+            <motion.div variants={topDownVariants} animate="visible" exit="exit" className="mt-2">
+              <TagRoutes
+                user={user as User}
+                selectedTags={selectedTags}
+                onData={handleRoutePopUp}
+              />
             </motion.div>
           )}
         </AnimatePresence>

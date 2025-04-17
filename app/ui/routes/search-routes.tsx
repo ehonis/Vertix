@@ -12,6 +12,7 @@ export default function SearchRoutes({
   searchText,
   onData,
   user,
+  tags,
 }: {
   searchText: string;
   onData: (
@@ -22,6 +23,7 @@ export default function SearchRoutes({
     isCompleted: boolean
   ) => void;
   user: User;
+  tags: string[];
 }) {
   const [routes, setRoutes] = useState<(Route & { completed: boolean })[]>([]);
   const [isLoading, setIsLoading] = useState(false);

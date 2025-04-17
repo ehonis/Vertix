@@ -11,7 +11,8 @@ export async function GET(req: NextRequest) {
     const searchParams = req.nextUrl.searchParams;
 
     // Access individual query parameters
-    const wall = searchParams.get("wall");
+    const tags = searchParams.get("tags");
+    const tagsArray = tags?.split(",");
     const userId = searchParams.get("userId");
 
     let routesWithCompletion: RouteWithCompletions[];
@@ -20,8 +21,12 @@ export async function GET(req: NextRequest) {
       // If user is signed in, include completions filtered by user
       const routes = await prisma.route.findMany({
         where: {
-          location: wall as Locations,
           isArchive: false,
+          tags: {
+            some: {
+                name: { in: tagsArray },
+            },
+          },
         },
         include: {
           completions: {
@@ -39,8 +44,12 @@ export async function GET(req: NextRequest) {
       // then add an empty completions array to match our type.
       const routes = await prisma.route.findMany({
         where: {
-          location: wall as Locations,
           isArchive: false,
+          tags: {
+            some: {
+                name: { in: tagsArray },
+            },
+          },
         },
       });
 
