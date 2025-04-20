@@ -115,23 +115,25 @@ enum UserRole {
 }
 
 model User {
-    id              String            @id @default(cuid())
-    username        String?           @unique
-    name            String?
-    email           String            @unique
-    emailVerified   DateTime?
-    image           String?
-    password        String?
-    completions     RouteCompletion[] // One-to-many relationship with RouteCompletion
-    attempts        RouteAttempt[] // One-to-many relationship with RouteAttempt
-    communityGrades CommunityGrade[]
-    stars           RouteStar[]
-    badges          Badge[]
-    role            UserRole          @default(USER)
-    createdAt       DateTime          @default(now())
-    updatedAt       DateTime          @updatedAt
-    Account         Account[]
-    Session         Session[]
+    id                  String            @id @default(cuid())
+    username            String?           @unique
+    name                String?
+    email               String            @unique
+    emailVerified       DateTime?
+    image               String?
+    password            String?
+    highestRopeGrade    String?
+    highestBoulderGrade String?
+    completions         RouteCompletion[] // One-to-many relationship with RouteCompletion
+    attempts            RouteAttempt[] // One-to-many relationship with RouteAttempt
+    communityGrades     CommunityGrade[]
+    stars               RouteStar[]
+    badges              Badge[]
+    role                UserRole          @default(USER)
+    createdAt           DateTime          @default(now())
+    updatedAt           DateTime          @updatedAt
+    Account             Account[]
+    Session             Session[]
 
     private      Boolean        @default(false)
     mixerClimber MixerClimber[]
