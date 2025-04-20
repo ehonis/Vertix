@@ -25,19 +25,11 @@ export default async function ProfilePage({ params }: { params: Promise<{ slug: 
   if (!user) {
     redirect("/signin");
   }
-  const totalCompletionsInt = (await getRouteCompletions(username))?.length;
+  redirect(`/profile/${username}/dashboard`);
+
   return (
     <div className="w-screen">
-      <div className="w-full flex flex-col items-center ">
-        <ImageNamePlate
-          image={user.image}
-          name={user.name}
-          username={username}
-          title={user.tag}
-          id={user.id}
-        />
-        <SendsPlate completions={totalCompletionsInt} highlightedBadge={undefined} />
-      </div>
+      <p>Redirecting to dashboard...</p>
     </div>
   );
 }

@@ -20,8 +20,8 @@ export default function ImageNamePlate({ image, name, username, title, id }: Ima
           {image === null ? (
             <Image
               src={"https://8jiyvthxbb.ufs.sh/f/bujx12z5cHJjhC8qChmfsrL6AEIclW7bn0CeSKix1gBohFRZ"}
-              width={120}
-              height={120}
+              width={500}
+              height={500}
               className="rounded-full border-4 border-slate-900 size-36 object-cover"
               alt="picture of user"
             />

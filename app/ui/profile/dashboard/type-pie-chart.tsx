@@ -51,14 +51,6 @@ export default function TypePieChart({
 }) {
   const [isExpanded, setIsExpanded] = useState(false);
 
-  if (!completionData || completionData.length === 0) {
-    return (
-      <div className="w-full h-full bg-slate-900 rounded-lg p-5 flex items-center justify-center">
-        <p className="text-white">No completion data available</p>
-      </div>
-    );
-  }
-
   const { boulderRoutes, ropeRoutes } = splitRoutesByType(completionData);
 
   // Define colors for each route type

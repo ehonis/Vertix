@@ -3,6 +3,7 @@ import EditRoute from "./edit-route";
 import { getRouteImagesById } from "@/lib/routes";
 import { findDaysOld } from "@/lib/dates";
 import { findAllTotalSends } from "@/lib/routes";
+
 export default async function IndividualRoutePageLoad({ routeId }) {
   const route = await getRouteById(routeId);
   const images = await getRouteImagesById(routeId);
