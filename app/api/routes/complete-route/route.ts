@@ -1,6 +1,9 @@
 import prisma from "@/prisma";
 import { NextResponse, NextRequest } from "next/server";
 import { auth } from "@/auth";
+import { RouteType, User } from "@prisma/client";
+import { findIfBoulderGradeIsHigher, findIfRopeGradeIsHigher } from "@/lib/route";
+
 export async function POST(req: NextRequest) {
   const session = await auth();
     
@@ -11,6 +14,48 @@ export async function POST(req: NextRequest) {
 
   try {
     const { userId, routeId } = await req.json();
+
+    const route = await prisma.route.findUnique({
+      where: {
+        id: routeId,
+      },
+    });
+    const user = await prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+    });
+
+    if(!route){
+      return NextResponse.json({ message: "Route not found" },{ status: 404 });
+    }
+
+    if(route.type === RouteType.ROPE){
+      if(findIfRopeGradeIsHigher(user as User, route)){
+        await prisma.user.update({
+          where: {
+            id: userId,
+          },
+          data: {
+            highestRopeGrade: route.grade,
+          },
+        });
+      }
+    }
+
+    if(route.type === RouteType.BOULDER){
+      if(findIfBoulderGradeIsHigher(user as User, route)){
+        await prisma.user.update({
+          where: {
+            id: userId,
+          },
+          data: {
+            highestBoulderGrade: route.grade,
+          },
+        });
+      }
+    }
+    
 
     const result = await prisma.routeCompletion.upsert({
         where: {

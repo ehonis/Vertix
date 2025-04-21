@@ -6,9 +6,19 @@ type ImageNamePlate = {
   username: string;
   title: string | null;
   id: string;
+  highestRopeGrade: string | null;
+  highestBoulderGrade: string | null;
 };
 
-export default function ImageNamePlate({ image, name, username, title, id }: ImageNamePlate) {
+export default function ImageNamePlate({
+  image,
+  name,
+  username,
+  title,
+  id,
+  highestRopeGrade,
+  highestBoulderGrade,
+}: ImageNamePlate) {
   if (username === null) {
     username = id;
   }
@@ -41,13 +51,23 @@ export default function ImageNamePlate({ image, name, username, title, id }: Ima
         </div>
 
         {/* Name and ID Plate */}
-        <div className="bg-slate-900  w-xs md:w-md rounded-lg mt-12 p-6 px-5 relative">
-          <h1 className="text-white font-barlow font-bold text-3xl text-start drop-shadow-customBlack">
-            {name}
-          </h1>
-          <h2 className="text-gray-400 font-barlow font-bold text-start drop-shadow-customBlack">
-            @{username}
-          </h2>
+        <div className="bg-slate-900  w-xs md:w-md rounded-lg mt-12 p-6 px-5 relative flex justify-between items-center">
+          <div>
+            <h1 className="text-white font-barlow font-bold text-3xl text-start drop-shadow-customBlack">
+              {name}
+            </h1>
+            <h2 className="text-gray-400 font-barlow font-bold text-start drop-shadow-customBlack">
+              @{username}
+            </h2>
+          </div>
+          <div className="font-barlow text-white flex flex-col justify-center items-center gap-1">
+            <p className="font-bold text-lg">Highest Grade</p>
+            <div className="flex gap-3">
+              <p>{highestRopeGrade ? highestRopeGrade : "n/a"}</p>
+              <div className="bg-white rounded-full h-8 w-0.5"></div>
+              <p>{highestBoulderGrade ? highestBoulderGrade : "n/a"}</p>
+            </div>
+          </div>
         </div>
       </div>
     </>

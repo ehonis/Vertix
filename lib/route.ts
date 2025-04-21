@@ -1,5 +1,5 @@
 import prisma from "@/prisma"
-import { Route, RouteImage, RouteStar, RouteCompletion, CommunityGrade } from "@prisma/client"
+import { Route, RouteImage, RouteStar, RouteCompletion, CommunityGrade, User, RouteType } from "@prisma/client"
 
 // Type definitions for better type safety
 type RouteWithImages = Route & {
@@ -253,4 +253,29 @@ export async function findCommunityGrade(routeId: string): Promise<string> {
       console.error(`Error calculating community grade for route ${routeId}`, error);
       return "none";
     }
+}
+
+export function findIfRopeGradeIsHigher (user:User, route:Route){
+  const ropeGrades = ["5.b", "5.7-", "5.7", "5.7+", "5.8-", "5.8", "5.8+", "5.9-", "5.9", "5.9+", "5.10-", "5.10", "5.10+", "5.11-", "5.11", "5.11+", "5.12-", "5.12", "5.12+", "5.13-", "5.13", "5.13+"]
+  if(!user.highestRopeGrade){
+    return true
+  }else{
+    if(ropeGrades.indexOf(user.highestRopeGrade) > ropeGrades.indexOf(route.grade)){
+      return true
+    }else{
+      return false
+    }
+  }
+}
+export function findIfBoulderGradeIsHigher(user:User, route:Route){
+  const boulderGrades = ["vb", "v0", "v1", "v2", "v3", "v4", "v5", "v6", "v7", "v8", "v9", "v10"]
+  if(!user.highestBoulderGrade){
+    return true
+  }else{
+    if(boulderGrades.indexOf(user.highestBoulderGrade) > boulderGrades.indexOf(route.grade)){
+      return true
+    }else{
+      return false
+    }
+  }
 }

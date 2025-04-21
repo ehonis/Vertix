@@ -45,6 +45,8 @@ export default async function Dashboard({ params }: { params: Promise<{ slug: st
         username={user.username}
         title={user.tag}
         id={user.id}
+        highestRopeGrade={user.highestRopeGrade}
+        highestBoulderGrade={user.highestBoulderGrade}
       />
       <div className="flex flex-col w-xs md:w-md gap-2">
         <h2 className="font-barlow text-white text-2xl font-bold">Completions</h2>
