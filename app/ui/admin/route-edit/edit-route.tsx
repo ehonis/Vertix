@@ -9,8 +9,21 @@ import { splitGradeModifier } from "@/lib/routes";
 import { useState, useEffect } from "react";
 import { useNotification } from "@/app/contexts/NotificationContext";
 import { useRouter } from "next/navigation";
+import { Route, RouteImage, Locations, RouteType } from "@prisma/client";
 
-export default function EditRoute({ route, images, daysOld, totalSends }) {
+export default function EditRoute({
+  route,
+  images,
+  daysOld,
+  totalSends,
+  starRating,
+}: {
+  route: Route;
+  images: RouteImage[];
+  daysOld: number;
+  totalSends: number;
+  starRating: number;
+}) {
   const { showNotification } = useNotification();
   const router = useRouter();
 
@@ -26,7 +39,7 @@ export default function EditRoute({ route, images, daysOld, totalSends }) {
   const [date, setDate] = useState(formatDateToYYYYMMDD(route.setDate));
   const [finalDate, setFinalDate] = useState(route.setDate);
 
-  const [location, setLocation] = useState(route.location);
+  const [location, setLocation] = useState<Locations>(route.location);
 
   const [isSubmit, setIsSubmit] = useState(false);
   useEffect(() => {
@@ -47,43 +60,43 @@ export default function EditRoute({ route, images, daysOld, totalSends }) {
     }
   }, [grade, modifier]);
 
-  const handleTitleChange = event => {
+  const handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newTitle = event.target.value;
     setTitle(newTitle);
     setIsSubmit(true);
   };
-  const handleBoulderGradeChange = event => {
+  const handleBoulderGradeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const newGrade = event.target.value;
     setGrade(newGrade);
     setFinalGrade(newGrade);
     setIsSubmit(true);
   };
-  const handleRopeGradeChange = event => {
+  const handleRopeGradeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const newGrade = event.target.value;
     setGrade(newGrade);
     setFinalGrade(`${newGrade}${modifier}`);
     setIsSubmit(true);
   };
-  const handleRopeModifierChange = event => {
+  const handleRopeModifierChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const newModifier = event.target.value;
     setModifier(newModifier);
     setFinalGrade(`${grade}${newModifier}`);
     setIsSubmit(true);
   };
-  const handleTypeChange = event => {
+  const handleTypeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const newType = event.target.value;
-    setType(newType);
+    setType(newType as RouteType);
     setIsSubmit(true);
   };
-  const handleDateChange = event => {
+  const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newDate = event.target.value;
     setDate(newDate);
     setFinalDate(parseDateString(newDate));
     setIsSubmit(true);
   };
-  const handleLocationChange = event => {
+  const handleLocationChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const newLocation = event.target.value;
-    setLocation(newLocation);
+    setLocation(newLocation as Locations);
     setIsSubmit(true);
   };
   const handleSubmit = async () => {
@@ -96,13 +109,16 @@ export default function EditRoute({ route, images, daysOld, totalSends }) {
       newLocation: location,
     };
     try {
-      const response = await fetch("/api/edit/updateRoute", {
+      const response = await fetch("/api/routes/edit/updateRoute", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
       });
       if (!response.ok) {
-        console.error(response.message);
+        showNotification({
+          message: `Response was not ok: error updating route`,
+          color: "red",
+        });
       } else {
         showNotification({
           message: `Successfully Updated ${route.title}`,
@@ -117,13 +133,39 @@ export default function EditRoute({ route, images, daysOld, totalSends }) {
       });
     }
   };
+
+  const handleArchive = async () => {
+    const data = {
+      routeId: route.id,
+      isArchive: !route.isArchive,
+    };
+    try {
+      const response = await fetch("/api/routes/edit/archiveRoute", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+      if (!response.ok) {
+        showNotification({
+          message: `Response was not ok: error updating route`,
+          color: "red",
+        });
+      } else {
+        showNotification({
+          message: `Successfully ${route.isArchive ? "Unarchived" : "Archived"} ${route.title}`,
+          color: "green",
+        });
+        router.refresh();
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const color = route.color;
 
   return (
     <>
-      <div className="font-barlow font-bold text-white text-4xl items-center justify-center flex mt-5">
-        Edit
-      </div>
       <div className="flex justify-center items-center flex-col py-7 ">
         <div className="flex justify-between items-center w-11/12 md:w-3/5 ">
           <div className="">
@@ -146,10 +188,10 @@ export default function EditRoute({ route, images, daysOld, totalSends }) {
           <input
             type="text"
             defaultValue={route.title}
-            className="text-black font-barlow font-bold text-center p-2 rounded-sm text-xl focus:outline-hidden"
+            className="text-white font-barlow font-bold text-center p-2 rounded-sm text-xl focus:outline-hidden"
             onChange={handleTitleChange}
           />
-          <button className="flex flex-col items-center">
+          <button className="flex flex-col items-center" onClick={handleArchive}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -190,19 +232,19 @@ export default function EditRoute({ route, images, daysOld, totalSends }) {
           <div className="flex p-5 justify-between">
             <div className="flex-col flex gap-2">
               {/* Type */}
-              <div className="flex gap-2">
+              <div className="flex gap-2 items-center">
                 <label htmlFor="" className="text-white font-barlow font-bold">
                   Type:
                 </label>
                 <select
                   name="type"
                   id="type"
-                  className="font-barlow font-bold rounded-sm"
+                  className="font-barlow font-bold rounded-sm text-white bg-gray-700 p-1"
                   value={type}
                   onChange={handleTypeChange}
                 >
-                  <option value="rope">rope</option>
-                  <option value="boulder">boulder</option>
+                  <option value="ROPE">rope</option>
+                  <option value="BOULDER">boulder</option>
                 </select>
               </div>
               {/* Grade */}
@@ -210,12 +252,12 @@ export default function EditRoute({ route, images, daysOld, totalSends }) {
                 <label htmlFor="" className="text-white font-barlow font-bold">
                   Grade:
                 </label>
-                {type === "rope" ? (
+                {type === "ROPE" ? (
                   <>
                     <select
                       name="type"
                       id="type"
-                      className="font-barlow font-bold rounded-sm"
+                      className="font-barlow font-bold rounded-sm text-white bg-gray-700 p-1"
                       value={grade}
                       onChange={handleRopeGradeChange}
                     >
@@ -232,7 +274,7 @@ export default function EditRoute({ route, images, daysOld, totalSends }) {
                       <select
                         name="type"
                         id="type"
-                        className="font-barlow font-bold rounded-sm w-10"
+                        className="font-barlow font-bold r w-10 rounded-sm text-white bg-gray-700 p-1"
                         value={modifier}
                         onChange={handleRopeModifierChange}
                       >
@@ -246,7 +288,7 @@ export default function EditRoute({ route, images, daysOld, totalSends }) {
                   <select
                     name="type"
                     id="type"
-                    className="font-barlow font-bold rounded-sm"
+                    className="font-barlow font-bold rounded-sm text-white bg-gray-700 p-1"
                     value={grade}
                     onChange={handleBoulderGradeChange}
                   >
@@ -263,14 +305,14 @@ export default function EditRoute({ route, images, daysOld, totalSends }) {
                 )}
               </div>
               {/* Date */}
-              <div className="flex gap-2">
+              <div className="flex gap-2 items-center">
                 <label htmlFor="" className="font-barlow font-bold text-white">
                   setDate:{" "}
                 </label>
                 <input
                   type="date"
                   value={date}
-                  className="font-barlow font-bold rounded-sm w-32 focus:outline-hidden"
+                  className="font-barlow font-bold rounded-sm w-32 focus:outline-hidden text-white bg-gray-700 p-1 text-sm"
                   onChange={handleDateChange}
                 />
               </div>
@@ -282,23 +324,30 @@ export default function EditRoute({ route, images, daysOld, totalSends }) {
                 <select
                   name=""
                   id=""
-                  className="font-barlow font-bold rounded-sm"
+                  className="font-barlow font-bold rounded-sm text-white bg-gray-700 p-1 text-sm"
                   value={location}
                   onChange={handleLocationChange}
                 >
-                  <option value="AB">AB</option>
-                  <option value="main2">ropeNorth</option>
-                  <option value="main1">ropeSouth</option>
-                  <option value="boulder1">boulderNorth</option>
-                  <option value="boulder2">boulderSouth</option>
+                  <option value={Locations.ABWallNorth}>AB North</option>
+                  <option value={Locations.ABWallSouth}>AB South</option>
+                  <option value={Locations.ropeNorth}>ropeNorth</option>
+                  <option value={Locations.ropeNorthWest}>ropeNorthWest</option>
+                  <option value={Locations.ropeNorthEast}>ropeNorthEast</option>
+                  <option value={Locations.ropeSouthWest}>ropeSouthWest</option>
+                  <option value={Locations.ropeSouthEast}>ropeSouthEast</option>
+                  <option value={Locations.boulderNorthSlab}>boulderNorthSlab</option>
+                  <option value={Locations.boulderNorthCave}>boulderNorthCave</option>
+                  <option value={Locations.boulderMiddle}>boulderMiddle</option>
+                  <option value={Locations.boulderSouth}>boulderSouth</option>
                 </select>
               </div>
-              <div className="text-white font-barlow font-bold">Id: {route.id}</div>
+
+              <div className="text-white font-barlow font-bold text-sm">Id: {route.id}</div>
               <div className="text-white font-barlow font-bold">
                 IsArchive: {route.isArchive ? "Yes" : "No"}
               </div>
             </div>
-            {/* Images */}
+            {/* Images
             {images.length > 0 ? (
               <ImageSlider images={images} />
             ) : (
@@ -307,10 +356,10 @@ export default function EditRoute({ route, images, daysOld, totalSends }) {
                 height={600}
                 width={600}
                 style={{ objectFit: "cover" }}
-                className="w-32 h-40"
+                className="w-24 h-28"
                 alt="default route picture"
               />
-            )}
+            )} */}
           </div>
         </div>
         <div className="flex justify-end mt-3 w-11/12 md:w-3/5">
@@ -324,7 +373,7 @@ export default function EditRoute({ route, images, daysOld, totalSends }) {
           ) : null}
         </div>
         <div className="flex mt-3 justify-center bg-slate-900 rounded-xl p-3 w-11/12 md:w-3/5">
-          <StarRating rating={route.starRating} />
+          <StarRating rating={starRating} />
         </div>
         <div className="flex mt-3 justify-between w-11/12 md:w-3/5">
           <div className="mr-3 flex w-full flex-col items-center rounded-xl bg-slate-900 p-4 shadow-lg">

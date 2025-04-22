@@ -1,11 +1,11 @@
-import { NextResponse } from "next/server";
+import { NextResponse, NextRequest } from "next/server";
 import prisma from "@/prisma";
 
-export async function POST(request) {
+export async function PATCH(request: NextRequest) {
   const { routeId, newTitle, newType, newGrade, newDate, newLocation } = await request.json();
 
   try {
-    await prisma.Route.update({
+    await prisma.route.update({
       where: { id: routeId },
       data: {
         title: newTitle,
@@ -15,11 +15,11 @@ export async function POST(request) {
         location: newLocation,
       },
     });
-    return NextResponse.json({ status: 200 }, { message: "Successfully updated route" });
+    return NextResponse.json({ message: "Successfully updated route" }, { status: 200 } );
   } catch (error) {
     console.log(error);
     return NextResponse.json(
-      { error: "Failed to update route", details: error.message },
+      { error: "Failed to update route"},
       { status: 500 }
     );
   }

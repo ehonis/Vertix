@@ -12,7 +12,7 @@ export function generateStaticParams() {
   return ids;
 }
 
-export default async function EditRoute({ params }) {
+export default async function EditRoute({ params }: { params: Promise<{ slug: string }> }) {
   const session = await auth();
   const { slug } = await params;
   const routeId = slug;

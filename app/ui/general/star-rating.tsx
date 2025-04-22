@@ -1,8 +1,11 @@
-export default function StarRating({ rating }) {
+export default function StarRating({ rating }: { rating: number | undefined }) {
+  if (!rating) {
+    return null;
+  }
   const roundedRating = Math.floor(rating * 2) / 2;
   const [intPart, decimalPart] = roundedRating.toString().split(".");
-  let starRating = [];
-  for (let i = 0; i < intPart; i++) {
+  const starRating = [];
+  for (let i = 0; i < parseInt(intPart); i++) {
     starRating.push(
       <svg
         key={i}

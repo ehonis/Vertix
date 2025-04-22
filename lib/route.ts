@@ -48,6 +48,7 @@ export async function getRouteById(id: string): Promise<Route | null> {
       const route = await prisma.route.findUnique({
         where: { id },
       });
+      
       return route;
     } catch (error) {
       console.error(`Error finding route with id: ${id}`, error);
