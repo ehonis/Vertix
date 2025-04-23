@@ -145,7 +145,7 @@ export default function UserProfile() {
           ref={profileRef}
           className={clsx(
             "z-50 fixed flex flex-col  h-max w-56  bg-black top-[5.2rem] justify-start transition-all p-3 duration-700 transform gap-3 right-0 button-container rounded-sm cursor-default",
-            isProfilePopUp ? "opacity-100 -translate-x-2" : "opacity-0 translate-x-full"
+            isProfilePopUp ? "opacity-100 -translate-x-2 " : "opacity-0 translate-x-100 "
           )}
         >
           <p className="text-white font-bold">

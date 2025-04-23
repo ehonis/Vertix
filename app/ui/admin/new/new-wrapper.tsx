@@ -7,9 +7,9 @@ import ErrorPopUp from "./error-pop-up";
 import { useNotification } from "@/app/contexts/NotificationContext";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Locations } from "@prisma/client";
+import { Locations, RouteTag } from "@prisma/client";
 import { CompetitionStatus } from "@prisma/client";
-
+import React from "react";
 type compData = {
   id: string;
   title: string;
@@ -27,7 +27,7 @@ type routeData = {
   wall: Locations;
   type: string;
 };
-export default function NewWrapper() {
+export default function NewWrapper({ tags }: { tags: RouteTag[] }) {
   const { showNotification } = useNotification();
   const router = useRouter();
   const options = ["Route", "Comp"];
@@ -42,7 +42,14 @@ export default function NewWrapper() {
       const newId = uuidv4();
       setTable(prevTable => [
         ...prevTable,
-        <NewRoute id={newId} key={newId} onCommit={handleCommit} onUncommit={handleUncommit} />,
+        <NewRoute
+          id={newId}
+          key={newId}
+          onCommit={handleCommit}
+          onUncommit={handleUncommit}
+          onDelete={handleDelete}
+          tags={tags}
+        />,
       ]);
     }
     if (optionText === "Comp") {
@@ -95,6 +102,23 @@ export default function NewWrapper() {
       return newData; // Return the updated array
     });
   };
+  const handleDelete = (id: string) => {
+    // Filter out the data entry with matching id
+    setData(prevData => prevData.filter(item => item.id !== id));
+    // Filter out the React node with matching key
+    setTable(prevTable =>
+      prevTable.filter(node => {
+        // Check if the node is a valid React element and has a key prop
+        if (React.isValidElement(node)) {
+          return node.key !== id;
+        }
+        return true; // Keep non-React elements (though there shouldn't be any)
+      })
+    );
+  };
+  useEffect(() => {
+    console.log(data);
+  }, [data]);
 
   return (
     <>
@@ -118,6 +142,7 @@ export default function NewWrapper() {
           <p className="font-barlow font-bold text-xs text-white">Admin Center</p>
         </Link>
         <h1 className="text-white font-barlow font-bold text-4xl">New</h1>
+        {/* create new options */}
         <div className="flex justify-between items-center">
           <div className="flex gap-3 items-center overflow-x-auto w-[66%] rounded-r-full">
             {options.map(optionText => {
@@ -146,15 +171,9 @@ export default function NewWrapper() {
             })}
             {/* Gradient Overlay */}
           </div>
-
-          {table.length > 0 && (
-            <button className="px-4 py-1 bg-slate-400 text-white font-barlow font-bold rounded-sm">
-              Edit
-            </button>
-          )}
         </div>
-        <div className="h-1 w-full bg-white rounded-full"></div>
-        <div className="flex flex-col gap-2">
+        <div className="h-1 w-full bg-white rounded-full mb-2"></div>
+        <div className="flex flex-col gap-4">
           {table.map(option => {
             return option;
           })}

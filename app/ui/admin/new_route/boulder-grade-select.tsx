@@ -1,5 +1,9 @@
-export default function BoulderGradeSelect({ onGradeChange }) {
-  const handleGradeChange = event => {
+export default function BoulderGradeSelect({
+  onGradeChange,
+}: {
+  onGradeChange: (grade: string) => void;
+}) {
+  const handleGradeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     onGradeChange(event.target.value); // Pass grade to parent
   };
   return (
@@ -7,7 +11,7 @@ export default function BoulderGradeSelect({ onGradeChange }) {
       name="grade"
       id=""
       onChange={handleGradeChange}
-      className="bg-[#181a1c] rounded-sm text-white font-barlow font-bold p-1"
+      className="bg-gray-700 rounded-sm text-white font-barlow font-bold p-1"
     >
       <option value=""></option>
       <option value="vb">VB</option>

@@ -5,6 +5,7 @@ import RoutePanels from "../../../ui/admin/route-panels";
 import { redirect } from "next/navigation";
 import { auth } from "@/auth";
 import prisma from "@/prisma";
+
 const getRoutes = async () => {
   const routes = await prisma.route.findMany({
     where: {

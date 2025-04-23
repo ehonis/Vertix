@@ -126,7 +126,6 @@ export default function RoutesPage({ user }: { user: User | null | undefined }) 
     } else {
       setSelectedTags(prev => [...prev, tag]);
     }
-    console.log(selectedTags);
   };
   return (
     <div className="w-full  font-barlow text-white flex justify-center">
