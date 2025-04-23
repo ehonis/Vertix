@@ -10,6 +10,7 @@ import Link from "next/link";
 import { Locations, RouteTag } from "@prisma/client";
 import { CompetitionStatus } from "@prisma/client";
 import React from "react";
+
 type compData = {
   id: string;
   title: string;
@@ -56,7 +57,13 @@ export default function NewWrapper({ tags }: { tags: RouteTag[] }) {
       const newId = uuidv4();
       setTable(prevTable => [
         ...prevTable,
-        <NewComp id={newId} key={newId} onCommit={handleCommit} onUncommit={handleUncommit} />,
+        <NewComp
+          id={newId}
+          key={newId}
+          onCommit={handleCommit}
+          onUncommit={handleUncommit}
+          onDelete={handleDelete}
+        />,
       ]);
     }
   };

@@ -165,180 +165,187 @@ export default function NewRoute({
           onCancel={() => setIsDelete(false)}
         />
       )}
-      <div className="relative bg-slate-900 w-full rounded-lg flex md:flex-row flex-col gap-2 p-5">
-        <button
-          className="absolute -top-3 -right-3 bg-red-500 text-white font-barlow font-bold p-2 rounded-full size-10 flex items-center justify-center"
-          onClick={() => setIsDelete(true)}
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={1.5}
-            stroke="currentColor"
-            className="size-8 stroke-2"
+      <div className="flex flex-col">
+        <p className="text-white font-barlow font-bold text-3xl">Route</p>
+        <div className="relative bg-slate-900 w-full rounded-lg flex md:flex-row flex-col gap-2 p-5 mb-2">
+          <button
+            className="absolute -top-3 -right-3 bg-red-500 text-white font-barlow font-bold p-2 rounded-full size-10 flex items-center justify-center"
+            onClick={() => setIsDelete(true)}
           >
-            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
-          </svg>
-        </button>
-        <div className="flex flex-col md:gap-4 gap-2 w-full justify-between  ">
-          <div className="flex gap-3 items-center ">
-            <input
-              type="text"
-              value={name}
-              onChange={handleNameChange}
-              placeholder="Name"
-              className="rounded-md bg-gray-700 text-white py-1 px-2 max-w-min lg:h-14 lg:text-3xl font-barlow font-bold focus:outline-hidden"
-            />
-          </div>
-          <div className="flex gap-1 items-center">
-            <label htmlFor="" className="text-white font-barlow font-bold text-lg">
-              <span className="font-barlow font-bold text-red-500">*</span>Set Date:
-            </label>
-            <button
-              className={clsx(
-                "font-barlow font-bold px-2 py-1 rounded-lg bg-gray-700 text-white",
-                isToday && "bg-green-500"
-              )}
-              onClick={handleNowButton}
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+              className="size-8 stroke-2"
             >
-              Now
-            </button>
-            <input
-              type="date"
-              id="date"
-              name="date"
-              value={selectedDate} // Controlled value
-              onChange={handleDateChange} // Update state on change
-              className="p-1 rounded-lg bg-gray-700 text-white cursor-pointer font-barlow font-bold focus:outline-hidden"
-            />
-          </div>
-          <GradeSelect onGradeChange={handleGradeData} />
-          <div className="flex gap-2 w-2/6 items-center">
-            <label htmlFor="" className="text-white font-barlow font-bold text-lg">
-              <span className="font-barlow font-bold text-red-500">*</span>
-              Color:
-            </label>
-
-            <select
-              name="color"
-              id="color"
-              value={color}
-              onChange={handleColorChange}
-              className="bg-gray-700 text-white font-barlow font-bold p-1 rounded-sm"
-            >
-              <option value=""></option>
-              <option value="black">Black</option>
-              <option value="white">White</option>
-              <option value="brown">Brown</option>
-              <option value="red">Red</option>
-              <option value="blue">Blue</option>
-              <option value="yellow">Yellow</option>
-              <option value="green">Green</option>
-              <option value="orange">Orange</option>
-              <option value="pink">Pink</option>
-              <option value="purple">Purple</option>
-            </select>
-          </div>
-        </div>
-        <div className="bg-gray-700 pl-2 pr-3  rounded-lg flex justify-center py-2">
-          <TopDown onData={handleWallData} />
-        </div>
-        {/* tags */}
-        <div className="flex flex-col gap-2">
-          <p className="text-white font-barlow font-bold text-lg">Tags</p>
-          <div className="flex gap-2 flex-wrap items-center">
-            {tempTags.map(tag => (
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
+            </svg>
+          </button>
+          <div className="flex flex-col md:gap-4 gap-2 w-full justify-between  ">
+            <div className="flex gap-3 items-center ">
+              <input
+                type="text"
+                value={name}
+                onChange={handleNameChange}
+                placeholder="Name"
+                className="rounded-md bg-gray-700 text-white py-1 px-2 max-w-min lg:h-14 lg:text-3xl font-barlow font-bold focus:outline-hidden"
+              />
+            </div>
+            <div className="flex gap-1 items-center">
+              <label htmlFor="" className="text-white font-barlow font-bold text-lg">
+                <span className="font-barlow font-bold text-red-500">*</span>Set Date:
+              </label>
               <button
-                key={tag}
                 className={clsx(
-                  "  px-2 py-1 rounded-full font-normal text-center text-white font-barlow",
-                  selectedTags.includes(tag)
-                    ? " bg-green-500 "
-                    : "bg-black/25 outline-white outline"
+                  "font-barlow font-bold px-2 py-1 rounded-lg bg-gray-700 text-white",
+                  isToday && "bg-green-500"
                 )}
-                onClick={() => handleTagClick(tag)}
+                onClick={handleNowButton}
               >
-                {tag}
+                Now
               </button>
-            ))}
-            {!isNewTag && (
-              <button
-                className="bg-black/25 outline-white outline p-2 size-8 rounded-full font-bold text-xl text-center text-white font-barlow flex items-center justify-center"
-                onClick={handleNewTag}
+              <input
+                type="date"
+                id="date"
+                name="date"
+                value={selectedDate} // Controlled value
+                onChange={handleDateChange} // Update state on change
+                className="p-1 rounded-lg bg-gray-700 text-white cursor-pointer font-barlow font-bold focus:outline-hidden"
+              />
+            </div>
+            <GradeSelect onGradeChange={handleGradeData} />
+            <div className="flex gap-2 w-2/6 items-center">
+              <label htmlFor="" className="text-white font-barlow font-bold text-lg">
+                <span className="font-barlow font-bold text-red-500">*</span>
+                Color:
+              </label>
+
+              <select
+                name="color"
+                id="color"
+                value={color}
+                onChange={handleColorChange}
+                className="bg-gray-700 text-white font-barlow font-bold p-1 rounded-sm"
               >
-                +
-              </button>
-            )}
+                <option value=""></option>
+                <option value="black">Black</option>
+                <option value="white">White</option>
+                <option value="brown">Brown</option>
+                <option value="red">Red</option>
+                <option value="blue">Blue</option>
+                <option value="yellow">Yellow</option>
+                <option value="green">Green</option>
+                <option value="orange">Orange</option>
+                <option value="pink">Pink</option>
+                <option value="purple">Purple</option>
+              </select>
+            </div>
           </div>
-          <div className="flex gap-2 items-center">
-            {isNewTag && (
-              <div className="flex gap-2 items-center">
-                <input
-                  type="text"
-                  placeholder="New Tag..."
-                  value={newTag}
-                  onChange={handleNewTagChange}
-                  className="bg-black/25 outline-white outline px-2 py-1 rounded-full font-barlow  text-white"
-                />
+          <div className="bg-gray-700 pl-2 pr-3  rounded-lg flex justify-center py-2">
+            <TopDown onData={handleWallData} />
+          </div>
+          {/* tags */}
+          <div className="flex flex-col gap-2">
+            <p className="text-white font-barlow font-bold text-lg">Tags</p>
+            <div className="flex gap-2 flex-wrap items-center">
+              {tempTags.map(tag => (
+                <button
+                  key={tag}
+                  className={clsx(
+                    "  px-2 py-1 rounded-full font-normal text-center text-white font-barlow",
+                    selectedTags.includes(tag)
+                      ? " bg-green-500 "
+                      : "bg-black/25 outline-white outline"
+                  )}
+                  onClick={() => handleTagClick(tag)}
+                >
+                  {tag}
+                </button>
+              ))}
+              {!isNewTag && (
+                <button
+                  className="bg-black/25 outline-white outline p-2 size-8 rounded-full font-bold text-xl text-center text-white font-barlow flex items-center justify-center"
+                  onClick={handleNewTag}
+                >
+                  +
+                </button>
+              )}
+            </div>
+            <div className="flex gap-2 items-center">
+              {isNewTag && (
                 <div className="flex gap-2 items-center">
-                  <button
-                    className="p-2 rounded-full bg-red-500 text-white font-barlow font-bold"
-                    onClick={handleNewTagCancel}
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth={1.5}
-                      stroke="currentColor"
-                      className="size-5 stroke-white"
+                  <input
+                    type="text"
+                    placeholder="New Tag..."
+                    value={newTag}
+                    onChange={handleNewTagChange}
+                    className="bg-black/25 outline-white outline px-2 py-1 rounded-full font-barlow  text-white"
+                  />
+                  <div className="flex gap-2 items-center">
+                    <button
+                      className="p-2 rounded-full bg-red-500 text-white font-barlow font-bold"
+                      onClick={handleNewTagCancel}
                     >
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
-                    </svg>
-                  </button>
-                  <button
-                    className="p-2 rounded-full bg-green-500 text-white font-barlow font-bold"
-                    onClick={handleNewTagSubmit}
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth={1.5}
-                      stroke="currentColor"
-                      className="size-5 stroke-white"
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="size-5 stroke-white"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M6 18 18 6M6 6l12 12"
+                        />
+                      </svg>
+                    </button>
+                    <button
+                      className="p-2 rounded-full bg-green-500 text-white font-barlow font-bold"
+                      onClick={handleNewTagSubmit}
                     >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="m4.5 12.75 6 6 9-13.5"
-                      />
-                    </svg>
-                  </button>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="size-5 stroke-white"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="m4.5 12.75 6 6 9-13.5"
+                        />
+                      </svg>
+                    </button>
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
+            </div>
           </div>
         </div>
-      </div>
-      <div className="flex gap-1 items-center justify-start">
-        <button
-          className={clsx(
-            "text-white  md:p-2 p-2 md:text-base text-sm md:w-32 min-w-16 rounded-full font-barlow font-bold",
-            commitText === "Committed" ? "bg-green-500" : "bg-slate-500"
+        <div className="flex gap-1 items-center justify-start">
+          <button
+            className={clsx(
+              "text-white  md:p-2 p-2 md:text-base text-sm md:w-32 min-w-16 rounded-full font-barlow font-bold",
+              commitText === "Committed" ? "bg-green-500" : "bg-slate-500"
+            )}
+            onClick={handleCommit}
+          >
+            {commitText}
+          </button>
+          {commitText === "Commit" && (
+            <div className="flex gap-1">
+              <p className="text-white font-barlow font-bold md:text-base text-xs">
+                ← you must commit before submitting
+              </p>
+            </div>
           )}
-          onClick={handleCommit}
-        >
-          {commitText}
-        </button>
-        {commitText === "Commit" && (
-          <div className="flex gap-1">
-            <p className="text-white font-barlow font-bold md:text-base text-xs">
-              ← you must commit before submitting
-            </p>
-          </div>
-        )}
+        </div>
       </div>
     </>
   );
