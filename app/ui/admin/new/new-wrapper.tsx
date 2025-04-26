@@ -90,6 +90,8 @@ export default function NewWrapper({ tags }: { tags: RouteTag[] }) {
           message: `Successfully added new Item(s)`,
           color: "green",
         });
+        setData([]);
+        setTable([]);
         router.refresh();
       } catch (error) {
         showNotification({
@@ -128,9 +130,9 @@ export default function NewWrapper({ tags }: { tags: RouteTag[] }) {
   }, [data]);
 
   return (
-    <>
+    <div className="flex justify-center w-full">
       {isError && <ErrorPopUp message={errorMessage} onCancel={handleCancel} />}
-      <div className="p-5 flex-col flex gap-3">
+      <div className="p-5 flex-col flex gap-3 md:w-[66%]">
         <Link href={"/admin"} className="flex gap-1 items-center">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -180,7 +182,7 @@ export default function NewWrapper({ tags }: { tags: RouteTag[] }) {
           </div>
         </div>
         <div className="h-1 w-full bg-white rounded-full mb-2"></div>
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-4 ">
           {table.map(option => {
             return option;
           })}
@@ -200,6 +202,6 @@ export default function NewWrapper({ tags }: { tags: RouteTag[] }) {
           </div>
         )}
       </div>
-    </>
+    </div>
   );
 }

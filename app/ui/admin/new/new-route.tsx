@@ -264,67 +264,6 @@ export default function NewRoute({
                   {tag}
                 </button>
               ))}
-              {!isNewTag && (
-                <button
-                  className="bg-black/25 outline-white outline p-2 size-8 rounded-full font-bold text-xl text-center text-white font-barlow flex items-center justify-center"
-                  onClick={handleNewTag}
-                >
-                  +
-                </button>
-              )}
-            </div>
-            <div className="flex gap-2 items-center">
-              {isNewTag && (
-                <div className="flex gap-2 items-center">
-                  <input
-                    type="text"
-                    placeholder="New Tag..."
-                    value={newTag}
-                    onChange={handleNewTagChange}
-                    className="bg-black/25 outline-white outline px-2 py-1 rounded-full font-barlow  text-white"
-                  />
-                  <div className="flex gap-2 items-center">
-                    <button
-                      className="p-2 rounded-full bg-red-500 text-white font-barlow font-bold"
-                      onClick={handleNewTagCancel}
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth={1.5}
-                        stroke="currentColor"
-                        className="size-5 stroke-white"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M6 18 18 6M6 6l12 12"
-                        />
-                      </svg>
-                    </button>
-                    <button
-                      className="p-2 rounded-full bg-green-500 text-white font-barlow font-bold"
-                      onClick={handleNewTagSubmit}
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth={1.5}
-                        stroke="currentColor"
-                        className="size-5 stroke-white"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="m4.5 12.75 6 6 9-13.5"
-                        />
-                      </svg>
-                    </button>
-                  </div>
-                </div>
-              )}
             </div>
           </div>
         </div>

@@ -82,9 +82,6 @@ export default function NewComp({
   const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     SetName(event.target.value);
   };
-  const handleCancel = () => {
-    setIsError(false);
-  };
   const handleCompTypeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setCompType(event.target.value);
   };
