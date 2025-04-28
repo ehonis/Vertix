@@ -206,6 +206,11 @@ enum CompetitionStatus {
     ARCHIVED
 }
 
+enum StandingsType {
+    averageDownwardMovement
+    downMovementByTop
+}
+
 model MixerCompetition {
     id                      String              @id @default(cuid())
     name                    String
@@ -228,6 +233,7 @@ model MixerCompetition {
     areScoresAvailable      Boolean             @default(false)
     isTestCompetition       Boolean             @default(false)
     hasScoresBeenCalculated Boolean             @default(false)
+    standingsType           StandingsType?
 }
 
 model MixerRoute {

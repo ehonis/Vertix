@@ -1,7 +1,7 @@
 import prisma from "@/prisma";
 import { NextResponse, NextRequest } from "next/server";
 import { auth } from "@/auth";
-import { calculateStandings } from "@/lib/mixers";
+import { calculateStandings, calculateStandingsWithAverageDownwardMovement } from "@/lib/mixers";
 export async function POST(req: NextRequest) {
 
   const session = await auth();
@@ -16,6 +16,7 @@ export async function POST(req: NextRequest) {
   try {
     const { compId } = await req.json();
     await calculateStandings(compId);
+    await calculateStandingsWithAverageDownwardMovement(compId);
     return NextResponse.json({ message: "Successfully exported standings" }, { status: 200 });
   } catch (error) {
     console.error(error);

@@ -8,8 +8,8 @@ import Image from "next/image";
 import ImagePopUp from "./image-uploader-popup";
 import { useNotification } from "@/app/contexts/NotificationContext";
 import { useRouter } from "next/navigation";
-import { CompetitionStatus } from "@prisma/client";
-import type { MixerRopeScore, MixerBoulderScore } from "@prisma/client";
+import { CompetitionStatus, StandingsType } from "@prisma/client";
+
 type VariableDataProps = {
   compId: string;
   name: string;
@@ -20,6 +20,7 @@ type VariableDataProps = {
   imageUrl: string | null;
   passcode: string | null;
   hasScoresBeenCalculated: boolean;
+  standingsType: string | null;
 };
 
 export default function VariablesComponent({
@@ -32,6 +33,7 @@ export default function VariablesComponent({
   imageUrl,
   passcode,
   hasScoresBeenCalculated,
+  standingsType,
 }: VariableDataProps) {
   const { showNotification } = useNotification();
   const router = useRouter();
@@ -47,12 +49,16 @@ export default function VariablesComponent({
   const [isScoresAvailableInfoPopUp, setIsScoresAvailableInfoPopUp] = useState(false);
   const [isImagePopUp, setIsImagePopUp] = useState(false);
   const [isStatusInfoPopUp, setIsStatusInfoPopUp] = useState(false);
+  const [compStandingsType, setCompStandingsType] = useState<StandingsType | null>(
+    standingsType as StandingsType | null
+  );
 
   const [isNameSave, setIsNameSave] = useState(false);
   const [isScoresAvailableSave, setIsScoresAvailableSave] = useState(false);
   const [isStatusSave, setIsStatusSave] = useState(false);
   const [isTimeAllottedSave, setIsTimeAllottedSave] = useState(false);
   const [isDaySave, setIsDaySave] = useState(false);
+  const [isStandingsTypeSave, setIsStandingsTypeSave] = useState(false);
 
   useEffect(() => {
     setCompName(name);
@@ -441,6 +447,40 @@ export default function VariablesComponent({
     });
   };
 
+  const handleCompStandingsTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setCompStandingsType(e.target.value as StandingsType);
+    if (e.target.value !== standingsType) {
+      setIsStandingsTypeSave(true);
+    } else {
+      setIsStandingsTypeSave(false);
+    }
+  };
+  const handleCompStandingsTypeSave = async () => {
+    try {
+      const response = await fetch("/api/mixer/manager/variables/standingsTypeUpdate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ compId: compId, standingsType: compStandingsType }),
+      });
+      if (response.ok) {
+        showNotification({
+          message: "Standings type updated",
+          color: "green",
+        });
+        router.refresh();
+      } else {
+        showNotification({
+          message: "Could not update standings type",
+          color: "red",
+        });
+      }
+    } catch (error) {
+      showNotification({
+        message: "Could not update standings type",
+        color: "red",
+      });
+    }
+  };
   return (
     <div>
       {(isStatusInfoPopUp || isScoresAvailableInfoPopUp) && (
@@ -695,6 +735,33 @@ export default function VariablesComponent({
               </button>
             )}
           </div>
+          <div className="flex gap-2 bg-gray-700 rounded-sm p-2 justify-between items-center">
+            <label htmlFor="" className="text-lg truncate">
+              Standings Type
+            </label>
+            <select
+              name=""
+              id=""
+              value={(compStandingsType as string) || ""}
+              onChange={handleCompStandingsTypeChange}
+              className="bg-slate-900 rounded-sm p-1 w-32 text-center hide-spinners focus:outline-hidden"
+            >
+              <option value=""></option>
+              <option value={StandingsType.averageDownwardMovement}>
+                Average Downward Movement
+              </option>
+              <option value={StandingsType.downMovementByTop}>Downward Movement By Top</option>
+            </select>
+
+            {isStandingsTypeSave && (
+              <button
+                className="bg-green-500 px-2 py-1 rounded-md font-normal"
+                onClick={handleCompStandingsTypeSave}
+              >
+                Save
+              </button>
+            )}
+          </div>
         </div>
       </div>
 
@@ -718,7 +785,7 @@ export default function VariablesComponent({
         </div>
       )}
       {isScoresCalculated && (
-        <div className="flex w-full py-2 px-1">
+        <div className="flex flex-col gap-3 w-full py-3 px-2">
           <button
             className="bg-green-500 px-2 py-1 rounded-md font-bold w-full"
             onClick={handleExportStandings}

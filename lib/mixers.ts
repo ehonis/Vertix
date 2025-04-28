@@ -264,6 +264,56 @@ const adjustDivisions = (originalDivisionStandings: DivisionStanding[]) => {
     return divisionStandings;
 };
 
+const adjustDivisionsWithAverageDownwardMovement = (originalDivisionStandings: DivisionStanding[]) => {
+    // Create a deep copy and mark original divisions
+    const divisionStandings = JSON.parse(JSON.stringify(originalDivisionStandings));
+    divisionStandings.forEach((division: DivisionStanding) => {
+        division.climbers.forEach((climber: Climber) => {
+            climber.originalDivision = division.divisionName;
+        });
+    });
+    
+    // First handle outliers (2 or more division moves)
+    const outliers = findOutliers(divisionStandings);
+    for (const {climber, fromDivision, toDivision} of outliers) {
+        moveClimberBetweenDivisions(divisionStandings, climber as Climber, fromDivision, toDivision);
+    }
+    
+    // Move climbers up based on rule d) - same as original
+    for (let i = 0; i < divisionStandings.length - 1; i++) {
+        const higherDiv = divisionStandings[i];
+        const lowerDiv = divisionStandings[i + 1];
+        
+        const climbersToMoveUp = lowerDiv.climbers.filter(
+            (climber: Climber) => climber.finishPlacePoints <= higherDiv.averageFinishPlacePoints
+        );
+        
+        for (const climber of climbersToMoveUp) {
+            moveClimberBetweenDivisions(divisionStandings, climber, lowerDiv.divisionName, higherDiv.divisionName);
+        }
+    }
+    
+    // Move climbers down based on modified rule - using average of lower division
+    for (let i = 0; i < divisionStandings.length - 1; i++) {
+        const higherDiv = divisionStandings[i];
+        const lowerDiv = divisionStandings[i + 1];
+        
+        if (lowerDiv.climbers.length > 0) {
+            // Calculate average finish place points for the lower division
+            const lowerDivAverage = lowerDiv.averageFinishPlacePoints;
+            const climbersToMoveDown = higherDiv.climbers.filter(
+                (climber: Climber) => climber.finishPlacePoints >= lowerDivAverage
+            );
+            
+            for (const climber of climbersToMoveDown) {
+                moveClimberBetweenDivisions(divisionStandings, climber, higherDiv.divisionName, lowerDiv.divisionName);
+            }
+        }
+    }
+    
+    return divisionStandings;
+};
+
 export const calculateStandings = async (compId: string) => {
     // Fetch all climbers for the competition with their scores and division
     const climbers = await prisma.mixerClimber.findMany({
@@ -446,6 +496,197 @@ export const calculateStandings = async (compId: string) => {
     formatDivisionStandings(sortedDivisionStandings);
     
     console.log("\n=== ADJUSTED STANDINGS (AFTER DIVISION MOVEMENTS) ===");
+    formatDivisionStandings(adjustedDivisionStandings);
+
+    return {
+        boulderScores: sortedBoulderScores,
+        ropeScores: sortedRopeScores,
+        overallStandings: finalStandings,
+        originalDivisionStandings: sortedDivisionStandings,
+        adjustedDivisionStandings: adjustedDivisionStandings
+    };
+}
+
+export const calculateStandingsWithAverageDownwardMovement = async (compId: string) => {
+    // Fetch all climbers for the competition with their scores and division
+    const climbers = await prisma.mixerClimber.findMany({
+        where: {
+            competitionId: compId,
+        },
+        select:{
+            id: true,
+            name: true,
+            boulderScores: {
+                select: {
+                    score: true,
+                    attempts: true
+                }
+            },
+            ropeScores: {
+                select: {
+                    score: true,
+                    attempts: true
+                }
+            },
+            division: {
+                select: {
+                    id: true,
+                    name: true
+                }
+            },
+        }
+    });
+
+    // Create arrays for all boulder and rope scores
+    const allBoulderScores = climbers.flatMap(climber => 
+        climber.boulderScores.map(score => ({
+            climberName: climber.name,
+            division: climber.division?.name || 'No Division',
+            score: score.score,
+            attempts: score.attempts
+        }))
+    );
+
+    const allRopeScores = climbers.flatMap(climber => 
+        climber.ropeScores.map(score => ({
+            climberName: climber.name,
+            division: climber.division?.name || 'No Division',
+            score: score.score,
+            attempts: score.attempts
+        }))
+    );
+
+    // Sort scores in descending order (highest to lowest)
+    // If scores are equal, sort by attempts (lower attempts is better)
+    const sortedBoulderScores = allBoulderScores.sort((a, b) => {
+        if (a.score !== b.score) {
+            return b.score - a.score;
+        }
+        return a.attempts - b.attempts;
+    });
+
+    const sortedRopeScores = allRopeScores.sort((a, b) => {
+        if (a.score !== b.score) {
+            return b.score - a.score;
+        }
+        return a.attempts - b.attempts;
+    });
+
+    // Create a map to store each climber's places
+    const climberPlaces = new Map<string, { boulderPlace: number, ropePlace: number }>();
+
+    // Assign places for boulder scores
+    let currentPlace = 1;
+    let previousScore = -1;
+    let previousAttempts = -1;
+    sortedBoulderScores.forEach((score, index) => {
+        if (score.score !== previousScore || score.attempts !== previousAttempts) {
+            currentPlace = index + 1;
+        }
+        if (!climberPlaces.has(score.climberName)) {
+            climberPlaces.set(score.climberName, { boulderPlace: currentPlace, ropePlace: 0 });
+        } else {
+            climberPlaces.get(score.climberName)!.boulderPlace = currentPlace;
+        }
+        previousScore = score.score;
+        previousAttempts = score.attempts;
+    });
+
+    // Reset for rope scores
+    currentPlace = 1;
+    previousScore = -1;
+    previousAttempts = -1;
+    sortedRopeScores.forEach((score, index) => {
+        if (score.score !== previousScore || score.attempts !== previousAttempts) {
+            currentPlace = index + 1;
+        }
+        if (!climberPlaces.has(score.climberName)) {
+            climberPlaces.set(score.climberName, { boulderPlace: 0, ropePlace: currentPlace });
+        } else {
+            climberPlaces.get(score.climberName)!.ropePlace = currentPlace;
+        }
+        previousScore = score.score;
+        previousAttempts = score.attempts;
+    });
+
+    // Calculate overall standings
+    const overallStandings = Array.from(climberPlaces.entries()).map(([climberName, places]) => {
+        const division = sortedBoulderScores.find(s => s.climberName === climberName)?.division || 'No Division';
+        return {
+            climberName,
+            division,
+            boulderPlace: places.boulderPlace,
+            ropePlace: places.ropePlace,
+            finishPlacePoints: places.boulderPlace + places.ropePlace,
+            bestIndividualPlace: Math.min(places.boulderPlace, places.ropePlace),
+            worstIndividualPlace: Math.max(places.boulderPlace, places.ropePlace)
+        };
+    });
+
+    // Sort overall standings to match the image exactly
+    const sortedOverallStandings = overallStandings.sort((a, b) => {
+        // First compare by total place
+        if (a.finishPlacePoints !== b.finishPlacePoints) {
+            return a.finishPlacePoints - b.finishPlacePoints;
+        }
+        // If total places are equal, compare by best individual place
+        if (a.bestIndividualPlace !== b.bestIndividualPlace) {
+            return a.bestIndividualPlace - b.bestIndividualPlace;
+        }
+        // If best places are equal, compare by worst individual place
+        if (a.worstIndividualPlace !== b.worstIndividualPlace) {
+            return a.worstIndividualPlace - b.worstIndividualPlace;
+        }
+        // If still tied, compare by boulder place (lower is better)
+        return a.boulderPlace - b.boulderPlace;
+    });
+
+    // Add final overall place
+    const finalStandings = sortedOverallStandings.map((standing, index) => ({
+        ...standing,
+        overallPlace: index + 1
+    }));
+
+    // Group standings by division and calculate division averages
+    const standingsByDivision = finalStandings.reduce((acc, climber) => {
+        const divisionName = climber.division;
+        if (!acc[divisionName]) {
+            acc[divisionName] = {
+                climbers: [],
+                totalFinishPlacePoints: 0,
+                climberCount: 0
+            };
+        }
+        acc[divisionName].climbers.push(climber);
+        acc[divisionName].totalFinishPlacePoints += climber.finishPlacePoints;
+        acc[divisionName].climberCount += 1;
+        return acc;
+    }, {} as Record<string, {
+        climbers: typeof finalStandings,
+        totalFinishPlacePoints: number,
+        climberCount: number
+    }>);
+
+    // Calculate averages and sort climbers within each division
+    const divisionStandings = Object.entries(standingsByDivision).map(([divisionName, data]) => ({
+        divisionName,
+        climbers: data.climbers.sort((a, b) => a.overallPlace - b.overallPlace),
+        averageFinishPlacePoints: Math.round((data.totalFinishPlacePoints / data.climberCount))
+    }));
+
+    // Sort divisions by their average finish place points
+    const sortedDivisionStandings = divisionStandings.sort((a, b) => 
+        a.averageFinishPlacePoints - b.averageFinishPlacePoints
+    );
+
+    // Get adjusted division standings using the new method
+    const adjustedDivisionStandings = adjustDivisionsWithAverageDownwardMovement(sortedDivisionStandings);
+
+    // Format and print both original and adjusted standings
+    console.log("\n=== ORIGINAL STANDINGS WITH AVERAGE DOWNWARD MOVEMENT ===");
+    formatDivisionStandings(sortedDivisionStandings);
+    
+    console.log("\n=== ADJUSTED STANDINGS WITH AVERAGE DOWNWARD MOVEMENT ===");
     formatDivisionStandings(adjustedDivisionStandings);
 
     return {
