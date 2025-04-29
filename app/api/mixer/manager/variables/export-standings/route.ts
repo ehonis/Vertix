@@ -15,11 +15,14 @@ export async function POST(req: NextRequest) {
 
   try {
     const { compId } = await req.json();
-    await calculateStandings(compId);
-    await calculateStandingsWithAverageDownwardMovement(compId);
-    return NextResponse.json({ message: "Successfully exported standings" }, { status: 200 });
+    const standingsbyTop = await calculateStandings(compId);
+    const standingsbyAverage = await calculateStandingsWithAverageDownwardMovement(compId);
+    return NextResponse.json(
+      { data: { standingsbyTop, standingsbyAverage }, message: "Successfully exported standings" },
+      { status: 200 }
+    );
   } catch (error) {
     console.error(error);
-    return NextResponse.json({ message: "error updating name in api" }, { status: 500 } );
+    return NextResponse.json({ message: "error updating name in api" }, { status: 500 });
   }
 }

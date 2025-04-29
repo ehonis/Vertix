@@ -9,6 +9,7 @@ import ImagePopUp from "./image-uploader-popup";
 import { useNotification } from "@/app/contexts/NotificationContext";
 import { useRouter } from "next/navigation";
 import { CompetitionStatus, StandingsType } from "@prisma/client";
+import { generateCompetitionCsv } from "@/lib/mixers";
 
 type VariableDataProps = {
   compId: string;
@@ -67,7 +68,8 @@ export default function VariablesComponent({
     setStatusOption(status);
     setCompTime(time);
     setIsScoresCalculated(hasScoresBeenCalculated);
-  }, [name, compDay, areScoresAvailable, status, time, hasScoresBeenCalculated]);
+    setCompStandingsType(standingsType as StandingsType | null);
+  }, [name, compDay, areScoresAvailable, status, time, hasScoresBeenCalculated, standingsType]);
 
   const handleScoresAvailableButtonClick = () => {
     setIsScoresAvailableInfoPopUp(true);
@@ -438,13 +440,88 @@ export default function VariablesComponent({
     }
   };
   const handleExportStandings = async () => {
-    const responnse = await fetch("/api/mixer/manager/variables/export-standings", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ compId: compId }),
-    });
+    try {
+      const response = await fetch("/api/mixer/manager/variables/export-standings", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ compId: compId }),
+      });
+      if (response.ok) {
+        showNotification({
+          message: "Standings exported successfully",
+          color: "green",
+        });
+        const data = await response.json();
+        handleDownloadSpreadsheet(data.data);
+      }
+    } catch (error) {
+      showNotification({
+        message: "Failed to export standings",
+        color: "red",
+      });
+    }
+  };
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const handleDownloadSpreadsheet = (data: any) => {
+    try {
+      const csvString = generateCompetitionCsv(data.standingsbyAverage, "Average");
+
+      // Create a Blob from the CSV string
+      const blob = new Blob([csvString], {
+        type: "text/csv;charset=utf-8;",
+      });
+
+      // Create a link element
+      const link = document.createElement("a");
+      if (link.download !== undefined) {
+        // Browsers that support HTML5 download attribute
+        const url = URL.createObjectURL(blob);
+        link.setAttribute("href", url);
+        link.setAttribute("download", `${compName}_Standings_By_Average.csv`);
+        link.style.visibility = "hidden";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url); // Clean up
+      } else {
+        // Fallback for older browsers (less common now)
+        alert("Your browser doesn't support direct downloads. Please copy the data.");
+      }
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (e: any) {
+      console.error("Error generating or downloading CSV:", e);
+      alert(`Failed to generate CSV: ${e.message}`);
+    }
+    try {
+      const csvString = generateCompetitionCsv(data.standingsbyTop, "Top");
+
+      // Create a Blob from the CSV string
+      const blob = new Blob([csvString], {
+        type: "text/csv;charset=utf-8;",
+      });
+
+      // Create a link element
+      const link = document.createElement("a");
+      if (link.download !== undefined) {
+        // Browsers that support HTML5 download attribute
+        const url = URL.createObjectURL(blob);
+        link.setAttribute("href", url);
+        link.setAttribute("download", `${compName}_Standings_By_Top.csv`);
+        link.style.visibility = "hidden";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url); // Clean up
+      } else {
+        // Fallback for older browsers (less common now)
+        alert("Your browser doesn't support direct downloads. Please copy the data.");
+      }
+    } catch (error) {
+      console.error("Error generating or downloading CSV:", error);
+      alert(`Failed to generate CSV: ${error}`);
+    }
   };
 
   const handleCompStandingsTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -735,33 +812,35 @@ export default function VariablesComponent({
               </button>
             )}
           </div>
-          <div className="flex gap-2 bg-gray-700 rounded-sm p-2 justify-between items-center">
-            <label htmlFor="" className="text-lg truncate">
-              Standings Type
-            </label>
-            <select
-              name=""
-              id=""
-              value={(compStandingsType as string) || ""}
-              onChange={handleCompStandingsTypeChange}
-              className="bg-slate-900 rounded-sm p-1 w-32 text-center hide-spinners focus:outline-hidden"
-            >
-              <option value=""></option>
-              <option value={StandingsType.averageDownwardMovement}>
-                Average Downward Movement
-              </option>
-              <option value={StandingsType.downMovementByTop}>Downward Movement By Top</option>
-            </select>
-
-            {isStandingsTypeSave && (
-              <button
-                className="bg-green-500 px-2 py-1 rounded-md font-normal"
-                onClick={handleCompStandingsTypeSave}
+          {isScoresAvailable && (
+            <div className="flex gap-2 bg-gray-700 rounded-sm p-2 justify-between items-center">
+              <label htmlFor="" className="text-lg truncate">
+                Standings Type
+              </label>
+              <select
+                name=""
+                id=""
+                value={(compStandingsType as string) || ""}
+                onChange={handleCompStandingsTypeChange}
+                className="bg-slate-900 rounded-sm p-1 w-32 text-center hide-spinners focus:outline-hidden"
               >
-                Save
-              </button>
-            )}
-          </div>
+                <option value=""></option>
+                <option value={StandingsType.averageDownwardMovement}>
+                  Average Downward Movement
+                </option>
+                <option value={StandingsType.downMovementByTop}>Downward Movement By Top</option>
+              </select>
+
+              {isStandingsTypeSave && (
+                <button
+                  className="bg-green-500 px-2 py-1 rounded-md font-normal"
+                  onClick={handleCompStandingsTypeSave}
+                >
+                  Save
+                </button>
+              )}
+            </div>
+          )}
         </div>
       </div>
 

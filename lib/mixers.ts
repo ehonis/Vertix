@@ -492,11 +492,11 @@ export const calculateStandings = async (compId: string) => {
     const adjustedDivisionStandings = adjustDivisions(sortedDivisionStandings);
 
     // Format and print both original and adjusted standings
-    console.log("\n=== ORIGINAL STANDINGS ===");
-    formatDivisionStandings(sortedDivisionStandings);
+    // console.log("\n=== ORIGINAL STANDINGS ===");
+    // formatDivisionStandings(sortedDivisionStandings);
     
-    console.log("\n=== ADJUSTED STANDINGS (AFTER DIVISION MOVEMENTS) ===");
-    formatDivisionStandings(adjustedDivisionStandings);
+    // console.log("\n=== ADJUSTED STANDINGS (AFTER DIVISION MOVEMENTS) ===");
+    // formatDivisionStandings(adjustedDivisionStandings);
 
     return {
         boulderScores: sortedBoulderScores,
@@ -683,11 +683,11 @@ export const calculateStandingsWithAverageDownwardMovement = async (compId: stri
     const adjustedDivisionStandings = adjustDivisionsWithAverageDownwardMovement(sortedDivisionStandings);
 
     // Format and print both original and adjusted standings
-    console.log("\n=== ORIGINAL STANDINGS WITH AVERAGE DOWNWARD MOVEMENT ===");
-    formatDivisionStandings(sortedDivisionStandings);
+    // console.log("\n=== ORIGINAL STANDINGS WITH AVERAGE DOWNWARD MOVEMENT ===");
+    // formatDivisionStandings(sortedDivisionStandings);
     
-    console.log("\n=== ADJUSTED STANDINGS WITH AVERAGE DOWNWARD MOVEMENT ===");
-    formatDivisionStandings(adjustedDivisionStandings);
+    // console.log("\n=== ADJUSTED STANDINGS WITH AVERAGE DOWNWARD MOVEMENT ===");
+    // formatDivisionStandings(adjustedDivisionStandings);
 
     return {
         boulderScores: sortedBoulderScores,
@@ -697,3 +697,203 @@ export const calculateStandingsWithAverageDownwardMovement = async (compId: stri
         adjustedDivisionStandings: adjustedDivisionStandings
     };
 }
+
+
+/**
+ * Escapes a cell value for CSV format.
+ * Wraps in double quotes if it contains a comma, double quote, or newline.
+ * Doubles up existing double quotes.
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function escapeCsvCell(cellData: any): string {
+    const str = String(cellData ?? ""); // Handle null/undefined
+    if (str.includes(",") || str.includes('"') || str.includes("\n")) {
+      return `"${str.replace(/"/g, '""')}"`;
+    }
+    return str;
+  }
+  
+  /**
+   * Generates the competition results CSV string based on the template.
+   */
+
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  export function generateCompetitionCsv(data: any, standingType: "Top" | "Average"): string {
+    const csvRows: string[] = [];
+  
+    // --- Header Section ---
+    csvRows.push(`${standingType} SCORES,,,,,,,,,,,,,`);
+    csvRows.push(",,,,,,,,,,,,,");
+    csvRows.push(",,,,,,,,,,,,,");
+  
+    // --- Section 1: Boulder, Ropes, Overall Side-by-Side ---
+    const boulderScores = data.boulderScores || [];
+    const ropeScores = data.ropeScores || [];
+    const overallStandings = data.overallStandings || [];
+  
+    csvRows.push("BOULDER,,,,,ROPES,,,,,OVERALL,,,");
+    csvRows.push([
+      "Name",
+      "Boulder \nPoints",
+      "Attempts",
+      "Place",
+      "",
+      "Name",
+      "Rope\nPoints",
+      "Attempts",
+      "Place",
+      "",
+      "Name",
+      "Total Finish-\nPlace Points",
+      "Best \nFinish Place",
+      "Overall \nPlace"
+    ].map(escapeCsvCell).join(","));
+  
+    // Add scores data
+    const maxLength = Math.max(
+      boulderScores.length,
+      ropeScores.length,
+      overallStandings.length
+    );
+  
+    for (let i = 0; i < maxLength; i++) {
+      const boulder = boulderScores[i];
+      const rope = ropeScores[i];
+      const overall = overallStandings[i];
+  
+      const row = [
+        boulder?.climberName,
+        boulder?.score,
+        boulder?.attempts,
+        i + 1,
+        "",
+        rope?.climberName,
+        rope?.score,
+        rope?.attempts,
+        i + 1,
+        "",
+        overall?.climberName,
+        overall?.finishPlacePoints,
+        overall?.bestIndividualPlace,
+        overall?.overallPlace
+      ];
+      csvRows.push(row.map(escapeCsvCell).join(","));
+    }
+  
+    // --- Separator Rows ---
+    csvRows.push(",,,,,,,,,,,,,");
+    csvRows.push(",,,,,,,,,,,,,");
+  
+    // --- Section 2: Original Division Standings ---
+    csvRows.push("Final Standings without movement,,,,,,,,,,,,,");
+    csvRows.push(",,,,,,,,,,,,,");
+    csvRows.push(",,,,,,,,,,,,,");
+  
+    const originalDivisions = data.originalDivisionStandings || [];
+    for (const division of originalDivisions) {
+      // Add division header
+      csvRows.push(`"${division.divisionName}",,average = ${division.averageFinishPlacePoints},,,,,,,,,,,,`);
+      
+      // Add column headers
+      csvRows.push([
+        "Name",
+        "Total \nFinish-Place \nPoints",
+        "Best \nFinish \nPlace",
+        "Overall \nPlace",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        ""
+      ].map(escapeCsvCell).join(","));
+  
+      // Add climbers
+      for (const climber of division.climbers) {
+        const row = [
+          climber.climberName,
+          climber.finishPlacePoints,
+          climber.bestIndividualPlace,
+          climber.overallPlace,
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ];
+        csvRows.push(row.map(escapeCsvCell).join(","));
+      }
+  
+      // Add separator rows
+      csvRows.push(",,,,,,,,,,,,,");
+      csvRows.push(",,,,,,,,,,,,,");
+    }
+  
+    // --- Section 3: Adjusted Division Standings ---
+    csvRows.push("Final Standings with Division Movement,,,,,,,,,,,,,");
+    csvRows.push(",,,,,,,,,,,,,");
+    csvRows.push(",,,,,,,,,,,,,");
+  
+    const adjustedDivisions = data.adjustedDivisionStandings || [];
+    for (const division of adjustedDivisions) {
+      // Add division header
+      csvRows.push(`"${division.divisionName}",,average = ${division.averageFinishPlacePoints},,,,,,,,,,,,`);
+      
+      // Add column headers
+      csvRows.push([
+        "Name",
+        "Total \nFinish-Place \nPoints",
+        "Best \nFinish \nPlace",
+        "Overall \nPlace",
+        "Movement",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        ""
+      ].map(escapeCsvCell).join(","));
+  
+     
+      for (const climber of division.climbers) {
+        const movement = climber.originalDivision !== division.divisionName ? "moved" : "";
+        const row = [
+          climber.climberName,
+          climber.finishPlacePoints,
+          climber.bestIndividualPlace,
+          climber.overallPlace,
+          movement,
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ];
+        csvRows.push(row.map(escapeCsvCell).join(","));
+      }
+  
+      // Add separator rows
+      csvRows.push(",,,,,,,,,,,,,");
+      csvRows.push(",,,,,,,,,,,,,");
+    }
+  
+    return csvRows.join("\n");
+  }
+  
