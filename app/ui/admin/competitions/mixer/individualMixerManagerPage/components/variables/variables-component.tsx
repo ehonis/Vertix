@@ -9,7 +9,7 @@ import ImagePopUp from "./image-uploader-popup";
 import { useNotification } from "@/app/contexts/NotificationContext";
 import { useRouter } from "next/navigation";
 import { CompetitionStatus, StandingsType } from "@prisma/client";
-import { generateCompetitionCsv } from "@/lib/mixers";
+import { generateCompetitionCsv, StandingsData } from "@/lib/mixers";
 
 type VariableDataProps = {
   compId: string;
@@ -22,6 +22,14 @@ type VariableDataProps = {
   passcode: string | null;
   hasScoresBeenCalculated: boolean;
   standingsType: string | null;
+};
+
+type ExportStandingsResponse = {
+  data: {
+    standingsbyTop: StandingsData;
+    standingsbyAverage: StandingsData;
+  };
+  message: string;
 };
 
 export default function VariablesComponent({
@@ -453,7 +461,7 @@ export default function VariablesComponent({
           message: "Standings exported successfully",
           color: "green",
         });
-        const data = await response.json();
+        const data: ExportStandingsResponse = await response.json();
         handleDownloadSpreadsheet(data.data);
       }
     } catch (error) {
@@ -463,8 +471,10 @@ export default function VariablesComponent({
       });
     }
   };
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const handleDownloadSpreadsheet = (data: any) => {
+  const handleDownloadSpreadsheet = (data: {
+    standingsbyTop: StandingsData;
+    standingsbyAverage: StandingsData;
+  }) => {
     try {
       const csvString = generateCompetitionCsv(data.standingsbyAverage, "Average");
 
@@ -479,7 +489,7 @@ export default function VariablesComponent({
         // Browsers that support HTML5 download attribute
         const url = URL.createObjectURL(blob);
         link.setAttribute("href", url);
-        link.setAttribute("download", `${compName}_Standings_By_Average.csv`);
+        link.setAttribute("download", `${compName}_Standings_2024_rules.csv`);
         link.style.visibility = "hidden";
         document.body.appendChild(link);
         link.click();
@@ -489,10 +499,9 @@ export default function VariablesComponent({
         // Fallback for older browsers (less common now)
         alert("Your browser doesn't support direct downloads. Please copy the data.");
       }
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (e: any) {
-      console.error("Error generating or downloading CSV:", e);
-      alert(`Failed to generate CSV: ${e.message}`);
+    } catch (error) {
+      console.error("Error generating or downloading CSV:", error);
+      alert(`Failed to generate CSV: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
     try {
       const csvString = generateCompetitionCsv(data.standingsbyTop, "Top");
@@ -508,7 +517,7 @@ export default function VariablesComponent({
         // Browsers that support HTML5 download attribute
         const url = URL.createObjectURL(blob);
         link.setAttribute("href", url);
-        link.setAttribute("download", `${compName}_Standings_By_Top.csv`);
+        link.setAttribute("download", `${compName}_Standings_2025_rules.csv`);
         link.style.visibility = "hidden";
         document.body.appendChild(link);
         link.click();
@@ -520,7 +529,7 @@ export default function VariablesComponent({
       }
     } catch (error) {
       console.error("Error generating or downloading CSV:", error);
-      alert(`Failed to generate CSV: ${error}`);
+      alert(`Failed to generate CSV: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
   };
 

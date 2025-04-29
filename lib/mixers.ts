@@ -1,6 +1,40 @@
 import { CompletionType, MixerBoulderScore, MixerCompletion, MixerDivision, MixerRopeScore } from "@prisma/client";
 import prisma from "@/prisma";
 
+// Types for spreadsheet data structures
+export interface Score {
+  climberName: string;
+  division: string;
+  score: number;
+  attempts: number;
+}
+
+export interface ClimberStanding {
+  climberName: string;
+  division: string;
+  boulderPlace: number;
+  ropePlace: number;
+  finishPlacePoints: number;
+  bestIndividualPlace: number;
+  worstIndividualPlace: number;
+  overallPlace: number;
+  originalDivision?: string;
+}
+
+export interface DivisionStanding {
+  divisionName: string;
+  climbers: ClimberStanding[];
+  averageFinishPlacePoints: number;
+}
+
+export interface StandingsData {
+  boulderScores: Score[];
+  ropeScores: Score[];
+  overallStandings: ClimberStanding[];
+  originalDivisionStandings: DivisionStanding[];
+  adjustedDivisionStandings: DivisionStanding[];
+}
+
 interface Climber {
     climberName: string;
     division: string;
@@ -11,12 +45,6 @@ interface Climber {
     worstIndividualPlace: number;
     overallPlace: number;
     originalDivision?: string;  // Track original division for movement indicators
-}
-
-interface DivisionStanding {
-    divisionName: string;
-    climbers: Climber[];
-    averageFinishPlacePoints: number;
 }
 
 export const filterCompletionsByType = (completions: MixerCompletion[]) => {
@@ -314,7 +342,7 @@ const adjustDivisionsWithAverageDownwardMovement = (originalDivisionStandings: D
     return divisionStandings;
 };
 
-export const calculateStandings = async (compId: string) => {
+export const calculateStandings = async (compId: string): Promise<StandingsData> => {
     // Fetch all climbers for the competition with their scores and division
     const climbers = await prisma.mixerClimber.findMany({
         where: {
@@ -345,7 +373,7 @@ export const calculateStandings = async (compId: string) => {
     });
 
     // Create arrays for all boulder and rope scores
-    const allBoulderScores = climbers.flatMap(climber => 
+    const allBoulderScores: Score[] = climbers.flatMap(climber => 
         climber.boulderScores.map(score => ({
             climberName: climber.name,
             division: climber.division?.name || 'No Division',
@@ -354,7 +382,7 @@ export const calculateStandings = async (compId: string) => {
         }))
     );
 
-    const allRopeScores = climbers.flatMap(climber => 
+    const allRopeScores: Score[] = climbers.flatMap(climber => 
         climber.ropeScores.map(score => ({
             climberName: climber.name,
             division: climber.division?.name || 'No Division',
@@ -416,7 +444,7 @@ export const calculateStandings = async (compId: string) => {
         previousAttempts = score.attempts;
     });
 
-    console.log(climberPlaces);
+    // console.log(climberPlaces);
 
     // Calculate overall standings
     const overallStandings = Array.from(climberPlaces.entries()).map(([climberName, places]) => {
@@ -507,7 +535,7 @@ export const calculateStandings = async (compId: string) => {
     };
 }
 
-export const calculateStandingsWithAverageDownwardMovement = async (compId: string) => {
+export const calculateStandingsWithAverageDownwardMovement = async (compId: string): Promise<StandingsData> => {
     // Fetch all climbers for the competition with their scores and division
     const climbers = await prisma.mixerClimber.findMany({
         where: {
@@ -538,7 +566,7 @@ export const calculateStandingsWithAverageDownwardMovement = async (compId: stri
     });
 
     // Create arrays for all boulder and rope scores
-    const allBoulderScores = climbers.flatMap(climber => 
+    const allBoulderScores: Score[] = climbers.flatMap(climber => 
         climber.boulderScores.map(score => ({
             climberName: climber.name,
             division: climber.division?.name || 'No Division',
@@ -547,7 +575,7 @@ export const calculateStandingsWithAverageDownwardMovement = async (compId: stri
         }))
     );
 
-    const allRopeScores = climbers.flatMap(climber => 
+    const allRopeScores: Score[] = climbers.flatMap(climber => 
         climber.ropeScores.map(score => ({
             climberName: climber.name,
             division: climber.division?.name || 'No Division',
@@ -698,7 +726,6 @@ export const calculateStandingsWithAverageDownwardMovement = async (compId: stri
     };
 }
 
-
 /**
  * Escapes a cell value for CSV format.
  * Wraps in double quotes if it contains a comma, double quote, or newline.
@@ -716,21 +743,24 @@ function escapeCsvCell(cellData: any): string {
   /**
    * Generates the competition results CSV string based on the template.
    */
-
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  export function generateCompetitionCsv(data: any, standingType: "Top" | "Average"): string {
+  export function generateCompetitionCsv(data: StandingsData, standingType: "Top" | "Average"): string {
     const csvRows: string[] = [];
-  
+    let spreadsheetName = "";
+    if(standingType === "Top"){
+        spreadsheetName = "Division movement by 2025 rules";
+    }else{
+        spreadsheetName = "Divsion movement by before 2025 rules";
+    }
+
     // --- Header Section ---
-    csvRows.push(`${standingType} SCORES,,,,,,,,,,,,,`);
+    csvRows.push(`${spreadsheetName} SCORES,,,,,,,,,,,,,`);
     csvRows.push(",,,,,,,,,,,,,");
     csvRows.push(",,,,,,,,,,,,,");
   
     // --- Section 1: Boulder, Ropes, Overall Side-by-Side ---
-    const boulderScores = data.boulderScores || [];
-    const ropeScores = data.ropeScores || [];
-    const overallStandings = data.overallStandings || [];
+    const boulderScores = data.boulderScores;
+    const ropeScores = data.ropeScores;
+    const overallStandings = data.overallStandings;
   
     csvRows.push("BOULDER,,,,,ROPES,,,,,OVERALL,,,");
     csvRows.push([
@@ -790,7 +820,7 @@ function escapeCsvCell(cellData: any): string {
     csvRows.push(",,,,,,,,,,,,,");
     csvRows.push(",,,,,,,,,,,,,");
   
-    const originalDivisions = data.originalDivisionStandings || [];
+    const originalDivisions = data.originalDivisionStandings;
     for (const division of originalDivisions) {
       // Add division header
       csvRows.push(`"${division.divisionName}",,average = ${division.averageFinishPlacePoints},,,,,,,,,,,,`);
@@ -844,7 +874,7 @@ function escapeCsvCell(cellData: any): string {
     csvRows.push(",,,,,,,,,,,,,");
     csvRows.push(",,,,,,,,,,,,,");
   
-    const adjustedDivisions = data.adjustedDivisionStandings || [];
+    const adjustedDivisions = data.adjustedDivisionStandings;
     for (const division of adjustedDivisions) {
       // Add division header
       csvRows.push(`"${division.divisionName}",,average = ${division.averageFinishPlacePoints},,,,,,,,,,,,`);
