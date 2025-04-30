@@ -244,6 +244,7 @@ model MixerRoute {
     competitionId String
     completions   MixerCompletion[]
     competition   MixerCompetition  @relation(fields: [competitionId], references: [id], onDelete: Cascade)
+    grade         String?
 }
 
 model MixerBoulder {
@@ -253,6 +254,7 @@ model MixerBoulder {
     competitionId String
     completions   MixerCompletion[]
     competition   MixerCompetition  @relation(fields: [competitionId], references: [id], onDelete: Cascade)
+    grade         String?
 }
 
 model MixerClimber {

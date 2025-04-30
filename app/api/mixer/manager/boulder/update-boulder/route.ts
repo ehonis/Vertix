@@ -17,14 +17,16 @@ export async function POST(req: NextRequest)  {
     const {boulderId,
         newPoints,
         newColor,
-        compId,} = await req.json();
+        compId,
+        newGrade,
+    } = await req.json();
  
 
 
 
     const result = await prisma.mixerBoulder.update({
         where: {id:boulderId as string, competitionId:compId as string},
-        data: {points:newPoints, color:newColor,}
+        data: {points:newPoints, color:newColor, grade:newGrade}
     })
 
   

@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import clsx from "clsx";
 import { useNotification } from "@/app/contexts/NotificationContext";
 import { useRouter } from "next/navigation";
+import BoulderGradeSelect from "@/app/ui/admin/new_route/boulder-grade-select";
 
 type NewRoutePopUpProps = {
   onCancel: () => void;
@@ -15,6 +16,7 @@ type boulderData = {
   points: number;
   color: string;
   competitionId: string;
+  grade: string;
 };
 
 export default function NewBoulderPopUp({ onCancel, compId }: NewRoutePopUpProps) {
@@ -61,6 +63,7 @@ export default function NewBoulderPopUp({ onCancel, compId }: NewRoutePopUpProps
         points: currentPointValue, // Use the stored value for this boulder
         color: "red",
         competitionId: compId,
+        grade: "",
       };
     });
     setBoulders(initializeBouldersArray);
@@ -95,6 +98,13 @@ export default function NewBoulderPopUp({ onCancel, compId }: NewRoutePopUpProps
       showNotification({ message: "could not add boulders", color: "red" });
     }
   };
+
+  const handleGradeChange = (index: number, newGrade: string) => {
+    const updatedBoulders = [...boulders];
+    updatedBoulders[index] = { ...updatedBoulders[index], grade: newGrade };
+    setBoulders(updatedBoulders);
+  };
+
   return (
     <div>
       <motion.div
@@ -198,34 +208,27 @@ export default function NewBoulderPopUp({ onCancel, compId }: NewRoutePopUpProps
             <div className="flex flex-col gap-2">
               {/* if the user has picked many routes and inputted how many routes they wanted */}
               <p>boulder Information</p>
-              <div className="h-72 overflow-hidden overflow-y-auto flex flex-col gap-2">
+              <div className="h-72 overflow-hidden overflow-y-auto flex flex-col gap-2 p-2">
                 {boulders.map((boulder, index) => (
                   <div className="flex flex-col gap-1" key={index}>
                     <div
                       className={clsx(
                         "p-2  rounded",
-                        boulder.color === "red" && "bg-red-500",
-                        boulder.color === "blue" && "bg-blue-500",
-                        boulder.color === "green" && "bg-green-400",
-                        boulder.color === "orange" && "bg-orange-500",
-                        boulder.color === "yellow" && "bg-yellow-500",
-                        boulder.color === "pink" && "bg-pink-400",
-                        boulder.color === "purple" && "bg-purple-600",
-                        boulder.color === "white" && "bg-white",
-                        boulder.color === "black" && "bg-black"
+                        boulder.color === "red" && "bg-red-500/25 outline outline-red-500",
+                        boulder.color === "blue" && "bg-blue-500/25 outline outline-blue-500",
+                        boulder.color === "green" && "bg-green-400/25 outline outline-green-400",
+                        boulder.color === "orange" && "bg-orange-500/25 outline outline-orange-500",
+                        boulder.color === "yellow" && "bg-yellow-500/25 outline outline-yellow-500",
+                        boulder.color === "pink" && "bg-pink-400/25 outline outline-pink-400",
+                        boulder.color === "purple" && "bg-purple-600/25 outline outline-purple-600",
+                        boulder.color === "white" && "bg-white/25 outline outline-white",
+                        boulder.color === "black" && "bg-black/25 outline outline-white"
                       )}
                     >
-                      <p className={clsx("", boulder.color === "white" && "text-black")}>
-                        {boulder.points}
-                      </p>
+                      <p>{boulder.points}</p>
                       <div className="flex justify-between items-center">
                         <div className="flex gap-2">
-                          <label
-                            htmlFor=""
-                            className={clsx("", boulder.color === "white" && "text-black")}
-                          >
-                            Color:
-                          </label>
+                          <label>Color:</label>
                           <select
                             name=""
                             id=""
@@ -243,6 +246,10 @@ export default function NewBoulderPopUp({ onCancel, compId }: NewRoutePopUpProps
                             <option value="pink">pink</option>
                             <option value="orange">orange</option>
                           </select>
+                        </div>
+                        <div className="flex gap-2">
+                          <label htmlFor="">Grade:</label>
+                          <BoulderGradeSelect onGradeChange={e => handleGradeChange(index, e)} />
                         </div>
                       </div>
                     </div>

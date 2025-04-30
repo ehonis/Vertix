@@ -3,13 +3,15 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
 import clsx from "clsx";
+import BoulderGradeSelect from "@/app/ui/admin/new_route/boulder-grade-select";
 
 type EditRoutePopUpData = {
   onCancel: () => void;
   boulderId: string;
   boulderPoints: number;
   boulderColor: string;
-  updateBoulder: (boulderId: string, newPoints: number, newColor: string) => void;
+  boulderGrade: string;
+  updateBoulder: (boulderId: string, newPoints: number, newColor: string, newGrade: string) => void;
 };
 
 export default function EditBoulderPopUp({
@@ -17,15 +19,18 @@ export default function EditBoulderPopUp({
   boulderId,
   boulderPoints,
   boulderColor,
+  boulderGrade,
   updateBoulder,
 }: EditRoutePopUpData) {
   const [points, setPoints] = useState(boulderPoints);
   const [color, setColor] = useState(boulderColor);
+  const [grade, setGrade] = useState(boulderGrade);
 
   const handleSaveChanges = () => {
-    updateBoulder(boulderId, points, color);
+    updateBoulder(boulderId, points, color, grade);
     onCancel();
   };
+
   return (
     <div>
       <motion.div
@@ -67,7 +72,7 @@ export default function EditBoulderPopUp({
           <select
             name=""
             id=""
-            className="bg-bg1 px-2 p-1 rounded"
+            className="bg-gray-700 p-2 rounded-sm mb-2"
             value={color}
             onChange={e => setColor(e.target.value)} // Corrected onChange handler
           >
@@ -81,6 +86,28 @@ export default function EditBoulderPopUp({
             <option value="pink">pink</option>
             <option value="orange">orange</option>
           </select>
+          <label htmlFor="">Grade:</label>
+          <select
+            name=""
+            id=""
+            value={grade}
+            onChange={e => setGrade(e.target.value)}
+            className="p-2 bg-gray-700 rounded-sm mb-2"
+          >
+            <option value="vb">VB</option>
+            <option value="v0">v0</option>
+            <option value="v1">v1</option>
+            <option value="v2">v2</option>
+            <option value="v3">v3</option>
+            <option value="v4">v4</option>
+            <option value="v5">v5</option>
+            <option value="v6">v6</option>
+            <option value="v7">v7</option>
+            <option value="v8">v8</option>
+            <option value="v9">v9</option>
+            <option value="v10">v10</option>
+          </select>
+
           <button className="bg-blue-500 px-3 py-1 rounded-md" onClick={handleSaveChanges}>
             Save Changes
           </button>

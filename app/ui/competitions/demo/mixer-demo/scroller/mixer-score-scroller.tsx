@@ -11,8 +11,10 @@ type RouteData = {
   id: string;
   color: string;
   holds: string;
+  grade: string | null;
   competitionId: string;
 };
+
 type MixerScoreScoller = {
   mixerRoutes: RouteData[];
   mixerBoulders: MixerBoulder[];

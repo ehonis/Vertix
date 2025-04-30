@@ -13,8 +13,9 @@ export default function BoulderGradeSelect({
       onChange={handleGradeChange}
       className="bg-gray-700 rounded-sm text-white font-barlow font-bold p-1"
     >
-      <option value=""></option>
+      <option value="">Select Grade</option>
       <option value="vb">VB</option>
+      <option value="v0">V0</option>
       <option value="v1">V1</option>
       <option value="v2">V2</option>
       <option value="v3">V3</option>
@@ -22,7 +23,9 @@ export default function BoulderGradeSelect({
       <option value="v5">V5</option>
       <option value="v6">V6</option>
       <option value="v7">V7</option>
-      <option value="v8">V8+</option>
+      <option value="v8">V8</option>
+      <option value="v9">V9</option>
+      <option value="v10">V10</option>
     </select>
   );
 }

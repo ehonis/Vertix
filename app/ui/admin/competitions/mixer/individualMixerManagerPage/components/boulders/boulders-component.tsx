@@ -4,13 +4,14 @@ import EditBoulderPopUp from "./edit-boulder-popup";
 import NewBoulderPopUp from "./new-boulder-pop-up";
 import { clsx } from "clsx";
 import { useNotification } from "@/app/contexts/NotificationContext";
-import { MixerBoulder } from "@prisma/client";
+import { MixerBoulder, CompetitionStatus } from "@prisma/client";
 
 type BouldersComponentData = {
   boulders: MixerBoulder[];
   compId: string;
+  compStatus: CompetitionStatus;
 };
-export default function BoulderComponent({ boulders, compId }: BouldersComponentData) {
+export default function BoulderComponent({ boulders, compId, compStatus }: BouldersComponentData) {
   const { showNotification } = useNotification();
   const [compBoulders, setCompBoulders] = useState<MixerBoulder[]>(boulders); // Boulder
   const [isEditBoulderPopup, setIsEditBoulderPopup] = useState(false); //Boulder
@@ -18,6 +19,8 @@ export default function BoulderComponent({ boulders, compId }: BouldersComponent
   const [tempBoulderId, setTempBoulderId] = useState(""); //Boulder
   const [tempBoulderPoints, setTempBoulderPoints] = useState<number>(); //Boulder
   const [tempBoulderColor, setTempBoulderColor] = useState<string>("");
+  const [tempBoulderGrade, setTempBoulderGrade] = useState<string>("");
+  const [isShowMore, setIsShowMore] = useState(false);
 
   const handleEditBoulderPopUp = (id: string) => {
     const tempBoulder = compBoulders.find(boulder => boulder.id === id);
@@ -26,16 +29,24 @@ export default function BoulderComponent({ boulders, compId }: BouldersComponent
       setTempBoulderId(tempBoulder.id);
       setTempBoulderPoints(tempBoulder.points);
       setTempBoulderColor(tempBoulder.color);
+      setTempBoulderGrade(tempBoulder.grade || "");
       setIsEditBoulderPopup(true);
     } else {
       console.error(`Boulder with ID ${id} not found`);
     }
   }; //Boulder
 
-  const updateBoulder = async (boulderId: string, newPoints: number, newColor: string) => {
+  const updateBoulder = async (
+    boulderId: string,
+    newPoints: number,
+    newColor: string,
+    newGrade: string
+  ) => {
     setCompBoulders(prevBoulders =>
       prevBoulders.map(boulder =>
-        boulder.id === boulderId ? { ...boulder, points: newPoints, color: newColor } : boulder
+        boulder.id === boulderId
+          ? { ...boulder, points: newPoints, color: newColor, grade: newGrade }
+          : boulder
       )
     );
     try {
@@ -44,6 +55,7 @@ export default function BoulderComponent({ boulders, compId }: BouldersComponent
         newPoints,
         newColor,
         compId,
+        newGrade,
       };
 
       const response = await fetch("/api/mixer/manager/boulder/update-boulder", {
@@ -71,8 +83,23 @@ export default function BoulderComponent({ boulders, compId }: BouldersComponent
   }; //Boulder
 
   useEffect(() => {
-    setCompBoulders(boulders);
+    if (!isShowMore) {
+      const smallBoulders = boulders.slice(0, 10);
+      setCompBoulders(smallBoulders);
+    } else {
+      setCompBoulders(boulders);
+    }
   }, [boulders]);
+
+  const handleShowMore = () => {
+    if (isShowMore) {
+      const smallBoulders = boulders.slice(0, 10);
+      setCompBoulders(smallBoulders);
+    } else {
+      setCompBoulders(boulders);
+    }
+    setIsShowMore(!isShowMore);
+  };
 
   return (
     <div>
@@ -86,6 +113,7 @@ export default function BoulderComponent({ boulders, compId }: BouldersComponent
           boulderId={tempBoulderId}
           boulderColor={tempBoulderColor}
           updateBoulder={updateBoulder}
+          boulderGrade={tempBoulderGrade}
         />
       )}
       <div>
@@ -97,7 +125,7 @@ export default function BoulderComponent({ boulders, compId }: BouldersComponent
                 <button
                   key={boulder.id}
                   className={clsx(
-                    " flex  rounded-sm justify-center p-2",
+                    " flex rounded-sm justify-center p-2",
                     boulder.color === "red" && "bg-red-500/25 outline outline-red-500",
                     boulder.color === "blue" && "bg-blue-500/25 outline outline-blue-500",
                     boulder.color === "green" && "bg-green-400/25 outline outline-green-400",
@@ -110,9 +138,24 @@ export default function BoulderComponent({ boulders, compId }: BouldersComponent
                   )}
                   onClick={() => handleEditBoulderPopUp(boulder.id)}
                 >
-                  <p className="text-xl t">{boulder.points}</p>
+                  <p className="text-xl">{boulder.points}</p>
                 </button>
               ))}
+              {isShowMore ? (
+                <button
+                  className="font-medium text-white p-2 rounded-sm bg-blue-500 mt-3"
+                  onClick={handleShowMore}
+                >
+                  Show Less
+                </button>
+              ) : (
+                <button
+                  className="font-medium text-white p-2 rounded-sm bg-blue-500 mt-3"
+                  onClick={handleShowMore}
+                >
+                  Show More
+                </button>
+              )}
               <div className="flex items-center gap-1">
                 <button
                   className="bg-green-400 p-1 rounded-full max-w-fit"
@@ -158,11 +201,17 @@ export default function BoulderComponent({ boulders, compId }: BouldersComponent
                     />
                   </svg>
                 </button>
-                <p className="font-medium">Add Boulder</p>
               </div>
             </div>
           )}
         </div>
+        {compStatus === CompetitionStatus.COMPLETED && (
+          <div className="mt-2 flex justify-center w-full">
+            <button className="bg-green-400 w-full py-1 px-5 text-sm rounded-md max-w-fit">
+              Release Boulders
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

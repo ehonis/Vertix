@@ -4,7 +4,7 @@ import EditRoutePopUp from "./mixer-edit-route-popup";
 import NewRoutePopUp from "./new-route-popop";
 import { clsx } from "clsx";
 import { useNotification } from "@/app/contexts/NotificationContext";
-import { MixerRoute } from "@prisma/client";
+import { MixerRoute, CompetitionStatus } from "@prisma/client";
 
 type holdData = {
   topRopePoints: number;
@@ -15,8 +15,9 @@ type holdData = {
 type RoutesComponentData = {
   routes: MixerRoute[];
   compId: string;
+  compStatus: CompetitionStatus;
 };
-export default function RoutesComponent({ routes, compId }: RoutesComponentData) {
+export default function RoutesComponent({ routes, compId, compStatus }: RoutesComponentData) {
   const { showNotification } = useNotification();
   const [compRoutes, setCompRoutes] = useState(
     routes.map(route => ({
@@ -30,7 +31,7 @@ export default function RoutesComponent({ routes, compId }: RoutesComponentData)
   const [tempRouteId, setTempRouteId] = useState(""); //route
   const [tempRouteName, setTempRouteName] = useState(""); //route
   const [tempRouteColor, setTempRouteColor] = useState("");
-
+  const [tempRouteGrade, setTempRouteGrade] = useState("");
   const handleEditRoutePopUp = (id: string) => {
     const tempRoute = compRoutes.find(route => route.id === id);
 
@@ -39,6 +40,7 @@ export default function RoutesComponent({ routes, compId }: RoutesComponentData)
       setTempRouteId(tempRoute.id);
       setTempRouteName(tempRoute.name);
       setTempRouteColor(tempRoute.color);
+      setTempRouteGrade(tempRoute.grade || "");
       setIsEditRoutePopup(true);
     } else {
       console.error(`Route with ID ${id} not found`);
@@ -49,11 +51,14 @@ export default function RoutesComponent({ routes, compId }: RoutesComponentData)
     routeId: string,
     newHolds: object,
     newName: string,
-    newColor: string
+    newColor: string,
+    newGrade: string
   ) => {
     setCompRoutes(prevRoutes =>
       prevRoutes.map(route =>
-        route.id === routeId ? { ...route, holds: newHolds, name: newName, color: newColor } : route
+        route.id === routeId
+          ? { ...route, holds: newHolds, name: newName, color: newColor, grade: newGrade }
+          : route
       )
     );
     try {
@@ -111,6 +116,7 @@ export default function RoutesComponent({ routes, compId }: RoutesComponentData)
           routeId={tempRouteId}
           updateRouteHolds={updateRouteHolds}
           routeColor={tempRouteColor}
+          routeGrade={tempRouteGrade}
         />
       )}
       <div className="md:w-48">
@@ -139,7 +145,7 @@ export default function RoutesComponent({ routes, compId }: RoutesComponentData)
                   <p className="text-xl place-self-end">Holds: {route.holds.length}</p>
                 </button>
               ))}
-              <div className="flex items-center gap-1">
+              <div className="flex items-center gap-1 mt-3">
                 <button
                   className="bg-green-400 p-1 rounded-full max-w-fit"
                   onClick={() => setIsNewEditRoutePopup(!isNewEditRoutePopUp)}
@@ -184,11 +190,18 @@ export default function RoutesComponent({ routes, compId }: RoutesComponentData)
                     />
                   </svg>
                 </button>
-                <p className="font-medium">Add Route</p>
+                <p className="font-medium">Add Routes</p>
               </div>
             </div>
           )}
         </div>
+        {compStatus === CompetitionStatus.COMPLETED && (
+          <div className="mt-2 flex justify-center w-full">
+            <button className="bg-green-400 w-full py-1 px-5 text-sm rounded-md max-w-fit">
+              Release Routes
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

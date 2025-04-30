@@ -26,6 +26,7 @@ type RouteData = {
   color: string;
   holds: routeHold[];
   competitionId: string;
+  grade: string | null;
 };
 type MixerScoreScoller = {
   comp: MixerCompetition;

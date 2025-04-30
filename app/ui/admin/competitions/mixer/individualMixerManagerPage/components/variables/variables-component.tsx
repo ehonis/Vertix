@@ -567,6 +567,7 @@ export default function VariablesComponent({
       });
     }
   };
+
   return (
     <div>
       {(isStatusInfoPopUp || isScoresAvailableInfoPopUp) && (

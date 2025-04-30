@@ -12,11 +12,13 @@ import { getPoints } from "@/lib/mixer";
 import MixerInfoPopup from "./mixer-info-popup";
 import SwipeAnimation from "@/app/ui/general/swipe-animation";
 import { getTopScores } from "@/lib/mixer";
+
 type RouteData = {
   name: string;
   id: string;
   color: string;
   holds: string;
+  grade: string | null;
   competitionId: string;
 };
 type MixerRopeScrollerData = {

@@ -16,7 +16,14 @@ type EditRoutePopUpData = {
   routeName: string;
   routeColor: string;
   holds: holdData[];
-  updateRouteHolds: (routeId: string, newHolds: object, newName: string, newColor: string) => void;
+  routeGrade: string;
+  updateRouteHolds: (
+    routeId: string,
+    newHolds: object,
+    newName: string,
+    newColor: string,
+    newGrade: string
+  ) => void;
 };
 
 export default function EditRoutePopUp({
@@ -26,10 +33,12 @@ export default function EditRoutePopUp({
   routeColor,
   holds,
   updateRouteHolds,
+  routeGrade,
 }: EditRoutePopUpData) {
   const [name, setName] = useState(routeName);
   const [tempHolds, setTempHolds] = useState([...holds]);
   const [color, setColor] = useState(routeColor);
+  const [grade, setGrade] = useState(routeGrade);
   const handleHoldChange = (index: number, field: string, value: string) => {
     const cleanedValue = Number(String(value).replace(/^0+/, "") || "0");
 
@@ -52,7 +61,7 @@ export default function EditRoutePopUp({
   };
 
   const handleSaveChanges = () => {
-    updateRouteHolds(routeId, tempHolds, name, color);
+    updateRouteHolds(routeId, tempHolds, name, color, grade);
     onCancel(); // Close the popup
   };
 
@@ -112,8 +121,37 @@ export default function EditRoutePopUp({
             <option value="orange">orange</option>
           </select>
 
+          <select
+            name=""
+            id=""
+            className="bg-gray-700 px-2 p-1 rounded"
+            value={grade}
+            onChange={e => setGrade(e.target.value)}
+          >
+            <option value="5.B">5.B</option>
+            <option value="5.7">5.7</option>
+            <option value="5.8-">5.8-</option>
+            <option value="5.8">5.8</option>
+            <option value="5.8+">5.8+</option>
+            <option value="5.9-">5.9-</option>
+            <option value="5.9">5.9</option>
+            <option value="5.9+">5.9+</option>
+            <option value="5.10-">5.10-</option>
+            <option value="5.10">5.10</option>
+            <option value="5.10+">5.10+</option>
+            <option value="5.11-">5.11-</option>
+            <option value="5.11">5.11</option>
+            <option value="5.11+">5.11+</option>
+            <option value="5.12-">5.12-</option>
+            <option value="5.12">5.12</option>
+            <option value="5.12+">5.12+</option>
+            <option value="5.13-">5.13-</option>
+            <option value="5.13">5.13</option>
+            <option value="5.13+">5.13+</option>
+          </select>
+
           <div>
-            <div className="grid grid-cols-3 bg-gray-700 rounded-sm px-1 mb-1">
+            <div className="grid grid-cols-3 bg-gray-700 rounded-sm px-2 pr-4 mb-1">
               <p className="place-self-start">Hold #</p>
               <p className="place-self-center">TR Pts</p>
               <p className="place-self-end">Lead Pts</p>
