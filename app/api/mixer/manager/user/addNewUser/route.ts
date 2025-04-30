@@ -30,7 +30,7 @@ export async function POST(req: NextRequest) {
     const parsedBoulderAttempts = parseInt(boulderAttempts, 10);
 
     // Use a transaction to ensure all operations succeed or fail together
-    const result = await prisma.$transaction(async tx => {
+    await prisma.$transaction(async tx => {
       // Create the climber first
       const climberData = {
         competition: {

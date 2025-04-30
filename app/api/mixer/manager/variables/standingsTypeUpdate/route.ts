@@ -19,7 +19,7 @@ export async function POST(req: NextRequest) {
             standingsTypeTemp = standingsType as StandingsType;
         }
 
-        const comp = await prisma.mixerCompetition.update({
+         await prisma.mixerCompetition.update({
             where: { id: compId },
             data: { standingsType: standingsTypeTemp },
         });

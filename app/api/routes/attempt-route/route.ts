@@ -12,7 +12,7 @@ export async function POST(req: NextRequest) {
   try {
     const { userId, routeId } = await req.json();
 
-    const result = await prisma.routeAttempt.upsert({
+    await prisma.routeAttempt.upsert({
         where: {
           userId_routeId: {
             userId: userId,

@@ -1,7 +1,7 @@
 import prisma from "@/prisma";
 import { NextResponse, NextRequest } from "next/server";
 
-export async function DELETE(request) {
+export async function DELETE(request: NextRequest) {
   try {
     const body = await request.json(); // Parse the request body
     const { routeIds } = body; // Extract routeIds from the request body

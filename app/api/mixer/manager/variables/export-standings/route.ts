@@ -1,4 +1,4 @@
-import prisma from "@/prisma";
+
 import { NextResponse, NextRequest } from "next/server";
 import { auth } from "@/auth";
 import { calculateStandings, calculateStandingsWithAverageDownwardMovement } from "@/lib/mixers";

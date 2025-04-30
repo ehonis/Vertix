@@ -67,10 +67,24 @@ export const groupByCompletionsClimberId = (completions: MixerCompletion[]) => {
 }
 
 export const findTwoHighestRopeScores = (ropeCompletions: MixerCompletion[]) => {
-    // Sort completions by points in descending order
-    const sortedRopeCompletions = ropeCompletions.sort((a, b) => b.points - a.points);
-    // Take up to 2 highest scores - will return all available completions if fewer than 2
-    return sortedRopeCompletions.slice(0, 2);
+    const twoHighestRopeScores: MixerCompletion[] = [];
+    const highestRouteWithFullCompletion = ropeCompletions.filter(completion => completion.isComplete).sort((a, b) => b.points - a.points)[0];
+
+    if(highestRouteWithFullCompletion){
+        twoHighestRopeScores.push(highestRouteWithFullCompletion);
+    }else{
+        const sortedRopeCompletions = ropeCompletions.sort((a, b) => b.points - a.points);
+        return sortedRopeCompletions.slice(0, 1);
+    }
+
+    const remainingRopeCompletions = ropeCompletions.filter(completion => completion.id !== highestRouteWithFullCompletion?.id);
+
+    const sortedRemainingRopeCompletions = remainingRopeCompletions.sort((a, b) => b.points - a.points);
+
+    twoHighestRopeScores.push(sortedRemainingRopeCompletions[0]);
+
+    return twoHighestRopeScores;
+    
 }
 
 export const findThreeHighestBoulderScores = (boulderCompletions: MixerCompletion[]) => {

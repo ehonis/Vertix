@@ -59,7 +59,6 @@ export default function MixerScoreScroller({
       const response = await fetch("/api/mixer/comp/finish", {
         method: "POST",
         body: JSON.stringify({
-          compId: comp.id,
           climberId: climber.id,
         }),
       });

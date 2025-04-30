@@ -13,7 +13,7 @@ export async function DELETE(req: NextRequest) {
 
   try {
     const { id} = await req.json();
-    const completion = await prisma.mixerCompletion.delete({
+    await prisma.mixerCompletion.delete({
       where: { id: id},
     });
     return NextResponse.json({ message: "Completion deleted" }, { status: 200 });

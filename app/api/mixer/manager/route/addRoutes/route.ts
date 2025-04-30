@@ -18,7 +18,7 @@ export async function POST(req: NextRequest)  {
 
 
 
-    const result = await prisma.mixerRoute.createMany({
+    await prisma.mixerRoute.createMany({
         data: routeData,
     })
 

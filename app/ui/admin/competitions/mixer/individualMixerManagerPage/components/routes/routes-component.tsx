@@ -5,6 +5,7 @@ import NewRoutePopUp from "./new-route-popop";
 import { clsx } from "clsx";
 import { useNotification } from "@/app/contexts/NotificationContext";
 import { MixerRoute, CompetitionStatus } from "@prisma/client";
+import ElementLoadingAnimation from "@/app/ui/general/element-loading-animation";
 
 type holdData = {
   topRopePoints: number;
@@ -32,6 +33,7 @@ export default function RoutesComponent({ routes, compId, compStatus }: RoutesCo
   const [tempRouteName, setTempRouteName] = useState(""); //route
   const [tempRouteColor, setTempRouteColor] = useState("");
   const [tempRouteGrade, setTempRouteGrade] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const handleEditRoutePopUp = (id: string) => {
     const tempRoute = compRoutes.find(route => route.id === id);
 
@@ -102,6 +104,34 @@ export default function RoutesComponent({ routes, compId, compStatus }: RoutesCo
       }))
     );
   }, [routes]);
+
+  const handleReleaseRoutes = async () => {
+    setIsLoading(true);
+    try {
+      const response = await fetch("/api/mixer/manager/route/release-routes", {
+        method: "POST",
+        body: JSON.stringify({ compId, routes: compRoutes }),
+      });
+      if (!response.ok) {
+        showNotification({
+          message: "response was not okay, could not release routes",
+          color: "red",
+        });
+      } else {
+        showNotification({
+          message: "routes released successfully",
+          color: "green",
+        });
+      }
+    } catch (error) {
+      showNotification({
+        message: "response was not okay, could not release routes",
+        color: "red",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <div>
@@ -197,11 +227,15 @@ export default function RoutesComponent({ routes, compId, compStatus }: RoutesCo
         </div>
         {compStatus === CompetitionStatus.COMPLETED && (
           <div className="mt-2 flex justify-center w-full">
-            <button className="bg-green-400 w-full py-1 px-5 text-sm rounded-md max-w-fit">
+            <button
+              className="bg-green-400 w-full py-1 px-5 text-sm rounded-md max-w-fit"
+              onClick={handleReleaseRoutes}
+            >
               Release Routes
             </button>
           </div>
         )}
+        {isLoading && <ElementLoadingAnimation />}
       </div>
     </div>
   );

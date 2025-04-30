@@ -1,7 +1,7 @@
 import { NextResponse, NextRequest } from "next/server";
 import prisma from "@/prisma";
 import { auth } from "@/auth";
-import { ClimberStatus } from "@prisma/client";
+
 
 export async function POST(req : NextRequest) {
   const session = await auth();
@@ -47,7 +47,7 @@ export async function POST(req : NextRequest) {
       parsedBoulderAttempts = null;
     }
     // Use a transaction to ensure all operations succeed or fail together
-    const result = await prisma.$transaction(async tx => {
+   await prisma.$transaction(async tx => {
       // Create the climber first
       const climberData = {
         competition: {

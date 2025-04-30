@@ -12,7 +12,7 @@ export async function POST(req: NextRequest) {
     }
     try {
         const { compId, compPasscode } = await req.json();
-        const comp = await prisma.mixerCompetition.update({
+        await prisma.mixerCompetition.update({
             where: { id: compId },
             data: { passcode: compPasscode },
         });

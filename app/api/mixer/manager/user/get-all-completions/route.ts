@@ -25,6 +25,13 @@ export async function GET(req: NextRequest) {
                 }
             }
         },
+        orderBy: {
+            mixerRoute: {
+                name: "asc",
+                
+            },
+
+        }
     });
     
     return NextResponse.json({data:completions}, {status:200});

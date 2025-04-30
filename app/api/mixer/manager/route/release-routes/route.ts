@@ -1,7 +1,7 @@
 import { NextResponse, NextRequest } from "next/server";
 import prisma from "@/prisma";
 import { auth } from "@/auth";
-
+import { Route } from "@prisma/client";
 
 export async function POST(req: NextRequest)  {
     const session = await auth();
@@ -14,19 +14,12 @@ export async function POST(req: NextRequest)  {
     }
 
   try {
-    const {boulderId,
-        newPoints,
-        newColor,
-        compId,
-        newGrade,
-    } = await req.json();
- 
+    const {compId, routes} = await req.json();
 
 
 
-    await prisma.mixerBoulder.update({
-        where: {id:boulderId as string, competitionId:compId as string},
-        data: {points:newPoints, color:newColor, grade:newGrade}
+    await prisma.route.createMany({
+        data: routes
     })
 
   

@@ -35,7 +35,7 @@ export async function POST(req: NextRequest) {
       });
     };
 
-    await prisma.$transaction(async tx => {
+    await prisma.$transaction(async () => {
       await removeRopeScores();
       await removeBoulderScores();
     });

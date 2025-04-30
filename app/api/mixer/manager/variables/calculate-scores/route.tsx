@@ -1,11 +1,9 @@
 import prisma from "@/prisma";
 import { NextResponse, NextRequest } from "next/server";
 import { auth } from "@/auth";
-import { CompletionType } from "@prisma/client";
+
 import {
   filterCompletionsByType,
-  findTwoHighestRopeScores,
-  findThreeHighestBoulderScores,
   groupByCompletionsClimberId,
   findTwoHighestRopeScoresPerClimber,
   findThreeHighestBoulderScoresPerClimber,
@@ -30,8 +28,6 @@ export async function POST(req: NextRequest) {
       where: { competitionId: compId },
     });
 
-    const { boulderCompletions, ropeCompletions } = filterCompletionsByType(usersWithCompletions);
-
     const groupedByClimberId = groupByCompletionsClimberId(usersWithCompletions);
 
     const twoHighestRopeScoresPerClimber = findTwoHighestRopeScoresPerClimber(groupedByClimberId);
@@ -44,9 +40,6 @@ export async function POST(req: NextRequest) {
 
     const threeHighestBoulderScoresPerClimberWithAttempts =
       combineThreeHighestBoulderScoresPerClimberWithAttempts(threeHighestBoulderScoresPerClimber);
-
-    console.log(twoHighestRopeScoresPerClimberWithAttempts);
-    console.log(threeHighestBoulderScoresPerClimberWithAttempts);
 
     const updateUsersRopeScores = async () => {
       for (const climber of twoHighestRopeScoresPerClimberWithAttempts) {

@@ -1,6 +1,6 @@
 import { getUserById } from "@/lib/users";
 import IndividualUserEdit from "@/app/ui/admin/user-edit/individual-user-edit";
-import prisma from "@/prisma";
+
 import Link from "next/link";
 // export async function generateStaticParams() {
 //   const users = await prisma.user.findMany();

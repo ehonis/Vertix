@@ -18,9 +18,9 @@ export async function POST(req: NextRequest)  {
 
     console.log(boulderData)
 
-    const result = await prisma.mixerBoulder.createMany({
-        data: boulderData,
-    })
+    await prisma.mixerBoulder.createMany({
+      data: boulderData,
+    });
 
   
 

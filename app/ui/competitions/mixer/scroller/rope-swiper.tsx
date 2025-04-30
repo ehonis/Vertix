@@ -304,7 +304,8 @@ export default function MixerRopeScorer({
     attempts: number,
     points: number,
     name: string,
-    holdNumber: number
+    holdNumber: number,
+    maxHoldNum: number
   ) => {
     if (attempts < 1) {
       showNotification({
@@ -332,20 +333,22 @@ export default function MixerRopeScorer({
             points: points,
             type: "ROPE",
             holdNumber: holdNumber,
+            maxHoldNum,
           }),
         });
 
         if (!response.ok) {
+          console.log(response);
           showNotification({
             message: `Oops! Failed to save completion, uncompleting... please try again`,
             color: "red",
           });
+        } else {
+          showNotification({
+            message: `Rope ${name} completion saved successfully!`,
+            color: "green",
+          });
         }
-
-        showNotification({
-          message: `Rope ${name} completion saved successfully!`,
-          color: "green",
-        });
       } catch (error) {
         showNotification({
           message: `Oops! Failed to save completion, uncompleting... please try again`,
@@ -666,7 +669,8 @@ export default function MixerRopeScorer({
                         attempts[panel.id],
                         points[panel.id],
                         panel.name,
-                        hold[panel.id]
+                        hold[panel.id],
+                        panel.holds.length
                       )
                     }
                   >

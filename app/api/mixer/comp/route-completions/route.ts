@@ -7,12 +7,20 @@ export async function POST(req: NextRequest) {
   if (!session) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
-  const { climberId, compId, type, mixerRouteId, attempts, points, holdNumber } =
+  const { climberId, compId, type, mixerRouteId, attempts, points, holdNumber, maxHoldNum } =
     await req.json();
 
+    console.log(climberId, compId, type, mixerRouteId, attempts, points, holdNumber, maxHoldNum);
   if (!climberId || !compId || !type || !mixerRouteId || !attempts || !points) {
     return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
   }
+
+  let isComplete = false;
+
+  if(holdNumber === maxHoldNum){
+    isComplete = true;
+  }
+
  try {
   const completion = await prisma.mixerCompletion.create({
     data: {
@@ -23,11 +31,12 @@ export async function POST(req: NextRequest) {
       attempts,
       points,
       holdNumber,
+      isComplete,
     },
   });
 
   return NextResponse.json(completion, { status: 201 });
-} catch (error) {
+} catch {
   return NextResponse.json({ error: "Failed to create completion" }, { status: 500 });
   }
 }
@@ -39,7 +48,7 @@ export async function DELETE(req: NextRequest) {
   const searchParams = req.nextUrl.searchParams;
 
   const climberId = searchParams.get("climberId");
-  const compId = searchParams.get("compId");
+
   const mixerRouteId = searchParams.get("mixerRouteId");
 
   if (!climberId || !mixerRouteId) {
@@ -56,7 +65,7 @@ export async function DELETE(req: NextRequest) {
       },
     });
     return NextResponse.json({ message: "Completion deleted successfully" }, { status: 200 });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: "Failed to delete completion" }, { status: 500 });
   }
   

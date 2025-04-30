@@ -47,6 +47,7 @@ export default function AllCompletionsPopUp({ onCancel, climber }: CompletionsUs
     };
     getCompletions();
   }, [climber]);
+
   const handleDeleteCompletion = async (id: string) => {
     try {
       const response = await fetch(`/api/mixer/manager/user/delete-completion`, {
@@ -115,6 +116,7 @@ export default function AllCompletionsPopUp({ onCancel, climber }: CompletionsUs
                     {completion.type === CompletionType.ROPE && (
                       <p>Hold #: {completion.holdNumber}</p>
                     )}
+                    <p>Is Complete: {completion.isComplete ? "Yes" : "No"}</p>
                     <div className="flex gap-2 items-center">
                       <label htmlFor="foulPlay" className="">
                         Foul Play?

@@ -25,7 +25,7 @@ export async function POST(req: NextRequest)  {
       const jsonHolds = JSON.stringify(newHolds);
 
 
-    const result = await prisma.mixerRoute.update({
+    await prisma.mixerRoute.update({
         where: {id:routeId as string, competitionId:compId as string},
         data: {name:newName, holds:jsonHolds, color:newColor, grade:newGrade}
     })

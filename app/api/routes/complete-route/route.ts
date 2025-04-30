@@ -57,7 +57,7 @@ export async function POST(req: NextRequest) {
     }
     
 
-    const result = await prisma.routeCompletion.upsert({
+     await prisma.routeCompletion.upsert({
         where: {
           userId_routeId: {
             userId: userId,

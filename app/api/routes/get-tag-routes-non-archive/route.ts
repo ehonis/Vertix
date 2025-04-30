@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/prisma";
-import { Locations, Route, RouteCompletion } from "@prisma/client";
+import { Route, RouteCompletion } from "@prisma/client";
 
 type RouteWithCompletions = Route & {
   completions: RouteCompletion[];

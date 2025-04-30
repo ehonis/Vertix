@@ -1,7 +1,7 @@
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import prisma from "@/prisma";
-import Image from "next/image";
+
 import Link from "next/link";
 import { Suspense } from "react";
 import ElementLoadingAnimation from "@/app/ui/general/element-loading-animation";
