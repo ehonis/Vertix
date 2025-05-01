@@ -42,7 +42,8 @@ export async function POST(req: NextRequest)  {
             setDate: new Date(),
             type: RouteType.BOULDER,
             isArchive: false,
-            id: boulder.id
+            id: boulder.id,
+            createdByUserID: session.user.id || null
         }));
 
         // Create all routes and store them to get their IDs

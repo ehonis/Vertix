@@ -43,7 +43,8 @@ export async function POST(req: NextRequest)  {
             setDate: new Date(),
             type: RouteType.ROPE,
             isArchive: false,
-            id: route.id
+            id: route.id,
+            createdByUserID: session.user.id || null
         }));
 
         // Create all routes and store them to get their IDs

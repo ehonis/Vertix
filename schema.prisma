@@ -42,6 +42,8 @@ model Route {
     tags            RouteTag[]
     location        Locations         @default(boulderSouth)
     stars           RouteStar[]
+    createdByUserID String?
+    createdByUser   User?             @relation("CreatedRoutes", fields: [createdByUserID], references: [id])
 }
 
 model RouteImage {
@@ -134,11 +136,11 @@ model User {
     updatedAt           DateTime          @updatedAt
     Account             Account[]
     Session             Session[]
-
-    private      Boolean        @default(false)
-    mixerClimber MixerClimber[]
-    isOnboarded  Boolean        @default(false)
-    tag          String?
+    createdRoutes       Route[]           @relation("CreatedRoutes")
+    private             Boolean           @default(false)
+    mixerClimber        MixerClimber[]
+    isOnboarded         Boolean           @default(false)
+    tag                 String?
 }
 
 model Badge {

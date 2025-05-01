@@ -339,7 +339,6 @@ export default function MixerLeaderBoard({
                     className="flex flex-col w-[95%] max-w-lg gap-1 justify-center items-center bg-bg2  outline-white outline-1 p-3 self-center rounded-sm"
                     initial={{ opacity: 0, y: -10, scale: 0.95 }}
                     animate={{ opacity: 1, y: 0, scale: 1 }}
-                    exit={{ opacity: 0, y: -10, scale: 0.95 }}
                     transition={{ duration: 0.3, ease: "easeInOut" }}
                   >
                     <motion.div
