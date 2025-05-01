@@ -280,3 +280,22 @@ export function findIfBoulderGradeIsHigher(user:User, route:Route){
     }
   }
 }
+export function isGradeHigher  (userHighest:string, newGrade:string, type:string) {
+  const ropeGrades = ["5.b", "5.7-", "5.7", "5.7+", "5.8-", "5.8", "5.8+", "5.9-", "5.9", "5.9+", "5.10-", "5.10", "5.10+", "5.11-", "5.11", "5.11+", "5.12-", "5.12", "5.12+", "5.13-", "5.13", "5.13+"]
+  const boulderGrades = ["vb", "v0", "v1", "v2", "v3", "v4", "v5", "v6", "v7", "v8", "v9", "v10"]
+
+  if(type === "rope"){
+    if(ropeGrades.indexOf(userHighest) < ropeGrades.indexOf(newGrade)){
+      return true
+    }else{
+      return false
+    }
+  }else if(type === "boulder"){
+    if(boulderGrades.indexOf(userHighest) < boulderGrades.indexOf(newGrade)){
+      return true
+    }else{
+      return false
+    }
+  }
+}
+

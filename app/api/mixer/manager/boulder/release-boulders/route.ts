@@ -1,9 +1,8 @@
 import { NextResponse, NextRequest } from "next/server";
 import prisma from "@/prisma";
 import { auth } from "@/auth";
-import { ClimberStatus, Route, RouteType } from "@prisma/client";
+import { ClimberStatus, Route, RouteType, MixerBoulder } from "@prisma/client";
 import { Locations } from "@prisma/client";
-import { MixerRoute } from "@prisma/client";
 import { isGradeHigher } from "@/lib/route";
 
 export async function POST(req: NextRequest)  {
@@ -17,7 +16,7 @@ export async function POST(req: NextRequest)  {
     }
 
   try {
-    const {compId, routes} : {compId: string, routes: MixerRoute[]} = await req.json();
+    const {compId, boulders} : {compId: string, boulders: MixerBoulder[]} = await req.json();
 
     // Wrap all database operations in a transaction
     const result = await prisma.$transaction(async (tx) => {
@@ -33,31 +32,31 @@ export async function POST(req: NextRequest)  {
         }
 
         // Create a map to store the relationship between mixer route IDs and created route IDs
-        const routeIdMap = new Map<string, string>();
+        const boulderIdMap = new Map<string, string>();
 
-        const formattedRoutes : Route[] = routes.map(route => ({
-            title: `${comp.name} Route ${route.name}`,
-            grade: route.grade || '5.10',
-            color: route.color,
+        const formattedBoulders : Route[] = boulders.map(boulder => ({
+            title: `${comp.name} Boulder ${boulder.points}`,
+            grade: boulder.grade || 'v0',
+            color: boulder.color,
             location: Locations.ropeNorth,
             setDate: new Date(),
-            type: RouteType.ROPE,
+            type: RouteType.BOULDER,
             isArchive: false,
-            id: route.id
+            id: boulder.id
         }));
 
         // Create all routes and store them to get their IDs
-        const createdRoutes = await Promise.all(
-            formattedRoutes.map(route => 
+        const createdBoulders = await Promise.all(
+            formattedBoulders.map(boulder => 
                 tx.route.create({
-                    data: route
+                    data: boulder
                 })
             )
         );
 
         // Build the ID mapping
-        createdRoutes.forEach(route => {
-            routeIdMap.set(route.id, route.id);
+        createdBoulders.forEach(boulder => {
+            boulderIdMap.set(boulder.id, boulder.id);
         });
 
         // Get completed climbers
@@ -86,7 +85,7 @@ export async function POST(req: NextRequest)  {
                     id: climber.userId
                 },
                 select: {
-                    highestRopeGrade: true,
+                    highestBoulderGrade: true,
                 }
             });
 
@@ -96,14 +95,14 @@ export async function POST(req: NextRequest)  {
             }
 
             // Initialize with user's current highest grade
-            let currentHighestGrade = user.highestRopeGrade || null;
+            let currentHighestGrade = user.highestBoulderGrade || null;
 
             for (const completion of climber.completions) {
                 // Get the corresponding route ID from our map
-                const actualRouteId = routeIdMap.get(completion.mixerRouteId!);
+                const actualBoulderId = boulderIdMap.get(completion.mixerBoulderId!);
                 
-                if (!actualRouteId) {
-                    console.warn(`No matching route found for completion ${completion.id}`);
+                if (!actualBoulderId) {
+                    console.warn(`No matching boulder found for completion ${completion.id}`);
                     continue;
                 }
 
@@ -113,7 +112,7 @@ export async function POST(req: NextRequest)  {
                         data: {
                             userId: climber.userId,
                             sends: completion.attempts || 1,
-                            routeId: actualRouteId
+                            routeId: actualBoulderId
                         },
                         include: {
                             route: {
@@ -126,7 +125,7 @@ export async function POST(req: NextRequest)  {
 
                     // Update highest grade if necessary
                     const newGrade = route.route.grade;
-                    if (!currentHighestGrade || isGradeHigher(currentHighestGrade, newGrade, "rope")) {
+                    if (!currentHighestGrade || isGradeHigher(currentHighestGrade, newGrade, "boulder")) {
                         currentHighestGrade = newGrade;
                         console.log(`Found higher grade ${newGrade} for user ${climber.userId}`);
                     }
@@ -135,7 +134,7 @@ export async function POST(req: NextRequest)  {
                     await tx.routeAttempt.create({
                         data: {
                             userId: climber.userId,
-                            routeId: actualRouteId,
+                            routeId: actualBoulderId,
                             attempts: completion.attempts || 0
                         }
                     });
@@ -143,11 +142,11 @@ export async function POST(req: NextRequest)  {
             }
 
             // After processing all completions for this user, update their highest grade if it changed
-            if (currentHighestGrade && (!user.highestRopeGrade || isGradeHigher(user.highestRopeGrade, currentHighestGrade, "rope"))) {
-                console.log(`Updating highest rope grade for user ${climber.userId} from ${user.highestRopeGrade || 'none'} to ${currentHighestGrade}`);
+            if (currentHighestGrade && (!user.highestBoulderGrade || isGradeHigher(user.highestBoulderGrade, currentHighestGrade, "boulder"))) {
+                console.log(`Updating highest boulder grade for user ${climber.userId} from ${user.highestBoulderGrade || 'none'} to ${currentHighestGrade}`);
                 await tx.user.update({
                     where: { id: climber.userId },
-                    data: { highestRopeGrade: currentHighestGrade }
+                    data: { highestBoulderGrade: currentHighestGrade }
                 });
             }
         }

@@ -47,7 +47,7 @@ model Route {
 model RouteImage {
     id        String   @id @default(cuid())
     url       String // URL of the image
-    route     Route    @relation(fields: [routeId], references: [id])
+    route     Route    @relation(fields: [routeId], references: [id], onDelete: Cascade)
     routeId   String
     createdAt DateTime @default(now())
 }
@@ -81,7 +81,7 @@ model RouteAttempt {
     id          Int      @id @default(autoincrement())
     user        User     @relation(fields: [userId], references: [id])
     userId      String
-    route       Route    @relation(fields: [routeId], references: [id])
+    route       Route    @relation(fields: [routeId], references: [id], onDelete: Cascade)
     routeId     String
     attempts    Int      @default(1)
     attemptDate DateTime @default(now())

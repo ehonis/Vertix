@@ -123,7 +123,7 @@ export default function RoutesComponent({ routes, compId, compStatus }: RoutesCo
           color: "green",
         });
       }
-    } catch (error) {
+    } catch {
       showNotification({
         message: "response was not okay, could not release routes",
         color: "red",
@@ -235,7 +235,11 @@ export default function RoutesComponent({ routes, compId, compStatus }: RoutesCo
             </button>
           </div>
         )}
-        {isLoading && <ElementLoadingAnimation />}
+        {isLoading && (
+          <div className="flex justify-center items-center">
+            <ElementLoadingAnimation />
+          </div>
+        )}
       </div>
     </div>
   );

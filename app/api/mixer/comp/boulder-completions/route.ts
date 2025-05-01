@@ -7,10 +7,10 @@ export async function POST(req: NextRequest) {
   if (!session) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
-  const { climberId, compId, type, mixerBoulderId, attempts, points } =
+  const { climberId, compId, type, mixerBoulderId, attempts, points, isComplete } =
     await req.json();
 
-  if (!climberId || !compId || !type || !mixerBoulderId || !attempts || !points) {
+  if (!climberId || !compId || !type || !mixerBoulderId || !attempts || !points || !isComplete) {
     return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
   }
  try {
@@ -22,6 +22,7 @@ export async function POST(req: NextRequest) {
       mixerBoulderId,
       attempts,
       points,
+      isComplete,
     },
   });
 

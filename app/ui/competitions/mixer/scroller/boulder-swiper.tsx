@@ -119,6 +119,7 @@ export default function MixerBoulderScorer({
             attempts: attempts,
             points: points,
             type: "BOULDER",
+            isComplete: true,
           }),
         });
 

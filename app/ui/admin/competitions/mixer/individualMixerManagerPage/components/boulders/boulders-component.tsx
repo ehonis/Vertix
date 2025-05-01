@@ -5,6 +5,7 @@ import NewBoulderPopUp from "./new-boulder-pop-up";
 import { clsx } from "clsx";
 import { useNotification } from "@/app/contexts/NotificationContext";
 import { MixerBoulder, CompetitionStatus } from "@prisma/client";
+import ElementLoadingAnimation from "@/app/ui/general/element-loading-animation";
 
 type BouldersComponentData = {
   boulders: MixerBoulder[];
@@ -21,7 +22,7 @@ export default function BoulderComponent({ boulders, compId, compStatus }: Bould
   const [tempBoulderColor, setTempBoulderColor] = useState<string>("");
   const [tempBoulderGrade, setTempBoulderGrade] = useState<string>("");
   const [isShowMore, setIsShowMore] = useState(false);
-
+  const [isLoading, setIsLoading] = useState(false);
   const handleEditBoulderPopUp = (id: string) => {
     const tempBoulder = compBoulders.find(boulder => boulder.id === id);
 
@@ -99,6 +100,34 @@ export default function BoulderComponent({ boulders, compId, compStatus }: Bould
       setCompBoulders(boulders);
     }
     setIsShowMore(!isShowMore);
+  };
+
+  const handleReleaseBoulders = async () => {
+    setIsLoading(true);
+    try {
+      const response = await fetch("/api/mixer/manager/boulder/release-boulders", {
+        method: "POST",
+        body: JSON.stringify({ compId, boulders: boulders }),
+      });
+      if (!response.ok) {
+        showNotification({
+          message: "response was not okay, could not release boulders",
+          color: "red",
+        });
+      } else {
+        showNotification({
+          message: "boulders released successfully",
+          color: "green",
+        });
+      }
+    } catch {
+      showNotification({
+        message: "response was not okay, could not release boulders",
+        color: "red",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -207,9 +236,17 @@ export default function BoulderComponent({ boulders, compId, compStatus }: Bould
         </div>
         {compStatus === CompetitionStatus.COMPLETED && (
           <div className="mt-2 flex justify-center w-full">
-            <button className="bg-green-400 w-full py-1 px-5 text-sm rounded-md max-w-fit">
+            <button
+              className="bg-green-400 w-full py-1 px-5 text-sm rounded-md max-w-fit"
+              onClick={handleReleaseBoulders}
+            >
               Release Boulders
             </button>
+          </div>
+        )}
+        {isLoading && (
+          <div className="flex justify-center items-center">
+            <ElementLoadingAnimation />
           </div>
         )}
       </div>
