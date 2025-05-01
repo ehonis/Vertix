@@ -835,10 +835,8 @@ export default function VariablesComponent({
                 className="bg-slate-900 rounded-sm p-1 w-32 text-center hide-spinners focus:outline-hidden"
               >
                 <option value=""></option>
-                <option value={StandingsType.averageDownwardMovement}>
-                  Average Downward Movement
-                </option>
-                <option value={StandingsType.downMovementByTop}>Downward Movement By Top</option>
+                <option value={StandingsType.averageDownwardMovement}>2024</option>
+                <option value={StandingsType.downMovementByTop}>2025</option>
               </select>
 
               {isStandingsTypeSave && (
