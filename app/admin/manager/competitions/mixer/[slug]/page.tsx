@@ -110,8 +110,18 @@ export default async function page({ params }: { params: Promise<{ slug: string 
             divisions={compDivisions}
           />
           <DivisionsComponent divisions={compDivisions} compId={compId} />
-          <RoutesComponent routes={compRoutes} compId={compId} compStatus={comp.status} />
-          <BoulderComponent boulders={compBoulders} compId={compId} compStatus={comp.status} />
+          <RoutesComponent
+            routes={compRoutes}
+            compId={compId}
+            compStatus={comp.status}
+            isRoutesReleased={comp.isRoutesReleased}
+          />
+          <BoulderComponent
+            boulders={compBoulders}
+            compId={compId}
+            compStatus={comp.status}
+            isBouldersReleased={comp.isBouldersReleased}
+          />
         </div>
       </div>
     </div>

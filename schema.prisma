@@ -234,6 +234,8 @@ model MixerCompetition {
     isTestCompetition       Boolean             @default(false)
     hasScoresBeenCalculated Boolean             @default(false)
     standingsType           StandingsType?
+    isBouldersReleased      Boolean             @default(false)
+    isRoutesReleased        Boolean             @default(false)
 }
 
 model MixerRoute {

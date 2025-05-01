@@ -6,7 +6,7 @@ import { clsx } from "clsx";
 import { useNotification } from "@/app/contexts/NotificationContext";
 import { MixerRoute, CompetitionStatus } from "@prisma/client";
 import ElementLoadingAnimation from "@/app/ui/general/element-loading-animation";
-
+import { useRouter } from "next/navigation";
 type holdData = {
   topRopePoints: number;
   leadPoints: number;
@@ -17,8 +17,14 @@ type RoutesComponentData = {
   routes: MixerRoute[];
   compId: string;
   compStatus: CompetitionStatus;
+  isRoutesReleased: boolean;
 };
-export default function RoutesComponent({ routes, compId, compStatus }: RoutesComponentData) {
+export default function RoutesComponent({
+  routes,
+  compId,
+  compStatus,
+  isRoutesReleased,
+}: RoutesComponentData) {
   const { showNotification } = useNotification();
   const [compRoutes, setCompRoutes] = useState(
     routes.map(route => ({
@@ -26,6 +32,7 @@ export default function RoutesComponent({ routes, compId, compStatus }: RoutesCo
       holds: JSON.parse(route.holds as string), // Convert holds JSON string to array
     }))
   ); // route
+  const router = useRouter();
   const [isEditRoutePopup, setIsEditRoutePopup] = useState(false); //route
   const [isNewEditRoutePopUp, setIsNewEditRoutePopup] = useState(false); //route
   const [tempHolds, setTempHolds] = useState<holdData[]>([]); //route
@@ -129,6 +136,7 @@ export default function RoutesComponent({ routes, compId, compStatus }: RoutesCo
         color: "red",
       });
     } finally {
+      router.refresh();
       setIsLoading(false);
     }
   };
@@ -225,7 +233,7 @@ export default function RoutesComponent({ routes, compId, compStatus }: RoutesCo
             </div>
           )}
         </div>
-        {compStatus === CompetitionStatus.COMPLETED && (
+        {compStatus === CompetitionStatus.COMPLETED && !isRoutesReleased && (
           <div className="mt-2 flex justify-center w-full">
             <button
               className="bg-green-400 w-full py-1 px-5 text-sm rounded-md max-w-fit"
@@ -233,6 +241,14 @@ export default function RoutesComponent({ routes, compId, compStatus }: RoutesCo
             >
               Release Routes
             </button>
+          </div>
+        )}
+        {isRoutesReleased && (
+          <div className="mt-2 flex flex-col text-center justify-center w-full">
+            <p className="text-green-400">Routes Released Already</p>
+            <p className="text-red-400 italic text-xs">
+              Please change the route location to the correct location
+            </p>
           </div>
         )}
         {isLoading && (

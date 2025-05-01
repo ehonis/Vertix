@@ -152,6 +152,11 @@ export async function POST(req: NextRequest)  {
             }
         }
 
+        await tx.mixerCompetition.update({
+            where: { id: compId },
+            data: { isRoutesReleased: true }
+        });
+
         return { success: true };
     });
 

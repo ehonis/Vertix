@@ -38,7 +38,7 @@ export async function POST(req: NextRequest)  {
             title: `${comp.name} Boulder ${boulder.points}`,
             grade: boulder.grade || 'v0',
             color: boulder.color,
-            location: Locations.ropeNorth,
+            location: Locations.boulderSouth,
             setDate: new Date(),
             type: RouteType.BOULDER,
             isArchive: false,
@@ -149,6 +149,11 @@ export async function POST(req: NextRequest)  {
                     data: { highestBoulderGrade: currentHighestGrade }
                 });
             }
+
+            await tx.mixerCompetition.update({
+                where: { id: compId },
+                data: { isBouldersReleased: true }
+            });
         }
 
         return { success: true };

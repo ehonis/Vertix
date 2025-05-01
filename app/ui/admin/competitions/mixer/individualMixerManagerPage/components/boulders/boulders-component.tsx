@@ -6,13 +6,21 @@ import { clsx } from "clsx";
 import { useNotification } from "@/app/contexts/NotificationContext";
 import { MixerBoulder, CompetitionStatus } from "@prisma/client";
 import ElementLoadingAnimation from "@/app/ui/general/element-loading-animation";
+import { useRouter } from "next/navigation";
 
 type BouldersComponentData = {
   boulders: MixerBoulder[];
   compId: string;
   compStatus: CompetitionStatus;
+  isBouldersReleased: boolean;
 };
-export default function BoulderComponent({ boulders, compId, compStatus }: BouldersComponentData) {
+export default function BoulderComponent({
+  boulders,
+  compId,
+  compStatus,
+  isBouldersReleased,
+}: BouldersComponentData) {
+  const router = useRouter();
   const { showNotification } = useNotification();
   const [compBoulders, setCompBoulders] = useState<MixerBoulder[]>(boulders); // Boulder
   const [isEditBoulderPopup, setIsEditBoulderPopup] = useState(false); //Boulder
@@ -127,6 +135,7 @@ export default function BoulderComponent({ boulders, compId, compStatus }: Bould
       });
     } finally {
       setIsLoading(false);
+      router.refresh();
     }
   };
 
@@ -234,7 +243,7 @@ export default function BoulderComponent({ boulders, compId, compStatus }: Bould
             </div>
           )}
         </div>
-        {compStatus === CompetitionStatus.COMPLETED && (
+        {compStatus === CompetitionStatus.COMPLETED && !isBouldersReleased && (
           <div className="mt-2 flex justify-center w-full">
             <button
               className="bg-green-400 w-full py-1 px-5 text-sm rounded-md max-w-fit"
@@ -242,6 +251,14 @@ export default function BoulderComponent({ boulders, compId, compStatus }: Bould
             >
               Release Boulders
             </button>
+          </div>
+        )}
+        {isBouldersReleased && (
+          <div className="mt-2 flex justify-center items-centerw-full flex-col text-center">
+            <p className="text-green-400">Boulders Released Already</p>
+            <p className="text-red-400 italic text-xs">
+              Please change the boulder location to the correct location
+            </p>
           </div>
         )}
         {isLoading && (
