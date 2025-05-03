@@ -733,7 +733,7 @@ export default function MixerRopeScorer({
                 {/* complete panel */}
                 <div
                   className={clsx(
-                    "flex flex-col justify-between p-3 bg-green-500/20 border-2 border-green-500 h-full w-full text-white text-2xl shadow-lg rounded-lg z-20",
+                    "relative flex flex-col justify-between p-3 bg-green-500/20 border-2 border-green-500 h-full w-full text-white text-2xl shadow-lg rounded-lg z-20",
                     panel.color === "blue" ? "shadow-blue-500" : null,
                     panel.color === "red" ? "shadow-red-500" : null,
                     panel.color === "green" ? "shadow-green-400" : null,
@@ -764,8 +764,50 @@ export default function MixerRopeScorer({
                     >
                       {panel.name}
                     </h1>
+                    <button
+                      className="absolute top-2 left-3 rounded-full size-10"
+                      onClick={() => handleImageClick(panel.id)}
+                    >
+                      <div className="flex justify-center items-center">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          strokeWidth={1.5}
+                          stroke="currentColor"
+                          className="size-10"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z"
+                          />
+                        </svg>
+                      </div>
+                    </button>
+                    <button
+                      className="absolute top-2 right-3 rounded-full size-10"
+                      onClick={() => handleInfoClick(panel.id)}
+                    >
+                      <div className="flex justify-center items-center">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          strokeWidth={1.5}
+                          stroke="currentColor"
+                          className="size-10"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="m3.75 13.5 10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75Z"
+                          />
+                        </svg>
+                      </div>
+                    </button>
                     <p className="font-tomorrow font-bold gradient-text-green-lime text-center">
-                      Completed
+                      Saved
                     </p>
                   </div>
                   <p className="font-barlow font-bold text-center text-4xl">
