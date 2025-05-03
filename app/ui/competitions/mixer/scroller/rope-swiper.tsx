@@ -835,7 +835,7 @@ export default function MixerRopeScorer({
 
                   <div className="flex flex-col items-center gap-3">
                     <h2 className="text-2xl font-barlow font-bold text-white text-center drop-shadow-customBlack">
-                      Uncomplete?
+                      Unsave?
                     </h2>
                     <button
                       className="rounded-full size-14 font-barlow font-bold bg-red-500 flex justify-center items-center shadow-lg drop-shadow-customBlack"
