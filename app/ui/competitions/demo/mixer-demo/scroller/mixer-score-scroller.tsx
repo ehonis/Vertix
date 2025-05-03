@@ -9,6 +9,7 @@ import { MixerBoulder } from "@prisma/client";
 type RouteData = {
   name: string;
   id: string;
+  imageUrl: string | null;
   color: string;
   holds: string;
   grade: string | null;

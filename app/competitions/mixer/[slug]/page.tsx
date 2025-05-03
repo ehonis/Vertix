@@ -171,28 +171,30 @@ export default async function page({ params }: { params: Promise<{ slug: string 
               )}
             </div>
           )}
-          {competition.status === CompetitionStatus.COMPLETED ||
-            (competition.status === CompetitionStatus.ARCHIVED && (
-              <div className="flex flex-col gap-2">
-                <Link
-                  href={`/competitions/mixer/${compId}/leaderboard`}
-                  className="px-2 py-1 text-white bg-yellow-500 rounded-sm font-barlow font-bold text-center shadow-xl"
-                >
-                  Leaderboard Demo
-                </Link>
-              </div>
-            ))}
+          {(competition.status === CompetitionStatus.COMPLETED ||
+            competition.status === CompetitionStatus.ARCHIVED) && (
+            <div className="flex flex-col gap-2">
+              <Link
+                href={`/competitions/mixer/${compId}/leaderboard`}
+                className="px-2 py-1 text-white bg-yellow-500 rounded-sm font-barlow font-bold text-center shadow-xl"
+              >
+                Leaderboard
+              </Link>
+            </div>
+          )}
         </div>
       </div>
-      <p className="text-center italic font-barlow text-white text-xs mt-5 z-10">
-        Having trouble signing up? Please reach out by emailing{" "}
-        <a
-          href="mailto:support@vertixclimb.com"
-          className="underline text-blue-500 hover:text-blue-400"
-        >
-          support@vertixclimb.com
-        </a>
-      </p>
+      {competition.status === CompetitionStatus.UPCOMING && (
+        <p className="text-center italic font-barlow text-white text-xs mt-5 z-10">
+          Having trouble signing up? Please reach out by emailing{" "}
+          <a
+            href="mailto:support@vertixclimb.com"
+            className="underline text-blue-500 hover:text-blue-400"
+          >
+            support@vertixclimb.com
+          </a>
+        </p>
+      )}
     </div>
   );
 }

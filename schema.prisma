@@ -242,6 +242,7 @@ model MixerCompetition {
 
 model MixerRoute {
     id            String            @id @default(cuid())
+    imageUrl      String?
     name          String
     color         String
     holds         Json // Array of { holdNumber, topRopePoints, leadPoints }

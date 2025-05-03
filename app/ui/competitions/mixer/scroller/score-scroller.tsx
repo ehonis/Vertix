@@ -24,6 +24,7 @@ type RouteData = {
   name: string;
   id: string;
   color: string;
+  imageUrl: string | null;
   holds: routeHold[];
   competitionId: string;
   grade: string | null;

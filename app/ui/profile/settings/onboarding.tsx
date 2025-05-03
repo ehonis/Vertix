@@ -101,7 +101,7 @@ export default function Onboarding({ user }: { user: User }) {
           message: "Successfully Onboarded",
           color: "green",
         });
-        router.push(`/profile/${username}`);
+        router.push(`/competitions`);
         router.refresh();
       } else {
         showNotification({

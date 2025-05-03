@@ -13,6 +13,7 @@ import MixerInfoPopup from "./info-popup";
 import SwipeAnimation from "@/app/ui/general/swipe-animation";
 import { getTopScores } from "@/lib/mixer";
 import { MixerCompletion } from "@prisma/client";
+import RouteImagePopup from "./route-image-popup";
 type routeHold = {
   holdNumber: number;
   topRopePoints: number;
@@ -22,6 +23,7 @@ type RouteData = {
   name: string;
   id: string;
   color: string;
+  imageUrl: string | null;
   holds: routeHold[];
   competitionId: string;
   grade: string | null;
@@ -41,7 +43,7 @@ export default function MixerRopeScorer({
 }: MixerRopeScrollerData) {
   const [tempRouteId, setTempRouteId] = useState("");
   const { showNotification } = useNotification();
-
+  const [isImagePopup, setIsImagePopup] = useState(false);
   const [topScores, setTopScores] = useState<[string, number][]>();
   const [isInfoPopup, setIsInfoPopup] = useState(false);
 
@@ -411,6 +413,15 @@ export default function MixerRopeScorer({
     setIsInfoPopup(false);
   };
 
+  const handleImageClick = (routeId: string) => {
+    setTempRouteId(routeId);
+    setIsImagePopup(!isImagePopup);
+  };
+  const handleImageCancel = () => {
+    setIsImagePopup(false);
+    setTempRouteId("");
+  };
+
   return (
     <>
       <Swiper
@@ -434,6 +445,9 @@ export default function MixerRopeScorer({
             onCancel={handleCancel}
             routeId={tempRouteId}
           />
+        ) : null}
+        {isImagePopup ? (
+          <RouteImagePopup routeId={tempRouteId} onCancel={handleImageCancel} />
         ) : null}
 
         {showBlurBackground && (
@@ -467,7 +481,28 @@ export default function MixerRopeScorer({
                 )}
               >
                 <button
-                  className="absolute top-0 right-1 rounded-full size-10"
+                  className="absolute top-2 left-3 rounded-full size-10"
+                  onClick={() => handleImageClick(panel.id)}
+                >
+                  <div className="flex justify-center items-center">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth={1.5}
+                      stroke="currentColor"
+                      className="size-10"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z"
+                      />
+                    </svg>
+                  </div>
+                </button>
+                <button
+                  className="absolute top-2 right-3 rounded-full size-10"
                   onClick={() => handleInfoClick(panel.id)}
                 >
                   <div className="flex justify-center items-center">
@@ -477,7 +512,7 @@ export default function MixerRopeScorer({
                       viewBox="0 0 24 24"
                       strokeWidth={1.5}
                       stroke="currentColor"
-                      className="size-8"
+                      className="size-10"
                     >
                       <path
                         strokeLinecap="round"
