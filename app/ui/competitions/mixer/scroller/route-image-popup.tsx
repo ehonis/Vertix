@@ -67,6 +67,7 @@ export default function RouteImagePopup({
               width={1000}
               height={1000}
               className="rounded-lg object-contain"
+              loading="eager"
             />
           )}
           {isLoading && (

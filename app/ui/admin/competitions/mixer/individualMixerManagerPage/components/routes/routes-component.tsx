@@ -41,6 +41,7 @@ export default function RoutesComponent({
   const [tempRouteColor, setTempRouteColor] = useState("");
   const [tempRouteGrade, setTempRouteGrade] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [tempRouteImageUrl, setTempRouteImageUrl] = useState("");
   const handleEditRoutePopUp = (id: string) => {
     const tempRoute = compRoutes.find(route => route.id === id);
 
@@ -50,6 +51,7 @@ export default function RoutesComponent({
       setTempRouteName(tempRoute.name);
       setTempRouteColor(tempRoute.color);
       setTempRouteGrade(tempRoute.grade || "");
+      setTempRouteImageUrl(tempRoute.imageUrl || "");
       setIsEditRoutePopup(true);
     } else {
       console.error(`Route with ID ${id} not found`);
@@ -155,6 +157,7 @@ export default function RoutesComponent({
           updateRouteHolds={updateRouteHolds}
           routeColor={tempRouteColor}
           routeGrade={tempRouteGrade}
+          routeImageUrl={tempRouteImageUrl}
         />
       )}
       <div className="md:w-48">

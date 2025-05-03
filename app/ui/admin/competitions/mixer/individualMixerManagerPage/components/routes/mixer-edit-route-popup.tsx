@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
 import clsx from "clsx";
-
+import ImageUploaderPopUp from "./image-uploader-popup";
 type holdData = {
   topRopePoints: number;
   leadPoints: number;
@@ -24,6 +24,7 @@ type EditRoutePopUpData = {
     newColor: string,
     newGrade: string
   ) => void;
+  routeImageUrl: string | null;
 };
 
 export default function EditRoutePopUp({
@@ -34,11 +35,13 @@ export default function EditRoutePopUp({
   holds,
   updateRouteHolds,
   routeGrade,
+  routeImageUrl,
 }: EditRoutePopUpData) {
   const [name, setName] = useState(routeName);
   const [tempHolds, setTempHolds] = useState([...holds]);
   const [color, setColor] = useState(routeColor);
   const [grade, setGrade] = useState(routeGrade);
+  const [isImageUploaderPopup, setIsImageUploaderPopup] = useState(false);
   const handleHoldChange = (index: number, field: string, value: string) => {
     const cleanedValue = Number(String(value).replace(/^0+/, "") || "0");
 
@@ -64,9 +67,22 @@ export default function EditRoutePopUp({
     updateRouteHolds(routeId, tempHolds, name, color, grade);
     onCancel(); // Close the popup
   };
+  const handleUploadNewImage = () => {
+    setIsImageUploaderPopup(true);
+  };
 
   return (
     <div>
+      {isImageUploaderPopup && (
+        <ImageUploaderPopUp
+          onCancel={() => {
+            setIsImageUploaderPopup(false);
+            onCancel();
+          }}
+          routeId={routeId}
+          routeImageUrl={routeImageUrl}
+        />
+      )}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -149,7 +165,14 @@ export default function EditRoutePopUp({
             <option value="5.13">5.13</option>
             <option value="5.13+">5.13+</option>
           </select>
-
+          <div className="flex flex-col gap-5 my-2">
+            <button className="bg-blue-500 px-3 py-1 rounded-md" onClick={handleUploadNewImage}>
+              Upload New Image
+            </button>
+            {routeImageUrl && (
+              <button className="bg-purple-500 px-3 py-1 rounded-md">Preview Image</button>
+            )}
+          </div>
           <div>
             <div className="grid grid-cols-3 bg-gray-700 rounded-sm px-2 pr-4 mb-1">
               <p className="place-self-start">Hold #</p>
