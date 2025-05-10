@@ -314,6 +314,11 @@ export default function MixerRopeScorer({
         message: `1 Attempt Needed`,
         color: "red",
       });
+    } else if (points === 0) {
+      showNotification({
+        message: `Points cannot be 0`,
+        color: "red",
+      });
     } else {
       try {
         // Update local state
