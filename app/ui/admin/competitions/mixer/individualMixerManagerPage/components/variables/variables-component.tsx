@@ -822,7 +822,7 @@ export default function VariablesComponent({
               </button>
             )}
           </div>
-          {isScoresAvailable && (
+          {status === CompetitionStatus.COMPLETED && (
             <div className="flex gap-2 bg-gray-700 rounded-sm p-2 justify-between items-center">
               <label htmlFor="" className="text-lg truncate">
                 Standings Type

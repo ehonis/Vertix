@@ -13,7 +13,8 @@ export default async function Redirect() {
     });
     redirect(`/profile/${user?.id}/settings`);
   } else {
-    redirect(`/profile/${user?.username}/dashboard`);
+    // redirect(`/profile/${user?.username}/dashboard`);
+    redirect("/");
   }
 
   return (

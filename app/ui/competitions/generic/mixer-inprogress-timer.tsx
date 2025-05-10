@@ -1,3 +1,5 @@
+//generic countdown timer that shows the time left for the competition to end without any notifications or onfinish function
+
 "use client";
 
 import { useState, useEffect } from "react";
@@ -6,18 +8,11 @@ import { useRouter } from "next/navigation";
 export default function MixerCountdownTimer({
   timeAllotted,
   startedAt,
-  onFinish,
 }: {
   timeAllotted: number | undefined | null;
   startedAt: Date | undefined | null;
-  onFinish: () => void;
 }) {
-  const { showNotification } = useNotification();
   const router = useRouter();
-  const [has1MinuteLeftNotif, setHas1MinuteLeftNotif] = useState(false);
-  const [has10MinutesLeftNotif, setHas10MinutesLeftNotif] = useState(false);
-  const [has30MinutesLeftNotif, setHas30MinutesLeftNotif] = useState(false);
-  const [has1HourLeftNotif, setHas1HourLeftNotif] = useState(false);
 
   // Calculate initial time left when component mounts
   const calculateInitialTimeLeft = () => {
@@ -42,42 +37,15 @@ export default function MixerCountdownTimer({
   const [timeLeft, setTimeLeft] = useState(calculateInitialTimeLeft());
 
   // Function to check and show notifications at specific time intervals
-  const checkAndShowNotifications = (time: number) => {
-    // Convert time to minutes for easier comparison
-    const minutesLeft = Math.floor(time / 60);
-
-    // Show notifications at specific intervals
-    if (minutesLeft === 60 && !has1HourLeftNotif) {
-      showNotification({ message: "1 hour remaining!", color: "green" });
-      setHas1HourLeftNotif(true);
-    } else if (minutesLeft === 30 && !has30MinutesLeftNotif) {
-      showNotification({ message: "30 minutes remaining!", color: "green" });
-      setHas30MinutesLeftNotif(true);
-    } else if (minutesLeft === 10 && !has10MinutesLeftNotif) {
-      showNotification({ message: "10 minutes remaining!", color: "green" });
-      setHas10MinutesLeftNotif(true);
-    } else if (minutesLeft === 1 && !has1MinuteLeftNotif) {
-      showNotification({ message: "1 minute remaining!", color: "red" });
-      setHas1MinuteLeftNotif(true);
-    }
-
-    // Call onFinish when timer reaches zero
-    if (time === 0) {
-      onFinish();
-    }
-  };
 
   useEffect(() => {
-    // Check initial time for notifications
-    checkAndShowNotifications(timeLeft);
-
     // Update timer every second
     const timer = setInterval(() => {
       setTimeLeft(prevTime => {
         // Decrement time by 1 second, but don't go below 0
         const newTime = Math.max(0, prevTime - 1);
         // Check for notifications and finish callback
-        checkAndShowNotifications(newTime);
+
         return newTime;
       });
     }, 1000);

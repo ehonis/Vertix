@@ -9,6 +9,7 @@ import RoutesComponent from "@/app/ui/admin/competitions/mixer/individualMixerMa
 import BoulderComponent from "@/app/ui/admin/competitions/mixer/individualMixerManagerPage/components/boulders/boulders-component";
 import UsersComponent from "@/app/ui/admin/competitions/mixer/individualMixerManagerPage/components/users/users-component";
 import DivisionsComponent from "@/app/ui/admin/competitions/mixer/individualMixerManagerPage/components/divisions/divisions-component";
+import TerminalComponent from "@/app/ui/admin/competitions/mixer/individualMixerManagerPage/components/terminal/terminal-component";
 
 export default async function page({ params }: { params: Promise<{ slug: string }> }) {
   const session = await auth();
@@ -70,7 +71,7 @@ export default async function page({ params }: { params: Promise<{ slug: string 
     );
   }
   return (
-    <div className="w-full max-w-full py-5 flex flex-col items-center font-barlow font-bold text-white">
+    <div className="w-full max-w-full py-5 flex flex-col items-center font-barlow font-bold text-white md:px-5">
       <div className="max-w-md md:max-w-full flex-col overflow-hidden">
         <Link href={"/admin/manager/competitions/mixer"} className="flex gap-1 items-center ">
           <svg
@@ -89,7 +90,7 @@ export default async function page({ params }: { params: Promise<{ slug: string 
           </svg>
           <p className="font-barlow font-bold text-xs text-white">Mixer Manager</p>
         </Link>
-        <div className="w-full flex flex-col md:flex-row md:gap-10 md:flex-wrap ">
+        <div className="w-full flex flex-col md:flex-row md:gap-10 md:flex-wrap md:justify-center">
           <VariablesComponent
             passcode={comp.passcode}
             compId={compId}
@@ -122,6 +123,7 @@ export default async function page({ params }: { params: Promise<{ slug: string 
             compStatus={comp.status}
             isBouldersReleased={comp.isBouldersReleased}
           />
+          <TerminalComponent compId={compId} />
         </div>
       </div>
     </div>
