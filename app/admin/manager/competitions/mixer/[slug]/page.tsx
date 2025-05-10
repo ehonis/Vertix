@@ -99,6 +99,7 @@ export default async function page({ params }: { params: Promise<{ slug: string 
             areScoresAvailable={comp.areScoresAvailable}
             status={comp.status}
             time={comp.time}
+            startedAt={comp.startedAt}
             imageUrl={comp.imageUrl}
             hasScoresBeenCalculated={comp.hasScoresBeenCalculated}
             standingsType={comp.standingsType}
