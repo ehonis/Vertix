@@ -12,7 +12,7 @@ export default function Search() {
   const [fetchedData, setFetchedData] = useState(null);
   return (
     <>
-      <ConstructionBlur />
+      {/* <ConstructionBlur /> */}
       <SearchTextBox onDataFetch={data => setFetchedData(data)} />
       {fetchedData ? (
         fetchedData.message === "profiles" ? (

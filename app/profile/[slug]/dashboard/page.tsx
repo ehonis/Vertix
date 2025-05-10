@@ -38,7 +38,7 @@ export default async function Dashboard({ params }: { params: Promise<{ slug: st
 
   return (
     <div className="flex flex-col p-5 gap-3 w-screen items-center">
-      {session.user.role !== "ADMIN" && <ConstructionBlur />}
+      {/* {session.user.role !== "ADMIN" && <ConstructionBlur />} */}
       <ImageNamePlate
         image={user.image}
         name={user.name}
