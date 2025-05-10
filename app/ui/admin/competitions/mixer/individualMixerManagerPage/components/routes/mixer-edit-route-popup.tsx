@@ -7,7 +7,7 @@ import ImageUploaderPopUp from "./image-uploader-popup";
 import { useRouter } from "next/navigation";
 import { useNotification } from "@/app/contexts/NotificationContext";
 import ConfirmationPopUp from "@/app/ui/general/confirmation-pop-up";
-
+import RouteImagePopup from "@/app/ui/competitions/mixer/scroller/route-image-popup";
 type holdData = {
   topRopePoints: number;
   leadPoints: number;
@@ -49,6 +49,7 @@ export default function EditRoutePopUp({
   const [grade, setGrade] = useState(routeGrade);
   const [isImageUploaderPopup, setIsImageUploaderPopup] = useState(false);
   const [isDeleteRoutePopup, setIsDeleteRoutePopup] = useState(false);
+  const [isRouteImagePopup, setIsRouteImagePopup] = useState(false);
   const handleHoldChange = (index: number, field: string, value: string) => {
     const cleanedValue = Number(String(value).replace(/^0+/, "") || "0");
 
@@ -107,6 +108,9 @@ export default function EditRoutePopUp({
 
   return (
     <div>
+      {isRouteImagePopup && (
+        <RouteImagePopup onCancel={() => setIsRouteImagePopup(false)} routeId={routeId} />
+      )}
       {isDeleteRoutePopup && (
         <ConfirmationPopUp
           onCancel={() => setIsDeleteRoutePopup(false)}
@@ -212,7 +216,12 @@ export default function EditRoutePopUp({
               Upload New Image
             </button>
             {routeImageUrl && (
-              <button className="bg-purple-500 px-3 py-1 rounded-md">Preview Image</button>
+              <button
+                className="bg-purple-500 px-3 py-1 rounded-md"
+                onClick={() => setIsRouteImagePopup(true)}
+              >
+                Preview Image
+              </button>
             )}
           </div>
           <div>

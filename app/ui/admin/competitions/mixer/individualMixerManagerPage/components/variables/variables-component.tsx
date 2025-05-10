@@ -10,6 +10,7 @@ import { useNotification } from "@/app/contexts/NotificationContext";
 import { useRouter } from "next/navigation";
 import { CompetitionStatus, StandingsType } from "@prisma/client";
 import { generateCompetitionCsv, StandingsData } from "@/lib/mixers";
+import MixerCountdownTimer from "@/app/ui/competitions/generic/mixer-inprogress-timer";
 
 type VariableDataProps = {
   compId: string;
@@ -22,6 +23,7 @@ type VariableDataProps = {
   passcode: string | null;
   hasScoresBeenCalculated: boolean;
   standingsType: string | null;
+  startedAt: Date | null;
 };
 
 type ExportStandingsResponse = {
@@ -33,6 +35,7 @@ type ExportStandingsResponse = {
 };
 
 export default function VariablesComponent({
+  startedAt,
   compId,
   name,
   compDay,
@@ -822,6 +825,14 @@ export default function VariablesComponent({
               </button>
             )}
           </div>
+          {status === CompetitionStatus.IN_PROGRESS && (
+            <div className="flex gap-2 bg-gray-700 rounded-sm p-2 justify-between items-center">
+              <label htmlFor="" className="text-lg truncate">
+                Started At
+              </label>
+              <MixerCountdownTimer timeAllotted={compTime} startedAt={startedAt} />
+            </div>
+          )}
           {status === CompetitionStatus.COMPLETED && (
             <div className="flex gap-2 bg-gray-700 rounded-sm p-2 justify-between items-center">
               <label htmlFor="" className="text-lg truncate">
