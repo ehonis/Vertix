@@ -113,7 +113,11 @@ async function UpComingComps() {
   const mixerCompetitions = await prisma.mixerCompetition.findMany({
     where: {
       status: {
-        in: [CompetitionStatus.UPCOMING, CompetitionStatus.IN_PROGRESS],
+        in: [
+          CompetitionStatus.UPCOMING,
+          CompetitionStatus.IN_PROGRESS,
+          CompetitionStatus.COMPLETED,
+        ],
       },
       isTestCompetition: false,
     },
@@ -177,6 +181,23 @@ async function UpComingComps() {
     </div>
   );
 }
+async function CompletedComps() {
+  const completedCompetitions = await prisma.mixerCompetition.findMany({
+    where: {
+      status: CompetitionStatus.COMPLETED,
+    },
+  });
+  return (
+    <div className="flex flex-col justify-center ">
+      <h1 className="font-barlow text-2xl text-white font-semibold mb-1">Completed</h1>
+      <div className="flex flex-col gap-3 w-full">
+        {completedCompetitions.map(comp => (
+          <div key={comp.id}>{comp.name}</div>
+        ))}
+      </div>
+    </div>
+  );
+}
 
 export default async function page() {
   return (
@@ -201,6 +222,17 @@ export default async function page() {
             </svg>
           </div>
           <div className="md:w-lg w-xs h-1 rounded-full bg-white" />
+        </div>
+        <div className="w-xs md:w-lg">
+          <Suspense
+            fallback={
+              <div className="flex justify-center mt-2">
+                <ElementLoadingAnimation />
+              </div>
+            }
+          >
+            <CompletedComps />
+          </Suspense>
         </div>
         <div className="w-xs md:w-lg">
           <Suspense
