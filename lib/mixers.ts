@@ -78,13 +78,14 @@ export const findTwoHighestRopeScores = (ropeCompletions: MixerCompletion[]) => 
     }
 
     const remainingRopeCompletions = ropeCompletions.filter(completion => completion.id !== highestRouteWithFullCompletion?.id);
-
     const sortedRemainingRopeCompletions = remainingRopeCompletions.sort((a, b) => b.points - a.points);
-
-    twoHighestRopeScores.push(sortedRemainingRopeCompletions[0]);
+    
+    // Only push the second score if it exists
+    if (sortedRemainingRopeCompletions[0]) {
+        twoHighestRopeScores.push(sortedRemainingRopeCompletions[0]);
+    }
 
     return twoHighestRopeScores;
-    
 }
 
 export const findThreeHighestBoulderScores = (boulderCompletions: MixerCompletion[]) => {
@@ -95,6 +96,7 @@ export const findThreeHighestBoulderScores = (boulderCompletions: MixerCompletio
 }
 
 export const findTwoHighestRopeScoresPerClimber = (groupedByClimberId: Record<string, MixerCompletion[]>) => {
+    console.log(groupedByClimberId);
     return Object.keys(groupedByClimberId).map(climberId => {
         const ropeCompletions = groupedByClimberId[climberId].filter(completion => completion.type === CompletionType.ROPE);
         const twoHighestRopeScores = findTwoHighestRopeScores(ropeCompletions);
@@ -113,6 +115,7 @@ export const findThreeHighestBoulderScoresPerClimber = (groupedByClimberId: Reco
 export const combineTwoHighestRopeScoresPerClimberWithAttempts = (twoHighestRopeScoresPerClimber: {climberId: string, twoHighestRopeScores: MixerCompletion[]}[]) => {
     return twoHighestRopeScoresPerClimber.map(climber => {
         // Sum points and attempts from all available rope completions (up to 2)
+       // console.log(climber.climberId, "\n", climber.twoHighestRopeScores, "\n", climber.twoHighestRopeScores.reduce((acc, completion) => acc + completion.points, 0), "\n", climber.twoHighestRopeScores.reduce((acc, completion) => acc + completion.attempts, 0));
         return {climberId: climber.climberId, points: climber.twoHighestRopeScores.reduce((acc, completion) => acc + completion.points, 0), attempts: climber.twoHighestRopeScores.reduce((acc, completion) => acc + completion.attempts, 0)};
     });
 }

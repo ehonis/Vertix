@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import MixerCountdownTimer from "./count-down-timer";
 import TypeToggleSwitch from "./type-toggle";
 import MixerRopeScorer from "./rope-swiper";
@@ -68,6 +68,7 @@ export default function MixerScoreScroller({
           message: "You have finished the competition",
           color: "green",
         });
+        router.refresh();
         router.push(`/competitions/mixer/${comp.id}/leaderboard`);
       } else {
         showNotification({
@@ -79,6 +80,12 @@ export default function MixerScoreScroller({
       console.error(error);
     }
   };
+
+  useEffect(() => {
+    if (climber.climberStatus === ClimberStatus.COMPLETED) {
+      router.push(`/competitions/mixer/${comp.id}/leaderboard`);
+    }
+  }, [climber]);
 
   return (
     <div className="w-screen">

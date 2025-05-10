@@ -30,16 +30,24 @@ export async function POST(req: NextRequest) {
 
     const groupedByClimberId = groupByCompletionsClimberId(usersWithCompletions);
 
+    // console.log(groupedByClimberId);
+
     const twoHighestRopeScoresPerClimber = findTwoHighestRopeScoresPerClimber(groupedByClimberId);
 
     const threeHighestBoulderScoresPerClimber =
       findThreeHighestBoulderScoresPerClimber(groupedByClimberId);
 
+    // console.log(threeHighestBoulderScoresPerClimber);
+
     const twoHighestRopeScoresPerClimberWithAttempts =
       combineTwoHighestRopeScoresPerClimberWithAttempts(twoHighestRopeScoresPerClimber);
 
+    // console.log(twoHighestRopeScoresPerClimberWithAttempts);
+
     const threeHighestBoulderScoresPerClimberWithAttempts =
       combineThreeHighestBoulderScoresPerClimberWithAttempts(threeHighestBoulderScoresPerClimber);
+
+    // console.log(threeHighestBoulderScoresPerClimberWithAttempts);
 
     const updateUsersRopeScores = async () => {
       for (const climber of twoHighestRopeScoresPerClimberWithAttempts) {
@@ -94,6 +102,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ data: "placeholderData" }, { status: 200 });
   } catch (error) {
+    console.log("error in calculate scores", error);
     return NextResponse.json({ message: "failed in api" }, { status: 200 });
   }
 }

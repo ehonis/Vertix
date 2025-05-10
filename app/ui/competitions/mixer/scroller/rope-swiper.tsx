@@ -695,9 +695,9 @@ export default function MixerRopeScorer({
                 </div>
 
                 {/* completion */}
-                <div className="flex flex-col gap-3 items-center">
+                <div className="flex flex-col gap-1 items-center">
                   <button
-                    className="bg-green-500/45 border-2 border-green-500 rounded-full size-16 flex justify-center items-center"
+                    className="bg-green-500/45 border-2 border-green-500 rounded-full size-16 flex flex-col justify-center items-center"
                     onClick={() =>
                       handleCompletion(
                         panel.id,
@@ -725,7 +725,8 @@ export default function MixerRopeScorer({
                         d="m4.5 12.75 6 6 9-13.5"
                       />
                     </svg>
-                  </button>
+                  </button>{" "}
+                  <p className="font-barlow font-bold text-base">Save</p>
                 </div>
               </div>
             ) : (
