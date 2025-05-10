@@ -4,6 +4,10 @@ import { motion } from "framer-motion";
 import { useState } from "react";
 import clsx from "clsx";
 import ImageUploaderPopUp from "./image-uploader-popup";
+import { useRouter } from "next/navigation";
+import { useNotification } from "@/app/contexts/NotificationContext";
+import ConfirmationPopUp from "@/app/ui/general/confirmation-pop-up";
+
 type holdData = {
   topRopePoints: number;
   leadPoints: number;
@@ -38,10 +42,13 @@ export default function EditRoutePopUp({
   routeImageUrl,
 }: EditRoutePopUpData) {
   const [name, setName] = useState(routeName);
+  const router = useRouter();
+  const { showNotification } = useNotification();
   const [tempHolds, setTempHolds] = useState([...holds]);
   const [color, setColor] = useState(routeColor);
   const [grade, setGrade] = useState(routeGrade);
   const [isImageUploaderPopup, setIsImageUploaderPopup] = useState(false);
+  const [isDeleteRoutePopup, setIsDeleteRoutePopup] = useState(false);
   const handleHoldChange = (index: number, field: string, value: string) => {
     const cleanedValue = Number(String(value).replace(/^0+/, "") || "0");
 
@@ -70,9 +77,44 @@ export default function EditRoutePopUp({
   const handleUploadNewImage = () => {
     setIsImageUploaderPopup(true);
   };
+  const handleDeleteRoute = async () => {
+    try {
+      const response = await fetch("/api/mixer/manager/route/delete-route", {
+        method: "DELETE",
+        body: JSON.stringify({ routeId }),
+      });
+      if (response.ok) {
+        showNotification({
+          message: "Route deleted successfully",
+          color: "green",
+        });
+        onCancel();
+      } else {
+        showNotification({
+          message: "Error deleting route",
+          color: "red",
+        });
+      }
+    } catch {
+      showNotification({
+        message: "Error deleting route",
+        color: "red",
+      });
+    } finally {
+      router.refresh();
+    }
+  };
 
   return (
     <div>
+      {isDeleteRoutePopup && (
+        <ConfirmationPopUp
+          onCancel={() => setIsDeleteRoutePopup(false)}
+          onConfirmation={handleDeleteRoute}
+          message="Are you sure you want to delete this route?"
+          submessage="This action cannot be undone."
+        />
+      )}
       {isImageUploaderPopup && (
         <ImageUploaderPopUp
           onCancel={() => {
@@ -247,6 +289,12 @@ export default function EditRoutePopUp({
                 Save Changes
               </button>
             </div>
+            <button
+              className="bg-red-500 px-3 py-1 rounded-md mt-2"
+              onClick={() => setIsDeleteRoutePopup(true)}
+            >
+              Delete Route
+            </button>
           </div>
         </motion.div>
       </motion.div>
