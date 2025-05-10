@@ -110,7 +110,7 @@ export default function EditRoute({
     };
     try {
       const response = await fetch("/api/routes/edit/updateRoute", {
-        method: "POST",
+        method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
       });

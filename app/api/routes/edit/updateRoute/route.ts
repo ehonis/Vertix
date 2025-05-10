@@ -2,7 +2,10 @@ import { NextResponse, NextRequest } from "next/server";
 import prisma from "@/prisma";
 
 export async function PATCH(request: NextRequest) {
+  
   const { routeId, newTitle, newType, newGrade, newDate, newLocation } = await request.json();
+
+  console.log(routeId, newTitle, newType, newGrade, newDate, newLocation);
 
   try {
     await prisma.route.update({

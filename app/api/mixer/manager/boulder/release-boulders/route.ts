@@ -158,6 +158,8 @@ export async function POST(req: NextRequest)  {
         }
 
         return { success: true };
+    }, {
+        timeout: 60000 // Increased timeout as a temporary measure or if optimization isn't enough
     });
 
     return NextResponse.json({ message: "Successfully created routes and processed completions" }, { status: 200 });

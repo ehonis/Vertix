@@ -411,7 +411,8 @@ export default function RouteListEdit({ ropes, boulders }: { ropes: Route[]; bou
                   className="size-5"
                 />
               )}
-              <div
+              <Link
+                href={`/admin/manager/routes/${boulder.id}`}
                 className={clsx(
                   "outline rounded-md p-2 w-full flex justify-between items-center",
                   boulder.color === "green" && "bg-green-500/25 outline-green-500",
@@ -431,7 +432,7 @@ export default function RouteListEdit({ ropes, boulders }: { ropes: Route[]; bou
                   <p className="text-xs">{boulder.grade}</p>
                 </div>
                 <p>{formatDateMMDD(boulder.setDate)}</p>
-              </div>
+              </Link>
             </motion.div>
           ))}
           <div className="place-self-end mt-3">
