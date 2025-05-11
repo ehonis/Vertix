@@ -293,6 +293,7 @@ export default function EditRoute({
                     onChange={handleBoulderGradeChange}
                   >
                     <option value="vb">VB</option>
+                    <option value="v0">V0</option>
                     <option value="v1">V1</option>
                     <option value="v2">V2</option>
                     <option value="v3">V3</option>

@@ -6,18 +6,6 @@ import Link from "next/link";
 import { Suspense } from "react";
 import ElementLoadingAnimation from "@/app/ui/general/element-loading-animation";
 import UserEditor from "@/app/ui/admin/user-edit/userEditor";
-async function GetUsers() {
-  const users = await prisma.user.findMany({
-    select: {
-      id: true,
-      name: true,
-      username: true,
-      image: true,
-    },
-  });
-
-  return <UserEditor users={users} />;
-}
 
 export default async function UserAdmin() {
   const session = await auth();
@@ -59,7 +47,7 @@ export default async function UserAdmin() {
           </div>
         }
       >
-        <GetUsers />
+        <UserEditor />
       </Suspense>
     </div>
   );

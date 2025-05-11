@@ -75,7 +75,7 @@ export default function HamburgerMenu() {
       extraStyles: "",
     },
   ];
-  if (user?.role === "ADMIN") {
+  if (user?.role === "ADMIN" || user?.role === "ROUTE_SETTER") {
     profileLinks.push({
       name: "Admin Center",
       url: `/admin`,

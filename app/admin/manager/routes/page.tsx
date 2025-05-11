@@ -6,7 +6,7 @@ import { redirect } from "next/navigation";
 import { auth } from "@/auth";
 import prisma from "@/prisma";
 import RouteListEdit from "@/app/ui/admin/route-edit/route-list-edit";
-
+import { UserRole } from "@prisma/client";
 const getRoutes = async () => {
   const routes = await prisma.route.findMany({
     where: {
@@ -24,7 +24,7 @@ export default async function Page() {
   const user = session?.user || null;
   const routes = await getRoutes();
 
-  if (!user || user.role !== "ADMIN") {
+  if (user?.role !== UserRole.ADMIN && user?.role !== UserRole.ROUTE_SETTER) {
     redirect("/signin");
   } else {
     const boulderRoutes = routes.filter(route => route.type === "BOULDER");

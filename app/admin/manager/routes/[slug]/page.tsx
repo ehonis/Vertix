@@ -2,6 +2,7 @@ import IndividualRoutePageLoad from "@/app/ui/admin/route-edit/individualpageloa
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import prisma from "@/prisma";
+import { UserRole } from "@prisma/client";
 
 export const revalidate = 120;
 
@@ -18,7 +19,7 @@ export default async function EditRoute({ params }: { params: Promise<{ slug: st
   const routeId = slug;
   const user = session?.user || null;
 
-  if (!user || user.role !== "ADMIN") {
+  if (user?.role !== UserRole.ADMIN && user?.role !== UserRole.ROUTE_SETTER) {
     redirect("/dashboard");
   }
   return (

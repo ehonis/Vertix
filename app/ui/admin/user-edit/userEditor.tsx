@@ -1,25 +1,94 @@
 "use client";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
+import { User } from "@prisma/client";
+import { motion } from "framer-motion";
+import clsx from "clsx";
+import ElementLoadingAnimation from "../../general/element-loading-animation";
 
-type UserEditorProps = {
-  users: {
-    id: string | null;
-    name: string | null;
-    username: string | null;
-    image: string | null;
-  }[];
-};
+// Custom hook for debouncing
+function useDebounce<T>(value: T, delay: number): T {
+  const [debouncedValue, setDebouncedValue] = useState<T>(value);
 
-export default function UserEditor({ users }: UserEditorProps) {
+  useEffect(() => {
+    // Set a timeout to update the debounced value after the specified delay
+    const timer = setTimeout(() => {
+      setDebouncedValue(value);
+    }, delay);
+
+    // Cleanup function to clear the timeout if the value changes before the delay
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [value, delay]);
+
+  return debouncedValue;
+}
+
+export default function UserEditor() {
   const [isSearch, setIsSearch] = useState(false);
   const [searchText, setSearchText] = useState("");
+  const [users, setUsers] = useState<User[]>([]);
+  const [hasMore, setHasMore] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [takeAmount, setTakeAmount] = useState(10);
+  // Debounce the search text with a 300ms delay
+  const debouncedSearchText = useDebounce(searchText, 300);
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      if (debouncedSearchText === "") {
+        setUsers([]);
+        setHasMore(false);
+        return;
+      }
+
+      setIsLoading(true);
+      const queryData = new URLSearchParams({
+        search: debouncedSearchText,
+        take: takeAmount.toString(),
+      });
+
+      const response = await fetch("/api/user/manager/search?" + queryData);
+      const data = await response.json();
+      setUsers(data.data);
+      setHasMore(data.hasMore);
+      setIsLoading(false);
+    };
+    fetchUsers();
+  }, [debouncedSearchText]); // Changed dependency to use debounced value
+
+  const handleShowMore = async () => {
+    if (!hasMore) return;
+    setIsLoading(true);
+    const queryData = new URLSearchParams({
+      search: debouncedSearchText,
+      take: (takeAmount + 10).toString(),
+    });
+
+    const response = await fetch("/api/user/manager/search?" + queryData);
+    const data = await response.json();
+    setUsers(data.data);
+    setHasMore(data.hasMore);
+    setIsLoading(false);
+  };
 
   return (
-    <div className="flex flex-col   bg-bg0 rounded-md px-5 py-2 w-xs md:w-lg">
-      <div className="flex justify-between mb-1">
-        <button className="bg-gray-400 rounded px-3 py-1  text-sm ">Select</button>
+    <div className={clsx("flex flex-col rounded-md py-2 w-xs md:w-lg h-full")}>
+      <div
+        className={clsx(
+          "flex justify-between mb-1 gap-3 justify-self-center items-center",
+          isSearch && "border-2 border-white"
+        )}
+      >
+        <input
+          type="text"
+          className="py-1 border-b w-full focus:outline-none"
+          placeholder="Search..."
+          value={searchText}
+          onChange={e => setSearchText(e.target.value)}
+        />
         <button className="" onClick={() => setIsSearch(!isSearch)}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -37,15 +106,15 @@ export default function UserEditor({ users }: UserEditorProps) {
           </svg>
         </button>
       </div>
-      <div className="h-1 w-full bg-white rounded-md mb-1" />
+
       <div className="flex flex-col gap-2 mt-2">
         {users.map(user => (
           <Link
             href={`/admin/manager/users/${user.id}`}
-            className="flex flex-col w-full bg-black p-2 rounded-md"
+            className="flex flex-col w-full bg-slate-900 p-2 rounded-md"
             key={user.id}
           >
-            <div className="flex gap-2">
+            <div className="flex gap-2 items-center">
               {user.image ? (
                 <Image
                   src={user.image}
@@ -73,11 +142,31 @@ export default function UserEditor({ users }: UserEditorProps) {
               <div className="flex flex-col">
                 <p className="text-lg font-bold truncate w-40">{user.name || "No name"}</p>
                 <p className="text-xs text-gray-400 truncate">@{user.username}</p>
+                <p className="text-xs text-gray-400 truncate">{user.email}</p>
+                <p
+                  className={clsx(
+                    "text-xs  truncate",
+                    user.role === "ADMIN" && "text-blue-500",
+                    user.role === "USER" && "text-gray-400"
+                  )}
+                >
+                  {user.role}
+                </p>
               </div>
             </div>
           </Link>
         ))}
+        {hasMore && (
+          <button className="text-white p-2 rounded-md bg-blue-500" onClick={handleShowMore}>
+            Show more
+          </button>
+        )}
       </div>
+      {isLoading && (
+        <div className="flex justify-center items-center">
+          <ElementLoadingAnimation />
+        </div>
+      )}
     </div>
   );
 }

@@ -84,7 +84,7 @@ export default function UserProfile() {
         </>
       ),
     },
-    ...(user?.role === "ADMIN"
+    ...(user?.role === "ADMIN" || user?.role === "ROUTE_SETTER"
       ? [
           {
             href: "/admin",
