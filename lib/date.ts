@@ -18,13 +18,22 @@ export function convertToEST(date: Date) {
   }
 
 export function findDaysOld(date: Date) {
+    // Get current date and time
     const today = new Date();
-    const setDate = convertToEST(date);
-    const differenceInTime = today.getMilliseconds() - setDate.getMilliseconds(); // Difference in milliseconds
-    const differenceInDays = Math.floor(differenceInTime / (1000 * 60 * 60 * 24)); // Convert milliseconds to days
+    
+    // Set both dates to midnight to compare calendar days only
+    const startDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+    const endDate = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+    
+    // Calculate the difference in milliseconds between the dates
+    const differenceInTime = endDate.getTime() - startDate.getTime();
+    
+    // Convert milliseconds to days
+    // This will now give us the exact number of calendar days between dates
+    const differenceInDays = Math.round(differenceInTime / (1000 * 60 * 60 * 24));
+    
     return differenceInDays;
-  }
-
+}
 
 export function formatDateMMDDYY(date: Date) {
   // Get month (0-11) and add 1 to make it 1-12, pad with leading zero if needed

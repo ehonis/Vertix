@@ -270,10 +270,11 @@ export default async function IndividualRoute({ params }: { params: Promise<{ sl
       </div>
     );
   }
-  console.log(communityGrade);
 
   const date = formatDateMMDDYY(route.setDate);
+
   const daysOld = findDaysOld(route.setDate);
+  console.log(daysOld);
 
   return (
     <div className="w-screen flex items-center justify-center flex-col mt-10">
