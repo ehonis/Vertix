@@ -113,43 +113,96 @@ async function UpComingComps() {
   const mixerCompetitions = await prisma.mixerCompetition.findMany({
     where: {
       status: {
-        in: [
-          CompetitionStatus.UPCOMING,
-          CompetitionStatus.IN_PROGRESS,
-          CompetitionStatus.COMPLETED,
-        ],
+        in: [CompetitionStatus.UPCOMING, CompetitionStatus.IN_PROGRESS],
       },
       isTestCompetition: false,
     },
   });
 
+  if (mixerCompetitions.length === 0) {
+    return null;
+  } else {
+    return (
+      <div className="flex flex-col justify-center ">
+        <h1 className="font-barlow text-2xl text-white font-semibold mb-1">Active or Upcoming</h1>
+        <div className="flex flex-col gap-3 w-full">
+          {mixerCompetitions.map(comp => (
+            <Link
+              key={comp.id}
+              href={`/competitions/mixer/${comp.id}`}
+              className={clsx(
+                " bg-blue-500/15 rounded-lg  p-2 flex justify-between outline  place-items-center",
+                comp.status === CompetitionStatus.UPCOMING && "outline-blue-500 bg-blue-500/15",
+                comp.status === CompetitionStatus.IN_PROGRESS && "outline-green-500 bg-green-500/15"
+              )}
+            >
+              <div className="flex flex-col">
+                <p className="font-barlow  text-white text-xl text-start whitespace-nowrap">
+                  {comp.name}
+                </p>
+                {comp.status === CompetitionStatus.UPCOMING && (
+                  <p className="text-blue-500 text-sm italic ">Sign Ups are Active!</p>
+                )}
+                {comp.status === CompetitionStatus.INACTIVE && (
+                  <p className="text-red-500 text-sm italic ">Currently Unavailable</p>
+                )}
+                {comp.status === CompetitionStatus.IN_PROGRESS && (
+                  <p className="text-green-500 text-sm italic ">In Progress</p>
+                )}
+              </div>
+              {!comp.imageUrl ? (
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                  className="size-12 stroke-white relative z-10 self-center place-self-start"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M16.5 18.75h-9m9 0a3 3 0 0 1 3 3h-15a3 3 0 0 1 3-3m9 0v-3.375c0-.621-.503-1.125-1.125-1.125h-.871M7.5 18.75v-3.375c0-.621.504-1.125 1.125-1.125h.872m5.007 0H9.497m5.007 0a7.454 7.454 0 0 1-.982-3.172M9.497 14.25a7.454 7.454 0 0 0 .981-3.172M5.25 4.236c-.982.143-1.954.317-2.916.52A6.003 6.003 0 0 0 7.73 9.728M5.25 4.236V4.5c0 2.108.966 3.99 2.48 5.228M5.25 4.236V2.721C7.456 2.41 9.71 2.25 12 2.25c2.291 0 4.545.16 6.75.47v1.516M7.73 9.728a6.726 6.726 0 0 0 2.748 1.35m8.272-6.842V4.5c0 2.108-.966 3.99-2.48 5.228m2.48-5.492a46.32 46.32 0 0 1 2.916.52 6.003 6.003 0 0 1-5.395 4.972m0 0a6.726 6.726 0 0 1-2.749 1.35m0 0a6.772 6.772 0 0 1-3.044 0"
+                  />
+                </svg>
+              ) : (
+                <Image
+                  src={comp.imageUrl}
+                  width={100}
+                  height={100}
+                  className="size-12 rounded-full object-cover  self-center place-self-start"
+                  alt="comp icon"
+                />
+              )}
+            </Link>
+          ))}
+        </div>
+      </div>
+    );
+  }
+}
+async function CompletedComps() {
+  const completedCompetitions = await prisma.mixerCompetition.findMany({
+    where: {
+      status: CompetitionStatus.COMPLETED,
+      isTestCompetition: false,
+    },
+  });
   return (
     <div className="flex flex-col justify-center ">
-      <h1 className="font-barlow text-2xl text-white font-semibold mb-1">Active or Upcoming</h1>
-      <div className="flex flex-col gap-3 w-full">
-        {mixerCompetitions.map(comp => (
+      <h1 className="font-barlow text-2xl text-white font-semibold mb-1">Completed</h1>
+      <div className="flex flex-col gap-3 w-full text-white">
+        {completedCompetitions.map(comp => (
           <Link
             key={comp.id}
             href={`/competitions/mixer/${comp.id}`}
-            className={clsx(
-              " bg-blue-500/15 rounded-lg  p-2 flex justify-between outline  place-items-center",
-              comp.status === CompetitionStatus.UPCOMING && "outline-blue-500 bg-blue-500/15",
-              comp.status === CompetitionStatus.IN_PROGRESS && "outline-green-500 bg-green-500/15"
-            )}
+            className=" rounded-lg  p-2 flex justify-between outline  place-items-center outline-green-500 bg-green-500/15"
           >
             <div className="flex flex-col">
               <p className="font-barlow  text-white text-xl text-start whitespace-nowrap">
                 {comp.name}
               </p>
-              {comp.status === CompetitionStatus.UPCOMING && (
-                <p className="text-blue-500 text-sm italic ">Sign Ups are Active!</p>
-              )}
-              {comp.status === CompetitionStatus.INACTIVE && (
-                <p className="text-red-500 text-sm italic ">Currently Unavailable</p>
-              )}
-              {comp.status === CompetitionStatus.IN_PROGRESS && (
-                <p className="text-green-500 text-sm italic ">In Progress</p>
-              )}
+              <p className="text-green-500 text-sm italic ">Completed</p>
             </div>
             {!comp.imageUrl ? (
               <svg
@@ -176,23 +229,6 @@ async function UpComingComps() {
               />
             )}
           </Link>
-        ))}
-      </div>
-    </div>
-  );
-}
-async function CompletedComps() {
-  const completedCompetitions = await prisma.mixerCompetition.findMany({
-    where: {
-      status: CompetitionStatus.COMPLETED,
-    },
-  });
-  return (
-    <div className="flex flex-col justify-center ">
-      <h1 className="font-barlow text-2xl text-white font-semibold mb-1">Completed</h1>
-      <div className="flex flex-col gap-3 w-full">
-        {completedCompetitions.map(comp => (
-          <div key={comp.id}>{comp.name}</div>
         ))}
       </div>
     </div>
