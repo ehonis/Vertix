@@ -261,7 +261,7 @@ export function findIfRopeGradeIsHigher (user:User, route:Route){
   if(!user.highestRopeGrade){
     return true
   }else{
-    if(ropeGrades.indexOf(user.highestRopeGrade) > ropeGrades.indexOf(route.grade)){
+    if(ropeGrades.indexOf(user.highestRopeGrade) < ropeGrades.indexOf(route.grade)){
       return true
     }else{
       return false
@@ -273,7 +273,7 @@ export function findIfBoulderGradeIsHigher(user:User, route:Route){
   if(!user.highestBoulderGrade){
     return true
   }else{
-    if(boulderGrades.indexOf(user.highestBoulderGrade) > boulderGrades.indexOf(route.grade)){
+    if(boulderGrades.indexOf(user.highestBoulderGrade) < boulderGrades.indexOf(route.grade)){
       return true
     }else{
       return false
