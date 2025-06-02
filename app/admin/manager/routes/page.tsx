@@ -56,7 +56,7 @@ export default async function Page() {
           </Link>
           <div className="flex justify-between items-center w-full pt-2 pb-5">
             <h1 className="text-white text-3xl font-bold">Route Manager</h1>
-            <NewRouteButton tags={tags} />
+            {/* <NewRouteButton tags={tags} /> */}
           </div>
 
           <RouteListEdit ropes={ropeRoutes} boulders={boulderRoutes} />
