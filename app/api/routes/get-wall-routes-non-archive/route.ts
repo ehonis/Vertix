@@ -31,6 +31,9 @@ export async function GET(req: NextRequest) {
           },
           tags: true,
         },
+        orderBy: {
+          order: "asc",
+        },
       }) as RouteWithCompletions[];
 
       routesWithCompletion = routes;
@@ -41,6 +44,9 @@ export async function GET(req: NextRequest) {
         where: {
           location: wall as Locations,
           isArchive: false,
+        },
+        orderBy: {
+          order: "asc",
         },
       });
 

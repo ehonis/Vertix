@@ -6,7 +6,10 @@ import { redirect } from "next/navigation";
 import { auth } from "@/auth";
 import prisma from "@/prisma";
 import RouteListEdit from "@/app/ui/admin/route-edit/route-list-edit";
+import NewRoutePopup from "@/app/ui/admin/route-edit/new-route-popup";
 import { UserRole } from "@prisma/client";
+import NewRouteButton from "@/app/ui/admin/route-edit/new-route-button";
+
 const getRoutes = async () => {
   const routes = await prisma.route.findMany({
     where: {
@@ -23,6 +26,7 @@ export default async function Page() {
   const session = await auth();
   const user = session?.user || null;
   const routes = await getRoutes();
+  const tags = await prisma.routeTag.findMany();
 
   if (user?.role !== UserRole.ADMIN && user?.role !== UserRole.ROUTE_SETTER) {
     redirect("/signin");
@@ -52,6 +56,7 @@ export default async function Page() {
           </Link>
           <div className="flex justify-between items-center w-full pt-2 pb-5">
             <h1 className="text-white text-3xl font-bold">Route Manager</h1>
+            <NewRouteButton tags={tags} />
           </div>
 
           <RouteListEdit ropes={ropeRoutes} boulders={boulderRoutes} />

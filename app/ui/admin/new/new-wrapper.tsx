@@ -125,9 +125,6 @@ export default function NewWrapper({ tags }: { tags: RouteTag[] }) {
       })
     );
   };
-  useEffect(() => {
-    console.log(data);
-  }, [data]);
 
   return (
     <div className="flex justify-center w-full">

@@ -14,6 +14,7 @@ enum Locations {
     ropeNorthEast
     ABWallNorth
     ABWallSouth
+    ABWall
     ropeSouthWest
     ropeSouthEast
     boulderSouth

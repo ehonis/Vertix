@@ -10,7 +10,12 @@ import { useNotification } from "@/app/contexts/NotificationContext";
 import { useRouter } from "next/navigation";
 import ConfirmationPopUp from "../../general/confirmation-pop-up";
 
-export default function RouteListEdit({ ropes, boulders }: { ropes: Route[]; boulders: Route[] }) {
+interface RouteListEditProps {
+  ropes: Route[];
+  boulders: Route[];
+}
+
+export default function RouteListEdit({ ropes, boulders }: RouteListEditProps) {
   const router = useRouter();
   const { showNotification } = useNotification();
   const [selectedRoutes, setSelectedRoutes] = useState<Route[]>([]);
@@ -28,6 +33,8 @@ export default function RouteListEdit({ ropes, boulders }: { ropes: Route[]; bou
   const [isDeleteConfirmationBoulder, setIsDeleteConfirmationBoulder] = useState(false);
   const [isArchiveConfirmationRope, setIsArchiveConfirmationRope] = useState(false);
   const [isArchiveConfirmationBoulder, setIsArchiveConfirmationBoulder] = useState(false);
+
+  const [selectedRouteId, setSelectedRouteId] = useState<string | null>(null);
 
   const handleRouteSelect = (route: Route) => {
     if (selectedRoutes.some(r => r.id === route.id)) {
@@ -176,6 +183,75 @@ export default function RouteListEdit({ ropes, boulders }: { ropes: Route[]; bou
       setIsArchiveConfirmationBoulder(false);
       router.refresh();
     }
+  };
+
+  const handleOrderUpdate = async (routes: Route[]) => {
+    try {
+      const response = await fetch("/api/routes/edit/update-route-order", {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ routes }),
+      });
+
+      if (!response.ok) {
+        showNotification({
+          message: "Failed to update route order",
+          color: "red",
+        });
+        return;
+      }
+
+      showNotification({
+        message: "Successfully updated route order",
+        color: "green",
+      });
+    } catch (error) {
+      console.error("Error updating route order:", error);
+      showNotification({
+        message: "Error updating route order",
+        color: "red",
+      });
+    }
+  };
+
+  const handleMoveUp = () => {
+    if (!selectedRouteId) return;
+    const currentRoute = routes.find(route => route.id === selectedRouteId);
+    if (!currentRoute || currentRoute.order === null) return;
+
+    const newRoutes = routes.map(route => {
+      if (route.id === selectedRouteId) {
+        return { ...route, order: (route.order || 0) - 1 };
+      }
+      if (route.order !== null && route.order === (currentRoute.order || 0) - 1) {
+        return { ...route, order: (route.order || 0) + 1 };
+      }
+      return route;
+    });
+
+    setRoutes(newRoutes);
+    handleOrderUpdate(newRoutes);
+  };
+
+  const handleMoveDown = () => {
+    if (!selectedRouteId) return;
+    const currentRoute = routes.find(route => route.id === selectedRouteId);
+    if (!currentRoute || currentRoute.order === null) return;
+
+    const newRoutes = routes.map(route => {
+      if (route.id === selectedRouteId) {
+        return { ...route, order: (route.order || 0) + 1 };
+      }
+      if (route.order !== null && route.order === (currentRoute.order || 0) + 1) {
+        return { ...route, order: (route.order || 0) - 1 };
+      }
+      return route;
+    });
+
+    setRoutes(newRoutes);
+    handleOrderUpdate(newRoutes);
   };
 
   return (

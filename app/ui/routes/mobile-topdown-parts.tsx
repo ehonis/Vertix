@@ -105,10 +105,10 @@ function RopeSouthEast({ selectedPart, setSelectedPart }: WallProps) {
   );
 }
 
-function ABWallNorth({ selectedPart, setSelectedPart }: WallProps) {
+function ABWall({ selectedPart, setSelectedPart }: WallProps) {
   const [fillColor, handleClick] = useClickState(
     "#FFFFFF",
-    "ABWallNorth",
+    "ABWall",
     selectedPart,
     setSelectedPart
   );
@@ -117,19 +117,6 @@ function ABWallNorth({ selectedPart, setSelectedPart }: WallProps) {
     <g className="cursor-pointer" fill={fillColor} onClick={handleClick}>
       <rect id="AB-4" width="10.0286111" height="32.773054" x="20.347147" y="185.33461" />
       <rect id="AB-3" width="10.0286111" height="30.990782" x="20.334927" y="215.87732" />
-    </g>
-  );
-}
-
-function ABWallSouth({ selectedPart, setSelectedPart }: WallProps) {
-  const [fillColor, handleClick] = useClickState(
-    "#FFFFFF",
-    "ABWallSouth",
-    selectedPart,
-    setSelectedPart
-  );
-  return (
-    <g className="cursor-pointer" fill={fillColor} onClick={handleClick}>
       <rect
         id="AB-2"
         width="10.97174382"
@@ -143,6 +130,7 @@ function ABWallSouth({ selectedPart, setSelectedPart }: WallProps) {
     </g>
   );
 }
+
 function RopeNorthWest({ selectedPart, setSelectedPart }: WallProps) {
   const [fillColor, handleClick] = useClickState(
     "#FFFFFF",
@@ -411,8 +399,7 @@ export default function MobileTopdownParts({
     <>
       <RopeSouthWest selectedPart={selectedPart} setSelectedPart={setSelectedPart} />
       <RopeSouthEast selectedPart={selectedPart} setSelectedPart={setSelectedPart} />
-      <ABWallNorth selectedPart={selectedPart} setSelectedPart={setSelectedPart} />
-      <ABWallSouth selectedPart={selectedPart} setSelectedPart={setSelectedPart} />
+      <ABWall selectedPart={selectedPart} setSelectedPart={setSelectedPart} />
       <RopeNorthWest selectedPart={selectedPart} setSelectedPart={setSelectedPart} />
       <RopeNorth selectedPart={selectedPart} setSelectedPart={setSelectedPart} />
       <RopeNorthEast selectedPart={selectedPart} setSelectedPart={setSelectedPart} />
