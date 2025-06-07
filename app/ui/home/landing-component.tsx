@@ -10,8 +10,9 @@ import clsx from "clsx";
 import Link from "next/link";
 
 import "swiper/css";
+import { User } from "next-auth";
 
-export default function LandingComponent() {
+export default function LandingComponent({ user }: { user: User | null }) {
   const [displayText, setDisplayText] = useState("");
   const [wordIndex, setWordIndex] = useState(0);
   const [charIndex, setCharIndex] = useState(0);
@@ -69,20 +70,37 @@ export default function LandingComponent() {
             <span className="animate-flash-fast">|</span>
           </span>
         </div>
-        <div className="hidden md:flex gap-10 w-full justify-center mt-8">
-          <Link
-            href={"/signin"}
-            className="blue-button p-2 px-3 text-3xl font-semibold z-20 rounded-lg"
-          >
-            Sign In
-          </Link>
-          <Link
-            href={"/signin"}
-            className="purple-button p-2 px-3 text-3xl font-semibold z-20 rounded-lg"
-          >
-            Sign Up
-          </Link>
-        </div>
+        {!user ? (
+          <div className="hidden md:flex gap-10 w-full justify-center mt-8">
+            <Link
+              href={"/signin"}
+              className="blue-button p-2 px-3 text-3xl font-semibold z-20 rounded-lg"
+            >
+              Sign In
+            </Link>
+            <Link
+              href={"/signin"}
+              className="purple-button p-2 px-3 text-3xl font-semibold z-20 rounded-lg"
+            >
+              Sign Up
+            </Link>
+          </div>
+        ) : (
+          <div className="hidden md:flex gap-10 w-full justify-center mt-8">
+            <Link
+              href={"/routes"}
+              className="blue-button p-2 px-3 text-3xl font-semibold z-20 rounded-lg"
+            >
+              Routes
+            </Link>
+            <Link
+              href={`/profile/${user.username}/dashboard`}
+              className="purple-button p-2 px-3 text-3xl font-semibold z-20 rounded-lg"
+            >
+              Dashboard
+            </Link>
+          </div>
+        )}
       </div>
 
       {/* <div
@@ -91,14 +109,28 @@ export default function LandingComponent() {
             background: "radial-gradient(circle at bottom right, #1d4ed8 0%, transparent 75%)",
           }}
         /> */}
-      <div className="flex gap-10 mt-5 md:hidden">
-        <Link href={"/signin"} className="blue-button p-2 text-2xl font-semibold z-20">
-          Sign In
-        </Link>
-        <Link href={"/signin"} className="purple-button p-2 text-2xl font-semibold z-20">
-          Sign Up
-        </Link>
-      </div>
+      {!user ? (
+        <div className="flex gap-10 mt-5 md:hidden">
+          <Link href={"/signin"} className="blue-button p-2 text-2xl font-semibold z-20">
+            Sign In
+          </Link>
+          <Link href={"/signin"} className="purple-button p-2 text-2xl font-semibold z-20">
+            Sign Up
+          </Link>
+        </div>
+      ) : (
+        <div className="flex gap-10 mt-5 md:hidden">
+          <Link href={"/routes"} className="blue-button p-2 text-2xl font-semibold z-20">
+            Routes
+          </Link>
+          <Link
+            href={`/profile/${user.username}/dashboard`}
+            className="purple-button p-2 text-2xl font-semibold z-20"
+          >
+            Dashboard
+          </Link>
+        </div>
+      )}
       <Swiper
         modules={[Autoplay]}
         loop={true}

@@ -1,11 +1,17 @@
 import { Route, RouteType } from "@prisma/client";
+
+// Helper function to split routes into boulder and rope routes
 function splitRoutesByType(routes: Route[]){
     const boulderRoutes = routes.filter((route) => route.type === RouteType.BOULDER);
     const ropeRoutes = routes.filter((route) => route.type === RouteType.ROPE);
     return {boulderRoutes, ropeRoutes};
 }
+
 export function getGradeCounts(routes: Route[]){
+    // Split routes into boulder and rope routes
     const {boulderRoutes, ropeRoutes} = splitRoutesByType(routes);
+    
+    // Initialize arrays with all possible grades and zero counts
     const boulderGradeCounts = [
         { grade: "vb", count: 0 },
         { grade: "v0", count: 0 },
@@ -17,15 +23,20 @@ export function getGradeCounts(routes: Route[]){
         { grade: "v6", count: 0 },
         { grade: "v7", count: 0 },
         { grade: "v8", count: 0 },
-
+        { grade: "v9", count: 0 },
+        { grade: "v10", count: 0 },
+        { grade: "v11", count: 0 },
+        { grade: "v12", count: 0 },
+        { grade: "v13", count: 0 },
+        { grade: "v14", count: 0 },
+        { grade: "v15", count: 0 },
     ];
+    
     const ropeGradeCounts = [
         { grade: "5.B", count: 0 },
         { grade: "5.7", count: 0 },
-        { grade: "5.8-", count: 0 },
         { grade: "5.8", count: 0 },
         { grade: "5.8+", count: 0 },
-        { grade: "5.9-", count: 0 },
         { grade: "5.9", count: 0 },
         { grade: "5.9+", count: 0 },
         { grade: "5.10-", count: 0 },
@@ -37,9 +48,16 @@ export function getGradeCounts(routes: Route[]){
         { grade: "5.12-", count: 0 },
         { grade: "5.12", count: 0 },
         { grade: "5.12+", count: 0 },
-
+        { grade: "5.13-", count: 0 },
+        { grade: "5.13", count: 0 },
+        { grade: "5.13+", count: 0 },
+        { grade: "5.14-", count: 0 },
+        { grade: "5.14", count: 0 },
+        { grade: "5.14+", count: 0 },
+        { grade: "5.15-", count: 0 },
     ];
 
+    // Count occurrences of each grade in boulder routes
     boulderRoutes.forEach(route => {
         const grade = route.grade;
         const gradeCount = boulderGradeCounts.find(g => g.grade === grade);
@@ -47,6 +65,8 @@ export function getGradeCounts(routes: Route[]){
             gradeCount.count++;
         }
     });
+
+    // Count occurrences of each grade in rope routes
     ropeRoutes.forEach(route => {
         const grade = route.grade;
         const gradeCount = ropeGradeCounts.find(g => g.grade === grade);
@@ -54,8 +74,19 @@ export function getGradeCounts(routes: Route[]){
             gradeCount.count++;
         }
     });
-    const ropeTotal = ropeRoutes.length
-    const boulderTotal = boulderRoutes.length
-    return {boulderGradeCounts, ropeGradeCounts, ropeTotal, boulderTotal};
 
+    // Calculate totals
+    const ropeTotal = ropeRoutes.length;
+    const boulderTotal = boulderRoutes.length;
+
+    // Filter out grades with zero counts before returning
+    const filteredBoulderGrades = boulderGradeCounts.filter(grade => grade.count > 0);
+    const filteredRopeGrades = ropeGradeCounts.filter(grade => grade.count > 0);
+
+    return {
+        boulderGradeCounts: filteredBoulderGrades,
+        ropeGradeCounts: filteredRopeGrades,
+        ropeTotal,
+        boulderTotal
+    };
 }
