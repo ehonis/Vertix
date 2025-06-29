@@ -53,10 +53,6 @@ export default function RouteListEdit({ ropes, boulders }: RouteListEditProps) {
   };
 
   useEffect(() => {
-    console.log(selectedRoutes);
-  });
-
-  useEffect(() => {
     if (!isRoutesExpanded) {
       setRoutes(ropes.slice(0, 10));
     } else {

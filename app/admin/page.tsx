@@ -90,7 +90,7 @@ export default async function AdminCenter() {
       <div className="flex justify-center w-screen">
         <div className="flex p-5 flex-col w-full max-w-lg">
           <h1 className="text-white font-barlow font-bold text-3xl mb-3">Admin Center</h1>
-          <div className="flex flex-col bg-slate-900 gap-3 rounded-md p-5 mb-10">
+          {/* <div className="flex flex-col bg-slate-900 gap-3 rounded-md p-5 mb-10">
             <Link
               className="purple-button flex p-2 items-center w-full rounded-sm"
               href={"/admin/create"}
@@ -113,8 +113,8 @@ export default async function AdminCenter() {
                 Create Content
               </h3>
             </Link>
-          </div>
-          <h2 className="text-white font-barlow font-bold text-3xl mb-3">Content Manager</h2>
+          </div> */}
+
           <div className="flex flex-col bg-slate-900 gap-5 rounded-md p-5 mb-10">
             {adminPanels.map((panel, index) => (
               <Link

@@ -1,18 +1,19 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
-import { Route, User } from "@prisma/client";
+import { CommunityGrade, RouteCompletion, RouteAttempt, User } from "@prisma/client";
 import ElementLoadingAnimation from "../general/element-loading-animation";
 import { motion } from "framer-motion";
 import { AnimatePresence } from "framer-motion";
 import RouteTile from "./route-tile";
 import { useDebounce } from "use-debounce"; // Import useDebounce
+import { RouteWithExtraData } from "@/app/api/routes/get-wall-routes-non-archive/route";
 
 export default function SearchRoutes({
+  user,
   searchText,
   onData,
-  user,
-  tags,
+  refreshTrigger,
 }: {
   searchText: string;
   onData: (
@@ -20,12 +21,15 @@ export default function SearchRoutes({
     name: string,
     grade: string,
     color: string,
-    isCompleted: boolean
+    completions: RouteCompletion[],
+    attempts: RouteAttempt[],
+    userGrade: string | null,
+    communityGrade: string
   ) => void;
   user: User;
-  tags: string[];
+  refreshTrigger?: number;
 }) {
-  const [routes, setRoutes] = useState<(Route & { completed: boolean })[]>([]);
+  const [routes, setRoutes] = useState<RouteWithExtraData[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [hasMore, setHasMore] = useState(false);
   const [take] = useState<number>(10); // We'll use a constant "take" for each new page load
@@ -70,7 +74,7 @@ export default function SearchRoutes({
     };
 
     fetchRoutes();
-  }, [debouncedSearchText, take, user?.id]);
+  }, [debouncedSearchText, take, user?.id, refreshTrigger]);
 
   // LoadMore function: fetch additional routes and append them.
   const loadMore = async () => {
@@ -124,6 +128,7 @@ export default function SearchRoutes({
                   }}
                 >
                   <RouteTile
+                    user={user}
                     color={route.color}
                     name={route.title}
                     grade={route.grade}
@@ -131,7 +136,9 @@ export default function SearchRoutes({
                     isArchived={route.isArchive}
                     isSearched={true}
                     onData={onData}
-                    isCompleted={route.completed}
+                    completions={route.completions}
+                    attempts={route.attempts}
+                    communityGrades={route.communityGrades}
                   />
                 </motion.div>
               </AnimatePresence>

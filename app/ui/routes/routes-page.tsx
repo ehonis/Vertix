@@ -1,8 +1,8 @@
 "use client";
 
-import { User } from "@prisma/client";
+import { CommunityGrade, RouteAttempt, RouteCompletion, User } from "@prisma/client";
 import TopDown from "./topdown";
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import WallRoutes from "./wall-routes";
 import SearchRoutes from "./search-routes";
 import { Locations } from "@prisma/client";
@@ -10,41 +10,91 @@ import { motion } from "framer-motion";
 import { AnimatePresence } from "framer-motion";
 import RoutePopUp from "./route-pop-up";
 import clsx from "clsx";
-import TagRoutes from "./tag-routes";
+
+import { useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 export default function RoutesPage({ user }: { user: User | null | undefined }) {
-  const tags = [
-    "Dyno",
-    "Static",
-    "Crimpy",
-    "Roof",
-    "Chimney",
-    "Arete",
-    "Slab",
-    "Steep",
-    "Cave",
-    "Pinchy",
-    "Dihedral",
-    "Compression",
-    "Vert",
-    "Pockets",
-    "Dualtex",
-    "Burly",
-  ];
-  const [wall, setWall] = useState<string | null>(null);
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const [isLoading, setIsLoading] = useState(false);
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
+
+  /**
+   * Get initial wall selection from URL params or localStorage
+   * This function determines which wall should be selected when the component loads
+   * Priority: URL search params > localStorage > null (no selection)
+   *
+   * @returns The initially selected wall location or null if none is stored
+   */
+  const getInitialWallSelection = (): Locations | null => {
+    // First try to get from URL search params - this allows direct linking to specific walls
+    const wallParam = searchParams.get("wall");
+    if (wallParam && Object.values(Locations).includes(wallParam as Locations)) {
+      return wallParam as Locations;
+    }
+
+    // Fallback to localStorage if no URL param - this persists selection across page refreshes
+    if (typeof window !== "undefined") {
+      const storedWall = localStorage.getItem("selectedWall");
+      if (storedWall && Object.values(Locations).includes(storedWall as Locations)) {
+        return storedWall as Locations;
+      }
+    }
+
+    return null;
+  };
+
+  const [wall, setWall] = useState<Locations | null>(getInitialWallSelection);
   const [isTopDownActive, setIsTopDownActive] = useState(false);
   const [isSearch, setIsSearch] = useState(false);
   const [searchText, setSearchText] = useState<string>("");
-  const [selectedTags, setSelectedTags] = useState<string[]>([]);
 
   const [isRoutePopUp, setIsRoutePopUp] = useState(false);
   const [routePopUpId, setRoutePopUpId] = useState<string>("");
   const [routePopUpName, setRoutePopUpName] = useState<string>("");
   const [routePopUpGrade, setRoutePopUpGrade] = useState<string>("");
   const [routePopUpColor, setRoutePopUpColor] = useState<string>("");
-  const [routePopUpIsCompleted, setRoutePopUpIsCompleted] = useState<boolean>(false);
 
-  const handleTopDownChange = (data: Locations | null) => {
+  const [routePopUpCompletions, setRoutePopUpCompletions] = useState<number>(0);
+  const [routePopUpAttempts, setRoutePopUpAttempts] = useState<number>(0);
+
+  const [routePopUpUserGrade, setRoutePopUpUserGrade] = useState<string | null>(null);
+  const [routePopUpCommunityGrade, setRoutePopUpCommunityGrade] = useState<string | null>(null);
+  /**
+   * Update URL and localStorage when wall selection changes
+   * This effect ensures that:
+   * 1. The URL reflects the current wall selection (for bookmarking/sharing)
+   * 2. The selection is persisted in localStorage (for page refreshes)
+   * 3. The browser history is updated without creating new entries
+   */
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      if (wall) {
+        // Update URL with wall parameter for direct linking and bookmarking
+        const url = new URL(window.location.href);
+        url.searchParams.set("wall", wall);
+        window.history.replaceState({}, "", url.toString());
+
+        // Store in localStorage for persistence across page refreshes
+        localStorage.setItem("selectedWall", wall);
+      } else {
+        // Remove wall parameter from URL when no wall is selected
+        const url = new URL(window.location.href);
+        url.searchParams.delete("wall");
+        window.history.replaceState({}, "", url.toString());
+
+        // Remove from localStorage when no wall is selected
+        localStorage.removeItem("selectedWall");
+      }
+    }
+  }, [wall]);
+
+  /**
+   * Memoized callback to handle wall selection changes from the TopDown component
+   * This prevents infinite re-renders by only recreating the function when needed
+   */
+  const handleTopDownChange = useCallback((data: Locations | null) => {
     if (data === null) {
       setIsTopDownActive(false);
       setWall(data);
@@ -52,7 +102,14 @@ export default function RoutesPage({ user }: { user: User | null | undefined }) 
       setIsTopDownActive(true);
       setWall(data);
     }
-  };
+  }, []);
+
+  // Initialize isTopDownActive when wall is set from URL/localStorage
+  useEffect(() => {
+    if (wall) {
+      setIsTopDownActive(true);
+    }
+  }, [wall]);
 
   const searchInputVariants = {
     hidden: {
@@ -103,13 +160,19 @@ export default function RoutesPage({ user }: { user: User | null | undefined }) 
     name: string,
     grade: string,
     color: string,
-    isCompleted: boolean
+    completions: RouteCompletion[],
+    attempts: RouteAttempt[],
+    userGrade: string | null,
+    communityGrade: string | null
   ) => {
     setRoutePopUpId(routeId);
     setRoutePopUpName(name);
     setRoutePopUpGrade(grade);
     setRoutePopUpColor(color);
-    setRoutePopUpIsCompleted(isCompleted);
+    setRoutePopUpCompletions(completions[0]?.sends || 0);
+    setRoutePopUpAttempts(attempts[0]?.attempts || 0);
+    setRoutePopUpCommunityGrade(communityGrade);
+    setRoutePopUpUserGrade(userGrade);
     setIsRoutePopUp(true);
   };
   const handleRoutePopUpCancel = () => {
@@ -117,16 +180,15 @@ export default function RoutesPage({ user }: { user: User | null | undefined }) 
     setRoutePopUpName("");
     setRoutePopUpGrade("");
     setRoutePopUpColor("");
-    setRoutePopUpIsCompleted(false);
+    setRoutePopUpCompletions(0);
+    setRoutePopUpAttempts(0);
+    setRoutePopUpCommunityGrade("");
+    setRoutePopUpUserGrade(null);
     setIsRoutePopUp(false);
+    // Trigger a refresh of the WallRoutes component data
+    setRefreshTrigger(prev => prev + 1);
   };
-  const handleTagClick = (tag: string) => {
-    if (selectedTags.includes(tag)) {
-      setSelectedTags(prev => prev.filter(t => t !== tag));
-    } else {
-      setSelectedTags(prev => [...prev, tag]);
-    }
-  };
+
   return (
     <div className="w-full  font-barlow text-white flex justify-center">
       {isRoutePopUp && (
@@ -138,30 +200,14 @@ export default function RoutesPage({ user }: { user: User | null | undefined }) 
             grade={routePopUpGrade}
             user={user}
             color={routePopUpColor}
-            isCompleted={routePopUpIsCompleted}
+            completions={routePopUpCompletions}
+            attempts={routePopUpAttempts}
+            userGrade={routePopUpUserGrade}
+            communityGrade={routePopUpCommunityGrade}
           />
         </AnimatePresence>
       )}
       <div className="flex flex-col w-xs md:w-md h-full items-center mt-6">
-        {!isSearch && (
-          <div className="flex gap-4 rounded-full w-xs md:md overflow-x-auto scrol p-2 scrollbar-hidden ">
-            {tags.map(tag => (
-              <button
-                key={tag}
-                className={clsx(
-                  "  px-2 py-1 rounded-full font-normal text-center",
-                  selectedTags.includes(tag)
-                    ? " bg-green-500 "
-                    : "bg-black/25 outline-white outline"
-                )}
-                onClick={() => handleTagClick(tag)}
-              >
-                {tag}
-              </button>
-            ))}
-          </div>
-        )}
-
         <div className="flex flex-col gap-1 w-full mb-3">
           <div className="flex gap-2 w-full justify-between items-center">
             {!isSearch && (
@@ -223,7 +269,7 @@ export default function RoutesPage({ user }: { user: User | null | undefined }) 
               searchText={searchText}
               onData={handleRoutePopUp}
               user={user as User}
-              tags={selectedTags}
+              refreshTrigger={refreshTrigger}
             />
           </div>
         )}
@@ -236,7 +282,7 @@ export default function RoutesPage({ user }: { user: User | null | undefined }) 
               className="flex flex-col w-full  "
             >
               <div className="bg-slate-900 rounded p-5 pl-4 py-3 flex flex-col justify-center items-center outline outline-blue-600">
-                <TopDown onData={handleTopDownChange} />
+                <TopDown onData={handleTopDownChange} initialSelection={wall} />
               </div>
               <p className="font-normal text-xs mt-1">
                 Tap a wall on the map to see the routes there
@@ -247,21 +293,15 @@ export default function RoutesPage({ user }: { user: User | null | undefined }) 
 
         <AnimatePresence>
           {isTopDownActive && (
-            <motion.div variants={topDownVariants} animate="visible" exit="exit" className="mt-2">
+            <motion.div variants={topDownVariants} animate="visible" exit="exit" className="mt-3">
+              <h2 className="font-barlow text-white font-bold text-2xl text-start place-self-start mb-2">
+                Sorted Left → Right
+              </h2>
               <WallRoutes
                 wall={wall}
                 user={user as User}
                 onData={handleRoutePopUp}
-                selectedTags={selectedTags}
-              />
-            </motion.div>
-          )}
-          {selectedTags.length > 0 && !isTopDownActive && (
-            <motion.div variants={topDownVariants} animate="visible" exit="exit" className="mt-2">
-              <TagRoutes
-                user={user as User}
-                selectedTags={selectedTags}
-                onData={handleRoutePopUp}
+                refreshTrigger={refreshTrigger}
               />
             </motion.div>
           )}

@@ -2,16 +2,22 @@
 
 import clsx from "clsx";
 import { useEffect, useState } from "react";
-import { getBoulderGradeMapping } from "@/lib/route";
+import { findCommunityGradeForRoute, getBoulderGradeMapping } from "@/lib/route";
+import { RouteAttempt, RouteCompletion, User } from "@prisma/client";
+import { CommunityGrade } from "@prisma/client";
 export default function RouteTile({
+  user,
   id,
   color,
   name,
   grade,
   isArchived,
   onData,
-  isCompleted,
+  completions,
+  attempts,
+  communityGrades,
 }: {
+  user: User;
   id: string;
   color: string;
   name: string;
@@ -23,11 +29,21 @@ export default function RouteTile({
     name: string,
     grade: string,
     color: string,
-    isCompleted: boolean
+    completions: RouteCompletion[],
+    attempts: RouteAttempt[],
+    userGrade: string | null,
+    communityGrade: string
   ) => void;
-  isCompleted: boolean;
+
+  completions: RouteCompletion[];
+  attempts: RouteAttempt[];
+  communityGrades: CommunityGrade[];
 }) {
   const [gradeMapped, setGradeMapped] = useState("");
+  const [communityGrade, setCommunityGrade] = useState<string>(
+    findCommunityGradeForRoute(communityGrades)
+  );
+
   useEffect(() => {
     if (grade.startsWith("v")) {
       setGradeMapped(getBoulderGradeMapping(grade));
@@ -36,9 +52,16 @@ export default function RouteTile({
     }
   }, [grade]);
 
+  let userGrade: string | null = null;
+  if (user) {
+    userGrade = communityGrades.find(grade => grade.userId === user.id)?.grade || null;
+  }
+
   return (
     <button
-      onClick={() => onData(id, name, grade, color, isCompleted)}
+      onClick={() =>
+        onData(id, name, grade, color, completions, attempts, userGrade, communityGrade)
+      }
       className={clsx("w-xs md:w-md rounded flex outline-2 justify-between items-center p-2", {
         "bg-green-400/35  outline-green-400": color === "green",
         "bg-red-400/35  outline-red-400": color === "red",
@@ -74,7 +97,7 @@ export default function RouteTile({
             </svg>
           </div>
         )}
-        {isCompleted && (
+        {completions.length > 0 && (
           <div className="bg-green-400 rounded-full size-9 flex justify-center items-center shadow">
             <svg
               xmlns="http://www.w3.org/2000/svg"

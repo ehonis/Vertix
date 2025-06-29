@@ -1,11 +1,12 @@
 import { motion } from "motion/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ElementLoadingAnimation from "@/app/ui/general/element-loading-animation";
 import { useNotification } from "@/app/contexts/NotificationContext";
 import { useRouter } from "next/navigation";
-import { User } from "@prisma/client";
+import { RouteCompletion, RouteAttempt, CommunityGrade, User } from "@prisma/client";
 import Link from "next/link";
 import clsx from "clsx";
+import { getBoulderGradeMapping, getGradeRange } from "@/lib/route";
 
 export default function RoutePopUp({
   id,
@@ -14,7 +15,10 @@ export default function RoutePopUp({
   onCancel,
   user,
   color,
-  isCompleted,
+  completions,
+  attempts,
+  userGrade,
+  communityGrade,
 }: {
   id: string;
   grade: string;
@@ -22,13 +26,24 @@ export default function RoutePopUp({
   onCancel: () => void;
   user: User | null | undefined;
   color: string;
-  isCompleted: boolean;
+  completions: number;
+  attempts: number;
+  userGrade: string | null;
+  communityGrade: string | null;
 }) {
   const { showNotification } = useNotification();
   const router = useRouter();
   const [isCompletionLoading, setIsCompletionLoading] = useState(false);
   const [isFrontendCompleted, setIsFrontendCompleted] = useState(false);
   const [isAttemptLoading, setIsAttemptLoading] = useState(false);
+  const [isGradeLoading, setIsGradeLoading] = useState(false);
+  const [frontendCompletions, setFrontendCompletions] = useState(completions || 0);
+  const [frontendAttempts, setFrontendAttempts] = useState(attempts || 0);
+  const [frontendCommunityGrade, setFrontendCommunityGrade] = useState("");
+  const [gradeMapped, setGradeMapped] = useState("");
+  const [gradeRange, setGradeRange] = useState<string[]>(getGradeRange(grade));
+
+  const [selectedGrade, setSelectedGrade] = useState("");
 
   const handleRouteCompletion = async () => {
     if (!user) {
@@ -56,6 +71,7 @@ export default function RoutePopUp({
           color: "green",
         });
         setIsFrontendCompleted(true);
+        setFrontendCompletions(prev => prev + 1);
         router.refresh();
       }
     } catch (error) {
@@ -89,7 +105,8 @@ export default function RoutePopUp({
           message: `Successfully attempted ${name}`,
           color: "green",
         });
-        setIsFrontendCompleted(true);
+
+        setFrontendAttempts(prev => prev + 1);
         router.refresh();
       }
     } catch (error) {
@@ -98,6 +115,40 @@ export default function RoutePopUp({
       setIsAttemptLoading(false);
     }
   };
+  const handleGradeSubmission = async () => {
+    setIsGradeLoading(true);
+    if (!user) {
+      showNotification({ message: "You must be signed in to grade a route", color: "red" });
+      return;
+    }
+    try {
+      const data = { userId: user.id, routeId: id, selectedGrade: selectedGrade };
+      const response = await fetch("/api/routes/grade", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+      if (!response.ok) {
+        showNotification({ message: "Error trying to grade route", color: "red" });
+      } else {
+        showNotification({ message: "Successfully graded route", color: "green" });
+        setFrontendCommunityGrade(selectedGrade);
+      }
+    } catch (error) {
+      showNotification({ message: "Error trying to grade route", color: "red" });
+    } finally {
+      setIsGradeLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (grade.startsWith("v")) {
+      setGradeMapped(getBoulderGradeMapping(grade));
+    } else {
+      setGradeMapped(grade);
+    }
+  }, [grade]);
+
   return (
     <div>
       <motion.div
@@ -106,6 +157,7 @@ export default function RoutePopUp({
         exit={{ opacity: 0, y: -20 }}
         transition={{ duration: 0.2 }}
         className="fixed inset-0 flex items-center justify-center bg-black/50 z-20 backdrop-blur-sm"
+        onClick={onCancel}
       >
         <motion.div
           initial={{ scale: 0.5 }}
@@ -113,7 +165,7 @@ export default function RoutePopUp({
           exit={{ scale: 0.8 }}
           transition={{ duration: 0.2 }}
           className={clsx(
-            "bg-slate-900/35 p-3 rounded-lg shadow-lg text-white max-w-[22rem] w-full relative flex flex-col gap-10 z-30 outline-2 h-1/2 justify-between",
+            "bg-slate-900/35 p-3 rounded-lg shadow-lg text-white max-w-[22rem] w-full relative flex flex-col gap-10 z-30 outline-2 h-max justify-between",
             {
               "outline-green-400": color === "green",
               "outline-red-400": color === "red",
@@ -126,6 +178,7 @@ export default function RoutePopUp({
               "outline-pink-400": color === "pink",
             }
           )}
+          onClick={e => e.stopPropagation()}
         >
           <button className="absolute top-2 right-2" onClick={onCancel}>
             <svg
@@ -140,7 +193,7 @@ export default function RoutePopUp({
             </svg>
           </button>
           <div className="flex gap-2 items-center">
-            {(isCompleted || isFrontendCompleted) && (
+            {(completions > 0 || isFrontendCompleted) && (
               <div className="bg-green-400 rounded-full size-10 flex justify-center items-center ">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -156,7 +209,14 @@ export default function RoutePopUp({
             )}
             <div className="flex flex-col w-[90%]">
               <p className="text-3xl font-barlow font-bold max-w-[75%] truncate">{name}</p>
-              <p className="italic text-xl font-barlow">{grade}</p>
+              <p className="italic text-xl font-barlow font-semibold">{gradeMapped}</p>
+
+              <p className="text-sm font-barlow">
+                Community Grade:{" "}
+                <span className="font-bold">
+                  {communityGrade === "none" ? "N/A" : communityGrade}
+                </span>
+              </p>
             </div>
           </div>
 
@@ -174,24 +234,69 @@ export default function RoutePopUp({
             </div>
           ) : (
             <div className="flex flex-col gap-2 justify-center items-center">
-              <p className="font-barlow font-semibold text-lg">Quick Action</p>
+              <p className="font-barlow font-semibold text-lg">Quick Actions</p>
               <div className="flex w-4/5 justify-between">
-                <button
-                  className="bg-gray-400/45 outline outline-gray-300 p-2 px-3 rounded-full shadow font-semibold font-barlow text-2xl"
-                  onClick={handleRouteAttempt}
-                >
-                  {isAttemptLoading ? <ElementLoadingAnimation /> : "Attempt"}
-                </button>{" "}
-                <button
-                  className="bg-green-400/45 outline outline-green-400  p-2 px-3 rounded-full shadow font-semibold font-barlow text-2xl"
-                  onClick={handleRouteCompletion}
-                >
-                  {isCompletionLoading ? <ElementLoadingAnimation /> : "Complete"}
-                </button>
+                <div className="flex flex-col gap-2 items-center">
+                  <button
+                    className="bg-gray-400/45 outline outline-gray-300 p-2 px-3 rounded-full shadow font-semibold font-barlow text-2xl"
+                    onClick={handleRouteAttempt}
+                  >
+                    {isAttemptLoading ? <ElementLoadingAnimation /> : "Attempt"}
+                  </button>
+                  {frontendAttempts > 0 && (
+                    <div className="">
+                      {frontendAttempts} attempt{"(s)"}
+                    </div>
+                  )}
+                </div>
+                <div className="flex flex-col gap-2 items-center">
+                  <button
+                    className="bg-green-400/45 outline outline-green-400  p-2 px-3 rounded-full shadow font-semibold font-barlow text-2xl"
+                    onClick={handleRouteCompletion}
+                  >
+                    {isCompletionLoading ? <ElementLoadingAnimation /> : "Complete"}
+                  </button>
+                  {(frontendCompletions > 0 || isFrontendCompleted) && (
+                    <div className="">
+                      {frontendCompletions} send{"(s)"}
+                    </div>
+                  )}
+                </div>
               </div>
-              <p className="text-xs italic text-center">
-                If you have already completed or attempted, these buttons will add onto the totals
-              </p>
+
+              {!userGrade ? (
+                <div className="flex flex-col gap-2 items-center mt-5">
+                  <p className="font-barlow font-semibold text-lg">Grade it Yourself!</p>
+                  <select
+                    className="bg-gray-400/45 outline outline-gray-300 p-2 px-3 rounded shadow font-semibold font-barlow text-2xl"
+                    onChange={e => setSelectedGrade(e.target.value)}
+                    value={selectedGrade}
+                  >
+                    <option value={""}>Select a Grade</option>
+                    {gradeRange.map(grade => (
+                      <option key={grade} value={grade}>
+                        {grade}
+                      </option>
+                    ))}
+                  </select>
+                  {selectedGrade !== "" && !frontendCommunityGrade && (
+                    <button
+                      className=" bg-green-500  p-2 px-3 rounded-full shadow font-semibold font-barlow text-xl"
+                      onClick={handleGradeSubmission}
+                    >
+                      {isGradeLoading ? <ElementLoadingAnimation /> : "Submit"}
+                    </button>
+                  )}
+                </div>
+              ) : (
+                <div className="flex flex-col gap-2 items-center mt-5">
+                  <p className="text-center">
+                    You graded this climb a{" "}
+                    <span className="font-bold">{userGrade.toUpperCase()}</span>, to change your
+                    grade go to the route page
+                  </p>
+                </div>
+              )}
             </div>
           )}
           <div className="flex items-center gap-2">

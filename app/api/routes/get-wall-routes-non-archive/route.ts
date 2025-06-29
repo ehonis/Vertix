@@ -1,9 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/prisma";
-import { Locations, Route, RouteCompletion } from "@prisma/client";
+import { Locations, Route, RouteCompletion, RouteAttempt, CommunityGrade } from "@prisma/client";
 
-type RouteWithCompletions = Route & {
+export type RouteWithExtraData = Route & {
   completions: RouteCompletion[];
+  attempts: RouteAttempt[];
+  communityGrades: CommunityGrade[];
 };
 
 export async function GET(req: NextRequest) {
@@ -14,7 +16,7 @@ export async function GET(req: NextRequest) {
     const wall = searchParams.get("wall");
     const userId = searchParams.get("userId");
 
-    let routesWithCompletion: RouteWithCompletions[];
+    let routesWithCompletion: RouteWithExtraData[];
 
     if (userId) {
       // If user is signed in, include completions filtered by user
@@ -29,12 +31,18 @@ export async function GET(req: NextRequest) {
               userId: userId,
             },
           },
+          attempts: {
+            where: {
+              userId: userId,
+            },
+          },
           tags: true,
+          communityGrades: true,
         },
         orderBy: {
           order: "asc",
         },
-      }) as RouteWithCompletions[];
+      }) as RouteWithExtraData[];
 
       routesWithCompletion = routes;
     } else {
@@ -53,6 +61,8 @@ export async function GET(req: NextRequest) {
       routesWithCompletion = routes.map((route) => ({
         ...route,
         completions: [],
+        attempts: [],
+        communityGrades: [],
       }));
     }
 
@@ -62,6 +72,7 @@ export async function GET(req: NextRequest) {
       completed: userId ? route.completions.length > 0 : false,
     }));
 
+    console.log("communityGrades", routesWithCompletedFlag[0].communityGrades);
     return NextResponse.json({ data: routesWithCompletedFlag });
   } catch (error) {
     console.error(error);

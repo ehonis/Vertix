@@ -1,3 +1,4 @@
+import { RouteWithExtraData } from "@/app/api/routes/get-wall-routes-non-archive/route";
 import prisma from "@/prisma"
 import { Route, RouteImage, RouteStar, RouteCompletion, CommunityGrade, User, RouteType } from "@prisma/client"
 
@@ -168,11 +169,100 @@ function findClosestGrade(value: number, map: Record<string, number>): string {
         closestGrade = grade;
       }
     }
-  
+
     return closestGrade;
 }
 
 // Find the community grade for a route
+export function findCommunityGradeForRoute(communityGrades: CommunityGrade[]): string {
+  // Return "none" if no community grades exist
+  if (!communityGrades.length) return "none";
+      
+  // Separate rope and boulder grades based on whether they start with 'v'
+  const ropeGrades = communityGrades.filter((grade: { grade: string }) => !grade.grade.toLowerCase().startsWith('v'));
+  const boulderGrades = communityGrades.filter((grade: { grade: string }) => grade.grade.toLowerCase().startsWith('v'));
+      
+  // Handle rope grades if any exist
+  if (ropeGrades.length > 0) {
+    // Define rope grade mapping with numeric values for averaging
+    const ropeGradeMap: Record<string, number> = {
+      "5.b": 6.0,
+      "5.7-": 7.0,
+      5.7: 7.2,
+      "5.7+": 7.3,
+      "5.8-": 8.0,
+      5.8: 8.2,
+      "5.8+": 8.3,
+      "5.9-": 9.0,
+      5.9: 9.2,
+      "5.9+": 9.3,
+      "5.10-": 10.0,
+      "5.10": 10.2,
+      "5.10+": 10.3,
+      "5.11-": 11.0,
+      5.11: 11.2,
+      "5.11+": 11.3,
+      "5.12-": 12.0,
+      5.12: 12.2,
+      "5.12+": 12.3,
+      "5.13-": 13.0,
+      5.13: 13.2,
+      "5.13+": 13.3,
+    };
+        
+    // Convert rope grades to numeric values and filter out invalid ones
+    const numericGrades = ropeGrades
+      .map((grade: { grade: string }) => ropeGradeMap[grade.grade.toLowerCase()])
+      .filter((grade): grade is number => grade !== undefined);
+          
+    // Return "none" if no valid numeric grades found
+    if (!numericGrades.length) return "none";
+        
+    // Calculate average numeric grade
+    const averageNumeric = numericGrades.reduce((sum: number, num: number) => sum + num, 0) / numericGrades.length;
+
+    // Find the closest grade from the mapping
+    return findClosestGrade(averageNumeric, ropeGradeMap);
+  }
+  
+  // Handle boulder grades if any exist (and no rope grades)
+  if (boulderGrades.length > 0) {
+    // Define boulder grade mapping with numeric values for averaging
+    const boulderGradeMap: Record<string, number> = {
+      "vb": 0,
+      "v0": 1,
+      "v1": 2,
+      "v2": 3,
+      "v3": 4,
+      "v4": 5,
+      "v5": 6,
+      "v6": 7,
+      "v7": 8,
+      "v8": 9,
+      "v9": 10,
+      "v10": 11,
+    };
+        
+    // Convert boulder grades to numeric values and filter out invalid ones
+    const numericGrades = boulderGrades
+      .map((grade: { grade: string }) => boulderGradeMap[grade.grade.toLowerCase()])
+      .filter((grade): grade is number => grade !== undefined);
+          
+    // Return "none" if no valid numeric grades found
+    if (!numericGrades.length) return "none";
+        
+    // Calculate average numeric grade and round to nearest integer
+    const averageNumeric = numericGrades.reduce((sum: number, num: number) => sum + num, 0) / numericGrades.length;
+    const closestNumeric = Math.round(averageNumeric);
+    
+    // Find the grade string that matches the rounded numeric value
+    return Object.entries(boulderGradeMap).find(([_, value]) => value === closestNumeric)?.[0] ?? "none";
+  }
+      
+  // Return "none" if no valid grades found
+  return "none";
+}
+
 export async function findCommunityGrade(routeId: string): Promise<string> {
     try {
       const communityGrades = await prisma.communityGrade.findMany({
@@ -182,12 +272,13 @@ export async function findCommunityGrade(routeId: string): Promise<string> {
       
       if (!communityGrades.length) return "none";
       
-      // Separate rope and boulder grades
-      const ropeGrades = communityGrades.filter((grade: { grade: string }) => !grade.grade.startsWith('v'));
-      const boulderGrades = communityGrades.filter((grade: { grade: string }) => grade.grade.startsWith('v'));
+      // Separate rope and boulder grades based on whether they start with 'v'
+      const ropeGrades = communityGrades.filter((grade: { grade: string }) => !grade.grade.toLowerCase().startsWith('v'));
+      const boulderGrades = communityGrades.filter((grade: { grade: string }) => grade.grade.toLowerCase().startsWith('v'));
       
+      // Handle rope grades if any exist
       if (ropeGrades.length > 0) {
-        // Handle rope grades
+        // Define rope grade mapping with numeric values for averaging
         const ropeGradeMap: Record<string, number> = {
           "5.b": 6.0,
           "5.7-": 7.0,
@@ -213,16 +304,22 @@ export async function findCommunityGrade(routeId: string): Promise<string> {
           "5.13+": 13.3,
         };
         
+        // Convert rope grades to numeric values and filter out invalid ones
         const numericGrades = ropeGrades
           .map((grade: { grade: string }) => ropeGradeMap[grade.grade.toLowerCase()])
           .filter((grade): grade is number => grade !== undefined);
           
+        // Return "none" if no valid numeric grades found
         if (!numericGrades.length) return "none";
         
+        // Calculate average numeric grade
         const averageNumeric = numericGrades.reduce((sum: number, num: number) => sum + num, 0) / numericGrades.length;
         return findClosestGrade(averageNumeric, ropeGradeMap);
-      } else if (boulderGrades.length > 0) {
-        // Handle boulder grades
+      }
+      
+      // Handle boulder grades if any exist (and no rope grades)
+      if (boulderGrades.length > 0) {
+        // Define boulder grade mapping with numeric values for averaging
         const boulderGradeMap: Record<string, number> = {
           "vb": 0,
           "v0": 1,
@@ -238,17 +335,21 @@ export async function findCommunityGrade(routeId: string): Promise<string> {
           "v10": 11,
         };
         
+        // Convert boulder grades to numeric values and filter out invalid ones
         const numericGrades = boulderGrades
           .map((grade: { grade: string }) => boulderGradeMap[grade.grade.toLowerCase()])
           .filter((grade): grade is number => grade !== undefined);
           
+        // Return "none" if no valid numeric grades found
         if (!numericGrades.length) return "none";
         
+        // Calculate average numeric grade and round to nearest integer
         const averageNumeric = numericGrades.reduce((sum: number, num: number) => sum + num, 0) / numericGrades.length;
         const closestNumeric = Math.round(averageNumeric);
         return Object.entries(boulderGradeMap).find(([_, value]) => value === closestNumeric)?.[0] ?? "none";
       }
       
+      // Return "none" if no valid grades found
       return "none";
     } catch (error) {
       console.error(`Error calculating community grade for route ${routeId}`, error);
@@ -296,6 +397,49 @@ export function isGradeHigher  (userHighest:string, newGrade:string, type:string
     }else{
       return false
     }
+  }
+}
+export function getGradeRange(grade:string) {
+  const ropeGrades = [
+    "5.B",
+    "5.7-",
+    "5.7",
+    "5.7+",
+    "5.8-",
+    "5.8",
+    "5.8+",
+    "5.9-",
+    "5.9",
+    "5.9+",
+    "5.10-",
+    "5.10",
+    "5.10+",
+    "5.11-",
+    "5.11",
+    "5.11+",
+    "5.12-",
+    "5.12",
+    "5.12+",
+    "5.13-",
+    "5.13",
+    "5.13+",
+  ];
+  const boulderGrades = ["vb", "v0", "v1", "v2", "v3", "v4", "v5", "v6", "v7", "v8", "v9", "v10"];
+
+  const isBoulderGrade = grade[0] === "v";
+  const gradeList = isBoulderGrade ? boulderGrades : ropeGrades;
+  const index = gradeList.findIndex(element => grade === element);
+
+  if (index === -1) return []; // Handle case where grade isn't found
+
+  if (isBoulderGrade) {
+    if (index === 0 || index === 1) return ["vb", "v0", "v1"];
+    if (index === gradeList.length - 1) return ["v8", "v9", "v10"];
+    return gradeList.slice(Math.max(0, index - 1), Math.min(gradeList.length, index + 2));
+  } else {
+    if (index <= 2) return ["5.B", "5.7-", "5.7", "5.7+", "5.8-"];
+    if (index >= gradeList.length - 3) return ["5.12", "5.12+", "5.13-", "5.13", "5.13+"];
+    return gradeList.slice(index - 2, index + 3);
   }
 }
 

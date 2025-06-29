@@ -1,8 +1,16 @@
-import { User, Route, RouteTag } from "@prisma/client";
+import {
+  User,
+  Route,
+  RouteTag,
+  CommunityGrade,
+  RouteAttempt,
+  RouteCompletion,
+} from "@prisma/client";
 import { useEffect, useState } from "react";
 import { useNotification } from "@/app/contexts/NotificationContext";
 import RouteTile from "./route-tile";
 import ElementLoadingAnimation from "../general/element-loading-animation";
+import { RouteWithExtraData } from "@/app/api/routes/get-wall-routes-non-archive/route";
 
 interface WallRoutesProps {
   wall: string | null;
@@ -12,17 +20,18 @@ interface WallRoutesProps {
     name: string,
     grade: string,
     color: string,
-    isCompleted: boolean
+    completions: RouteCompletion[],
+    attempts: RouteAttempt[],
+    userGrade: string | null,
+    communityGrade: string
   ) => void;
-  selectedTags: string[];
+  refreshTrigger?: number;
 }
 
-export default function WallRoutes({ wall, user, onData, selectedTags }: WallRoutesProps) {
+export default function WallRoutes({ wall, user, onData, refreshTrigger }: WallRoutesProps) {
   const { showNotification } = useNotification();
-  const [routes, setRoutes] = useState<(Route & { completed: boolean; tags: RouteTag[] })[]>([]);
-  const [filteredRoutes, setFilteredRoutes] = useState<
-    (Route & { completed: boolean; tags: RouteTag[] })[]
-  >([]);
+  const [routes, setRoutes] = useState<RouteWithExtraData[]>([]);
+  const [filteredRoutes, setFilteredRoutes] = useState<RouteWithExtraData[]>([]);
 
   const [isFiltered, setIsFiltered] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -50,23 +59,9 @@ export default function WallRoutes({ wall, user, onData, selectedTags }: WallRou
           return;
         }
         const json = await response.json();
-        const data: (Route & { completed: boolean; tags: RouteTag[] })[] = json.data;
-        if (Array.isArray(data)) {
-          if (selectedTags.length > 0) {
-            const filteredRoutes = data.filter(route =>
-              selectedTags.some(tag => route.tags.some(t => t.name === tag))
-            );
-            setIsFiltered(true);
-            setFilteredRoutes(filteredRoutes);
-            setRoutes(data);
-          } else {
-            setIsFiltered(false);
-            setFilteredRoutes([]);
-            setRoutes(data);
-          }
-        } else {
-          showNotification({ message: `Invalid data format for wall : ${wall}`, color: "red" });
-        }
+        const data: RouteWithExtraData[] = json.data;
+
+        setRoutes(data);
       } catch (error) {
         showNotification({ message: `Error finding routes for wall : ${wall}`, color: "red" });
       } finally {
@@ -75,20 +70,7 @@ export default function WallRoutes({ wall, user, onData, selectedTags }: WallRou
     };
 
     findRoutes();
-  }, [wall]);
-
-  useEffect(() => {
-    if (selectedTags.length > 0) {
-      const filteredRoutes = routes.filter(route =>
-        selectedTags.some(tag => route.tags.some(t => t.name === tag))
-      );
-      setIsFiltered(true);
-      setFilteredRoutes(filteredRoutes);
-    } else {
-      setIsFiltered(false);
-      setFilteredRoutes([]);
-    }
-  }, [selectedTags]);
+  }, [wall, refreshTrigger]);
 
   return (
     <div>
@@ -96,6 +78,7 @@ export default function WallRoutes({ wall, user, onData, selectedTags }: WallRou
         {isFiltered && filteredRoutes.length > 0
           ? filteredRoutes.map(route => (
               <RouteTile
+                user={user}
                 key={route.id}
                 color={route.color}
                 name={route.title}
@@ -104,7 +87,9 @@ export default function WallRoutes({ wall, user, onData, selectedTags }: WallRou
                 isArchived={route.isArchive}
                 isSearched={false}
                 onData={onData}
-                isCompleted={route.completed}
+                completions={route.completions}
+                attempts={route.attempts}
+                communityGrades={route.communityGrades}
               />
             ))
           : null}
@@ -112,19 +97,24 @@ export default function WallRoutes({ wall, user, onData, selectedTags }: WallRou
         {isLoading ? (
           <ElementLoadingAnimation />
         ) : !isFiltered && routes && routes.length > 0 ? (
-          routes.map(route => (
-            <RouteTile
-              key={route.id}
-              color={route.color}
-              name={route.title}
-              grade={route.grade}
-              id={route.id}
-              isArchived={route.isArchive}
-              isSearched={false}
-              onData={onData}
-              isCompleted={route.completed}
-            />
-          ))
+          routes
+            .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
+            .map(route => (
+              <RouteTile
+                user={user}
+                key={route.id}
+                color={route.color}
+                name={route.title}
+                grade={route.grade}
+                id={route.id}
+                isArchived={route.isArchive}
+                isSearched={false}
+                onData={onData}
+                completions={route.completions}
+                attempts={route.attempts}
+                communityGrades={route.communityGrades}
+              />
+            ))
         ) : null}
         {isFiltered && filteredRoutes.length === 0 && (
           <p>No Routes found for this combination of tags and wall</p>

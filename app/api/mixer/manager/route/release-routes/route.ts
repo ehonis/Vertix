@@ -39,7 +39,7 @@ export async function POST(req: NextRequest)  {
             title: `${comp.name} Route ${route.name}`,
             grade: route.grade || '5.10',
             color: route.color,
-            location: Locations.ropeNorth,
+            location: Locations.ropeNorthWest,
             setDate: new Date(),
             type: RouteType.ROPE,
             isArchive: false,

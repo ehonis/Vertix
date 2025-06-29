@@ -329,9 +329,7 @@ export default function EditRoute({
                   value={location}
                   onChange={handleLocationChange}
                 >
-                  <option value={Locations.ABWallNorth}>AB North</option>
-                  <option value={Locations.ABWallSouth}>AB South</option>
-                  <option value={Locations.ropeNorth}>ropeNorth</option>
+                  <option value={Locations.ABWall}>AB Wall</option>
                   <option value={Locations.ropeNorthWest}>ropeNorthWest</option>
                   <option value={Locations.ropeNorthEast}>ropeNorthEast</option>
                   <option value={Locations.ropeSouthWest}>ropeSouthWest</option>

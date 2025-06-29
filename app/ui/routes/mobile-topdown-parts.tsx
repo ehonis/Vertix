@@ -165,6 +165,15 @@ function RopeNorthWest({ selectedPart, setSelectedPart }: WallProps) {
         y="29.96077"
         transform="rotate(-90)"
       />
+      <rect
+        id="main2"
+        width="10.0286111"
+        height="24.450414"
+        x="-94.332166"
+        y="163.61043"
+        transform="rotate(-50)"
+      />
+      <rect id="main3" width="10.0286111" height="15.850414" x="79.922047" y="185.68465" />
     </g>
   );
 }
@@ -175,35 +184,7 @@ function RopeNorth({ selectedPart, setSelectedPart }: WallProps) {
     selectedPart,
     setSelectedPart
   );
-  return (
-    <g className="cursor-pointer" fill={fillColor} onClick={handleClick}>
-      <rect
-        id="main2"
-        width="10.0286111"
-        height="24.450414"
-        x="-94.332166"
-        y="163.61043"
-        transform="rotate(-50)"
-      />
-      <rect id="main3" width="10.0286111" height="14.150414" x="79.922047" y="185.68465" />
-      <rect
-        id="main4"
-        width="10.0286111"
-        height="25.626314"
-        x="-201.29778"
-        y="80.000912"
-        transform="rotate(-90)"
-      />
-      <rect
-        id="main6"
-        width="10.0157199"
-        height="29.28586"
-        x="156.3375"
-        y="146.72034"
-        transform="matrix(0.97818502,0.20773555,-0.32026895,0.94732666,0,0)"
-      />
-    </g>
-  );
+  return <g className="cursor-pointer" fill={fillColor} onClick={handleClick}></g>;
 }
 function RopeNorthEast({ selectedPart, setSelectedPart }: WallProps) {
   const [fillColor, handleClick] = useClickState(
@@ -214,6 +195,14 @@ function RopeNorthEast({ selectedPart, setSelectedPart }: WallProps) {
   );
   return (
     <g className="cursor-pointer" fill={fillColor} onClick={handleClick}>
+      <rect
+        id="main6"
+        width="10.0157199"
+        height="29.28586"
+        x="156.3375"
+        y="146.72034"
+        transform="matrix(0.97818502,0.20773555,-0.32026895,0.94732666,0,0)"
+      />
       <rect
         id="main5"
         width="10.0286111"
@@ -231,6 +220,8 @@ function RopeNorthEast({ selectedPart, setSelectedPart }: WallProps) {
         y="-70.06575"
         transform="rotate(-145)"
       />
+      <rect id="main4" width="9.5" height="16.4" x="-201.7" y="90.000912" transform="rotate(-90)" />
+      <polygon id="northEastConnector" points="80,201.67 90,192.5 100,201.67" />
     </g>
   );
 }
@@ -384,15 +375,36 @@ function BoulderSouth({ selectedPart, setSelectedPart }: WallProps) {
   );
 }
 
+/**
+ * MobileTopdownParts component - Core wall selection logic
+ *
+ * This component manages the interactive wall selection state and renders
+ * all the individual wall sections as clickable SVG elements. It supports
+ * external control of the initial selection through the initialSelection prop.
+ *
+ * @param onData - Callback function called when wall selection changes
+ * @param initialSelection - Optional initial wall to be selected (for URL/localStorage persistence)
+ */
 export default function MobileTopdownParts({
   onData,
+  initialSelection = null,
 }: {
   onData: (data: Locations | null) => void;
+  initialSelection?: Locations | null;
 }) {
-  const [selectedPart, setSelectedPart] = useState<Locations | null>(null);
+  // Initialize selectedPart with the initialSelection prop if provided
+  // This allows external components to control which wall is selected on load
+  const [selectedPart, setSelectedPart] = useState<Locations | null>(initialSelection);
 
+  // Update selectedPart when initialSelection changes (e.g., from URL params)
+  // This ensures the component stays in sync with external state changes
   useEffect(() => {
-    onData(selectedPart); // Call onData when selectedPart changes
+    setSelectedPart(initialSelection);
+  }, [initialSelection]);
+
+  // Notify parent component whenever the selection changes
+  useEffect(() => {
+    onData(selectedPart);
   }, [selectedPart, onData]);
 
   return (

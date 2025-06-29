@@ -1,9 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/prisma";
-import { Route, RouteCompletion } from "@prisma/client";
+import { Route, RouteCompletion, RouteAttempt, CommunityGrade } from "@prisma/client";
+import { RouteWithExtraData } from "../get-wall-routes-non-archive/route";
 
-type RouteWithCompletions = Route & {
+type RouteWithCompletions = RouteWithExtraData & {
   completions: RouteCompletion[];
+  attempts: RouteAttempt[];
+  communityGrades: CommunityGrade[];
 };
 
 export async function GET(req: NextRequest) {
@@ -23,8 +26,8 @@ export async function GET(req: NextRequest) {
     const whereClause = {
       OR: [
         { title: { contains: searchTerm, mode: "insensitive" as const } },
-        { color: { contains: searchTerm, mode: "insensitive"as const } },
-        { grade: { contains: searchTerm, mode: "insensitive"as const } },
+        { color: { contains: searchTerm, mode: "insensitive" as const } },
+        { grade: { contains: searchTerm, mode: "insensitive" as const } },
       ],
     };
 
@@ -36,6 +39,16 @@ export async function GET(req: NextRequest) {
         where: whereClause,
         include: {
           completions: {
+            where: {
+              userId: userId,
+            },
+          },
+          attempts: {
+            where: {
+              userId: userId,
+            },
+          },
+          communityGrades: {
             where: {
               userId: userId,
             },
@@ -55,6 +68,8 @@ export async function GET(req: NextRequest) {
       routesWithCompletion = routes.map(route => ({
         ...route,
         completions: [],
+        attempts: [],
+        communityGrades: [],
       }));
     }
 

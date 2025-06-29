@@ -4,7 +4,23 @@ import { useState, useEffect } from "react";
 import MobileTopdownParts from "./mobile-topdown-parts";
 import { Locations } from "@prisma/client";
 
-export default function TopDown({ onData }: { onData: (data: Locations | null) => void }) {
+/**
+ * TopDown component - Interactive wall selection interface
+ *
+ * This component renders an interactive SVG map of the climbing gym walls
+ * and allows users to select different wall sections. It supports external
+ * control of the initial selection through the initialSelection prop.
+ *
+ * @param onData - Callback function called when wall selection changes
+ * @param initialSelection - Optional initial wall to be selected (for URL/localStorage persistence)
+ */
+export default function TopDown({
+  onData,
+  initialSelection = null,
+}: {
+  onData: (data: Locations | null) => void;
+  initialSelection?: Locations | null;
+}) {
   return (
     <>
       <svg
@@ -16,7 +32,7 @@ export default function TopDown({ onData }: { onData: (data: Locations | null) =
       >
         <defs id="defs1" />
         <g id="layer2" transform="translate(-9.3866979,-163.67377)">
-          <MobileTopdownParts onData={onData} />
+          <MobileTopdownParts onData={onData} initialSelection={initialSelection} />
         </g>
       </svg>
     </>

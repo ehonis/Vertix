@@ -9,6 +9,8 @@ import RouteListEdit from "@/app/ui/admin/route-edit/route-list-edit";
 import NewRoutePopup from "@/app/ui/admin/route-edit/new-route-popup";
 import { UserRole } from "@prisma/client";
 import NewRouteButton from "@/app/ui/admin/route-edit/new-route-button";
+import RouteEditListByWall from "@/app/ui/admin/route-edit/route-edit-list-by-wall";
+import { Locations } from "@prisma/client";
 
 const getRoutes = async () => {
   const routes = await prisma.route.findMany({
@@ -31,13 +33,10 @@ export default async function Page() {
   if (user?.role !== UserRole.ADMIN && user?.role !== UserRole.ROUTE_SETTER) {
     redirect("/signin");
   } else {
-    const boulderRoutes = routes.filter(route => route.type === "BOULDER");
-    const ropeRoutes = routes.filter(route => route.type === "ROPE");
-
     return (
       <div className="w-full flex justify-center">
-        <div className="md:w-[75%] w-sm flex flex-col">
-          <Link href={"/admin"} className="flex gap-1 items-center mt-5">
+        <div className="md:w-md w-sm flex flex-col items-center">
+          <Link href={"/admin"} className="flex gap-1 items-center mt-5 place-self-start">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -54,12 +53,15 @@ export default async function Page() {
             </svg>
             <p className="font-barlow font-bold text-xs text-white">Admin Center</p>
           </Link>
-          <div className="flex justify-between items-center w-full pt-2 pb-5">
-            <h1 className="text-white text-3xl font-bold">Route Manager</h1>
-            {/* <NewRouteButton tags={tags} /> */}
+          <div className="flex justify-between items-center md:w-md w-sm pt-2 pb-5">
+            <div className="flex items-center">
+              <h1 className="text-white text-3xl font-bold">Route Manager</h1>
+            </div>
+            <NewRouteButton tags={tags} />
           </div>
+          <RouteEditListByWall routes={routes} />
 
-          <RouteListEdit ropes={ropeRoutes} boulders={boulderRoutes} />
+          {/* <RouteListEdit ropes={ropeRoutes} boulders={boulderRoutes} /> */}
         </div>
       </div>
     );

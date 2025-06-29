@@ -260,7 +260,7 @@ export default function NewRoutePopup({
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: -20 }}
         transition={{ duration: 0.3 }}
-        className="fixed inset-0 flex items-center justify-center bg-black/50 z-20 backdrop-blur-sm"
+        className="fixed inset-0 flex items-center justify-center bg-black/50 z-20 backdrop-blur-md"
       >
         <motion.div
           initial={{ scale: 0.8 }}
@@ -378,23 +378,7 @@ export default function NewRoutePopup({
                   />
                 </div>
               </div>
-              <p className="text-white font-barlow font-bold text-lg">Tags</p>
-              <div className="flex gap-2 flex-wrap items-center">
-                {tempTags.map(tag => (
-                  <button
-                    key={tag}
-                    className={clsx(
-                      "  px-2 py-1 rounded-full font-normal text-center text-white font-barlow",
-                      selectedTags.includes(tag)
-                        ? " bg-green-500 "
-                        : "bg-black/25 outline-white outline"
-                    )}
-                    onClick={() => handleTagClick(tag)}
-                  >
-                    {tag}
-                  </button>
-                ))}
-              </div>
+
               <div className="flex justify-between w-full mt-3">
                 <button
                   className="rounded bg-gray-400 font-barlow px-2 py-1 text-lg font-semibold items-center flex"

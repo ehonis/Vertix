@@ -10,10 +10,9 @@ datasource db {
 
 enum Locations {
     ropeNorthWest
-    ropeNorth
+
     ropeNorthEast
-    ABWallNorth
-    ABWallSouth
+
     ABWall
     ropeSouthWest
     ropeSouthEast

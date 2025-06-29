@@ -35,6 +35,7 @@ export function splitRoutesByType(routes: (RouteCompletion & {route: {type: Rout
     return {boulderRoutes, ropeRoutes};
 }
 export function getRouteGradeCounts(ropeRoutes: (RouteCompletion & {route: {type: RouteType , grade: string}})[], boulderRoutes: (RouteCompletion & {route: {type: RouteType , grade: string}})[],) {
+    // Initialize arrays with all possible grades and their counts set to 0
     const boulderGradeCounts = [
         { grade: "vb", count: 0 },
         { grade: "v0", count: 0 },
@@ -51,10 +52,8 @@ export function getRouteGradeCounts(ropeRoutes: (RouteCompletion & {route: {type
     const ropeGradeCounts = [
         { grade: "5.B", count: 0 },
         { grade: "5.7", count: 0 },
-        { grade: "5.8-", count: 0 },
         { grade: "5.8", count: 0 },
         { grade: "5.8+", count: 0 },
-        { grade: "5.9-", count: 0 },
         { grade: "5.9", count: 0 },
         { grade: "5.9+", count: 0 },
         { grade: "5.10-", count: 0 },
@@ -68,6 +67,8 @@ export function getRouteGradeCounts(ropeRoutes: (RouteCompletion & {route: {type
         { grade: "5.12+", count: 0 },
 
     ];
+    
+    // Count completed boulder routes by grade
     boulderRoutes.forEach(route => {
         const grade = route.route.grade;
         const gradeCount = boulderGradeCounts.find(g => g.grade === grade);
@@ -75,6 +76,8 @@ export function getRouteGradeCounts(ropeRoutes: (RouteCompletion & {route: {type
             gradeCount.count++;
         }
     });
+    
+    // Count completed rope routes by grade
     ropeRoutes.forEach(route => {
         const grade = route.route.grade;
         const gradeCount = ropeGradeCounts.find(g => g.grade === grade);
@@ -82,7 +85,12 @@ export function getRouteGradeCounts(ropeRoutes: (RouteCompletion & {route: {type
             gradeCount.count++;
         }
     });
-    return {boulderGradeCounts, ropeGradeCounts};
+     
+    // Filter out grades with count 0 and return only completed grades
+    const completedBoulderGrades = boulderGradeCounts.filter(grade => grade.count > 0);
+    const completedRopeGrades = ropeGradeCounts.filter(grade => grade.count > 0);
+    
+    return {boulderGradeCounts: completedBoulderGrades, ropeGradeCounts: completedRopeGrades};
 }
 
 // Type definition for the completion counts by time period
