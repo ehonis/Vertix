@@ -7,7 +7,8 @@ function splitRoutesByType(routes: Route[]){
     return {boulderRoutes, ropeRoutes};
 }
 
-export function getGradeCounts(routes: Route[]){
+
+export function getAllGradeCounts(routes: Route[]){
     // Split routes into boulder and rope routes
     const {boulderRoutes, ropeRoutes} = splitRoutesByType(routes);
     

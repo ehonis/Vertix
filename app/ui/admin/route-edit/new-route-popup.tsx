@@ -216,6 +216,7 @@ export default function NewRoutePopup({
             date: selectedDate,
             order: routeOrderNumber,
             location: location,
+            type: type,
           },
         }),
       });

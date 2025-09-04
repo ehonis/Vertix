@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 import prisma from "@/prisma";
-import { getGradeCounts } from "@/lib/homepage";
+import { getAllGradeCounts } from "@/lib/homepage";
 import ElementLoadingAnimation from "../general/element-loading-animation";
 import ClientRouteGraphs from "./client-route-graphs";
 
@@ -10,7 +10,8 @@ async function RoutesGraph() {
   const routes = await prisma.route.findMany({
     where: { isArchive: false },
   });
-  const { boulderGradeCounts, ropeGradeCounts, ropeTotal, boulderTotal } = getGradeCounts(routes);
+  const { boulderGradeCounts, ropeGradeCounts, ropeTotal, boulderTotal } =
+    getAllGradeCounts(routes);
   return (
     <div>
       <ClientRouteGraphs
