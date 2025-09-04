@@ -8,6 +8,7 @@ import TypePieChart from "@/app/ui/profile/dashboard/type-pie-chart";
 import GradeCompletionsOverTime from "@/app/ui/profile/dashboard/grade-completions-over-time";
 import ActivityGraph from "@/app/ui/profile/dashboard/activity-graph";
 import ImageNamePlate from "@/app/ui/profile/profile-page/image-name-plate";
+import ActivityFeed from "@/app/ui/profile/dashboard/activity-feed";
 
 export const revalidate = 100;
 
@@ -39,6 +40,7 @@ export default async function Dashboard({ params }: { params: Promise<{ slug: st
   return (
     <div className="flex flex-col p-5 gap-3 w-screen items-center">
       {/* {session.user.role !== "ADMIN" && <ConstructionBlur />} */}
+
       <ImageNamePlate
         image={user.image}
         name={user.name}
@@ -48,15 +50,18 @@ export default async function Dashboard({ params }: { params: Promise<{ slug: st
         highestRopeGrade={user.highestRopeGrade}
         highestBoulderGrade={user.highestBoulderGrade}
       />
-      <div className="flex flex-col w-xs md:w-md gap-2">
-        <h2 className="font-barlow text-white text-2xl font-bold">Completions</h2>
+
+      <div className="flex flex-col w-xs md:w-md gap-3">
+        <h2 className="font-barlow text-white text-2xl font-bold">Recent Tix & Attempts</h2>
+        <ActivityFeed userId={user.id} />
+        <h2 className="font-barlow text-white text-2xl font-bold">Total Tix</h2>
         <PyramidGraph completionData={completionData} />
         <div className="flex flex-row gap-2">
           <TypePieChart completionData={completionData} />
           <GradeCompletionsOverTime completionData={completionData} />
         </div>
 
-        <ActivityGraph completionData={completionData} attemptsData={attemptsData} />
+        {/* <ActivityGraph completionData={completionData} attemptsData={attemptsData} /> */}
       </div>
     </div>
   );

@@ -4,7 +4,7 @@ import Image from "next/image";
 import clsx from "clsx";
 import { CompetitionStatus } from "@prisma/client";
 export default async function UpComingCompetitions() {
-  const UpComingCompetitions = await prisma.mixerCompetition.findMany({
+  const mixerUpComingCompetitions = await prisma.mixerCompetition.findMany({
     where: {
       status: {
         in: [CompetitionStatus.INACTIVE, CompetitionStatus.UPCOMING, CompetitionStatus.IN_PROGRESS],
@@ -13,10 +13,17 @@ export default async function UpComingCompetitions() {
     take: 3,
     select: { id: true, name: true, compDay: true, imageUrl: true, status: true },
   });
-
+  const bLUpComingCompetitions = await prisma.bLCompetition.findMany({
+    where: {
+      status: {
+        in: [CompetitionStatus.INACTIVE, CompetitionStatus.UPCOMING, CompetitionStatus.IN_PROGRESS],
+      },
+    },
+  });
+  const upComingCompetitions = [...mixerUpComingCompetitions, ...bLUpComingCompetitions];
   return (
     <div className="flex flex-col gap-2 rounded-sm">
-      {UpComingCompetitions.map(comp => (
+      {upComingCompetitions.map(comp => (
         <Link
           key={comp.id}
           className={clsx(
@@ -26,7 +33,7 @@ export default async function UpComingCompetitions() {
             comp.status === CompetitionStatus.IN_PROGRESS &&
               "bg-green-500/25 outline outline-green-500"
           )}
-          href={`/admin/manager/competitions/mixer/${comp.id}`}
+          href={`/admin/manager/competitions/${comp.name.includes("Mixer") ? "mixer" : "boulder-league"}/${comp.id}`}
         >
           {comp.imageUrl === null ? (
             <svg
@@ -53,7 +60,6 @@ export default async function UpComingCompetitions() {
             />
           )}
           <p className="text-sm text-center self-center">{comp.name}</p>
-          <p className="text-end">{comp.compDay?.toLocaleDateString("en-US") || null}</p>
         </Link>
       ))}
     </div>

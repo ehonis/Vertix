@@ -140,6 +140,7 @@ model User {
     createdRoutes       Route[]           @relation("CreatedRoutes")
     private             Boolean           @default(false)
     mixerClimber        MixerClimber[]
+    blClimber           BLClimber[]
     isOnboarded         Boolean           @default(false)
     tag                 String?
 }
@@ -214,6 +215,12 @@ enum StandingsType {
     downMovementByTop
 }
 
+enum CompletionType {
+    BOULDER
+    ROPE
+}
+
+//MIXER COMPETITION
 model MixerCompetition {
     id                      String              @id @default(cuid())
     name                    String
@@ -315,11 +322,6 @@ model MixerRopeScore {
     @@unique([climberId, competitionId])
 }
 
-enum CompletionType {
-    BOULDER
-    ROPE
-}
-
 model MixerCompletion {
     id             String           @id @default(cuid())
     climberId      String
@@ -340,4 +342,97 @@ model MixerCompletion {
     // Ensure a climber completes a specific route/boulder only once per competition
     @@unique([climberId, mixerRouteId])
     @@unique([climberId, mixerBoulderId])
+}
+
+//BOULDER LEAGUE
+model BLCompetition {
+    id                      String            @id @default(cuid())
+    name                    String
+    year                    Int
+    status                  CompetitionStatus @default(INACTIVE)
+    activeWeek              Int               @default(1)
+    imageUrl                String?
+    endDate                 DateTime?
+    weekOneStartDate        DateTime?
+    weekTwoStartDate        DateTime?
+    weekThreeStartDate      DateTime?
+    passcode                String?
+    boulder                 BLBoulder[]
+    climbers                BLClimber[]
+    divisions               BLDivision[]
+    boulderScores           BLBoulderScore[]
+    completions             BLCompletion[]
+    createdAt               DateTime          @default(now())
+    updatedAt               DateTime          @updatedAt
+    areScoresAvailable      Boolean           @default(false)
+    isTestCompetition       Boolean           @default(false)
+    hasScoresBeenCalculated Boolean           @default(false)
+    standingsType           StandingsType?
+    isBouldersReleased      Boolean           @default(false)
+}
+
+model BLBoulder {
+    id            String         @id @default(cuid())
+    points        Int
+    week          Int
+    color         String
+    competitionId String
+    completions   BLCompletion[]
+    competition   BLCompetition  @relation(fields: [competitionId], references: [id], onDelete: Cascade)
+    grade         String?
+}
+
+model BLClimber {
+    id            String           @id @default(cuid())
+    name          String
+    divisionId    String?
+    division      BLDivision?      @relation(fields: [divisionId], references: [id], onDelete: SetNull)
+    boulderScores BLBoulderScore[]
+    competitionId String
+    competition   BLCompetition    @relation(fields: [competitionId], references: [id], onDelete: Cascade)
+    completions   BLCompletion[]
+    entryMethod   EntryMethod      @default(MANUAL) // APP if linked to a user account
+    climberStatus ClimberStatus    @default(NOT_STARTED) // not started, in progress, completed
+    userId        String?
+    user          User?            @relation(fields: [userId], references: [id])
+    createdAt     DateTime         @default(now())
+    updatedAt     DateTime         @updatedAt
+}
+
+model BLBoulderScore {
+    id            String        @id @default(cuid())
+    climberId     String        @unique
+    climber       BLClimber     @relation(fields: [climberId], references: [id], onDelete: Cascade)
+    score         Int
+    attempts      Int
+    competitionId String
+    competition   BLCompetition @relation(fields: [competitionId], references: [id], onDelete: Cascade)
+
+    @@unique([climberId, competitionId])
+}
+
+model BLDivision {
+    id            String        @id @default(cuid())
+    name          String
+    climbers      BLClimber[]
+    competitionId String
+    level         String?
+    competition   BLCompetition @relation(fields: [competitionId], references: [id], onDelete: Cascade)
+}
+
+model BLCompletion {
+    id             String        @id @default(cuid())
+    climberId      String
+    climber        BLClimber     @relation(fields: [climberId], references: [id], onDelete: Cascade)
+    competitionId  String
+    competition    BLCompetition @relation(fields: [competitionId], references: [id], onDelete: Cascade)
+    boulderId      String?
+    boulder        BLBoulder?    @relation(fields: [boulderId], references: [id])
+    attempts       Int
+    points         Int
+    completionDate DateTime      @default(now())
+    isComplete     Boolean?
+
+    // Ensure a climber completes a specific route/boulder only once per competition
+    @@unique([climberId, boulderId])
 }

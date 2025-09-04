@@ -15,11 +15,18 @@ async function TestComps() {
   if (user?.role !== UserRole.ADMIN) {
     return null;
   } else {
-    const testCompetitions = await prisma.mixerCompetition.findMany({
+    const mixerTestCompetitions = await prisma.mixerCompetition.findMany({
       where: {
         isTestCompetition: true,
       },
     });
+    const bLTestCompetitions = await prisma.bLCompetition.findMany({
+      where: {
+        isTestCompetition: true,
+      },
+    });
+    const testCompetitions = [...mixerTestCompetitions, ...bLTestCompetitions];
+
     if (testCompetitions.length === 0) {
       return null;
     } else {
@@ -70,47 +77,58 @@ async function TestComps() {
   }
 }
 async function DemoComps() {
-  const demoCompetitions = await prisma.mixerCompetition.findMany({
+  const mixerDemoCompetitions = await prisma.mixerCompetition.findMany({
     where: {
       status: CompetitionStatus.DEMO,
       isTestCompetition: false,
     },
   });
-  return (
-    <div className="flex flex-col justify-center ">
-      <h1 className="font-barlow text-2xl text-white font-semibold mb-1">Demo</h1>
-      <div className="flex flex-col gap-3 w-full">
-        {demoCompetitions.map(comp => (
-          <Link
-            key={comp.id}
-            href={`/competitions/demo/${comp.id}`}
-            className=" bg-yellow-500/15 rounded-lg  p-2 flex justify-between outline outline-yellow-400 place-items-center"
-          >
-            <div className="flex flex-col">
-              <p className="font-barlow  text-white text-xl text-center whitespace-nowrap">
-                {comp.name}
-              </p>
+  const bLDemoCompetitions = await prisma.bLCompetition.findMany({
+    where: {
+      status: CompetitionStatus.DEMO,
+      isTestCompetition: false,
+    },
+  });
+  const demoCompetitions = [...mixerDemoCompetitions, ...bLDemoCompetitions];
+  if (demoCompetitions.length === 0) {
+    return null;
+  } else {
+    return (
+      <div className="flex flex-col justify-center ">
+        <h1 className="font-barlow text-2xl text-white font-semibold mb-1">Demo</h1>
+        <div className="flex flex-col gap-3 w-full">
+          {demoCompetitions.map(comp => (
+            <Link
+              key={comp.id}
+              href={`/competitions/demo/${comp.id}`}
+              className=" bg-yellow-500/15 rounded-lg  p-2 flex justify-between outline outline-yellow-400 place-items-center"
+            >
+              <div className="flex flex-col">
+                <p className="font-barlow  text-white text-xl text-center whitespace-nowrap">
+                  {comp.name}
+                </p>
 
-              <p className="text-yellow-400 text-sm italic ">Demo</p>
-            </div>
-            {comp.status === CompetitionStatus.DEMO && (
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="#000000"
-                viewBox="0 0 256 256"
-                className="size-12 stroke-white fill-white relative z-10 self-center place-self-start"
-              >
-                <path d="M221.69,199.77,160,96.92V40h8a8,8,0,0,0,0-16H88a8,8,0,0,0,0,16h8V96.92L34.31,199.77A16,16,0,0,0,48,224H208a16,16,0,0,0,13.72-24.23ZM110.86,103.25A7.93,7.93,0,0,0,112,99.14V40h32V99.14a7.93,7.93,0,0,0,1.14,4.11L183.36,167c-12,2.37-29.07,1.37-51.75-10.11-15.91-8.05-31.05-12.32-45.22-12.81ZM48,208l28.54-47.58c14.25-1.74,30.31,1.85,47.82,10.72,19,9.61,35,12.88,48,12.88a69.89,69.89,0,0,0,19.55-2.7L208,208Z"></path>
-              </svg>
-            )}
-          </Link>
-        ))}
+                <p className="text-yellow-400 text-sm italic ">Demo</p>
+              </div>
+              {comp.status === CompetitionStatus.DEMO && (
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="#000000"
+                  viewBox="0 0 256 256"
+                  className="size-12 stroke-white fill-white relative z-10 self-center place-self-start"
+                >
+                  <path d="M221.69,199.77,160,96.92V40h8a8,8,0,0,0,0-16H88a8,8,0,0,0,0,16h8V96.92L34.31,199.77A16,16,0,0,0,48,224H208a16,16,0,0,0,13.72-24.23ZM110.86,103.25A7.93,7.93,0,0,0,112,99.14V40h32V99.14a7.93,7.93,0,0,0,1.14,4.11L183.36,167c-12,2.37-29.07,1.37-51.75-10.11-15.91-8.05-31.05-12.32-45.22-12.81ZM48,208l28.54-47.58c14.25-1.74,30.31,1.85,47.82,10.72,19,9.61,35,12.88,48,12.88a69.89,69.89,0,0,0,19.55-2.7L208,208Z"></path>
+                </svg>
+              )}
+            </Link>
+          ))}
+        </div>
       </div>
-    </div>
-  );
+    );
+  }
 }
 async function UpComingComps() {
-  const mixerCompetitions = await prisma.mixerCompetition.findMany({
+  const mixerUpComingCompetitions = await prisma.mixerCompetition.findMany({
     where: {
       status: {
         in: [CompetitionStatus.UPCOMING, CompetitionStatus.IN_PROGRESS],
@@ -118,18 +136,27 @@ async function UpComingComps() {
       isTestCompetition: false,
     },
   });
+  const bLUpComingCompetitions = await prisma.bLCompetition.findMany({
+    where: {
+      status: {
+        in: [CompetitionStatus.UPCOMING, CompetitionStatus.IN_PROGRESS],
+      },
+      isTestCompetition: false,
+    },
+  });
+  const upComingCompetitions = [...mixerUpComingCompetitions, ...bLUpComingCompetitions];
 
-  if (mixerCompetitions.length === 0) {
+  if (upComingCompetitions.length === 0) {
     return null;
   } else {
     return (
       <div className="flex flex-col justify-center ">
         <h1 className="font-barlow text-2xl text-white font-semibold mb-1">Active or Upcoming</h1>
         <div className="flex flex-col gap-3 w-full">
-          {mixerCompetitions.map(comp => (
+          {upComingCompetitions.map(comp => (
             <Link
               key={comp.id}
-              href={`/competitions/mixer/${comp.id}`}
+              href={`/competitions/${comp.name.includes("Mixer") ? "mixer" : "boulder-league"}/${comp.id}`}
               className={clsx(
                 " bg-blue-500/15 rounded-lg  p-2 flex justify-between outline  place-items-center",
                 comp.status === CompetitionStatus.UPCOMING && "outline-blue-500 bg-blue-500/15",
@@ -182,12 +209,20 @@ async function UpComingComps() {
   }
 }
 async function CompletedComps() {
-  const completedCompetitions = await prisma.mixerCompetition.findMany({
+  const mixerCompletedCompetitions = await prisma.mixerCompetition.findMany({
     where: {
       status: CompetitionStatus.COMPLETED,
       isTestCompetition: false,
     },
   });
+  const bLCompletedCompetitions = await prisma.bLCompetition.findMany({
+    where: {
+      status: CompetitionStatus.COMPLETED,
+      isTestCompetition: false,
+    },
+  });
+  const completedCompetitions = [...mixerCompletedCompetitions, ...bLCompletedCompetitions];
+
   return (
     <div className="flex flex-col justify-center ">
       <h1 className="font-barlow text-2xl text-white font-semibold mb-1">Completed</h1>
@@ -195,7 +230,7 @@ async function CompletedComps() {
         {completedCompetitions.map(comp => (
           <Link
             key={comp.id}
-            href={`/competitions/mixer/${comp.id}`}
+            href={`/competitions/${comp.name.includes("Mixer") ? "mixer" : "boulder-league"}/${comp.id}`}
             className=" rounded-lg  p-2 flex justify-between outline  place-items-center outline-green-500 bg-green-500/15"
           >
             <div className="flex flex-col">
@@ -267,7 +302,7 @@ export default async function page() {
               </div>
             }
           >
-            <CompletedComps />
+            <UpComingComps />
           </Suspense>
         </div>
         <div className="w-xs md:w-lg">
@@ -278,9 +313,10 @@ export default async function page() {
               </div>
             }
           >
-            <UpComingComps />
+            <CompletedComps />
           </Suspense>
         </div>
+
         <div className="w-xs md:w-lg">
           <Suspense
             fallback={
