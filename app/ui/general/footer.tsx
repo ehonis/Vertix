@@ -16,7 +16,7 @@ export default function Footer() {
     // mt-auto ensures it pushes to the bottom of the flex container
     <footer className="bg-black text-white mt-10">
       <div className="container mx-auto px-3">
-        <p className="text-start text-sm text-gray-500">© 2025 Vertix ⋅ v0.1.5</p>
+        <p className="text-start text-sm text-gray-500">© 2025 Vertix ⋅ v0.2.1</p>
       </div>
     </footer>
   );
