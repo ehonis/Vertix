@@ -23,7 +23,9 @@ interface WallRoutesProps {
     completions: RouteCompletion[],
     attempts: RouteAttempt[],
     userGrade: string | null,
-    communityGrade: string
+    communityGrade: string,
+    xp: { xp: number; baseXp: number; xpExtrapolated: { type: string; xp: number }[] } | null,
+    isArchived: boolean
   ) => void;
   refreshTrigger?: number;
 }
@@ -74,7 +76,7 @@ export default function WallRoutes({ wall, user, onData, refreshTrigger }: WallR
 
   return (
     <div>
-      <div className="flex flex-col gap-3">
+      <div className="flex flex-col gap-6">
         {isFiltered && filteredRoutes.length > 0
           ? filteredRoutes.map(route => (
               <RouteTile

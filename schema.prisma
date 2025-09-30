@@ -1,5 +1,6 @@
 generator client {
     provider = "prisma-client-js"
+    output   = "./node_modules/.prisma/client"
 }
 
 datasource db {
@@ -10,9 +11,7 @@ datasource db {
 
 enum Locations {
     ropeNorthWest
-
     ropeNorthEast
-
     ABWall
     ropeSouthWest
     ropeSouthEast
@@ -37,6 +36,7 @@ model Route {
     images          RouteImage[]
     type            RouteType         @default(BOULDER)
     isArchive       Boolean           @default(false)
+    xp              Int               @default(0) @db.SmallInt
     completions     RouteCompletion[] // One-to-many relationship with RouteCompletion
     attempts        RouteAttempt[] // One-to-many relationship with RouteAttemp
     tags            RouteTag[]
@@ -61,10 +61,11 @@ model RouteCompletion {
     userId         String
     route          Route    @relation(fields: [routeId], references: [id], onDelete: Cascade)
     routeId        String
-    sends          Int      @default(1)
+    flash          Boolean  @default(false)
     completionDate DateTime @default(now())
+    xpEarned       Int      @default(0) // Track XP earned for this specific completion
 
-    @@unique([userId, routeId])
+    @@index([userId, routeId]) // Remove unique constraint to allow multiple completions
 }
 
 model RouteStar {
@@ -117,11 +118,29 @@ enum UserRole {
     USER
 }
 
+model MonthlyXp {
+    id        Int      @id @default(autoincrement())
+    userId    String
+    user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+    month     Int
+    year      Int
+    xp        Int      @default(0) @db.SmallInt
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    // Ensure only one XP record per user per month/year
+    @@unique([userId, month, year])
+    // Add indexes for performance
+    @@index([userId])
+    @@index([year, month])
+    @@index([userId, year, month])
+}
+
 model User {
-    id                  String            @id @default(cuid())
-    username            String?           @unique
+    id                  String             @id @default(cuid())
+    username            String?            @unique
     name                String?
-    email               String            @unique
+    email               String             @unique
     emailVerified       DateTime?
     image               String?
     password            String?
@@ -132,17 +151,43 @@ model User {
     communityGrades     CommunityGrade[]
     stars               RouteStar[]
     badges              Badge[]
-    role                UserRole          @default(USER)
-    createdAt           DateTime          @default(now())
-    updatedAt           DateTime          @updatedAt
+    role                UserRole           @default(USER)
+    createdAt           DateTime           @default(now())
+    updatedAt           DateTime           @updatedAt
     Account             Account[]
     Session             Session[]
-    createdRoutes       Route[]           @relation("CreatedRoutes")
-    private             Boolean           @default(false)
+    createdRoutes       Route[]            @relation("CreatedRoutes")
+    private             Boolean            @default(false)
     mixerClimber        MixerClimber[]
     blClimber           BLClimber[]
-    isOnboarded         Boolean           @default(false)
+    isOnboarded         Boolean            @default(false)
     tag                 String?
+    monthlyXp           MonthlyXp[]
+    totalXp             Int                @default(0) @db.SmallInt
+    seenAnnouncements   UserAnnouncement[]
+}
+
+model Announcement {
+    id                String             @id @default(cuid())
+    title             String
+    body              String
+    isActive          Boolean            @default(true)
+    createdAt         DateTime           @default(now())
+    updatedAt         DateTime           @updatedAt
+    userAnnouncements UserAnnouncement[]
+}
+
+model UserAnnouncement {
+    id             String       @id @default(cuid())
+    userId         String
+    user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+    announcementId String
+    announcement   Announcement @relation(fields: [announcementId], references: [id], onDelete: Cascade)
+    seenAt         DateTime     @default(now())
+
+    @@unique([userId, announcementId]) // One record per user per announcement
+    @@index([userId])
+    @@index([announcementId])
 }
 
 model Badge {

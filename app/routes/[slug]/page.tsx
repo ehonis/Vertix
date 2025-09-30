@@ -160,9 +160,12 @@ function RouteInfo({
                 <p>Grade: </p>
                 <p>{mappedGrade}</p>
               </div>
-              <div className="text-white md:text-base flex justify-between">
-                <p>Community Grade:</p> <p>{communityGrade}</p>
-              </div>
+              {route.grade.toLowerCase() !== "vfeature" &&
+                route.grade.toLowerCase() !== "5.feature" && (
+                  <div className="text-white md:text-base flex justify-between">
+                    <p>Community Grade:</p> <p>{communityGrade}</p>
+                  </div>
+                )}
               <div className="text-white md:text-base flex justify-between">
                 <p>Set Date:</p> <p>{date}</p>
               </div>

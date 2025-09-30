@@ -3,6 +3,8 @@ import prisma from "@/prisma";
 import { RouteType } from "@prisma/client";
 import { auth } from "@/auth";
 import { UserRole } from "@prisma/client";
+import { getRouteXp } from "@/lib/route";
+
 
 export async function POST(req: Request) {
     const session = await auth();
@@ -13,6 +15,9 @@ export async function POST(req: Request) {
     }
 
   const { newRoute } = await req.json();
+
+  const routeXp = getRouteXp(newRoute.grade);
+
 
   if(!newRoute){
     return NextResponse.json({ message: "No new route" }, { status: 400 });
@@ -27,6 +32,7 @@ export async function POST(req: Request) {
         location: newRoute.location,
         type: newRoute.type as RouteType,
         color: newRoute.color,
+        xp: routeXp,
         createdByUserID: session.user.id,
         isArchive: false,
     }

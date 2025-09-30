@@ -82,20 +82,23 @@ export default function CompleteMenu({ route, userId, isComplete, isGraded, onCa
             <br />
             <span className="text-blue-500">Add a grade and add some sends!</span>
           </p>
-          <label className="flex gap-3 font-bold">
-            Grade:
-            <select
-              value={selectedGrade}
-              onChange={handleSelectGradeChange}
-              className="w-12 rounded-sm bg-bg2"
-            >
-              {gradeOptions.map((grade, idx) => (
-                <option key={idx} value={grade}>
-                  {grade}
-                </option>
-              ))}
-            </select>
-          </label>
+          {route.grade.toLowerCase() !== "vfeature" &&
+            route.grade.toLowerCase() !== "5.feature" && (
+              <label className="flex gap-3 font-bold">
+                Grade:
+                <select
+                  value={selectedGrade}
+                  onChange={handleSelectGradeChange}
+                  className="w-12 rounded-sm bg-bg2"
+                >
+                  {gradeOptions.map((grade, idx) => (
+                    <option key={idx} value={grade}>
+                      {grade}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            )}
         </div>
       );
     } else if (cases === "notCompletedGraded") {
@@ -107,20 +110,25 @@ export default function CompleteMenu({ route, userId, isComplete, isGraded, onCa
       );
     } else {
       return (
-        <label className="flex gap-3 font-bold">
-          Grade:
-          <select
-            value={selectedGrade}
-            onChange={handleSelectGradeChange}
-            className="w-12 rounded-sm bg-bg2"
-          >
-            {gradeOptions.map((grade, idx) => (
-              <option key={idx} value={grade}>
-                {grade}
-              </option>
-            ))}
-          </select>
-        </label>
+        <div className="flex flex-col items-center gap-2">
+          {route.grade.toLowerCase() !== "vfeature" &&
+            route.grade.toLowerCase() !== "5.feature" && (
+              <label className="flex gap-3 font-bold">
+                Grade:
+                <select
+                  value={selectedGrade}
+                  onChange={handleSelectGradeChange}
+                  className="w-12 rounded-sm bg-bg2"
+                >
+                  {gradeOptions.map((grade, idx) => (
+                    <option key={idx} value={grade}>
+                      {grade}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            )}
+        </div>
       );
     }
   };

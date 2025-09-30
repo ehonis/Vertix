@@ -78,7 +78,7 @@ export default function PyramidGraph({
   }, [isBoulder]);
 
   return (
-    <div className="w-full h-full bg-slate-900 rounded-lg p-5 flex flex-col gap-5">
+    <div className="w-full h-min bg-slate-900 rounded-lg p-5 flex flex-col gap-5">
       {/* Header section with title and route type selector */}
       <div className="flex justify-between items-center">
         <h1 className="text-white text-xl font-bold font-barlow">Tix by Grade</h1>
@@ -95,16 +95,32 @@ export default function PyramidGraph({
       </div>
 
       {/* Chart container with responsive design */}
-      <ResponsiveContainer width="100%" height={350} className="self-center">
-        <BarChart data={displayedGradeCounts} layout="vertical">
-          {/* Grid lines for better readability */}
-          <CartesianGrid strokeDasharray="3 3" stroke="#364153" />
-          {/* X-axis shows the count values */}
-          <XAxis type="number" dataKey="count" allowDecimals={false} />
-          {/* Y-axis shows the grades with custom formatting to display only base grades */}
-          <YAxis type="category" dataKey="grade" width={55} reversed={true} />
+      <ResponsiveContainer width="100%" height={250} className="self-start">
+        <BarChart
+          data={displayedGradeCounts}
+          margin={{ top: 20, right: 0, left: -40, bottom: -40 }}
+          barCategoryGap="10%"
+        >
+          <XAxis
+            type="category"
+            dataKey="grade"
+            angle={-45}
+            textAnchor="end"
+            height={80}
+            fontSize={12}
+            stroke="white"
+          />
+          {/* Y-axis shows the count values */}
+          <YAxis type="number" dataKey="count" allowDecimals={false} stroke="white" />
           {/* Bar elements representing the count for each grade */}
-          <Bar dataKey="count" fill="#155DFC" />
+          <Bar
+            dataKey="count"
+            fill={isBoulder ? "#a855f7" : "#3b82f6"}
+            fillOpacity={0.25}
+            stroke={isBoulder ? "#a855f7" : "#3b82f6"}
+            strokeWidth={1}
+            radius={[3, 3, 0, 0]}
+          />
           {/* Custom tooltip showing the full grade name and count */}
           <Tooltip content={<CustomTooltip />} />
         </BarChart>

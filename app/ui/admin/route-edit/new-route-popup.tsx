@@ -93,6 +93,7 @@ export default function NewRoutePopup({
         type: type,
         isArchive: false,
         createdByUserID: null,
+        xp: 0,
       },
       ...routes,
     ]);
@@ -322,6 +323,7 @@ export default function NewRoutePopup({
                 placeholder="Name"
                 className="bg-slate-900 rounded font-barlow text-xl px-2 py-1 focus:outline-none font-bold"
                 value={name}
+                autoCapitalize="sentences"
                 onChange={e => setName(e.target.value)}
               />
               <div className="flex justify-between items-center">

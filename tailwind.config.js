@@ -25,6 +25,7 @@ module.exports = {
       fontFamily: {
         sans: ["var(--font-tomorrow)", "sans-serif"],
         tomorrow: ["var(--font-tomorrow)", "sans-serif"],
+        jost: ["var(--font-jost)", "sans-serif"],
         barlow: ["var(--font-barlow)", "sans-serif"],
       },
     },

@@ -7,8 +7,9 @@ import PyramidGraph from "@/app/ui/profile/dashboard/pyramid-graph";
 import TypePieChart from "@/app/ui/profile/dashboard/type-pie-chart";
 import GradeCompletionsOverTime from "@/app/ui/profile/dashboard/grade-completions-over-time";
 import ActivityGraph from "@/app/ui/profile/dashboard/activity-graph";
-import ImageNamePlate from "@/app/ui/profile/profile-page/image-name-plate";
+import ImageNamePlate from "@/app/ui/profile/dashboard/image-name-plate";
 import ActivityFeed from "@/app/ui/profile/dashboard/activity-feed";
+import XpLevelDisplay from "@/app/ui/profile/dashboard/xp-level-display";
 
 export const revalidate = 100;
 
@@ -38,20 +39,13 @@ export default async function Dashboard({ params }: { params: Promise<{ slug: st
   const attemptsData = await getAttemptsData(user.id);
 
   return (
-    <div className="flex flex-col p-5 gap-3 w-screen items-center">
+    <div className="flex flex-col p-5 gap-2 w-screen items-center">
       {/* {session.user.role !== "ADMIN" && <ConstructionBlur />} */}
 
-      <ImageNamePlate
-        image={user.image}
-        name={user.name}
-        username={user.username}
-        title={user.tag}
-        id={user.id}
-        highestRopeGrade={user.highestRopeGrade}
-        highestBoulderGrade={user.highestBoulderGrade}
-      />
+      <ImageNamePlate user={user} />
 
       <div className="flex flex-col w-xs md:w-md gap-3">
+        <XpLevelDisplay user={user} />
         <h2 className="font-barlow text-white text-2xl font-bold">Recent Tix & Attempts</h2>
         <ActivityFeed userId={user.id} />
         <h2 className="font-barlow text-white text-2xl font-bold">Total Tix</h2>

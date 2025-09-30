@@ -36,6 +36,7 @@ export async function POST(req: NextRequest)  {
         const routeIdMap = new Map<string, string>();
 
         const formattedRoutes : Route[] = routes.map(route => ({
+            xp: 0,
             title: `${comp.name} Route ${route.name}`,
             grade: route.grade || '5.10',
             color: route.color,
@@ -110,27 +111,31 @@ export async function POST(req: NextRequest)  {
                 }
 
                 if (completion.isComplete) {
-                    // Create route completion
-                    const route = await tx.routeCompletion.create({
-                        data: {
-                            userId: climber.userId,
-                            sends: completion.attempts || 1,
-                            routeId: actualRouteId
-                        },
-                        include: {
-                            route: {
-                                select: {
-                                    grade: true
-                                }
-                            }
-                        }
-                    });
+                    // Create route completion records for each completion
+                    const attempts = completion.attempts || 1;
+                    for (let i = 0; i < attempts; i++) {
+                        await tx.routeCompletion.create({
+                            data: {
+                                userId: climber.userId,
+                                routeId: actualRouteId,
+                                xpEarned: 0, // Competition completions don't earn XP
+                                completionDate: new Date(),
+                            },
+                        });
+                    }
 
-                    // Update highest grade if necessary
-                    const newGrade = route.route.grade;
-                    if (!currentHighestGrade || isGradeHigher(currentHighestGrade, newGrade, "rope")) {
-                        currentHighestGrade = newGrade;
-                        console.log(`Found higher grade ${newGrade} for user ${climber.userId}`);
+                    // Update highest grade if necessary - get route grade
+                    const routeInfo = await tx.route.findUnique({
+                        where: { id: actualRouteId },
+                        select: { grade: true }
+                    });
+                    
+                    if (routeInfo) {
+                        const newGrade = routeInfo.grade;
+                        if (!currentHighestGrade || isGradeHigher(currentHighestGrade, newGrade, "rope")) {
+                            currentHighestGrade = newGrade;
+                            console.log(`Found higher grade ${newGrade} for user ${climber.userId}`);
+                        }
                     }
                 } else {
                     // Create route attempt

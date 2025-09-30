@@ -103,6 +103,7 @@ export default function EditBoulderPopUp({
             onChange={e => setGrade(e.target.value)}
             className="p-2 bg-gray-700 rounded-sm mb-2"
           >
+            <option value="vfeature">vFEATURE</option>
             <option value="vb">VB</option>
             <option value="v0">v0</option>
             <option value="v1">v1</option>

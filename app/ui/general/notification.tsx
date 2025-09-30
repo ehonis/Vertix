@@ -1,6 +1,6 @@
 "use client";
 
-import { useNotification } from "../contexts/NotificationContext";
+import { useNotification } from "../../contexts/NotificationContext";
 import { motion } from "framer-motion";
 import clsx from "clsx";
 

@@ -15,7 +15,9 @@ type RouteRating = {
 // Grade mapping for boulder problems
 export function getBoulderGradeMapping(grade:string){
     let mappedGrade = ""
-    if(grade === "v1" || grade === "v0"){
+    if(grade === "vfeature"){
+        mappedGrade = "vfeature"
+      }else if(grade === "v1" || grade === "v0"){
         mappedGrade = "v0-v2"
       }else if(grade === "v2"){
         mappedGrade = "v1-v3"
@@ -111,11 +113,11 @@ export async function findIfCompleted(userId: string | undefined, routeId: strin
 // Calculate total sends for a route
 export async function findAllTotalSends(routeId: string): Promise<number> {
     try {
-      const sends = await prisma.routeCompletion.findMany({
+      const completions = await prisma.routeCompletion.findMany({
         where: { routeId },
       });
   
-      return sends.reduce((acc, send) => acc + send.sends, 0);
+      return completions.length;
     } catch (error) {
       console.error(`Error calculating total sends for route ${routeId}`, error);
       return 0;
@@ -179,8 +181,8 @@ export function findCommunityGradeForRoute(communityGrades: CommunityGrade[]): s
   if (!communityGrades.length) return "none";
       
   // Separate rope and boulder grades based on whether they start with 'v'
-  const ropeGrades = communityGrades.filter((grade: { grade: string }) => !grade.grade.toLowerCase().startsWith('v'));
-  const boulderGrades = communityGrades.filter((grade: { grade: string }) => grade.grade.toLowerCase().startsWith('v'));
+  const ropeGrades = communityGrades.filter((grade: { grade: string }) => !grade.grade.toLowerCase().startsWith('v') && grade.grade.toLowerCase() !== '5.feature');
+  const boulderGrades = communityGrades.filter((grade: { grade: string }) => grade.grade.toLowerCase().startsWith('v') && grade.grade.toLowerCase() !== 'vfeature');
       
   // Handle rope grades if any exist
   if (ropeGrades.length > 0) {
@@ -273,8 +275,8 @@ export async function findCommunityGrade(routeId: string): Promise<string> {
       if (!communityGrades.length) return "none";
       
       // Separate rope and boulder grades based on whether they start with 'v'
-      const ropeGrades = communityGrades.filter((grade: { grade: string }) => !grade.grade.toLowerCase().startsWith('v'));
-      const boulderGrades = communityGrades.filter((grade: { grade: string }) => grade.grade.toLowerCase().startsWith('v'));
+      const ropeGrades = communityGrades.filter((grade: { grade: string }) => !grade.grade.toLowerCase().startsWith('v') && grade.grade.toLowerCase() !== '5.feature');
+      const boulderGrades = communityGrades.filter((grade: { grade: string }) => grade.grade.toLowerCase().startsWith('v') && grade.grade.toLowerCase() !== 'vfeature');
       
       // Handle rope grades if any exist
       if (ropeGrades.length > 0) {
@@ -381,10 +383,14 @@ export function findIfBoulderGradeIsHigher(user:User, route:Route){
     }
   }
 }
-export function isGradeHigher  (userHighest:string, newGrade:string, type:string) {
+export function isGradeHigher  (userHighest:string | null, newGrade:string, type:string) {
   const ropeGrades = ["5.b", "5.7-", "5.7", "5.7+", "5.8-", "5.8", "5.8+", "5.9-", "5.9", "5.9+", "5.10-", "5.10", "5.10+", "5.11-", "5.11", "5.11+", "5.12-", "5.12", "5.12+", "5.13-", "5.13", "5.13+"]
   const boulderGrades = ["vb", "v0", "v1", "v2", "v3", "v4", "v5", "v6", "v7", "v8", "v9", "v10"]
 
+
+  if(!userHighest){
+    return true
+  }else{
   if(type === "rope"){
     if(ropeGrades.indexOf(userHighest) < ropeGrades.indexOf(newGrade)){
       return true
@@ -399,8 +405,11 @@ export function isGradeHigher  (userHighest:string, newGrade:string, type:string
     }
   }
 }
+return false
+}
 export function getGradeRange(grade:string) {
   const ropeGrades = [
+    "5.feature",
     "5.B",
     "5.7-",
     "5.7",
@@ -424,7 +433,7 @@ export function getGradeRange(grade:string) {
     "5.13",
     "5.13+",
   ];
-  const boulderGrades = ["vb", "v0", "v1", "v2", "v3", "v4", "v5", "v6", "v7", "v8", "v9", "v10"];
+  const boulderGrades = ["vfeature", "vb", "v0", "v1", "v2", "v3", "v4", "v5", "v6", "v7", "v8", "v9", "v10"];
 
   const isBoulderGrade = grade[0] === "v";
   const gradeList = isBoulderGrade ? boulderGrades : ropeGrades;
@@ -433,13 +442,121 @@ export function getGradeRange(grade:string) {
   if (index === -1) return []; // Handle case where grade isn't found
 
   if (isBoulderGrade) {
-    if (index === 0 || index === 1) return ["vb", "v0", "v1"];
+    if (index === 0) return ["vfeature", "vb", "v0"];
+    if (index === 1) return ["vfeature", "vb", "v0", "v1"];
     if (index === gradeList.length - 1) return ["v8", "v9", "v10"];
     return gradeList.slice(Math.max(0, index - 1), Math.min(gradeList.length, index + 2));
   } else {
-    if (index <= 2) return ["5.B", "5.7-", "5.7", "5.7+", "5.8-"];
+    if (index === 0) return ["5.feature", "5.B", "5.7-", "5.7"];
+    if (index <= 2) return ["5.feature", "5.B", "5.7-", "5.7", "5.7+", "5.8-"];
     if (index >= gradeList.length - 3) return ["5.12", "5.12+", "5.13-", "5.13", "5.13+"];
     return gradeList.slice(index - 2, index + 3);
   }
+}
+
+export function getRouteXp(grade:string){
+  const boulderGrades = {
+    "vfeature": 200,    // Special grade, fixed XP
+    "vb": 10,           // Manual override for easiest grade
+    "v0": 20,           
+    "v1": 21,           
+    "v2": 26,           
+    "v3": 35,           
+    "v4": 44,           
+    "v5":64,           
+    "v6": 88,           
+    "v7": 110,          
+    "v8": 155,          
+    "v9": 175,         
+    "v10": 210,        
+
+  };
+  
+  const ropeGrades = {
+    "5.feature": 200,   // Special grade, fixed XP
+    "5.b": 10,          // Manual override for easiest grade (similar to VB)
+    "5.7-": 20,         // Between 5.6 and 5.7. Could map to Index 0 or 0.5 for finer control
+    "5.7": 20,          // Index 0: round(20 + (0^1.7))
+    "5.7+": 21,         // Between 5.7 and 5.8
+    "5.8-": 21,         // Between 5.7 and 5.8
+    "5.8": 26,          // Index 2: round(20 + (2^1.7))
+    "5.8+": 28,         // Between 5.8 and 5.9
+    "5.9-": 28,         // Between 5.8 and 5.9
+    "5.9": 31,          // Index 3: round(20 + (3^1.7))
+    "5.9+": 35,         // Between 5.9 and 5.10-
+    "5.10-": 39,        // Index 4: round(20 + (4^1.7))
+    "5.10": 42,         // Between 5.10- and 5.10+
+    "5.10+": 48,        // Index 5: round(20 + (5^1.7))
+    "5.11-": 60,        // Index 6: round(20 + (6^1.7))
+    "5.11": 73,         // Index 7: round(20 + (7^1.7))
+    "5.11+": 88,        // Index 8: round(20 + (8^1.7))
+    "5.12-": 105,       // Index 9: round(20 + (9^1.7))
+    "5.12": 123,        // Index 10: round(20 + (10^1.7))
+    "5.12+": 143,       // Index 11: round(20 + (11^1.7))
+    "5.13-": 164,       // Index 12: round(20 + (12^1.7))
+    "5.13": 187,        // Index 13: round(20 + (13^1.7))
+    "5.13+": 212,       // Index 14: round(20 + (14^1.7))
+  };
+  if(grade.toLowerCase().startsWith('v')){
+    return boulderGrades[grade.toLowerCase() as keyof typeof boulderGrades]
+  }else{
+    return ropeGrades[grade.toLowerCase() as keyof typeof ropeGrades]
+  }
+
+}
+
+export function calculateCompletionXpForRoute({grade, previousCompletions, newHighestGrade}:{grade:string, previousCompletions:number, newHighestGrade: boolean}){
+
+  const firstTimeXp = 25;
+  const newHighestGradeBonusXP = 250;
+
+  const baseXp = getRouteXp(grade);
+
+  if((grade === "vfeature" || grade === "5.feature") && previousCompletions > 0){
+    return { xp: 0, baseXp: 0, xpExtrapolated: [{type: "Repeated Feature Route", xp: 0}] };
+  }
+
+  const xpExtrapolated: { type: string; xp: number }[] = [];
+
+  let totalXp = 0;
+  // Base XP for completing the route
+  totalXp += baseXp;
+  
+  // First time completion bonus
+  if (previousCompletions === 0) {
+    totalXp += firstTimeXp;
+    xpExtrapolated.push({type: "First Send Bonus", xp: firstTimeXp})
+  }
+  
+  // New highest grade bonus
+  if (newHighestGrade) {
+    totalXp += newHighestGradeBonusXP;
+    xpExtrapolated.push({type: "New Highest Grade Bonus", xp: newHighestGradeBonusXP})
+  }
+  
+  // Additional sends penalty (diminishing returns)
+  if (previousCompletions > 0) {
+    const additionalXp = Math.floor(previousCompletions * (baseXp * 0.2)); // 20% of base XP per additional send
+    totalXp -= additionalXp;
+    if(totalXp < 0){
+      totalXp = 0;
+    }
+    xpExtrapolated.push({type: "Repeated Send XP Penalty", xp: -additionalXp})
+  }
+
+  return {xp: totalXp, baseXp, xpExtrapolated};
+}
+
+
+export function getLevelForXp(xp: number){
+  if (xp < 0) return 0;
+  const K = 10; 
+  return Math.floor(Math.sqrt(xp / K));
+
+  
+}
+export function getXpForLevel(level: number){
+  const K = 10;
+  return Math.floor(K * level * level);
 }
 

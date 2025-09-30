@@ -1,12 +1,18 @@
-import { motion } from "motion/react";
+import { motion, AnimatePresence } from "motion/react";
 import { useEffect, useState } from "react";
 import ElementLoadingAnimation from "@/app/ui/general/element-loading-animation";
 import { useNotification } from "@/app/contexts/NotificationContext";
 import { useRouter } from "next/navigation";
-import { RouteCompletion, RouteAttempt, CommunityGrade, User } from "@prisma/client";
+import { User } from "@prisma/client";
+import { useXpIntegration } from "@/app/hooks/useXpIntegration";
 import Link from "next/link";
 import clsx from "clsx";
-import { getBoulderGradeMapping, getGradeRange } from "@/lib/route";
+import {
+  getBoulderGradeMapping,
+  getGradeRange,
+  isGradeHigher,
+  calculateCompletionXpForRoute,
+} from "@/lib/route";
 
 export default function RoutePopUp({
   id,
@@ -19,6 +25,9 @@ export default function RoutePopUp({
   attempts,
   userGrade,
   communityGrade,
+  onRouteCompleted,
+  xp,
+  isArchived,
 }: {
   id: string;
   grade: string;
@@ -30,6 +39,9 @@ export default function RoutePopUp({
   attempts: number;
   userGrade: string | null;
   communityGrade: string | null;
+  onRouteCompleted?: () => void;
+  xp: { xp: number; baseXp: number; xpExtrapolated: { type: string; xp: number }[] } | null;
+  isArchived: boolean;
 }) {
   const { showNotification } = useNotification();
   const router = useRouter();
@@ -42,6 +54,17 @@ export default function RoutePopUp({
   const [frontendCommunityGrade, setFrontendCommunityGrade] = useState("");
   const [gradeMapped, setGradeMapped] = useState("");
   const [gradeRange, setGradeRange] = useState<string[]>(getGradeRange(grade));
+  const routeType = grade.startsWith("5") ? "rope" : "boulder";
+  const [isXpExpanded, setIsXpExpanded] = useState(false);
+  const { gainRouteCompletionXp } = useXpIntegration(user?.id);
+
+  // Local state for XP that updates after completion
+  const [currentXp, setCurrentXp] = useState(xp);
+
+  // Update currentXp when xp prop changes (when popup is opened)
+  useEffect(() => {
+    setCurrentXp(xp);
+  }, [xp]);
 
   const [selectedGrade, setSelectedGrade] = useState("");
 
@@ -71,8 +94,30 @@ export default function RoutePopUp({
           color: "green",
         });
         setIsFrontendCompleted(true);
+
+        // Only award XP for non-archived routes
+        if (!isArchived) {
+          gainRouteCompletionXp({
+            grade: grade,
+            previousCompletions: frontendCompletions,
+            newHighestGrade: isGradeHigher(user.highestRopeGrade, grade, routeType),
+          });
+        }
+
         setFrontendCompletions(prev => prev + 1);
+
+        // Update XP calculation for the next completion
+        if (!isArchived && user) {
+          const newXp = calculateCompletionXpForRoute({
+            grade: grade,
+            previousCompletions: frontendCompletions + 1, // Next completion count
+            newHighestGrade: false, // Won't be new highest since we just completed it
+          });
+          setCurrentXp(newXp);
+        }
+
         router.refresh();
+        onRouteCompleted?.();
       }
     } catch (error) {
       showNotification({ message: "Error trying to complete route", color: "red" });
@@ -156,16 +201,128 @@ export default function RoutePopUp({
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: -20 }}
         transition={{ duration: 0.2 }}
-        className="fixed inset-0 flex items-center justify-center bg-black/50 z-20 backdrop-blur-sm"
+        className="fixed inset-0 flex flex-col items-center justify-center bg-black/50 z-20 backdrop-blur-sm gap-5"
         onClick={onCancel}
       >
+        {/* xp section */}
+        <motion.button
+          initial={{ scale: 0.5 }}
+          animate={{
+            scale: 1,
+            borderRadius: isXpExpanded ? "8px" : "50px",
+            width: isXpExpanded ? "280px" : "fit-content",
+          }}
+          exit={{ scale: 0.8 }}
+          transition={{
+            duration: 0.3,
+            borderRadius: { duration: 0.3, ease: "easeInOut" },
+            width: { duration: 0.3, ease: "easeInOut" },
+          }}
+          onClick={e => {
+            e.stopPropagation();
+            if (!isArchived) {
+              setIsXpExpanded(!isXpExpanded);
+            }
+          }}
+          className={`flex flex-col items-center -mt-8 font-semibold text-2xl italic bg-black/50 p-1 px-3 outline cursor-pointer relative z-10 overflow-hidden ${
+            isArchived ? "text-gray-400 outline-gray-400" : "text-green-400 outline-green-400"
+          }`}
+        >
+          <div className="flex items-center gap-2">
+            <p>{isArchived ? "No XP Awarded" : `${currentXp?.xp}xp`}</p>
+            {!isArchived && (
+              <motion.div
+                animate={{ rotate: isXpExpanded ? 180 : 0 }}
+                transition={{ duration: 0.2 }}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                  className="size-6 stroke-2"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M19.5 8.25l-7.5 7.5-7.5-7.5"
+                  />
+                </svg>
+              </motion.div>
+            )}
+          </div>
+
+          {/* XP breakdown menu - part of the button */}
+          <AnimatePresence>
+            {isXpExpanded && !isArchived && (
+              <motion.div
+                initial={{
+                  opacity: 0,
+                  height: 0,
+                  marginTop: 0,
+                }}
+                animate={{
+                  opacity: 1,
+                  height: "auto",
+                  marginTop: 8,
+                }}
+                exit={{
+                  opacity: 0,
+                  height: 0,
+                  marginTop: 0,
+                }}
+                transition={{
+                  duration: 0.3,
+                  ease: "easeInOut",
+                }}
+                className="w-full space-y-1"
+              >
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{
+                    duration: 0.3,
+                  }}
+                  className="flex justify-between items-center text-xs"
+                >
+                  <p className="text-gray-300 font-barlow">Base XP:</p>
+                  <p className="font-barlow font-semibold text-green-400">{currentXp?.baseXp} XP</p>
+                </motion.div>
+                {currentXp?.xpExtrapolated.map((extrapolated, index) => (
+                  <motion.div
+                    key={extrapolated.type}
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{
+                      delay: (index + 1) * 0.1,
+                      duration: 0.2,
+                    }}
+                    className="flex justify-between items-center text-xs"
+                  >
+                    <span className="text-gray-300 font-barlow">{extrapolated.type}:</span>
+                    <span
+                      className={`font-barlow font-semibold ${
+                        extrapolated.xp > 0 ? "text-green-400" : "text-red-400"
+                      }`}
+                    >
+                      {extrapolated.xp > 0 ? "+" : ""}
+                      {extrapolated.xp} XP
+                    </span>
+                  </motion.div>
+                ))}
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </motion.button>
+        {/* route info section */}
         <motion.div
           initial={{ scale: 0.5 }}
           animate={{ scale: 1 }}
           exit={{ scale: 0.8 }}
           transition={{ duration: 0.2 }}
           className={clsx(
-            "bg-slate-900/35 p-3 rounded-lg shadow-lg text-white max-w-[22rem] w-full relative flex flex-col gap-10 z-30 outline-2 h-max justify-between",
+            "bg-slate-900/35 p-3 rounded-lg shadow-lg text-white max-w-[24rem] w-full relative flex flex-col gap-10 z-30 outline-2 h-max justify-between",
             {
               "outline-green-400": color === "green",
               "outline-red-400": color === "red",
@@ -208,15 +365,17 @@ export default function RoutePopUp({
               </div>
             )}
             <div className="flex flex-col w-[90%]">
-              <p className="text-3xl font-barlow font-bold max-w-[75%] truncate">{name}</p>
+              <p className="text-3xl font-barlow font-bold max-w-[80%] truncate">{name}</p>
               <p className="italic text-xl font-barlow font-semibold">{gradeMapped}</p>
 
-              <p className="text-sm font-barlow">
-                Community Grade:{" "}
-                <span className="font-bold">
-                  {communityGrade === "none" ? "N/A" : communityGrade}
-                </span>
-              </p>
+              {grade.toLowerCase() !== "vfeature" && grade.toLowerCase() !== "5.feature" && (
+                <p className="text-sm font-barlow">
+                  Community Grade:{" "}
+                  <span className="font-bold">
+                    {communityGrade === "none" ? "N/A" : communityGrade}
+                  </span>
+                </p>
+              )}
             </div>
           </div>
 
@@ -241,7 +400,7 @@ export default function RoutePopUp({
                     className="bg-gray-400/45 outline outline-gray-300 p-2 px-3 rounded-full shadow font-semibold font-barlow text-2xl"
                     onClick={handleRouteAttempt}
                   >
-                    {isAttemptLoading ? <ElementLoadingAnimation /> : "Attempt"}
+                    {isAttemptLoading ? <ElementLoadingAnimation size={6} /> : "Attempt"}
                   </button>
                   {frontendAttempts > 0 && (
                     <div className="">
@@ -254,7 +413,7 @@ export default function RoutePopUp({
                     className="bg-green-400/45 outline outline-green-400  p-2 px-3 rounded-full shadow font-semibold font-barlow text-2xl"
                     onClick={handleRouteCompletion}
                   >
-                    {isCompletionLoading ? <ElementLoadingAnimation /> : "Complete"}
+                    {isCompletionLoading ? <ElementLoadingAnimation size={6} /> : "Complete"}
                   </button>
                   {(frontendCompletions > 0 || isFrontendCompleted) && (
                     <div className="">
@@ -264,7 +423,9 @@ export default function RoutePopUp({
                 </div>
               </div>
 
-              {!userGrade ? (
+              {!userGrade &&
+              grade.toLowerCase() !== "vfeature" &&
+              grade.toLowerCase() !== "5.feature" ? (
                 <div className="flex flex-col gap-2 items-center mt-5">
                   <p className="font-barlow font-semibold text-lg">Grade it Yourself!</p>
                   <select
@@ -288,18 +449,17 @@ export default function RoutePopUp({
                     </button>
                   )}
                 </div>
-              ) : (
+              ) : userGrade ? (
                 <div className="flex flex-col gap-2 items-center mt-5">
                   <p className="text-center">
                     You graded this climb a{" "}
-                    <span className="font-bold">{userGrade.toUpperCase()}</span>, to change your
-                    grade go to the route page
+                    <span className="font-bold">{userGrade.toUpperCase()}</span>
                   </p>
                 </div>
-              )}
+              ) : null}
             </div>
           )}
-          <div className="flex items-center gap-2">
+          {/* <div className="flex items-center gap-2">
             <p className="text-xs text-center">
               Add & view completions, attempts, community grades, stars here
             </p>
@@ -323,7 +483,7 @@ export default function RoutePopUp({
                 />
               </svg>
             </Link>
-          </div>
+          </div> */}
         </motion.div>
       </motion.div>
     </div>

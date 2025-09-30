@@ -14,6 +14,7 @@ export function getAllGradeCounts(routes: Route[]){
     
     // Initialize arrays with all possible grades and zero counts
     const boulderGradeCounts = [
+        { grade: "vfeature", count: 0 },
         { grade: "vb", count: 0 },
         { grade: "v0", count: 0 },
         { grade: "v1", count: 0 },
@@ -34,6 +35,7 @@ export function getAllGradeCounts(routes: Route[]){
     ];
     
     const ropeGradeCounts = [
+        { grade: "5.feature", count: 0 },
         { grade: "5.B", count: 0 },
         { grade: "5.7", count: 0 },
         { grade: "5.8", count: 0 },

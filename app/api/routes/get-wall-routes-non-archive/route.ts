@@ -72,7 +72,7 @@ export async function GET(req: NextRequest) {
       completed: userId ? route.completions.length > 0 : false,
     }));
 
-    console.log("communityGrades", routesWithCompletedFlag[0].communityGrades);
+
     return NextResponse.json({ data: routesWithCompletedFlag });
   } catch (error) {
     console.error(error);

@@ -144,7 +144,7 @@ export default function LandingComponent({ user }: { user: User | null }) {
       >
         <SwiperSlide>
           <div className="flex flex-col items-center justify-center w-full h-full bg-black">
-            <p className="font-tomorrow text-7xl font-bold italic">Vertix</p>
+            <p className="font-jost text-7xl font-bold">Vertix</p>
             <p className="font-barlow font-thin text-md ">
               All of your climbing data, in one place
             </p>

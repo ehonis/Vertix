@@ -24,7 +24,9 @@ export default function SearchRoutes({
     completions: RouteCompletion[],
     attempts: RouteAttempt[],
     userGrade: string | null,
-    communityGrade: string
+    communityGrade: string,
+    xp: { xp: number; baseXp: number; xpExtrapolated: { type: string; xp: number }[] } | null,
+    isArchived: boolean
   ) => void;
   user: User;
   refreshTrigger?: number;
@@ -41,6 +43,13 @@ export default function SearchRoutes({
   useEffect(() => {
     // Reset the list when the search text changes.
     if (debouncedSearchText === "") {
+      setRoutes([]);
+      setHasMore(false);
+      return;
+    }
+
+    // Only search if we have at least 3 characters
+    if (debouncedSearchText.length < 3) {
       setRoutes([]);
       setHasMore(false);
       return;
@@ -105,44 +114,102 @@ export default function SearchRoutes({
     }
   };
 
+  // Split routes into current and archived
+  const currentRoutes = routes.filter(route => !route.isArchive);
+  const archivedRoutes = routes.filter(route => route.isArchive);
+
   return (
-    <div className="flex flex-col gap-3">
+    <div className="flex flex-col gap-3 mt-3">
+      {/* Show a message when search text is too short */}
+      {searchText.length > 0 && searchText.length < 3 && (
+        <div className="mt-4 text-center text-gray-500 text-sm">
+          Please enter at least 3 characters to search
+        </div>
+      )}
+
       {/* Show a loading spinner when initially loading the list */}
       {isLoading && routes.length === 0 ? (
         <div className="mt-8">
           <ElementLoadingAnimation size={16} />
         </div>
       ) : (
-        <div className="flex flex-col gap-3">
-          {routes.length > 0 &&
-            routes.map((route, index) => (
-              <AnimatePresence key={route.id}>
-                <motion.div
-                  key={route.id}
-                  initial={{ width: 0, opacity: 0 }}
-                  animate={{ width: "100%", opacity: 1 }}
-                  exit={{ width: 0, opacity: 0 }}
-                  transition={{
-                    width: { duration: 0.4, ease: "easeOut", delay: index * 0.07 },
-                    opacity: { duration: 0.4, ease: "easeOut", delay: index * 0.07 },
-                  }}
-                >
-                  <RouteTile
-                    user={user}
-                    color={route.color}
-                    name={route.title}
-                    grade={route.grade}
-                    id={route.id}
-                    isArchived={route.isArchive}
-                    isSearched={true}
-                    onData={onData}
-                    completions={route.completions}
-                    attempts={route.attempts}
-                    communityGrades={route.communityGrades}
-                  />
-                </motion.div>
-              </AnimatePresence>
-            ))}
+        <div className="flex flex-col gap-6">
+          {/* Current Routes Section */}
+          {currentRoutes.length > 0 && (
+            <>
+              <div className="flex items-center gap-3 mt-4">
+                <h3 className="text-2xl font-semibold text-white font-barlow">Current Routes</h3>
+                <div className="flex-1 h-px bg-gray-300"></div>
+              </div>
+              {currentRoutes.map((route, index) => (
+                <AnimatePresence key={route.id}>
+                  <motion.div
+                    key={route.id}
+                    initial={{ width: 0, opacity: 0 }}
+                    animate={{ width: "100%", opacity: 1 }}
+                    exit={{ width: 0, opacity: 0 }}
+                    transition={{
+                      width: { duration: 0.4, ease: "easeOut", delay: index * 0.07 },
+                      opacity: { duration: 0.4, ease: "easeOut", delay: index * 0.07 },
+                    }}
+                  >
+                    <RouteTile
+                      user={user}
+                      color={route.color}
+                      name={route.title}
+                      grade={route.grade}
+                      id={route.id}
+                      isArchived={route.isArchive}
+                      isSearched={true}
+                      onData={onData}
+                      completions={route.completions}
+                      attempts={route.attempts}
+                      communityGrades={route.communityGrades}
+                    />
+                  </motion.div>
+                </AnimatePresence>
+              ))}
+            </>
+          )}
+
+          {/* Archived Routes Section */}
+          {archivedRoutes.length > 0 && (
+            <>
+              <div className="flex items-center gap-3">
+                <h3 className="text-2xl font-semibold text-white">Archived Routes</h3>
+                <div className="flex-1 h-px bg-gray-300"></div>
+              </div>
+              {archivedRoutes.map((route, index) => (
+                <AnimatePresence key={route.id}>
+                  <motion.div
+                    key={route.id}
+                    initial={{ width: 0, opacity: 0 }}
+                    animate={{ width: "100%", opacity: 1 }}
+                    exit={{ width: 0, opacity: 0 }}
+                    transition={{
+                      width: { duration: 0.4, ease: "easeOut", delay: index * 0.07 },
+                      opacity: { duration: 0.4, ease: "easeOut", delay: index * 0.07 },
+                    }}
+                  >
+                    <RouteTile
+                      user={user}
+                      color={route.color}
+                      name={route.title}
+                      grade={route.grade}
+                      id={route.id}
+                      isArchived={route.isArchive}
+                      isSearched={true}
+                      onData={onData}
+                      completions={route.completions}
+                      attempts={route.attempts}
+                      communityGrades={route.communityGrades}
+                    />
+                  </motion.div>
+                </AnimatePresence>
+              ))}
+            </>
+          )}
+
           {hasMore && (
             <div className="flex justify-center">
               <button

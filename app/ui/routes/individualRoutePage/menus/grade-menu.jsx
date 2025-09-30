@@ -14,6 +14,20 @@ export default function GradeMenu({
   const gradeOptions = getGradeRange(route.grade);
   const [selectedGrade, setSelectedGrade] = useState(gradeOptions[0]);
   const { showNotification } = useNotification();
+
+  // Don't show grade menu for feature routes
+  if (route.grade.toLowerCase() === "vfeature" || route.grade.toLowerCase() === "5.feature") {
+    return (
+      <div className="flex flex-col items-center">
+        <p className="text-center text-red-500 font-bold">
+          Community grading is not available for feature routes.
+        </p>
+        <button onClick={onCancel} className="bg-gray-500 p-1 rounded-sm m-3">
+          Close
+        </button>
+      </div>
+    );
+  }
   const handleSelectGradeChange = event => {
     setSelectedGrade(event.target.value);
   };

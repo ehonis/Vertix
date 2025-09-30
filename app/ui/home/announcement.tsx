@@ -4,9 +4,9 @@ export default function Announcement({}) {
   return (
     <Link
       href="/routes"
-      className=" rounded-lg md:w-md font-barlow text-white text-md font-semibold text-center  "
+      className=" rounded-lg md:w-md w-[70%] font-barlow text-white text-md font-semibold text-center text-lg"
     >
-      ❗<span className="underline">Route Tracking is LIVE</span>❗
+      <span className="underline">XP Leveling & Boulder League signups are LIVE</span>
     </Link>
   );
 }

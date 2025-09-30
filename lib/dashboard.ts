@@ -37,6 +37,7 @@ export function splitRoutesByType(routes: (RouteCompletion & {route: {type: Rout
 export function getRouteGradeCounts(ropeRoutes: (RouteCompletion & {route: {type: RouteType , grade: string}})[], boulderRoutes: (RouteCompletion & {route: {type: RouteType , grade: string}})[],) {
     // Initialize arrays with all possible grades and their counts set to 0
     const boulderGradeCounts = [
+        { grade: "vfeature", count: 0 },
         { grade: "vb", count: 0 },
         { grade: "v0", count: 0 },
         { grade: "v1", count: 0 },
@@ -50,6 +51,7 @@ export function getRouteGradeCounts(ropeRoutes: (RouteCompletion & {route: {type
 
     ];
     const ropeGradeCounts = [
+        { grade: "5.feature", count: 0 },
         { grade: "5.B", count: 0 },
         { grade: "5.7", count: 0 },
         { grade: "5.8", count: 0 },
@@ -303,4 +305,7 @@ export function getLineChartCompletionsData(
         timeFrame,
         breakdown: formatBreakdown()
     };
+
+
 }
+

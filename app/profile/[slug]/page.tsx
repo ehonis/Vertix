@@ -1,6 +1,6 @@
 import prisma from "@/prisma";
 import SendsPlate from "@/app/ui/profile/profile-page/sends-plate";
-import ImageNamePlate from "@/app/ui/profile/profile-page/image-name-plate";
+import ImageNamePlate from "@/app/ui/profile/dashboard/image-name-plate";
 import { getRouteCompletions } from "@/lib/routeCompletions";
 import { redirect } from "next/navigation";
 import { Badge } from "@prisma/client";

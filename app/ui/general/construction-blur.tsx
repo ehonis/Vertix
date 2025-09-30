@@ -8,7 +8,7 @@ export default function ConstructionBlur() {
 
         <p className="text-white text-lg">
           Check back after the Spring Mixer to get access to all features of
-          <span className="font-tomorrow text-white font-bold italic"> Vertix</span>
+          <span className="font-jost text-white font-bold italic"> Vertix</span>
         </p>
         <Link href="/" className="text-blue-500 text-md font-semibold underline">
           Back to Home

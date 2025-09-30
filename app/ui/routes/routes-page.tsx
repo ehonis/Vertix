@@ -61,6 +61,12 @@ export default function RoutesPage({ user }: { user: User | null | undefined }) 
 
   const [routePopUpUserGrade, setRoutePopUpUserGrade] = useState<string | null>(null);
   const [routePopUpCommunityGrade, setRoutePopUpCommunityGrade] = useState<string | null>(null);
+  const [routePopUpXp, setRoutePopUpXp] = useState<{
+    xp: number;
+    baseXp: number;
+    xpExtrapolated: { type: string; xp: number }[];
+  } | null>(null);
+  const [routePopUpIsArchived, setRoutePopUpIsArchived] = useState<boolean>(false);
   /**
    * Update URL and localStorage when wall selection changes
    * This effect ensures that:
@@ -163,16 +169,20 @@ export default function RoutesPage({ user }: { user: User | null | undefined }) 
     completions: RouteCompletion[],
     attempts: RouteAttempt[],
     userGrade: string | null,
-    communityGrade: string | null
+    communityGrade: string | null,
+    xp: { xp: number; baseXp: number; xpExtrapolated: { type: string; xp: number }[] } | null,
+    isArchived: boolean
   ) => {
     setRoutePopUpId(routeId);
     setRoutePopUpName(name);
     setRoutePopUpGrade(grade);
     setRoutePopUpColor(color);
-    setRoutePopUpCompletions(completions[0]?.sends || 0);
+    setRoutePopUpCompletions(completions.length);
     setRoutePopUpAttempts(attempts[0]?.attempts || 0);
     setRoutePopUpCommunityGrade(communityGrade);
     setRoutePopUpUserGrade(userGrade);
+    setRoutePopUpXp(xp);
+    setRoutePopUpIsArchived(isArchived);
     setIsRoutePopUp(true);
   };
   const handleRoutePopUpCancel = () => {
@@ -184,8 +194,14 @@ export default function RoutesPage({ user }: { user: User | null | undefined }) 
     setRoutePopUpAttempts(0);
     setRoutePopUpCommunityGrade("");
     setRoutePopUpUserGrade(null);
+    setRoutePopUpIsArchived(false);
     setIsRoutePopUp(false);
     // Trigger a refresh of the WallRoutes component data
+    setRefreshTrigger(prev => prev + 1);
+  };
+
+  const handleRouteCompleted = () => {
+    // Trigger a refresh of the WallRoutes component data when a route is completed
     setRefreshTrigger(prev => prev + 1);
   };
 
@@ -204,6 +220,9 @@ export default function RoutesPage({ user }: { user: User | null | undefined }) 
             attempts={routePopUpAttempts}
             userGrade={routePopUpUserGrade}
             communityGrade={routePopUpCommunityGrade}
+            onRouteCompleted={handleRouteCompleted}
+            xp={routePopUpXp}
+            isArchived={routePopUpIsArchived}
           />
         </AnimatePresence>
       )}

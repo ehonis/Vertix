@@ -13,7 +13,12 @@ export default function RopeGradeSelect({
   const handleGradeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const newGrade = event.target.value;
     setGrade(newGrade);
-    if (newGrade === "5.B" || newGrade === "5.7" || newGrade === "5.8") {
+    if (
+      newGrade === "5.feature" ||
+      newGrade === "5.B" ||
+      newGrade === "5.7" ||
+      newGrade === "5.8"
+    ) {
       onGradeChange(newGrade);
       setModifier("");
     } else {
@@ -37,6 +42,7 @@ export default function RopeGradeSelect({
         className="bg-slate-900 rounded-sm text-white font-barlow font-bold p-1 text-lg"
       >
         <option value="">Grade</option>
+        <option value="5.feature">5.FEATURE</option>
         <option value="5.B">5.B</option>
         <option value="5.7">5.7</option>
         <option value="5.8">5.8</option>
@@ -46,7 +52,7 @@ export default function RopeGradeSelect({
         <option value="5.12">5.12</option>
         <option value="5.13">5.13</option>
       </select>
-      {grade !== "5.B" && grade !== "5.7" && (
+      {grade !== "5.feature" && grade !== "5.B" && grade !== "5.7" && (
         <select
           name="modifier"
           id=""

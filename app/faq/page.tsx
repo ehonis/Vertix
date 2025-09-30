@@ -17,12 +17,12 @@ export default function FAQPage() {
       q: "What is Vertix alpha?",
       a: (
         <p>
-          <span className="font-tomorrow font-bold italic text-purple-500">Vertix</span> is an
+          <span className="font-jost font-bold italic text-purple-500">Vertix</span> is an
           interactive web application designed to enhance your climbing gym experience by providing
           detailed route tracking, community features like grades and ratings, and engaging
           real-time competitions.
           <br />
-          <br /> <span className="text-red-500 font-tomorrow">alpha </span>refers to the stage of
+          <br /> <span className="text-red-500 font-jost">alpha </span>refers to the stage of
           development of Vertix. Right now very little features are actually included in the alpha
           stage. Many more features to come in the beta and full release
         </p>
@@ -85,6 +85,39 @@ export default function FAQPage() {
           &apos;premium&apos; tier in the future using a &apos;Pay What You Want&apos; model. This
           is primarily a way to support the platform&apos;s development, but it will also unlock
           some additional features beyond the free experience.
+        </p>
+      ),
+    },
+    {
+      q: "How is xp calculated per route?",
+      a: (
+        <div className="flex flex-col gap-2">
+          <p className="font-bold">
+            XP is calculated based on the difficulty of the route, your highest grade, the number of
+            your sends, and if it is your first time completing the route.
+          </p>
+          <div className="flex flex-col gap-2 text-sm">
+            <p>- The base xp for a route is determined by the grade of the route.</p>
+            <p>- The first time you complete a route, you will receive a bonus xp.</p>
+            <p>- The more times you complete a route, the less xp you will receive per send.</p>
+            <p>
+              - If you complete a route at a higher grade than your current highest grade, you will
+              receive a bonus xp.
+            </p>
+            <p>
+              - For feature routes, you will a recieve a one time amount of extra xp. Every send
+              after will result in no xp.
+            </p>
+          </div>
+        </div>
+      ),
+    },
+    {
+      q: "How is the leaderboard calculated?",
+      a: (
+        <p>
+          The leaderboard is calculated based on the xp you have earned. The leaderboard is updated
+          every time you submit a route
         </p>
       ),
     },

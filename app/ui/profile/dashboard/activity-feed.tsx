@@ -65,7 +65,7 @@ export default async function ActivityFeed({ userId }: { userId: string }) {
                 "completionDate" in activity ? activity.completionDate : activity.attemptDate;
               return (
                 <Link
-                  href={`/route/${activity.route.id}`}
+                  href={`/routes/${activity.route.id}`}
                   key={activity.id}
                   className={clsx("flex justify-between items-center bg-gray-700 rounded-md p-2", {
                     "bg-green-400/35 outline outline-green-400": activity.route.color === "green",

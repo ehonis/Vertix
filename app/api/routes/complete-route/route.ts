@@ -2,7 +2,7 @@ import prisma from "@/prisma";
 import { NextResponse, NextRequest } from "next/server";
 import { auth } from "@/auth";
 import { RouteType, User } from "@prisma/client";
-import { findIfBoulderGradeIsHigher, findIfRopeGradeIsHigher } from "@/lib/route";
+import { findIfBoulderGradeIsHigher, findIfRopeGradeIsHigher, calculateCompletionXpForRoute, getRouteXp } from "@/lib/route";
 
 export async function POST(req: NextRequest) {
   const session = await auth();
@@ -30,51 +30,58 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ message: "Route not found" },{ status: 404 });
     }
 
-    if(route.type === RouteType.ROPE){
-      if(findIfRopeGradeIsHigher(user as User, route)){
-        await prisma.user.update({
-          where: {
-            id: userId,
-          },
-          data: {
-            highestRopeGrade: route.grade,
-          },
-        });
-      }
-    }
+    // Get current completion count for XP calculation
+    const existingCompletions = await prisma.routeCompletion.findMany({
+      where: {
+        userId: userId,
+        routeId: routeId,
+      },
+    });
 
-    if(route.type === RouteType.BOULDER){
-      if(findIfBoulderGradeIsHigher(user as User, route)){
-        await prisma.user.update({
-          where: {
-            id: userId,
-          },
-          data: {
-            highestBoulderGrade: route.grade,
-          },
-        });
-      }
-    }
-    
+    const completionCount = existingCompletions.length;
 
-     await prisma.routeCompletion.upsert({
+    // Check if this is a new highest grade
+    const isNewHighestRope = route.type === RouteType.ROPE && findIfRopeGradeIsHigher(user as User, route);
+    const isNewHighestBoulder = route.type === RouteType.BOULDER && findIfBoulderGradeIsHigher(user as User, route);
+
+    if(isNewHighestRope){
+      await prisma.user.update({
         where: {
-          userId_routeId: {
-            userId: userId,
-            routeId: routeId,
-          },
+          id: userId,
         },
-        update: {
-          // For example, increment the sends count and update the completion date
-          sends: { increment: 1 },
-          completionDate: new Date(),
-        },
-        create: {
-          userId: userId,
-          routeId: routeId,
-          // other fields with default values will be set if not provided
+        data: {
+          highestRopeGrade: route.grade,
         },
       });
+    }
+
+    if(isNewHighestBoulder){
+      await prisma.user.update({
+        where: {
+          id: userId,
+        },
+        data: {
+          highestBoulderGrade: route.grade,
+        },
+      });
+    }
+
+    // Calculate XP for this completion
+    const xpData = calculateCompletionXpForRoute({
+      grade: route.grade,
+      previousCompletions: completionCount,
+      newHighestGrade: isNewHighestRope || isNewHighestBoulder
+    });
+
+    // Create new completion record
+    await prisma.routeCompletion.create({
+      data: {
+        userId: userId,
+        routeId: routeId,
+        xpEarned: xpData.xp,
+        completionDate: new Date(),
+      },
+    });
     
 
     return NextResponse.json({

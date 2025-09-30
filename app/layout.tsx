@@ -3,8 +3,12 @@ import "./globals.css";
 import NavBar from "./ui/navbar/navbar";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { NotificationProvider } from "./contexts/NotificationContext";
-import Notification from "./ui/notification";
-import { Tomorrow, Barlow } from "next/font/google";
+import { XpProvider } from "./contexts/XpContext";
+import { AnnouncementProvider } from "./contexts/AnnouncementContext";
+import Notification from "./ui/general/notification";
+import Announcement from "./ui/general/announcement";
+import XpLevelBarWrapper from "./components/XpLevelBarWrapper";
+import { Tomorrow, Barlow, Jost } from "next/font/google";
 import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
 import { extractRouterConfig } from "uploadthing/server";
 import { ourFileRouter } from "./api/uploadthing/core";
@@ -24,6 +28,13 @@ const tomorrow = Tomorrow({
   display: "swap",
 });
 
+const jost = Jost({
+  subsets: ["latin"],
+  weight: ["700"],
+  variable: "--font-jost",
+  display: "swap",
+});
+
 const geistMono = localFont({
   src: "./fonts/GeistMonoVF.woff",
   variable: "--font-geist-mono",
@@ -39,17 +50,23 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body
-        className={`${geistMono.variable} ${tomorrow.variable} ${barlow.variable} antialiased bg-black min-h-screen flex flex-col`}
+        className={`${geistMono.variable} ${tomorrow.variable} ${barlow.variable} ${jost.variable} antialiased bg-black min-h-screen flex flex-col`}
       >
         <PostHogProvider>
           <NotificationProvider>
-            <NextSSRPlugin routerConfig={extractRouterConfig(ourFileRouter)} />
-            <Notification />
-            <NavBar />
-            <SpeedInsights />
+            <XpProvider initialXp={0}>
+              <AnnouncementProvider>
+                <NextSSRPlugin routerConfig={extractRouterConfig(ourFileRouter)} />
+                <Notification />
+                <Announcement />
+                <NavBar />
+                <SpeedInsights />
 
-            <main className="flex-1">{children}</main>
-            <Footer />
+                <main className="flex-1">{children}</main>
+                <Footer />
+                <XpLevelBarWrapper />
+              </AnnouncementProvider>
+            </XpProvider>
           </NotificationProvider>
         </PostHogProvider>
       </body>

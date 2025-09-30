@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "Route" ADD COLUMN     "xp" SMALLINT NOT NULL DEFAULT 0;
