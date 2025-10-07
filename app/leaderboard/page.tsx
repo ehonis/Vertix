@@ -23,6 +23,7 @@ export default async function Leaderboard() {
       totalXp: {
         gt: 0, // Only show users with XP
       },
+      private: false,
     },
     orderBy: {
       totalXp: "desc",
@@ -38,6 +39,9 @@ export default async function Leaderboard() {
     where: {
       month: month,
       year: today.getFullYear(),
+      user: {
+        private: false,
+      },
     },
     orderBy: {
       xp: "desc",
@@ -67,8 +71,8 @@ export default async function Leaderboard() {
   // Convert -1 to undefined if user not found
   const userTotalIndex = foundIndexOfUserTotal === -1 ? undefined : foundIndexOfUserTotal;
   return (
-    <div className="w-screen">
-      <div className="px-4 pt-6 flex flex-col gap-4 items-center w-full">
+    <div className="w-screen flex  justify-center">
+      <div className="px-4 pt-6 flex flex-col gap-4 items-center md:w-lg w-full">
         <div className="flex flex-col gap-1">
           <div className="relative bg-black rounded-md overflow-hidden flex justify-between items-end md:w-lg w-xs">
             <h1 className="relative font-barlow italic font-bold text-white text-4xl z-10">

@@ -40,6 +40,7 @@ export default function ProfileSettingsPane({ user }: { user: User }) {
   const [isNameValid, setIsNameValid] = useState(true);
   const [nameError, setNameError] = useState("");
   const [tag, setTag] = useState<string>(user.tag ?? "none");
+  const [profileVisibility, setProfileVisibility] = useState(user.private ? "true" : "false");
 
   const checkUsername = useCallback(async () => {
     if (username.length > 0 && hasUserTyped && username !== user.username) {
@@ -91,12 +92,9 @@ export default function ProfileSettingsPane({ user }: { user: User }) {
       name,
       username,
       tag,
+      privacy: profileVisibility === "true",
     };
-    if (
-      isNameValid &&
-      isUsernameValid &&
-      (tag !== user.tag || username !== user.username || name !== user.name)
-    ) {
+    {
       try {
         const response = await fetch("/api/user/settings/uploadOnboarding", {
           method: "POST",
@@ -112,6 +110,7 @@ export default function ProfileSettingsPane({ user }: { user: User }) {
             message: "Profile settings saved",
             color: "green",
           });
+          setHasUserTyped(false);
           router.push(`/profile/${username}/settings`);
           router.refresh();
         }
@@ -121,11 +120,6 @@ export default function ProfileSettingsPane({ user }: { user: User }) {
           color: "red",
         });
       }
-    } else {
-      showNotification({
-        message: "Please fix all errors",
-        color: "red",
-      });
     }
   };
   useEffect(() => {
@@ -290,13 +284,42 @@ export default function ProfileSettingsPane({ user }: { user: User }) {
           value={tag}
           onChange={e => {
             setTag(e.target.value);
-            setHasUserTyped(true);
+            if (e.target.value === user.tag) {
+              setHasUserTyped(false);
+            } else {
+              setHasUserTyped(true);
+            }
           }}
         >
           <option value="Rope Climber">Rope Climber</option>
           <option value="Boulder">Boulder</option>
           <option value="All Around">All Around</option>
           <option value="none">none</option>
+        </select>
+      </div>
+      <div className="flex flex-col gap-1">
+        <div className="flex flex-col">
+          <p className="text-lg font-bold">Profile Visibility</p>
+          <p className="text-xs text-gray-300">
+            If your profile is private, you will not appear on the public leaderboard.
+          </p>
+        </div>
+        <select
+          name=""
+          id=""
+          className="bg-bg2 rounded-md p-2 text-lg"
+          value={profileVisibility}
+          onChange={e => {
+            setProfileVisibility(e.target.value);
+            if (e.target.value === (user.private ? "true" : "false")) {
+              setHasUserTyped(false);
+            } else {
+              setHasUserTyped(true);
+            }
+          }}
+        >
+          <option value="true">Private</option>
+          <option value="false">Public</option>
         </select>
       </div>
       {hasUserTyped && (

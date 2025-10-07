@@ -51,6 +51,16 @@ export default function Leaderboard({
     monthlyXp = monthlyLeaderBoardData.find(climber => climber.user.id === user.id)?.xp;
   }
 
+  const shortenXp = (xp: number) => {
+    if (xp > 1000000) {
+      return `${(xp / 1000000).toFixed(1)}M`;
+    } else if (xp > 1000) {
+      return `${(xp / 1000).toFixed(1)}K`;
+    } else {
+      return xp;
+    }
+  };
+
   return (
     <div className="flex flex-col w-full px-2 gap-5 font-barlow text-white">
       {/* userData */}
@@ -62,7 +72,7 @@ export default function Leaderboard({
           </h2>
           <div
             className={clsx(
-              "flex py-3 pl-3 pr-1 rounded-md bg-blue-500/35 outline-1 outline-blue-500 justify-between font-tomorrow font-bold",
+              "flex py-3 pl-3 pr-1 rounded-md bg-blue-500/35 outline-1 outline-blue-500 justify-between font-barlow font-bold",
               buttonText === "Monthly"
                 ? "bg-blue-500/35 outline-1 outline-blue-500"
                 : "bg-purple-500/35 outline-1 outline-purple-500"
@@ -72,9 +82,12 @@ export default function Leaderboard({
               foundIndexOfUserMonthly !== undefined ? (
                 <>
                   <span>{foundIndexOfUserMonthly + 1}</span>
-                  <span>{user.name}</span>
-                  <span className="text-center  text-green-400 px-2 rounded-full bg-slate-900/65 outline-1 outline-green-400">
-                    {monthlyXp}xp
+                  <div className="flex items-center gap-1.5">
+                    <LevelIndicator xp={user.totalXp} size="sm" />
+                    <span>{user.username ? user.username : user.id}</span>
+                  </div>
+                  <span className="text-center text-sm text-green-400 px-2 rounded-full bg-slate-900/65 outline-1 outline-green-400">
+                    {shortenXp(monthlyXp ? monthlyXp : 0)}xp
                   </span>
                 </>
               ) : (
@@ -83,15 +96,49 @@ export default function Leaderboard({
             ) : foundIndexOfUserTotal !== undefined ? (
               <>
                 <span>{foundIndexOfUserTotal + 1}</span>
-                <span>{user.name}</span>
+                <div className="flex items-center gap-1.5">
+                  <LevelIndicator xp={user.totalXp} size="sm" />
+                  <span>{user.username ? user.username : user.id}</span>
+                </div>
                 <span className="text-center  text-green-400 px-2 rounded-full bg-slate-900/65 outline-1 outline-green-400">
-                  {user.totalXp}xp
+                  {shortenXp(user.totalXp)}xp
                 </span>
               </>
             ) : (
               <div>No Data for this month</div>
             )}
           </div>
+          {!user.private ? (
+            <div className="text-xs ">
+              <p>
+                Your profile is <span className="text-green-400 font-bold">public</span>, so you are{" "}
+                <span className="underline font-bold">visible</span> on the leaderboard. To change
+                this, go to your{" "}
+                <Link
+                  href={`/profile/${user.username}/settings`}
+                  className="text-blue-400 underline"
+                >
+                  profile settings
+                </Link>
+                .
+              </p>
+            </div>
+          ) : (
+            <div className="text-xs ">
+              <p>
+                Your profile is <span className="text-red-400 font-bold">private</span>, so you are{" "}
+                <span className="underline font-bold">invisible</span> on the leaderboard. To change
+                this, go to your{" "}
+                <Link
+                  href={`/profile/${user.username}/settings`}
+                  className="text-blue-400 underline"
+                >
+                  profile settings
+                </Link>
+                .
+              </p>
+            </div>
+          )}
         </div>
       ) : (
         <Link
@@ -101,7 +148,7 @@ export default function Leaderboard({
           <p>Sign up or sign in to see your position!</p>
         </Link>
       )}
-      <div className="w-full h-1 rounded-full bg-white" />
+
       <div className="flex gap-4 justify-between items-center">
         <h1 className="text-start text-3xl font-bold">{headerText}</h1>
         <button
@@ -141,7 +188,7 @@ export default function Leaderboard({
                   <div
                     key={climber.user.id}
                     className={clsx(
-                      "grid w-full font-tomorrow font-bold py-3 pl-3 pr-1 rounded-md ",
+                      "grid w-full font-barlow font-bold py-3 pl-3 pr-1 rounded-md ",
                       index === 0 && "bg-amber-500/75 outline-1 outline-amber-500",
                       index === 1 && "bg-gray-500/75 outline-1 outline-gray-500",
                       index === 2 && "bg-orange-500/75 outline-1 outline-orange-500",
@@ -156,8 +203,8 @@ export default function Leaderboard({
                         {climber.user.username ? climber.user.username : climber.user.id}
                       </span>
                     </div>
-                    <span className="text-center  text-green-400 px-2 rounded-full bg-slate-900/45 outline-1 outline-green-400">
-                      {climber.xp}xp
+                    <span className="text-center text-green-400 px-2 rounded-full bg-slate-900/65 outline-1 outline-green-400">
+                      {shortenXp(climber.xp)}xp
                     </span>
                   </div>
                 ))
@@ -169,7 +216,7 @@ export default function Leaderboard({
                 <div
                   key={climber.id}
                   className={clsx(
-                    "grid w-full font-barlow font-bold text-xl py-3 pl-3 pr-1 rounded-md ",
+                    "grid w-full font-barlow font-bold py-3 pl-3 pr-1 rounded-md ",
                     index === 0 && "bg-amber-500/75 outline-1 outline-amber-500",
                     index === 1 && "bg-gray-500/75 outline-1 outline-gray-500",
                     index === 2 && "bg-orange-500/75 outline-1 outline-orange-500",
@@ -179,13 +226,13 @@ export default function Leaderboard({
                 >
                   <span className="text-start">{index + 1}</span>
                   <div className="flex items-center gap-1.5 justify-center">
-                    <span className="no-wrap truncate max-w-44 ">
-                      @{climber.username ? climber.username : climber.id}
-                    </span>
                     <LevelIndicator xp={climber.totalXp} size="sm" />
+                    <span className="no-wrap truncate max-w-44 ">
+                      {climber.username ? climber.username : climber.id}
+                    </span>
                   </div>
                   <span className="text-center  text-green-400 px-2 rounded-full bg-slate-900/65 outline-1 outline-green-400">
-                    {climber.totalXp}xp
+                    {shortenXp(climber.totalXp)}xp
                   </span>
                 </div>
               ))

@@ -87,9 +87,7 @@ export async function POST(req: NextRequest)  {
                 where: {
                     id: climber.userId
                 },
-                select: {
-                    highestBoulderGrade: true,
-                }
+                
             });
 
             if (!user) {
@@ -131,7 +129,7 @@ export async function POST(req: NextRequest)  {
                     
                     if (routeInfo) {
                         const newGrade = routeInfo.grade;
-                        if (!currentHighestGrade || isGradeHigher(currentHighestGrade, newGrade, "boulder")) {
+                        if (!currentHighestGrade || isGradeHigher(user, newGrade, "boulder")) {
                             currentHighestGrade = newGrade;
                             console.log(`Found higher grade ${newGrade} for user ${climber.userId}`);
                         }
@@ -149,7 +147,7 @@ export async function POST(req: NextRequest)  {
             }
 
             // After processing all completions for this user, update their highest grade if it changed
-            if (currentHighestGrade && (!user.highestBoulderGrade || isGradeHigher(user.highestBoulderGrade, currentHighestGrade, "boulder"))) {
+            if (currentHighestGrade && (!user.highestBoulderGrade || isGradeHigher(user, currentHighestGrade, "boulder"))) {
                 console.log(`Updating highest boulder grade for user ${climber.userId} from ${user.highestBoulderGrade || 'none'} to ${currentHighestGrade}`);
                 await tx.user.update({
                     where: { id: climber.userId },

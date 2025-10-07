@@ -79,11 +79,7 @@ export default function RouteTile({
         calculateCompletionXpForRoute({
           grade,
           previousCompletions: sends,
-          newHighestGrade: isGradeHigher(
-            routeType === "rope" ? user.highestRopeGrade : user.highestBoulderGrade,
-            grade,
-            routeType
-          ),
+          newHighestGrade: isGradeHigher(user as User, grade, routeType),
         })
       );
     } else if (isArchived) {

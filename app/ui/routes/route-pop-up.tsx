@@ -5,6 +5,7 @@ import { useNotification } from "@/app/contexts/NotificationContext";
 import { useRouter } from "next/navigation";
 import { User } from "@prisma/client";
 import { useXpIntegration } from "@/app/hooks/useXpIntegration";
+import { useRouteCompletion } from "@/app/contexts/routeCompletionContext";
 import Link from "next/link";
 import clsx from "clsx";
 import {
@@ -44,6 +45,8 @@ export default function RoutePopUp({
   isArchived: boolean;
 }) {
   const { showNotification } = useNotification();
+  const { isToday, toggleIsToday, isFlash, toggleIsFlash, date, setDate, getEffectiveDate } =
+    useRouteCompletion();
   const router = useRouter();
   const [isCompletionLoading, setIsCompletionLoading] = useState(false);
   const [isFrontendCompleted, setIsFrontendCompleted] = useState(false);
@@ -68,17 +71,17 @@ export default function RoutePopUp({
 
   const [selectedGrade, setSelectedGrade] = useState("");
 
-  const handleRouteCompletion = async () => {
+  const handleQuickComplete = async () => {
     if (!user) {
       showNotification({
         message:
-          "Not sure how you  got here, but you cant complete this route because your not signed in",
+          "Not sure how you  got here, but you cant complete this route because you are not signed in",
         color: "red",
       });
       return;
     }
     try {
-      const data = { userId: user.id, routeId: id };
+      const data = { userId: user.id, routeId: id, flash: isFlash, date: getEffectiveDate() };
       setIsCompletionLoading(true);
       const response = await fetch("/api/routes/complete-route", {
         method: "POST",
@@ -100,7 +103,7 @@ export default function RoutePopUp({
           gainRouteCompletionXp({
             grade: grade,
             previousCompletions: frontendCompletions,
-            newHighestGrade: isGradeHigher(user.highestRopeGrade, grade, routeType),
+            newHighestGrade: isGradeHigher(user as User, grade, routeType),
           });
         }
 
@@ -193,6 +196,26 @@ export default function RoutePopUp({
       setGradeMapped(grade);
     }
   }, [grade]);
+
+  const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedDate = new Date(e.target.value);
+    const today = new Date();
+
+    // Reset time to start of day for accurate comparison
+    today.setHours(0, 0, 0, 0);
+    selectedDate.setHours(0, 0, 0, 0);
+
+    if (selectedDate > today) {
+      showNotification({
+        message: "Cannot complete routes in the future! Please select today or a past date.",
+        color: "red",
+      });
+      setDate(today);
+      return;
+    }
+
+    setDate(selectedDate);
+  };
 
   return (
     <div>
@@ -322,7 +345,7 @@ export default function RoutePopUp({
           exit={{ scale: 0.8 }}
           transition={{ duration: 0.2 }}
           className={clsx(
-            "bg-slate-900/35 p-3 rounded-lg shadow-lg text-white max-w-[24rem] w-full relative flex flex-col gap-10 z-30 outline-2 h-max justify-between",
+            "bg-slate-900/35 p-3 rounded-lg shadow-lg text-white max-w-[23rem] w-full relative flex flex-col gap-10 z-30 outline-2 h-max justify-between",
             {
               "outline-green-400": color === "green",
               "outline-red-400": color === "red",
@@ -393,11 +416,10 @@ export default function RoutePopUp({
             </div>
           ) : (
             <div className="flex flex-col gap-2 justify-center items-center">
-              <p className="font-barlow font-semibold text-lg">Quick Actions</p>
-              <div className="flex w-4/5 justify-between">
+              <div className="flex  justify-between gap-5">
                 <div className="flex flex-col gap-2 items-center">
                   <button
-                    className="bg-gray-400/45 outline outline-gray-300 p-2 px-3 rounded-full shadow font-semibold font-barlow text-2xl"
+                    className="bg-gray-400/45 outline outline-gray-300 p-2 px-5 rounded-full shadow font-semibold font-barlow text-2xl"
                     onClick={handleRouteAttempt}
                   >
                     {isAttemptLoading ? <ElementLoadingAnimation size={6} /> : "Attempt"}
@@ -410,8 +432,8 @@ export default function RoutePopUp({
                 </div>
                 <div className="flex flex-col gap-2 items-center">
                   <button
-                    className="bg-green-400/45 outline outline-green-400  p-2 px-3 rounded-full shadow font-semibold font-barlow text-2xl"
-                    onClick={handleRouteCompletion}
+                    className="bg-green-400/45 outline outline-green-400  p-2 px-5 rounded-full shadow font-semibold font-barlow text-2xl"
+                    onClick={handleQuickComplete}
                   >
                     {isCompletionLoading ? <ElementLoadingAnimation size={6} /> : "Complete"}
                   </button>
@@ -429,7 +451,7 @@ export default function RoutePopUp({
                 <div className="flex flex-col gap-2 items-center mt-5">
                   <p className="font-barlow font-semibold text-lg">Grade it Yourself!</p>
                   <select
-                    className="bg-gray-400/45 outline outline-gray-300 p-2 px-3 rounded shadow font-semibold font-barlow text-2xl"
+                    className=" outline outline-gray-300 p-2 px-4 rounded-full shadow font-semibold font-barlow text-2xl"
                     onChange={e => setSelectedGrade(e.target.value)}
                     value={selectedGrade}
                   >
@@ -457,8 +479,90 @@ export default function RoutePopUp({
                   </p>
                 </div>
               ) : null}
+              <p className="font-barlow font-semibold text-lg mt-5">Options</p>
+              <div className="flex flex-col gap-2 bg-gray-600/45 outline outline-gray-300 p-3 w-full rounded ">
+                <div className="flex items-center gap-2 ">
+                  <button
+                    className={clsx(
+                      "  p-2 rounded-full ",
+                      !isToday ? "bg-gray-600" : "bg-green-400/45 outline outline-green-400"
+                    )}
+                    onClick={toggleIsToday}
+                  >
+                    {isToday ? (
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="size-5 stroke-2"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="m4.5 12.75 6 6 9-13.5"
+                        />
+                      </svg>
+                    ) : (
+                      <div className="size-5 bg-gray-400 rounded-full"></div>
+                    )}
+                  </button>
+                  <p className="text-base font-barlow">
+                    Completion Date is{" "}
+                    {isToday ? (
+                      <span className="text-green-400">Today</span>
+                    ) : (
+                      <input
+                        type="date"
+                        value={date.toISOString().split("T")[0]}
+                        onChange={handleDateChange}
+                        className="p-1 rounded-lg bg-gray-700 text-white cursor-pointer font-barlow font-bold focus:outline-hidden"
+                      />
+                    )}
+                  </p>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <button
+                    className={clsx(
+                      "  p-2 rounded-full ",
+                      !isFlash ? "bg-gray-600" : "bg-green-400/45 outline outline-green-400"
+                    )}
+                    onClick={toggleIsFlash}
+                  >
+                    {isFlash ? (
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="size-5 stroke-2"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="m4.5 12.75 6 6 9-13.5"
+                        />
+                      </svg>
+                    ) : (
+                      <div className="size-5 bg-gray-400 rounded-full"></div>
+                    )}
+                  </button>
+                  <p className="text-base font-barlow">
+                    Flash Mode is{" "}
+                    {isFlash ? (
+                      <span className="text-green-400">ON</span>
+                    ) : (
+                      <span className="text-red-400">OFF</span>
+                    )}
+                  </p>
+                </div>
+              </div>
             </div>
           )}
+
           {/* <div className="flex items-center gap-2">
             <p className="text-xs text-center">
               Add & view completions, attempts, community grades, stars here

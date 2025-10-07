@@ -13,7 +13,7 @@ export async function POST(req: NextRequest) {
 
 
   try {
-    const { userId, routeId } = await req.json();
+    const { userId, routeId, flash, date } = await req.json();
 
     const route = await prisma.route.findUnique({
       where: {
@@ -79,7 +79,8 @@ export async function POST(req: NextRequest) {
         userId: userId,
         routeId: routeId,
         xpEarned: xpData.xp,
-        completionDate: new Date(),
+        completionDate: date ? new Date(date) : new Date(),
+        flash: flash || false,
       },
     });
     

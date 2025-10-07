@@ -13,6 +13,7 @@ import clsx from "clsx";
 
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
+import { RouteCompletionProvider } from "@/app/contexts/routeCompletionContext";
 
 export default function RoutesPage({ user }: { user: User | null | undefined }) {
   const router = useRouter();
@@ -206,126 +207,128 @@ export default function RoutesPage({ user }: { user: User | null | undefined }) 
   };
 
   return (
-    <div className="w-full  font-barlow text-white flex justify-center">
-      {isRoutePopUp && (
-        <AnimatePresence>
-          <RoutePopUp
-            onCancel={handleRoutePopUpCancel}
-            id={routePopUpId}
-            name={routePopUpName}
-            grade={routePopUpGrade}
-            user={user}
-            color={routePopUpColor}
-            completions={routePopUpCompletions}
-            attempts={routePopUpAttempts}
-            userGrade={routePopUpUserGrade}
-            communityGrade={routePopUpCommunityGrade}
-            onRouteCompleted={handleRouteCompleted}
-            xp={routePopUpXp}
-            isArchived={routePopUpIsArchived}
-          />
-        </AnimatePresence>
-      )}
-      <div className="flex flex-col w-xs md:w-md h-full items-center mt-6">
-        <div className="flex flex-col gap-1 w-full mb-3">
-          <div className="flex gap-2 w-full justify-between items-center">
-            {!isSearch && (
-              <h1 className="font-barlow text-white font-bold text-3xl text-start place-self-start italic">
-                Routes
-              </h1>
-            )}
-
-            <AnimatePresence>
-              {isSearch && (
-                <motion.input
-                  key="search-input"
-                  type="text"
-                  className="border-b border-white w-full bg-transparent text-white placeholder-gray-500 focus:outline-none"
-                  placeholder="Search routes by name or grade"
-                  variants={searchInputVariants}
-                  value={searchText}
-                  onChange={e => setSearchText(e.target.value)}
-                  initial="hidden"
-                  animate="visible"
-                  exit="exit"
-                />
-              )}
-            </AnimatePresence>
-            <button onClick={() => handleSearchButton()}>
-              {isSearch ? (
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={1.5}
-                  stroke="currentColor"
-                  className="size-8"
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
-                </svg>
-              ) : (
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={1.5}
-                  stroke="currentColor"
-                  className="size-8"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
-                  />
-                </svg>
-              )}
-            </button>
-          </div>
-        </div>
-        {isSearch && (
-          <div>
-            <SearchRoutes
-              searchText={searchText}
-              onData={handleRoutePopUp}
-              user={user as User}
-              refreshTrigger={refreshTrigger}
+    <RouteCompletionProvider>
+      <div className="w-full  font-barlow text-white flex justify-center">
+        {isRoutePopUp && (
+          <AnimatePresence>
+            <RoutePopUp
+              onCancel={handleRoutePopUpCancel}
+              id={routePopUpId}
+              name={routePopUpName}
+              grade={routePopUpGrade}
+              user={user}
+              color={routePopUpColor}
+              completions={routePopUpCompletions}
+              attempts={routePopUpAttempts}
+              userGrade={routePopUpUserGrade}
+              communityGrade={routePopUpCommunityGrade}
+              onRouteCompleted={handleRouteCompleted}
+              xp={routePopUpXp}
+              isArchived={routePopUpIsArchived}
             />
-          </div>
+          </AnimatePresence>
         )}
-        <AnimatePresence>
-          {!isSearch && (
-            <motion.div
-              variants={topDownVariants}
-              animate="visible"
-              exit="exit"
-              className="flex flex-col w-full  "
-            >
-              <div className="bg-slate-900 rounded p-5 pl-4 py-3 flex flex-col justify-center items-center outline outline-blue-600">
-                <TopDown onData={handleTopDownChange} initialSelection={wall} />
-              </div>
-              <p className="font-normal text-xs mt-1">
-                Tap a wall on the map to see the routes there
-              </p>
-            </motion.div>
-          )}
-        </AnimatePresence>
+        <div className="flex flex-col w-xs md:w-md h-full items-center mt-6">
+          <div className="flex flex-col gap-1 w-full mb-3">
+            <div className="flex gap-2 w-full justify-between items-center">
+              {!isSearch && (
+                <h1 className="font-barlow text-white font-bold text-3xl text-start place-self-start italic">
+                  Routes
+                </h1>
+              )}
 
-        <AnimatePresence>
-          {isTopDownActive && (
-            <motion.div variants={topDownVariants} animate="visible" exit="exit" className="mt-3">
-              <h2 className="font-barlow text-white font-bold text-2xl text-start place-self-start mb-2">
-                Sorted Left → Right
-              </h2>
-              <WallRoutes
-                wall={wall}
-                user={user as User}
+              <AnimatePresence>
+                {isSearch && (
+                  <motion.input
+                    key="search-input"
+                    type="text"
+                    className="border-b border-white w-full bg-transparent text-white placeholder-gray-500 focus:outline-none"
+                    placeholder="Search routes by name or grade"
+                    variants={searchInputVariants}
+                    value={searchText}
+                    onChange={e => setSearchText(e.target.value)}
+                    initial="hidden"
+                    animate="visible"
+                    exit="exit"
+                  />
+                )}
+              </AnimatePresence>
+              <button onClick={() => handleSearchButton()}>
+                {isSearch ? (
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={1.5}
+                    stroke="currentColor"
+                    className="size-8"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
+                  </svg>
+                ) : (
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={1.5}
+                    stroke="currentColor"
+                    className="size-8"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
+                    />
+                  </svg>
+                )}
+              </button>
+            </div>
+          </div>
+          {isSearch && (
+            <div>
+              <SearchRoutes
+                searchText={searchText}
                 onData={handleRoutePopUp}
+                user={user as User}
                 refreshTrigger={refreshTrigger}
               />
-            </motion.div>
+            </div>
           )}
-        </AnimatePresence>
+          <AnimatePresence>
+            {!isSearch && (
+              <motion.div
+                variants={topDownVariants}
+                animate="visible"
+                exit="exit"
+                className="flex flex-col w-full  "
+              >
+                <div className="bg-slate-900 rounded p-5 pl-4 py-3 flex flex-col justify-center items-center outline outline-blue-600">
+                  <TopDown onData={handleTopDownChange} initialSelection={wall} />
+                </div>
+                <p className="font-normal text-xs mt-1">
+                  Tap a wall on the map to see the routes there
+                </p>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          <AnimatePresence>
+            {isTopDownActive && (
+              <motion.div variants={topDownVariants} animate="visible" exit="exit" className="mt-3">
+                <h2 className="font-barlow text-white font-bold text-2xl text-start place-self-start mb-2">
+                  Sorted Left → Right
+                </h2>
+                <WallRoutes
+                  wall={wall}
+                  user={user as User}
+                  onData={handleRoutePopUp}
+                  refreshTrigger={refreshTrigger}
+                />
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
       </div>
-    </div>
+    </RouteCompletionProvider>
   );
 }
