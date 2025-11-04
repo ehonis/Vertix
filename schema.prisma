@@ -190,6 +190,25 @@ model UserAnnouncement {
     @@index([announcementId])
 }
 
+enum TVSlideType {
+    LEADERBOARD
+    LOGO
+    IMAGE
+    TEXT
+    STATS
+    FEATURED_ROUTE
+}
+
+model TVSlide {
+    id        String      @id @default(cuid())
+    imageUrl  String?
+    text      String?
+    createdAt DateTime    @default(now())
+    updatedAt DateTime    @updatedAt
+    isActive  Boolean     @default(true)
+    type      TVSlideType @default(IMAGE)
+}
+
 model Badge {
     id    Int    @id @default(autoincrement())
     name  String
