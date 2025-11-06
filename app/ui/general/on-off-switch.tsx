@@ -2,7 +2,13 @@
 
 import { useState, useEffect } from "react";
 
-export default function OnOffSwitch({ value, onTypeSwitchValue }) {
+export default function OnOffSwitch({
+  value,
+  onTypeSwitchValue,
+}: {
+  value: boolean;
+  onTypeSwitchValue: (value: boolean) => void;
+}) {
   const [isOn, setIsOn] = useState(value ?? false); // Default to false if undefined
 
   useEffect(() => {

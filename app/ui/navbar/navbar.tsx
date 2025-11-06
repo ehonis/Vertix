@@ -25,7 +25,7 @@ async function UserStuff() {
 export default function NavBar() {
   return (
     <>
-      <nav className="sticky top-3 h-12 md:h-16 w-[95%] md:w-[85%] lg:w-[75%] z-50 shadow-md bg-black grid md:px-5 px-3 md:grid-cols-3 grid-cols-2 items-center rounded-md mx-auto">
+      <nav className="sticky top-3  h-12 md:h-16 w-[95%] md:w-[85%] lg:w-[75%] z-70 shadow-md bg-black grid md:px-5 px-3 md:grid-cols-3 grid-cols-2 items-center rounded-md mx-auto">
         <Link href={"/"} className="flex items-center gap-0.5 place-self-center justify-self-start">
           <h1 className="font-jost text-white md:text-5xl text-4xl font-bold hover:scale-105 duration-100 ease-in-out">
             Vertix

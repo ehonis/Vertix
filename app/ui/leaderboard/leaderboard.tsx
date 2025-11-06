@@ -6,7 +6,7 @@ import clsx from "clsx";
 import Link from "next/link";
 import LevelIndicator from "../general/level-indicator";
 
-type MonthlyLeaderBoardData = {
+export type MonthlyLeaderBoardData = {
   user: {
     name: string | null;
     id: string;

@@ -14,6 +14,7 @@ import { extractRouterConfig } from "uploadthing/server";
 import { ourFileRouter } from "./api/uploadthing/core";
 import { PostHogProvider } from "../components/PostHogProvider";
 import Footer from "./ui/general/footer";
+import { headers } from "next/headers";
 
 const barlow = Barlow({
   subsets: ["latin"],
@@ -46,7 +47,11 @@ export const metadata = {
   description: "The OTR Climbing tracker for ropes, boulders, and competitions",
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const headersList = await headers();
+  const pathname = headersList.get("x-pathname") || "";
+  const isTVPage = pathname === "/tv";
+
   return (
     <html lang="en">
       <body
@@ -59,7 +64,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 <NextSSRPlugin routerConfig={extractRouterConfig(ourFileRouter)} />
                 <Notification />
                 <Announcement />
-                <NavBar />
+                {!isTVPage && <NavBar />}
                 <SpeedInsights />
 
                 <main className="flex-1">{children}</main>

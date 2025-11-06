@@ -149,6 +149,11 @@
   outline: 1px solid #ef4444;
   border-radius: 0.125rem;
 }
+@utility green-button {
+  background-color: rgba(16, 185, 129, 0.15);
+  outline: 1px solid #10b981;
+  border-radius: 0.125rem;
+}
 
 @layer utilities {
   :root {
