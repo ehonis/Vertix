@@ -69,12 +69,12 @@ export default function LeaderboardSlide({
               <div className="text-sm mt-1">Start climbing to appear on the leaderboard!</div>
             </div>
           ) : (
-            monthlyLeaderBoardData.slice(0, 7).map((climber, index) => (
+            monthlyLeaderBoardData.slice(0, 9).map((climber, index) => (
               <div
                 key={climber.user.id}
                 className={clsx(
                   "z-10",
-                  "grid w-full font-barlow font-bold py-3 pl-3 pr-1 rounded-md h-20",
+                  "grid w-full font-barlow font-bold py-3 pl-3 pr-1 rounded-md h-14",
                   index === 0 && "bg-amber-500/75 outline-1 outline-amber-500",
                   index === 1 && "bg-gray-500/75 outline-1 outline-gray-500",
                   index === 2 && "bg-orange-500/75 outline-1 outline-orange-500",
@@ -104,6 +104,22 @@ export default function LeaderboardSlide({
               </div>
             ))
           )}
+          {/* <div
+            className="z-10 grid w-full font-barlow font-bold py-3 pl-3 pr-1 rounded-md h-14 bg-blue-500/25 outline-1 outline-blue-500"
+            style={{ gridTemplateColumns: "60px 1fr 80px" }}
+          >
+            <span className="text-start place-self-center text-2xl font-bold">10</span>
+            <div className="flex items-center gap-1.5 justify-center">
+              <LevelIndicator xp={1000000} size="md" />
+
+              <span className="no-wrap truncate max-w-44 font-barlow font-bold text-2xl">
+                testuser
+              </span>
+            </div>
+            <span className=" flex items-center justify-center text-center text-green-400 px-5 text-xl rounded-full bg-slate-900/65 outline-1 outline-green-400">
+              {shortenXp(1000000)}xp
+            </span>
+          </div> */}
         </div>
       </div>
       <div
