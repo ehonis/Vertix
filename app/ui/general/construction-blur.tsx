@@ -7,8 +7,8 @@ export default function ConstructionBlur() {
         <h2 className="text-2xl font-bold mb-4 text-white">🚧 Construction 🚧</h2>
 
         <p className="text-white text-lg">
-          Check back after the Spring Mixer to get access to all features of
-          <span className="font-jost text-white font-bold italic"> Vertix</span>
+          Routes page is currently under construction and will be available soon when all routes are
+          added. Apologizes for the inconvenience.
         </p>
         <Link href="/" className="text-blue-500 text-md font-semibold underline">
           Back to Home

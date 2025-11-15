@@ -1,5 +1,15 @@
+"use client";
+
 import Image from "next/image";
-export default function FeaturedRouteSlide() {
+import { useEffect, useState } from "react";
+import { Route } from "@prisma/client";
+export default function FeaturedRouteSlide({
+  routes,
+  featuredRoute,
+}: {
+  routes: Route[];
+  featuredRoute: Route | null;
+}) {
   return (
     <div className="flex flex-col items-center justify-between p-5 rounded-md bg-blue-500/25 outline outline-blue-500 h-full w-full">
       <svg

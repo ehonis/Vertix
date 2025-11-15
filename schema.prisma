@@ -45,6 +45,7 @@ model Route {
     createdByUserID String?
     createdByUser   User?             @relation("CreatedRoutes", fields: [createdByUserID], references: [id])
     order           Int?
+    tvSlides        TVSlide[]
 }
 
 model RouteImage {
@@ -206,7 +207,11 @@ model TVSlide {
     createdAt DateTime    @default(now())
     updatedAt DateTime    @updatedAt
     isActive  Boolean     @default(true)
+    routeId   String?
+    route     Route?      @relation(fields: [routeId], references: [id])
     type      TVSlideType @default(IMAGE)
+
+    @@index([routeId])
 }
 
 model Badge {

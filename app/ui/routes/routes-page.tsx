@@ -128,7 +128,7 @@ export default function RoutesPage({ user }: { user: User | null | undefined }) 
       opacity: 1,
       transition: {
         duration: 0.4,
-        ease: "easeOut",
+        ease: [0.0, 0.0, 0.2, 1.0] as const,
       },
     },
     exit: {
@@ -136,7 +136,7 @@ export default function RoutesPage({ user }: { user: User | null | undefined }) 
       opacity: 0,
       transition: {
         duration: 0,
-        ease: "easeIn",
+        ease: [0.4, 0.0, 1.0, 1.0] as const,
       },
     },
   };
@@ -145,14 +145,14 @@ export default function RoutesPage({ user }: { user: User | null | undefined }) 
       opacity: 1,
       transition: {
         duration: 0.3,
-        ease: "easeOut",
+        ease: [0.0, 0.0, 0.2, 1.0] as const,
       },
     },
     exit: {
       opacity: 0,
       transition: {
         duration: 0.3,
-        ease: "easeIn",
+        ease: [0.4, 0.0, 1.0, 1.0] as const,
       },
     },
   };

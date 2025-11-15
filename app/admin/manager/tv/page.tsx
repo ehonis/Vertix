@@ -35,7 +35,7 @@ export default function TVManager() {
         </div>
 
         <div className="flex justify-between items-center w-full md:px-[8.5rem]">
-          <h2 className="text-white text-3xl font-bold">Created Slides</h2>
+          <h2 className="text-white text-3xl font-bold">Created Slides & Featured Routes</h2>
           <AddButton />
         </div>
 

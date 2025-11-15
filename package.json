@@ -14,7 +14,7 @@
     "@auth/prisma-adapter": "^2.7.2",
     "@heroicons/react": "^2.2.0",
     "@lottiefiles/dotlottie-react": "^0.13.2",
-    "@prisma/client": "^6.16.3",
+    "@prisma/client": "^6.19.0",
     "@types/react-dom": "^19.0.4",
     "@types/swiper": "^5.4.3",
     "@uploadthing/react": "^7.3.0",
@@ -58,7 +58,10 @@
     "eslint-plugin-prettier": "^5.2.3",
     "prettier": "^3.5.3",
     "prettier-plugin-tailwindcss": "^0.6.11",
-    "prisma": "^6.16.3",
+    "prisma": "^6.19.0",
     "typescript": "^5.8.2"
+  },
+  "overrides": {
+    "@auth/core": "^0.37.0"
   }
 }

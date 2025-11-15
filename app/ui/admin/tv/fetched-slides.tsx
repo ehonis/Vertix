@@ -29,7 +29,7 @@ export default async function FetchedSlides() {
             {slide.type === "TEXT" && <p>{slide.text}</p>}
             {slide.type === "LOGO" && <LogoSlide />}
             {slide.type === "STATS" && <StatsSlide />}
-            {slide.type === "FEATURED_ROUTE" && <FeaturedRouteSlide />}
+            {/* {slide.type === "FEATURED_ROUTE" && <FeaturedRouteSlide />} */}
           </div>
         ))}
     </div>

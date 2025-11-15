@@ -63,7 +63,12 @@ export default function TVSlider({
   }
 
   slides = slides.filter(
-    slide => slide.type == "STATS" || slide.type === "LOGO" || slide.type === "LEADERBOARD"
+    slide =>
+      slide.type == "STATS" ||
+      slide.type === "LOGO" ||
+      slide.type === "LEADERBOARD" ||
+      slide.type === "FEATURED_ROUTE" ||
+      slide.type === "IMAGE"
   );
 
   return (
@@ -111,7 +116,7 @@ export default function TVSlider({
                   boulderTotal={boulderTotal}
                 />
               )}
-              {slide.type === "FEATURED_ROUTE" && <FeaturedRouteSlide />}
+              {/* {slide.type === "FEATURED_ROUTE" && } */}
             </div>
           </SwiperSlide>
         ))}

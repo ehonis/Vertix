@@ -1,16 +1,22 @@
 import prisma from "@/prisma";
-import { TVSlideType } from "@prisma/client";
+import { Route, TVSlideType } from "@prisma/client";
 import Image from "next/image";
 import Toggle from "./toggle";
+import FeaturedRouteSlide from "./featured-route-slide";
 export default async function CreatedSlides() {
   const createdSlides = await prisma.tVSlide.findMany({
     where: {
       type: {
-        in: [TVSlideType.IMAGE, TVSlideType.TEXT],
+        in: [TVSlideType.IMAGE, TVSlideType.TEXT, TVSlideType.FEATURED_ROUTE],
       },
     },
     orderBy: {
       createdAt: "asc",
+    },
+  });
+  const activeRoutes = await prisma.route.findMany({
+    where: {
+      isArchive: false,
     },
   });
 
@@ -35,6 +41,9 @@ export default async function CreatedSlides() {
                 </div>
               )}
               {slide.type === TVSlideType.TEXT && <p className="text-white">{slide.text}</p>}
+              {slide.type === TVSlideType.FEATURED_ROUTE && (
+                <FeaturedRouteSlide routes={activeRoutes} featuredRoute={null} />
+              )}
             </div>
             <p className=" text-2xl font-bold text-white">{slide.text} Slide</p>
             <Toggle slideId={slide.id} isActive={slide.isActive} />

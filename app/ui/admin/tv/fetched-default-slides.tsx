@@ -1,5 +1,5 @@
 import prisma from "@/prisma";
-import { TVSlideType } from "@prisma/client";
+import { Route, TVSlideType } from "@prisma/client";
 import LogoSlide from "./logo-slide";
 import StatsSlide from "./stats-slide";
 import LeaderBoardSlide from "./leaderboard-slide";
@@ -9,18 +9,17 @@ export default async function FetchedDefaultSlides() {
   const fetchedDefaultSlides = await prisma.tVSlide.findMany({
     where: {
       type: {
-        in: [
-          TVSlideType.LOGO,
-          TVSlideType.FEATURED_ROUTE,
-          TVSlideType.STATS,
-          TVSlideType.LEADERBOARD,
-        ],
+        in: [TVSlideType.LOGO, TVSlideType.STATS, TVSlideType.LEADERBOARD],
       },
     },
     orderBy: {
       createdAt: "asc",
     },
   });
+
+  const featuredRoute = fetchedDefaultSlides.find(
+    slide => slide.type === TVSlideType.FEATURED_ROUTE
+  );
 
   return (
     <div className="flex flex-col gap-2 w-full">
@@ -32,7 +31,7 @@ export default async function FetchedDefaultSlides() {
           >
             <div className="h-24 w-48">
               {slide.type === TVSlideType.LOGO && <LogoSlide />}
-              {slide.type === TVSlideType.FEATURED_ROUTE && <FeaturedRouteSlide />}
+
               {slide.type === TVSlideType.STATS && <StatsSlide />}
               {slide.type === TVSlideType.LEADERBOARD && <LeaderBoardSlide />}
             </div>
