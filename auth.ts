@@ -26,8 +26,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       session.user.id = user.id; // Include user ID
       session.user.role = user.role; // Include admin flag
       session.user.username = user.username; // Include routeSetter flag
-       // Include routeSetter flag
+      // Include routeSetter flag
       return session;
-    },}
-
+    },
+  },
 });

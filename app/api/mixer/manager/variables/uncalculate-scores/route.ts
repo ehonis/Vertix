@@ -2,7 +2,6 @@ import prisma from "@/prisma";
 import { NextResponse, NextRequest } from "next/server";
 import { auth } from "@/auth";
 
-
 export async function POST(req: NextRequest) {
   const session = await auth();
 
@@ -22,16 +21,22 @@ export async function POST(req: NextRequest) {
         climberId: true,
       },
     });
-    
+
     const removeRopeScores = async () => {
       await prisma.mixerRopeScore.deleteMany({
-        where: { competitionId: compId, climberId: { in: usersWithCompletions.map(user => user.climberId) } },
+        where: {
+          competitionId: compId,
+          climberId: { in: usersWithCompletions.map(user => user.climberId) },
+        },
       });
     };
 
     const removeBoulderScores = async () => {
       await prisma.mixerBoulderScore.deleteMany({
-        where: { competitionId: compId, climberId: { in: usersWithCompletions.map(user => user.climberId) } },
+        where: {
+          competitionId: compId,
+          climberId: { in: usersWithCompletions.map(user => user.climberId) },
+        },
       });
     };
 

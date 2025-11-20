@@ -5,7 +5,7 @@ import prisma from "@/prisma";
 export async function POST(req: NextRequest) {
   try {
     const session = await auth();
-    
+
     if (!session?.user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
@@ -26,7 +26,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error('Error dismissing announcement:', error);
+    console.error("Error dismissing announcement:", error);
     return NextResponse.json({ error: "Failed to dismiss announcement" }, { status: 500 });
   }
 }

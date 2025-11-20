@@ -5,21 +5,40 @@ import StatsSlide from "./stats-slide";
 import LeaderBoardSlide from "./leaderboard-slide";
 import FeaturedRouteSlide from "./featured-route-slide";
 import Toggle from "./toggle";
+import { FeaturedRoutesButton } from "./featured-routes-button";
 export default async function FetchedDefaultSlides() {
   const fetchedDefaultSlides = await prisma.tVSlide.findMany({
     where: {
       type: {
-        in: [TVSlideType.LOGO, TVSlideType.STATS, TVSlideType.LEADERBOARD],
+        in: [
+          TVSlideType.LOGO,
+          TVSlideType.STATS,
+          TVSlideType.LEADERBOARD,
+          TVSlideType.FEATURED_ROUTE,
+        ],
       },
     },
     orderBy: {
       createdAt: "asc",
     },
+    include: {
+      routes: true,
+    },
   });
-
-  const featuredRoute = fetchedDefaultSlides.find(
-    slide => slide.type === TVSlideType.FEATURED_ROUTE
-  );
+  const featuredRoutes = await prisma.route.findMany({
+    where: {
+      isArchive: false,
+      tvSlides: {
+        some: {
+          type: TVSlideType.FEATURED_ROUTE,
+        },
+      },
+    },
+    include: {
+      tvSlides: true,
+      images: true,
+    },
+  });
 
   return (
     <div className="flex flex-col gap-2 w-full">
@@ -38,7 +57,16 @@ export default async function FetchedDefaultSlides() {
                 <FeaturedRouteSlide routes={[]} featuredRoute={null} />
               )}
             </div>
-            <p className=" md:text-2xl text-sm font-bold text-white">{slide.text} Slide</p>
+            {slide.type !== TVSlideType.FEATURED_ROUTE ? (
+              <div className="flex flex-col items-center gap-2 justify-between">
+                <p className=" md:text-2xl text-sm font-bold text-white">{slide.text}</p>
+              </div>
+            ) : (
+              <div className="flex flex-col items-center gap-2 justify-between">
+                <FeaturedRoutesButton featuredRoutes={featuredRoutes} slide={slide} />
+              </div>
+            )}
+
             <Toggle slideId={slide.id} isActive={slide.isActive} />
           </div>
         ))}

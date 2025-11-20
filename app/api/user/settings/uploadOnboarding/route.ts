@@ -1,7 +1,7 @@
 import prisma from "@/prisma";
 import { NextResponse, NextRequest } from "next/server";
 
-export async function POST(req : NextRequest) {
+export async function POST(req: NextRequest) {
   const { id, name, username, tag, privacy } = await req.json();
 
   const updatedUser = await prisma.user.update({

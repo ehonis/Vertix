@@ -8,6 +8,13 @@ export default async function TV() {
   const slides = await prisma.tVSlide.findMany({
     where: { isActive: true },
     orderBy: { createdAt: "asc" },
+    include: {
+      routes: {
+        include: {
+          images: true,
+        },
+      },
+    },
   });
 
   const monthlyLeaderBoardData = await prisma.monthlyXp.findMany({

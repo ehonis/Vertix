@@ -16,11 +16,11 @@ export async function POST(request: NextRequest) {
     const route = await prisma.mixerRoute.update({
       where: {
         id: routeId,
-    },
-    data: {
-      imageUrl: newImage,
-    },
-  });
+      },
+      data: {
+        imageUrl: newImage,
+      },
+    });
 
     return NextResponse.json({ message: "Route image updated" }, { status: 200 });
   } catch {

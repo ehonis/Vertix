@@ -10,13 +10,11 @@ import LogoSlide from "./logo-slide";
 import StatsSlide from "../admin/tv/stats-slide";
 import FeaturedRouteSlide from "../admin/tv/featured-route-slide";
 import GymStatsSlide from "./gym-stats-slide";
+import FeaturedRoutes from "./featured-routes";
+import { Route, RouteImage, TVSlide } from "@prisma/client";
 
-type TVSlide = {
-  id: string;
-  type: string;
-  imageUrl: string | null;
-  text: string | null;
-  isActive: boolean;
+type RouteWithImages = Route & {
+  images: RouteImage[];
 };
 
 type MonthlyLeaderBoardData = {
@@ -31,12 +29,16 @@ type MonthlyLeaderBoardData = {
 }[];
 
 type TVData = {
-  slides: TVSlide[];
+  slides: extendedTVSlide[];
   monthlyLeaderBoardData: MonthlyLeaderBoardData;
   boulderGradeCounts: { grade: string; count: number }[];
   ropeGradeCounts: { grade: string; count: number }[];
   ropeTotal: number;
   boulderTotal: number;
+};
+
+type extendedTVSlide = TVSlide & {
+  routes: RouteWithImages[];
 };
 
 export default function TVSlider({
@@ -47,7 +49,7 @@ export default function TVSlider({
   ropeTotal: initialRopeTotal,
   boulderTotal: initialBoulderTotal,
 }: {
-  slides: TVSlide[];
+  slides: extendedTVSlide[];
   monthlyLeaderBoardData: MonthlyLeaderBoardData;
   boulderGradeCounts: { grade: string; count: number }[];
   ropeGradeCounts: { grade: string; count: number }[];
@@ -95,11 +97,11 @@ export default function TVSlider({
 
   const slides = tvData.slides.filter(
     slide =>
-      slide.type == "STATS" ||
-      slide.type === "LOGO" ||
-      slide.type === "LEADERBOARD" ||
-      slide.type === "FEATURED_ROUTE" ||
-      slide.type === "IMAGE"
+      // slide.type == "STATS" ||
+      // slide.type === "LOGO" ||
+      // slide.type === "LEADERBOARD" ||
+      slide.type === "FEATURED_ROUTE"
+    // slide.type === "IMAGE"
   );
 
   if (slides.length === 0) {
@@ -161,7 +163,7 @@ export default function TVSlider({
                   boulderTotal={tvData.boulderTotal}
                 />
               )}
-              {/* {slide.type === "FEATURED_ROUTE" && } */}
+              {slide.type === "FEATURED_ROUTE" && <FeaturedRoutes slide={slide} />}
             </div>
           </SwiperSlide>
         ))}

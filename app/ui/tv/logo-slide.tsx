@@ -8,8 +8,8 @@ export default function LogoSlide() {
         <Image
           src="/img/upscalemedia-transformed.webp"
           alt="Logo"
-          width={1000}
-          height={1000}
+          width={500}
+          height={500}
           className="w-full h-full object-contain scale-125"
         />
       </div>

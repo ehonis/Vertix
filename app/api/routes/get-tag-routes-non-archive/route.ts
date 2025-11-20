@@ -19,12 +19,12 @@ export async function GET(req: NextRequest) {
 
     if (userId) {
       // If user is signed in, include completions filtered by user
-      const routes = await prisma.route.findMany({
+      const routes = (await prisma.route.findMany({
         where: {
           isArchive: false,
           tags: {
             some: {
-                name: { in: tagsArray },
+              name: { in: tagsArray },
             },
           },
         },
@@ -36,7 +36,7 @@ export async function GET(req: NextRequest) {
           },
           tags: true,
         },
-      }) as RouteWithCompletions[];
+      })) as RouteWithCompletions[];
 
       routesWithCompletion = routes;
     } else {
@@ -47,20 +47,20 @@ export async function GET(req: NextRequest) {
           isArchive: false,
           tags: {
             some: {
-                name: { in: tagsArray },
+              name: { in: tagsArray },
             },
           },
         },
       });
 
-      routesWithCompletion = routes.map((route) => ({
+      routesWithCompletion = routes.map(route => ({
         ...route,
         completions: [],
       }));
     }
 
     // Map to add a flag (completed: true/false)
-    const routesWithCompletedFlag = routesWithCompletion.map((route) => ({
+    const routesWithCompletedFlag = routesWithCompletion.map(route => ({
       ...route,
       completed: userId ? route.completions.length > 0 : false,
     }));

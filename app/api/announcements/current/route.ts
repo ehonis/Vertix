@@ -5,7 +5,7 @@ import prisma from "@/prisma";
 export async function GET(req: NextRequest) {
   try {
     const session = await auth();
-    
+
     if (!session?.user) {
       return NextResponse.json({ announcement: null });
     }
@@ -16,7 +16,7 @@ export async function GET(req: NextRequest) {
         isActive: true,
       },
       orderBy: {
-        createdAt: 'desc',
+        createdAt: "desc",
       },
     });
 
@@ -41,7 +41,7 @@ export async function GET(req: NextRequest) {
 
     return NextResponse.json({ announcement });
   } catch (error) {
-    console.error('Error fetching current announcement:', error);
+    console.error("Error fetching current announcement:", error);
     return NextResponse.json({ announcement: null });
   }
 }

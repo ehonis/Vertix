@@ -14,21 +14,17 @@ export async function PATCH(request: NextRequest) {
       routes.map((route: Route) =>
         prisma.route.update({
           where: { id: route.id },
-          data: { order: route.order }
+          data: { order: route.order },
         })
       )
     );
 
-  
-    return NextResponse.json({ 
-      message: "Order updated successfully", 
-      updatedCount: updatedRoutes.length 
+    return NextResponse.json({
+      message: "Order updated successfully",
+      updatedCount: updatedRoutes.length,
     });
   } catch (error) {
     console.error("Error updating route order:", error);
-    return NextResponse.json(
-      { error: "Failed to update route order" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Failed to update route order" }, { status: 500 });
   }
 }

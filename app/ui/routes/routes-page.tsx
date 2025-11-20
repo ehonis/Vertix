@@ -75,6 +75,7 @@ export default function RoutesPage({ user }: { user: User | null | undefined }) 
     xpExtrapolated: { type: string; xp: number }[];
   } | null>(null);
   const [routePopUpIsArchived, setRoutePopUpIsArchived] = useState<boolean>(false);
+  const [routePopUpBonusXp, setRoutePopUpBonusXp] = useState<number>(0);
   /**
    * Update URL and localStorage when wall selection changes
    * This effect ensures that:
@@ -177,6 +178,7 @@ export default function RoutesPage({ user }: { user: User | null | undefined }) 
               grade: route.grade,
               previousCompletions: route.completions.length,
               newHighestGrade: isGradeHigher(user as User, route.grade, routeType),
+              bonusXp: route.bonusXp || 0,
             });
           }
 
@@ -191,7 +193,8 @@ export default function RoutesPage({ user }: { user: User | null | undefined }) 
             userGrade,
             communityGrade,
             xp,
-            route.isArchive
+            route.isArchive,
+            route.bonusXp || 0
           );
         } catch (error) {
           console.error("Error fetching route:", error);
@@ -255,7 +258,8 @@ export default function RoutesPage({ user }: { user: User | null | undefined }) 
     userGrade: string | null,
     communityGrade: string | null,
     xp: { xp: number; baseXp: number; xpExtrapolated: { type: string; xp: number }[] } | null,
-    isArchived: boolean
+    isArchived: boolean,
+    bonusXp: number = 0
   ) => {
     setRoutePopUpId(routeId);
     setRoutePopUpName(name);
@@ -267,6 +271,7 @@ export default function RoutesPage({ user }: { user: User | null | undefined }) 
     setRoutePopUpUserGrade(userGrade);
     setRoutePopUpXp(xp);
     setRoutePopUpIsArchived(isArchived);
+    setRoutePopUpBonusXp(bonusXp);
     setIsRoutePopUp(true);
 
     // Add route ID to URL
@@ -289,6 +294,7 @@ export default function RoutesPage({ user }: { user: User | null | undefined }) 
     setRoutePopUpCommunityGrade("");
     setRoutePopUpUserGrade(null);
     setRoutePopUpIsArchived(false);
+    setRoutePopUpBonusXp(0);
     setIsRoutePopUp(false);
 
     // Remove route ID from URL using Next.js router to ensure searchParams updates
@@ -332,6 +338,7 @@ export default function RoutesPage({ user }: { user: User | null | undefined }) 
               onRouteCompleted={handleRouteCompleted}
               xp={routePopUpXp}
               isArchived={routePopUpIsArchived}
+              bonusXp={routePopUpBonusXp}
             />
           </AnimatePresence>
         )}

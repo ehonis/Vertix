@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 
-
 import { auth } from "@/auth";
 
 import prisma from "@/prisma";
@@ -8,25 +7,25 @@ import prisma from "@/prisma";
 export async function GET(req: NextRequest) {
   try {
     const session = await auth();
-    
+
     if (!session?.user?.id) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const user = await prisma.user.findUnique({
       where: { id: session.user.id },
-      select: { 
+      select: {
         totalXp: true,
         monthlyXp: {
           where: {
             year: new Date().getFullYear(),
-            month: new Date().getMonth() + 1
+            month: new Date().getMonth() + 1,
           },
           select: {
-            xp: true
-          }
-        }
-      }
+            xp: true,
+          },
+        },
+      },
     });
 
     if (!user) {
@@ -35,9 +34,9 @@ export async function GET(req: NextRequest) {
 
     const currentMonthXp = user.monthlyXp[0]?.xp || 0;
 
-    return NextResponse.json({ 
+    return NextResponse.json({
       xp: user.totalXp || 0,
-      monthlyXp: currentMonthXp
+      monthlyXp: currentMonthXp,
     });
   } catch (error) {
     console.error("Error fetching user XP:", error);
@@ -48,7 +47,7 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   try {
     const session = await auth();
-    
+
     if (!session?.user?.id) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
@@ -64,12 +63,12 @@ export async function POST(req: NextRequest) {
     const currentMonth = currentDate.getMonth() + 1;
 
     // Update total XP and monthly XP in a transaction
-    const result = await prisma.$transaction(async (tx) => {
+    const result = await prisma.$transaction(async tx => {
       // Update total XP
       const updatedUser = await tx.user.update({
         where: { id: session.user.id! },
         data: { totalXp: { increment: xpGained } },
-        select: { totalXp: true }
+        select: { totalXp: true },
       });
 
       // Update or create monthly XP record
@@ -95,10 +94,10 @@ export async function POST(req: NextRequest) {
       return updatedUser;
     });
 
-    return NextResponse.json({ 
-      success: true, 
+    return NextResponse.json({
+      success: true,
       newTotalXp: result.totalXp,
-      monthlyXp: xpGained // Return the XP gained this month
+      monthlyXp: xpGained, // Return the XP gained this month
     });
   } catch (error) {
     console.error("Error updating user XP:", error);

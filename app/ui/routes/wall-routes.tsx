@@ -25,7 +25,8 @@ interface WallRoutesProps {
     userGrade: string | null,
     communityGrade: string,
     xp: { xp: number; baseXp: number; xpExtrapolated: { type: string; xp: number }[] } | null,
-    isArchived: boolean
+    isArchived: boolean,
+    bonusXp?: number
   ) => void;
   refreshTrigger?: number;
 }
@@ -92,6 +93,7 @@ export default function WallRoutes({ wall, user, onData, refreshTrigger }: WallR
                 completions={route.completions}
                 attempts={route.attempts}
                 communityGrades={route.communityGrades}
+                bonusXp={route.bonusXp || 0}
               />
             ))
           : null}
@@ -115,6 +117,7 @@ export default function WallRoutes({ wall, user, onData, refreshTrigger }: WallR
                 completions={route.completions}
                 attempts={route.attempts}
                 communityGrades={route.communityGrades}
+                bonusXp={route.bonusXp || 0}
               />
             ))
         ) : null}

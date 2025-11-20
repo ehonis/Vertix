@@ -9,7 +9,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
   const { climberId } = await req.json();
-  try{
+  try {
     await prisma.mixerClimber.update({
       where: { id: climberId },
       data: { climberStatus: ClimberStatus.COMPLETED },

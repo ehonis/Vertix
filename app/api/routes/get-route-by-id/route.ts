@@ -16,7 +16,7 @@ export async function GET(req: NextRequest) {
 
     if (userId) {
       // If user is signed in, include completions filtered by user
-      const fetchedRoute = await prisma.route.findUnique({
+      const fetchedRoute = (await prisma.route.findUnique({
         where: {
           id: routeId,
         },
@@ -34,7 +34,7 @@ export async function GET(req: NextRequest) {
           tags: true,
           communityGrades: true,
         },
-      }) as RouteWithExtraData | null;
+      })) as RouteWithExtraData | null;
 
       route = fetchedRoute;
     } else {
@@ -74,4 +74,3 @@ export async function GET(req: NextRequest) {
     );
   }
 }
-

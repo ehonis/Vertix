@@ -1,42 +1,40 @@
-import { NextRequest, NextResponse  } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/prisma";
 import { auth } from "@/auth";
 export async function GET(req: NextRequest) {
-    const session = await auth();
-    if (!session) {
-        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-    if (session.user.role !== "ADMIN") {
-        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+  const session = await auth();
+  if (!session) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+  if (session.user.role !== "ADMIN") {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
 
-    try {
-        const { searchParams } = new URL(req.url);
-        const climberId = searchParams.get("climberId");
-        const completions = await prisma.mixerCompletion.findMany({
-        where: {
-            climberId: climberId as string,
+  try {
+    const { searchParams } = new URL(req.url);
+    const climberId = searchParams.get("climberId");
+    const completions = await prisma.mixerCompletion.findMany({
+      where: {
+        climberId: climberId as string,
+      },
+      include: {
+        mixerRoute: {
+          select: {
+            name: true,
+            color: true,
+          },
         },
-        include: {
-            mixerRoute: {
-                select: {
-                    name: true,
-                    color: true,
-                }
-            }
+      },
+      orderBy: {
+        mixerRoute: {
+          name: "asc",
         },
-        orderBy: {
-            mixerRoute: {
-                name: "asc",
-                
-            },
-
-        }
+      },
     });
-    
-    return NextResponse.json({data:completions}, {status:200});
-    } catch (error) {
-        console.error(error);
-        return NextResponse.json({ error: "Internal server error" }, { status: 500 });
-    }
+
+    return NextResponse.json({ data: completions }, { status: 200 });
+  } catch (error) {
+    console.error(error);
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+  }
 }

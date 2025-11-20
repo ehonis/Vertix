@@ -1,16 +1,9 @@
 {
-  "extends": [
-    "next/core-web-vitals",
-    "prettier"
-  ],
+  "extends": ["next/core-web-vitals", "prettier"],
   "overrides": [
     {
       "files": ["**/*.ts", "**/*.tsx"],
-      "extends": [
-        "next/core-web-vitals",
-        "plugin:@typescript-eslint/recommended",
-        "prettier"
-      ],
+      "extends": ["next/core-web-vitals", "plugin:@typescript-eslint/recommended", "prettier"],
       "rules": {
         "@typescript-eslint/no-unused-vars": "warn",
         "@typescript-eslint/no-this-alias": "error",
@@ -20,13 +13,10 @@
     },
     {
       "files": ["**/*.js", "**/*.jsx"],
-      "extends": [
-        "next/core-web-vitals",
-        "prettier"
-      ],
+      "extends": ["next/core-web-vitals", "prettier"],
       "rules": {
         "no-unused-vars": "warn"
       }
     }
   ]
-} 
+}

@@ -34,6 +34,7 @@ export async function POST(request) {
             grade: route.grade,
             previousCompletions: completionNumber,
             newHighestGrade: false, // Already completed, so not new highest
+            bonusXp: route.bonusXp || 0,
           });
 
           await prisma.routeCompletion.create({
@@ -55,6 +56,7 @@ export async function POST(request) {
             grade: route.grade,
             previousCompletions: completionNumber,
             newHighestGrade: false, // Already completed, so not new highest
+            bonusXp: route.bonusXp || 0,
           });
 
           await prisma.routeCompletion.create({
@@ -91,6 +93,7 @@ export async function POST(request) {
           grade: route.grade,
           previousCompletions: 0,
           newHighestGrade: isNewHighest,
+          bonusXp: route.xp || 0,
         });
 
         await prisma.routeCompletion.create({
@@ -131,6 +134,7 @@ export async function POST(request) {
           grade: route.grade,
           previousCompletions: 0,
           newHighestGrade: isNewHighest2,
+          bonusXp: route.bonusXp || 0,
         });
 
         await prisma.routeCompletion.create({

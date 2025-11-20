@@ -29,6 +29,7 @@ export default function RoutePopUp({
   onRouteCompleted,
   xp,
   isArchived,
+  bonusXp = 0,
 }: {
   id: string;
   grade: string;
@@ -43,6 +44,7 @@ export default function RoutePopUp({
   onRouteCompleted?: () => void;
   xp: { xp: number; baseXp: number; xpExtrapolated: { type: string; xp: number }[] } | null;
   isArchived: boolean;
+  bonusXp?: number;
 }) {
   const { showNotification } = useNotification();
   const { isToday, toggleIsToday, isFlash, toggleIsFlash, date, setDate, getEffectiveDate } =
@@ -104,6 +106,7 @@ export default function RoutePopUp({
             grade: grade,
             previousCompletions: frontendCompletions,
             newHighestGrade: isGradeHigher(user as User, grade, routeType),
+            bonusXp: bonusXp || 0,
           });
         }
 
@@ -115,6 +118,7 @@ export default function RoutePopUp({
             grade: grade,
             previousCompletions: frontendCompletions + 1, // Next completion count
             newHighestGrade: false, // Won't be new highest since we just completed it
+            bonusXp: bonusXp || 0,
           });
           setCurrentXp(newXp);
         }

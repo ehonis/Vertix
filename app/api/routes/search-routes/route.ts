@@ -35,7 +35,7 @@ export async function GET(req: NextRequest) {
 
     if (userId) {
       // User is signed in: include completions filtered by userId
-      const routes = await prisma.route.findMany({
+      const routes = (await prisma.route.findMany({
         where: whereClause,
         include: {
           completions: {
@@ -56,7 +56,7 @@ export async function GET(req: NextRequest) {
         },
         skip: parsedSkip,
         take: parsedTake,
-      }) as RouteWithCompletions[];
+      })) as RouteWithCompletions[];
       routesWithCompletion = routes;
     } else {
       // User is not signed in: fetch routes without completions and then add empty completions
@@ -92,9 +92,6 @@ export async function GET(req: NextRequest) {
     });
   } catch (error) {
     console.error("Error in API:", error);
-    return NextResponse.json(
-      { message: "An error occurred", status: 500 },
-      { status: 500 }
-    );
+    return NextResponse.json({ message: "An error occurred", status: 500 }, { status: 500 });
   }
 }

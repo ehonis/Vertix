@@ -13,22 +13,22 @@ export async function POST(req: NextRequest) {
   if (!climberId || !compId || !type || !mixerBoulderId || !attempts || !points || !isComplete) {
     return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
   }
- try {
-  const completion = await prisma.mixerCompletion.create({
-    data: {
-      climberId,
-      competitionId: compId,
-      type,
-      mixerBoulderId,
-      attempts,
-      points,
-      isComplete,
-    },
-  });
+  try {
+    const completion = await prisma.mixerCompletion.create({
+      data: {
+        climberId,
+        competitionId: compId,
+        type,
+        mixerBoulderId,
+        attempts,
+        points,
+        isComplete,
+      },
+    });
 
-  return NextResponse.json(completion, { status: 201 });
-} catch {
-  return NextResponse.json({ error: "Failed to create completion" }, { status: 500 });
+    return NextResponse.json(completion, { status: 201 });
+  } catch {
+    return NextResponse.json({ error: "Failed to create completion" }, { status: 500 });
   }
 }
 export async function DELETE(req: NextRequest) {
@@ -49,7 +49,7 @@ export async function DELETE(req: NextRequest) {
   try {
     await prisma.mixerCompletion.delete({
       where: {
-        climberId_mixerBoulderId: { 
+        climberId_mixerBoulderId: {
           climberId: climberId,
           mixerBoulderId: mixerBoulderId,
         },
@@ -59,9 +59,4 @@ export async function DELETE(req: NextRequest) {
   } catch {
     return NextResponse.json({ error: "Failed to delete completion" }, { status: 500 });
   }
-
-
-
-
-  
 }

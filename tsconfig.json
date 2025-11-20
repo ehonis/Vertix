@@ -23,6 +23,14 @@
       "@/*": ["./*", "./app/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "lib/mixer.js", "next.config.js", "app/ui/admin/route-edit/individualpageload.tsx"],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    "lib/mixer.js",
+    "next.config.js",
+    "app/ui/admin/route-edit/individualpageload.tsx"
+  ],
   "exclude": ["node_modules"]
 }

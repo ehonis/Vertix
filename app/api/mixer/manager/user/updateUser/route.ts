@@ -2,16 +2,15 @@ import { NextResponse, NextRequest } from "next/server";
 import prisma from "@/prisma";
 import { auth } from "@/auth";
 
-
-export async function POST(req : NextRequest) {
+export async function POST(req: NextRequest) {
   const session = await auth();
-    
-    if(!session){
-        return NextResponse.json({ message: "Not Authenicated" },{ status: 403 });
-    }
-    if(session.user.role !== "ADMIN"){
-        return NextResponse.json({ message: "Not Authorized" },{ status: 403 });
-    }
+
+  if (!session) {
+    return NextResponse.json({ message: "Not Authenicated" }, { status: 403 });
+  }
+  if (session.user.role !== "ADMIN") {
+    return NextResponse.json({ message: "Not Authorized" }, { status: 403 });
+  }
   try {
     const {
       compId,
@@ -34,20 +33,20 @@ export async function POST(req : NextRequest) {
     let parsedBoulderAttempts = boulderAttempts !== null ? parseInt(boulderAttempts, 10) : null;
 
     console.log(parsedRopeScore, parsedBoulderScore, parsedRopeAttempts, parsedBoulderAttempts);
-    if(isNaN(parsedRopeScore as number)){
+    if (isNaN(parsedRopeScore as number)) {
       parsedRopeScore = null;
     }
-    if(isNaN(parsedBoulderScore as number)){
+    if (isNaN(parsedBoulderScore as number)) {
       parsedBoulderScore = null;
     }
-    if(isNaN(parsedRopeAttempts as number)){
+    if (isNaN(parsedRopeAttempts as number)) {
       parsedRopeAttempts = null;
     }
-    if(isNaN(parsedBoulderAttempts as number)){
+    if (isNaN(parsedBoulderAttempts as number)) {
       parsedBoulderAttempts = null;
     }
     // Use a transaction to ensure all operations succeed or fail together
-   await prisma.$transaction(async tx => {
+    await prisma.$transaction(async tx => {
       // Create the climber first
       const climberData = {
         competition: {
@@ -129,7 +128,7 @@ export async function POST(req : NextRequest) {
       };
     });
 
-    return NextResponse.json({ message: "Successfully Updated user" }, { status: 200 }, );
+    return NextResponse.json({ message: "Successfully Updated user" }, { status: 200 });
   } catch (error) {
     console.error(JSON.stringify(error, null, 2));
     return NextResponse.json(

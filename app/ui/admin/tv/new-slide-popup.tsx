@@ -115,15 +115,6 @@ export default function NewSlidePopup({ onCancel }: { onCancel: () => void }) {
               >
                 Promotional Image
               </button>
-              <button
-                className="bg-green-500 text-white p-2 rounded-md font-bold"
-                onClick={() => {
-                  setType(TVSlideType.FEATURED_ROUTE);
-                  setHeader("New Featured Route Slide");
-                }}
-              >
-                Featured Route
-              </button>
             </div>
           )}
           {imageUrl && (

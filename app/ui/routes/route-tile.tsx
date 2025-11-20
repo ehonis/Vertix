@@ -18,6 +18,7 @@ export default function RouteTile({
   completions,
   attempts,
   communityGrades,
+  bonusXp = 0,
 }: {
   user: User;
   id: string;
@@ -36,12 +37,14 @@ export default function RouteTile({
     userGrade: string | null,
     communityGrade: string,
     xp: { xp: number; baseXp: number; xpExtrapolated: { type: string; xp: number }[] } | null,
-    isArchived: boolean
+    isArchived: boolean,
+    bonusXp?: number
   ) => void;
 
   completions: RouteCompletion[];
   attempts: RouteAttempt[];
   communityGrades: CommunityGrade[];
+  bonusXp?: number;
 }) {
   const [gradeMapped, setGradeMapped] = useState("");
   const [sends, setSends] = useState(completions.length);
@@ -80,12 +83,13 @@ export default function RouteTile({
           grade,
           previousCompletions: sends,
           newHighestGrade: isGradeHigher(user as User, grade, routeType),
+          bonusXp: bonusXp || 0,
         })
       );
     } else if (isArchived) {
       setXp(null);
     }
-  }, [grade, user, sends, isArchived]);
+  }, [grade, user, sends, isArchived, bonusXp]);
 
   let userGrade: string | null = null;
   if (user && grade.toLowerCase() !== "vfeature" && grade.toLowerCase() !== "5.feature") {
@@ -105,7 +109,8 @@ export default function RouteTile({
           userGrade,
           communityGrade,
           xp,
-          isArchived
+          isArchived,
+          bonusXp
         )
       }
       className={clsx(

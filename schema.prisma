@@ -46,6 +46,7 @@ model Route {
     createdByUser   User?             @relation("CreatedRoutes", fields: [createdByUserID], references: [id])
     order           Int?
     tvSlides        TVSlide[]
+    bonusXp         Int?              @default(0)
 }
 
 model RouteImage {
@@ -207,11 +208,11 @@ model TVSlide {
     createdAt DateTime    @default(now())
     updatedAt DateTime    @updatedAt
     isActive  Boolean     @default(true)
-    routeId   String?
-    route     Route?      @relation(fields: [routeId], references: [id])
+    routesId  String?
+    routes    Route[] // Many-to-many relationship
     type      TVSlideType @default(IMAGE)
 
-    @@index([routeId])
+    @@index([routesId])
 }
 
 model Badge {

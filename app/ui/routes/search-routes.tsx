@@ -26,7 +26,8 @@ export default function SearchRoutes({
     userGrade: string | null,
     communityGrade: string,
     xp: { xp: number; baseXp: number; xpExtrapolated: { type: string; xp: number }[] } | null,
-    isArchived: boolean
+    isArchived: boolean,
+    bonusXp?: number
   ) => void;
   user: User;
   refreshTrigger?: number;
@@ -165,6 +166,7 @@ export default function SearchRoutes({
                       completions={route.completions}
                       attempts={route.attempts}
                       communityGrades={route.communityGrades}
+                      bonusXp={route.bonusXp || 0}
                     />
                   </motion.div>
                 </AnimatePresence>
@@ -203,6 +205,7 @@ export default function SearchRoutes({
                       completions={route.completions}
                       attempts={route.attempts}
                       communityGrades={route.communityGrades}
+                      bonusXp={route.bonusXp || 0}
                     />
                   </motion.div>
                 </AnimatePresence>

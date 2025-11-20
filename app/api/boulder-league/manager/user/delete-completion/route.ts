@@ -12,14 +12,13 @@ export async function DELETE(req: NextRequest) {
   }
 
   try {
-    const { id} = await req.json();
+    const { id } = await req.json();
     await prisma.bLCompletion.delete({
-      where: { id: id},
+      where: { id: id },
     });
     return NextResponse.json({ message: "Completion deleted" }, { status: 200 });
   } catch (error) {
     console.error(error);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
-
 }

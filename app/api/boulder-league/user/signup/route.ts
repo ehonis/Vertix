@@ -3,9 +3,9 @@ import { NextResponse, NextRequest } from "next/server";
 import { auth } from "@/auth";
 export async function POST(req: NextRequest) {
   const session = await auth();
-    if(!session){
-        return NextResponse.json({ message: "Not Authenicated" },{ status: 403 });
-    }
+  if (!session) {
+    return NextResponse.json({ message: "Not Authenicated" }, { status: 403 });
+  }
 
   const { userId, climberName, selectedDivision, compId } = await req.json();
   console.log(userId, climberName, selectedDivision, compId);
@@ -35,6 +35,6 @@ export async function POST(req: NextRequest) {
       success: true,
     });
   } catch {
-    return NextResponse.json({ success: false, error: "failed to "});
+    return NextResponse.json({ success: false, error: "failed to " });
   }
 }

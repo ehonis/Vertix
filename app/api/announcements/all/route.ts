@@ -5,7 +5,7 @@ import prisma from "@/prisma";
 export async function GET(req: NextRequest) {
   try {
     const session = await auth();
-    
+
     if (!session?.user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
@@ -17,13 +17,13 @@ export async function GET(req: NextRequest) {
 
     const announcements = await prisma.announcement.findMany({
       orderBy: {
-        createdAt: 'desc',
+        createdAt: "desc",
       },
     });
 
     return NextResponse.json({ announcements });
   } catch (error) {
-    console.error('Error fetching announcements:', error);
+    console.error("Error fetching announcements:", error);
     return NextResponse.json({ error: "Failed to fetch announcements" }, { status: 500 });
   }
 }

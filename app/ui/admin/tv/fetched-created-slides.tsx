@@ -7,16 +7,11 @@ export default async function CreatedSlides() {
   const createdSlides = await prisma.tVSlide.findMany({
     where: {
       type: {
-        in: [TVSlideType.IMAGE, TVSlideType.TEXT, TVSlideType.FEATURED_ROUTE],
+        in: [TVSlideType.IMAGE, TVSlideType.TEXT],
       },
     },
     orderBy: {
       createdAt: "asc",
-    },
-  });
-  const activeRoutes = await prisma.route.findMany({
-    where: {
-      isArchive: false,
     },
   });
 
@@ -41,13 +36,8 @@ export default async function CreatedSlides() {
                 </div>
               )}
               {slide.type === TVSlideType.TEXT && <p className="text-white">{slide.text}</p>}
-              {slide.type === TVSlideType.FEATURED_ROUTE && (
-                <FeaturedRouteSlide routes={activeRoutes} featuredRoute={null} />
-              )}
             </div>
-            <p className=" md:text-2xl text-center text-xs font-bold text-white">
-              {slide.text} Slide
-            </p>
+            <p className=" md:text-2xl text-center text-xs font-bold text-white">{slide.text}</p>
             <Toggle slideId={slide.id} isActive={slide.isActive} />
           </div>
         ))

@@ -24,10 +24,10 @@ export function useXpIntegration(userId?: string) {
   }) => {
     try {
       // Update database
-      const response = await fetch('/api/user/xp', {
-        method: 'POST',
+      const response = await fetch("/api/user/xp", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ xpGained: xpData.totalXp }),
       });
@@ -36,10 +36,10 @@ export function useXpIntegration(userId?: string) {
         // Show XP popup
         gainXp(xpData);
       } else {
-        console.error('Failed to update XP in database');
+        console.error("Failed to update XP in database");
       }
     } catch (error) {
-      console.error('Error updating XP:', error);
+      console.error("Error updating XP:", error);
     }
   };
 
@@ -48,6 +48,7 @@ export function useXpIntegration(userId?: string) {
     grade: string;
     previousCompletions: number;
     newHighestGrade: boolean;
+    bonusXp?: number;
   }) => {
     const xpData = calculateCompletionXpForRoute(routeData);
     await gainXpWithDatabase({
