@@ -39,7 +39,7 @@ export default function NewRoutePopup({
   const [selectedDate, setSelectedDate] = useState("");
   const [isToday, setIsToday] = useState(false);
   const [id, setId] = useState("");
-  const [location, setLocation] = useState<Locations>(Locations.boulderSouth);
+  const [location, setLocation] = useState<Locations>();
   const [color, setColor] = useState("black");
   const [grade, setGrade] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -70,6 +70,9 @@ export default function NewRoutePopup({
       data.startsWith("rope") || data.startsWith("AB") ? RouteType.ROPE : RouteType.BOULDER;
     setType(routeType);
     setLocation(data);
+    setIsFirstStep(false);
+    setIsThirdStep(false);
+    setIsSecondStep(true);
   };
 
   const handleFirstStepNextClick = () => {
@@ -81,6 +84,10 @@ export default function NewRoutePopup({
   const handleSecondStepNextClick = () => {
     const newId = uuidv4();
     setId(newId);
+    if (!location) {
+      showNotification({ message: "Please select a wall", color: "red" });
+      return;
+    }
     setRoutes([
       {
         id: newId,
@@ -304,16 +311,6 @@ export default function NewRoutePopup({
               <div className="pl-2">
                 <TopDown onData={handleLocationSelect} />
               </div>
-              {location && (
-                <div className="flex w-full justify-end mt-3 p-2 items-center gap-2">
-                  <button
-                    className="rounded bg-blue-500 font-barlow px-2 py-1 text-lg font-semibold"
-                    onClick={handleFirstStepNextClick}
-                  >
-                    Next →
-                  </button>
-                </div>
-              )}
             </div>
           )}
           {isSecondStep && (

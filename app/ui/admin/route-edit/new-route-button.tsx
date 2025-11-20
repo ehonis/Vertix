@@ -13,7 +13,7 @@ export default function NewRouteButton({ tags }: { tags: RouteTag[] }) {
         <NewRoutePopup onCancel={() => setIsNewRoutePopupOpen(false)} tags={tags} />
       )}
       <button
-        className="bg-green-500 text-white px-2 py-2 rounded-md flex items-center gap-1"
+        className="bg-green-500/45 outline outline-green-500 text-white px-2 py-2 rounded-md flex items-center gap-1"
         onClick={() => setIsNewRoutePopupOpen(true)}
       >
         <svg

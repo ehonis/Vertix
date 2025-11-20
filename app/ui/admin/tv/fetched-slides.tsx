@@ -10,10 +10,10 @@ export default async function FetchedSlides() {
   });
 
   return (
-    <div className="flex gap-5 ">
+    <div className="flex md:gap-5 gap-2 ">
       {fetchedSlides.length > 0 &&
         fetchedSlides.map(slide => (
-          <div key={slide.id} className="h-32 w-56 ">
+          <div key={slide.id} className="md:h-32 md:w-56 h-16 w-32 ">
             {slide.type === "LEADERBOARD" && <LeaderBoardSlide />}
             {slide.type === "IMAGE" && (
               <div className="flex items-center justify-center purple-button p-2 rounded-md h-full w-full">
@@ -22,7 +22,7 @@ export default async function FetchedSlides() {
                   alt={slide.text ? slide.text : "TV Slide"}
                   width={125}
                   height={125}
-                  className="object-cover"
+                  className="object-cover md:w-full md:h-full w-3/4 h-3/4"
                 />
               </div>
             )}

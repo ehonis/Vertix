@@ -28,17 +28,16 @@ export default async function CreatedSlides() {
             key={slide.id}
             className="flex items-center justify-between w-full bg-slate-800 p-3 rounded-md"
           >
-            <div className="h-24 w-48">
+            <div className="md:h-24 md:w-48 h-12 w-24">
               {slide.type === TVSlideType.IMAGE && (
-                <div className="flex items-center justify-center purple-button p-2 rounded-md h-full w-full">
+                <div className="flex items-center justify-center purple-button  rounded-md h-full w-full">
                   <Image
                     src={slide.imageUrl || ""}
                     alt={slide.text || "Slide"}
-                    width={82}
-                    height={82}
-                    className="object-contain"
+                    width={150}
+                    height={150}
+                    className="object-contain md:w-full md:h-full w-3/4 h-3/4"
                   />
-                  {}
                 </div>
               )}
               {slide.type === TVSlideType.TEXT && <p className="text-white">{slide.text}</p>}
@@ -46,7 +45,9 @@ export default async function CreatedSlides() {
                 <FeaturedRouteSlide routes={activeRoutes} featuredRoute={null} />
               )}
             </div>
-            <p className=" text-2xl font-bold text-white">{slide.text} Slide</p>
+            <p className=" md:text-2xl text-center text-xs font-bold text-white">
+              {slide.text} Slide
+            </p>
             <Toggle slideId={slide.id} isActive={slide.isActive} />
           </div>
         ))

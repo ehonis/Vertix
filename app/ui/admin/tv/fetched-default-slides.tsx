@@ -29,13 +29,13 @@ export default async function FetchedDefaultSlides() {
             key={slide.id}
             className="flex items-center justify-between w-full bg-slate-800 p-3 rounded-md"
           >
-            <div className="h-24 w-48">
+            <div className="md:h-24 md:w-48 h-12 w-24">
               {slide.type === TVSlideType.LOGO && <LogoSlide />}
 
               {slide.type === TVSlideType.STATS && <StatsSlide />}
               {slide.type === TVSlideType.LEADERBOARD && <LeaderBoardSlide />}
             </div>
-            <p className=" text-2xl font-bold text-white">{slide.text} Slide</p>
+            <p className=" md:text-2xl text-sm font-bold text-white">{slide.text} Slide</p>
             <Toggle slideId={slide.id} isActive={slide.isActive} />
           </div>
         ))}
