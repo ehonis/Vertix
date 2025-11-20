@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Autoplay } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
@@ -30,13 +30,22 @@ type MonthlyLeaderBoardData = {
   xp: number;
 }[];
 
+type TVData = {
+  slides: TVSlide[];
+  monthlyLeaderBoardData: MonthlyLeaderBoardData;
+  boulderGradeCounts: { grade: string; count: number }[];
+  ropeGradeCounts: { grade: string; count: number }[];
+  ropeTotal: number;
+  boulderTotal: number;
+};
+
 export default function TVSlider({
-  slides,
-  monthlyLeaderBoardData,
-  boulderGradeCounts,
-  ropeGradeCounts,
-  ropeTotal,
-  boulderTotal,
+  slides: initialSlides,
+  monthlyLeaderBoardData: initialMonthlyLeaderBoardData,
+  boulderGradeCounts: initialBoulderGradeCounts,
+  ropeGradeCounts: initialRopeGradeCounts,
+  ropeTotal: initialRopeTotal,
+  boulderTotal: initialBoulderTotal,
 }: {
   slides: TVSlide[];
   monthlyLeaderBoardData: MonthlyLeaderBoardData;
@@ -45,6 +54,36 @@ export default function TVSlider({
   ropeTotal: number;
   boulderTotal: number;
 }) {
+  const [tvData, setTvData] = useState<TVData>({
+    slides: initialSlides,
+    monthlyLeaderBoardData: initialMonthlyLeaderBoardData,
+    boulderGradeCounts: initialBoulderGradeCounts,
+    ropeGradeCounts: initialRopeGradeCounts,
+    ropeTotal: initialRopeTotal,
+    boulderTotal: initialBoulderTotal,
+  });
+
+  // Poll for updates every 5 seconds
+  useEffect(() => {
+    const fetchUpdates = async () => {
+      try {
+        const response = await fetch("/api/tv/data");
+        if (response.ok) {
+          const data = await response.json();
+          setTvData(data);
+        }
+      } catch (error) {
+        console.error("Failed to fetch TV updates:", error);
+      }
+    };
+
+    // Fetch immediately, then every 2 minutes
+    fetchUpdates();
+    const interval = setInterval(fetchUpdates, 120000);
+
+    return () => clearInterval(interval);
+  }, []);
+
   useEffect(() => {
     // Prevent body scrolling
     document.body.style.overflow = "hidden";
@@ -54,15 +93,7 @@ export default function TVSlider({
     };
   }, []);
 
-  if (slides.length === 0) {
-    return (
-      <div className="flex items-center justify-center h-screen w-screen">
-        <p className="text-white text-2xl font-barlow">No slides available</p>
-      </div>
-    );
-  }
-
-  slides = slides.filter(
+  const slides = tvData.slides.filter(
     slide =>
       slide.type == "STATS" ||
       slide.type === "LOGO" ||
@@ -71,49 +102,63 @@ export default function TVSlider({
       slide.type === "IMAGE"
   );
 
+  if (slides.length === 0) {
+    return (
+      <div className="flex items-center justify-center h-screen w-screen">
+        <p className="text-white text-2xl font-barlow">No slides available</p>
+      </div>
+    );
+  }
+
   return (
     <div className="w-screen h-screen flex items-center justify-center bg-black overflow-hidden">
       <Swiper
         modules={[Autoplay]}
         loop={true}
         autoplay={{
-          delay: 10000,
+          delay: 10000, // 10 seconds
           disableOnInteraction: false,
         }}
         spaceBetween={0}
         className="w-full h-full"
+        key={slides.map(s => s.id).join(",")} // Force re-render when slides change
       >
         {slides.map(slide => (
           <SwiperSlide key={slide.id} className="flex items-center justify-center p-5">
             <div className="w-full h-full flex items-center justify-center">
               {slide.type === "LEADERBOARD" && (
-                <LeaderBoardSlide monthlyLeaderBoardData={monthlyLeaderBoardData} />
+                <LeaderBoardSlide monthlyLeaderBoardData={tvData.monthlyLeaderBoardData} />
               )}
               {slide.type === "IMAGE" && (
-                <div className="flex items-center justify-center w-full h-full">
+                <div className="flex items-center justify-center w-full h-full  r">
                   {slide.imageUrl && (
                     <Image
                       src={slide.imageUrl}
                       alt={slide.text || "TV Slide"}
                       width={1920}
                       height={1080}
-                      className="object-contain w-full h-full"
+                      className="object-contain w-full h-full rounded-2xl"
                     />
                   )}
                 </div>
               )}
               {slide.type === "TEXT" && (
                 <div className="flex items-center justify-center w-full h-full">
-                  <p className="text-white text-4xl font-barlow">{slide.text}</p>
+                  <p
+                    className="text-white font-barlow"
+                    style={{ fontSize: "clamp(1.5rem, 3vw, 3rem)" }}
+                  >
+                    {slide.text}
+                  </p>
                 </div>
               )}
               {slide.type === "LOGO" && <LogoSlide />}
               {slide.type === "STATS" && (
                 <GymStatsSlide
-                  boulderGradeCounts={boulderGradeCounts}
-                  ropeGradeCounts={ropeGradeCounts}
-                  ropeTotal={ropeTotal}
-                  boulderTotal={boulderTotal}
+                  boulderGradeCounts={tvData.boulderGradeCounts}
+                  ropeGradeCounts={tvData.ropeGradeCounts}
+                  ropeTotal={tvData.ropeTotal}
+                  boulderTotal={tvData.boulderTotal}
                 />
               )}
               {/* {slide.type === "FEATURED_ROUTE" && } */}

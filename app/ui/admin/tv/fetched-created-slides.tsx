@@ -34,10 +34,11 @@ export default async function CreatedSlides() {
                   <Image
                     src={slide.imageUrl || ""}
                     alt={slide.text || "Slide"}
-                    width={125}
-                    height={125}
-                    className="object-cover"
+                    width={82}
+                    height={82}
+                    className="object-contain"
                   />
+                  {}
                 </div>
               )}
               {slide.type === TVSlideType.TEXT && <p className="text-white">{slide.text}</p>}

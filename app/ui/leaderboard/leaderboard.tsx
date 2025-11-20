@@ -5,6 +5,7 @@ import { User } from "@prisma/client";
 import clsx from "clsx";
 import Link from "next/link";
 import LevelIndicator from "../general/level-indicator";
+import Image from "next/image";
 
 export type MonthlyLeaderBoardData = {
   user: {
@@ -12,6 +13,7 @@ export type MonthlyLeaderBoardData = {
     id: string;
     totalXp: number;
     username: string | null;
+    image: string | null;
   };
   xp: number;
 }[];
@@ -61,53 +63,217 @@ export default function Leaderboard({
     }
   };
 
+  const getMedalIcon = (index: number) => {
+    if (index === 0) return "🥇";
+    if (index === 1) return "🥈";
+    if (index === 2) return "🥉";
+    return null;
+  };
+
   return (
     <div className="flex flex-col w-full px-2 gap-5 font-barlow text-white">
       {/* userData */}
+
       {user ? (
-        <div className="flex flex-col gap-1">
+        <div className="flex flex-col gap-2">
           <h2 className="text-xl font-bold">
             Your Position{" "}
             <span className="text-sm">{buttonText === "Monthly" ? "(monthly)" : "(total)"}</span>
           </h2>
-          <div
-            className={clsx(
-              "flex py-3 pl-3 pr-1 rounded-md bg-blue-500/35 outline-1 outline-blue-500 justify-between font-barlow font-bold",
-              buttonText === "Monthly"
-                ? "bg-blue-500/35 outline-1 outline-blue-500"
-                : "bg-purple-500/35 outline-1 outline-purple-500"
-            )}
-          >
-            {buttonText === "Monthly" ? (
-              foundIndexOfUserMonthly !== undefined ? (
-                <>
-                  <span>{foundIndexOfUserMonthly + 1}</span>
-                  <div className="flex items-center gap-1.5">
-                    <LevelIndicator xp={user.totalXp} size="sm" />
-                    <span>{user.username ? user.username : user.id}</span>
+
+          {buttonText === "Monthly" ? (
+            foundIndexOfUserMonthly !== undefined ? (
+              (() => {
+                const userRank = foundIndexOfUserMonthly;
+                const userMedalIcon = getMedalIcon(userRank);
+                console.log(userRank);
+                const topXp = monthlyLeaderBoardData[0]?.xp || 1;
+                const userXp = monthlyXp || 0;
+                const xpPercentage = (userXp / topXp) * 100;
+
+                return (
+                  <div
+                    className={clsx(
+                      "grid w-full font-barlow font-bold pl-3 pr-2  py-3 rounded-lg shadow-md transition-all duration-300",
+                      "grid-cols-[4rem_1fr_6rem] md:grid-cols-[5rem_1fr_7rem]",
+
+                      userRank === 0 &&
+                        "bg-amber-500/75 outline-2 outline-amber-500 shadow-amber-500/50 ring-1 ring-offset-1 ring-offset-black ring-amber-400",
+                      userRank === 1 &&
+                        "bg-gray-500/75 outline-2 outline-gray-500 shadow-gray-500/50 ring-1 ring-offset-1 ring-offset-black ring-gray-400",
+                      userRank === 2 &&
+                        "bg-orange-500/75 outline-2 outline-orange-500 shadow-orange-500/50 ring-1 ring-offset-1 ring-offset-black ring-orange-400",
+                      userRank > 2 ||
+                        (userRank === -1 &&
+                          "bg-blue-500/25 outline-1 outline-blue-500 shadow-blue-500/30")
+                    )}
+                  >
+                    <div className="flex items-center justify-start gap-2">
+                      {userMedalIcon && <span className="text-2xl">{userMedalIcon}</span>}
+                      <span
+                        className={clsx(
+                          "font-bold drop-shadow-lg",
+                          userRank === 0 && "text-amber-300",
+                          userRank === 1 && "text-gray-300",
+                          userRank === 2 && "text-orange-300",
+                          userRank > 2 && "text-blue-300"
+                        )}
+                      >
+                        #{userRank + 1}
+                      </span>
+                    </div>
+                    <div className="flex items-center justify-between gap-2 p-2 bg-slate-900/60 rounded-full">
+                      <div className="flex items-center justify-center gap-2">
+                        <LevelIndicator xp={user.totalXp} size="sm" />
+                        {user.image ? (
+                          <div
+                            className={clsx(
+                              "rounded-full overflow-hidden border-2 w-8 h-8 border-white/30"
+                            )}
+                          >
+                            <Image
+                              src={user.image}
+                              alt={user.username || ""}
+                              width={32}
+                              height={32}
+                              className="w-full h-full object-cover"
+                            />
+                          </div>
+                        ) : (
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            strokeWidth={1.5}
+                            stroke="currentColor"
+                            className="size-8"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
+                            />
+                          </svg>
+                        )}
+                      </div>
+                      <span
+                        className={clsx(
+                          "no-wrap truncate font-barlow font-bold drop-shadow-lg max-w-xs text-base"
+                        )}
+                      >
+                        {user.username ? user.username : user.id}
+                      </span>
+                      <div />
+                    </div>
+                    <div className="flex flex-col items-end justify-center gap-1">
+                      <span className="flex items-center justify-center text-center text-green-400 rounded-full bg-slate-900/60 px-3 py-1 border border-green-400/50 drop-shadow-lg font-bold text-sm">
+                        {shortenXp(userXp)} XP
+                      </span>
+                    </div>
                   </div>
-                  <span className="text-center text-sm text-green-400 px-2 rounded-full bg-slate-900/65 outline-1 outline-green-400">
-                    {shortenXp(monthlyXp ? monthlyXp : 0)}xp
-                  </span>
-                </>
-              ) : (
-                <div>No Data for this month</div>
-              )
-            ) : foundIndexOfUserTotal !== undefined ? (
-              <>
-                <span>{foundIndexOfUserTotal + 1}</span>
-                <div className="flex items-center gap-1.5">
-                  <LevelIndicator xp={user.totalXp} size="sm" />
-                  <span>{user.username ? user.username : user.id}</span>
-                </div>
-                <span className="text-center  text-green-400 px-2 rounded-full bg-slate-900/65 outline-1 outline-green-400">
-                  {shortenXp(user.totalXp)}xp
-                </span>
-              </>
+                );
+              })()
             ) : (
+              <div className="text-center p-8 text-white font-barlow font-bold rounded-lg bg-blue-500/25 outline-1 outline-blue-500">
+                <div className="text-2xl mb-2">📊</div>
+                <div>No Data for this month</div>
+              </div>
+            )
+          ) : foundIndexOfUserTotal !== undefined ? (
+            (() => {
+              const userRank = foundIndexOfUserTotal;
+              const userMedalIcon = getMedalIcon(userRank);
+
+              const topXp = totalXpLeaderBoardData[0]?.totalXp || 1;
+              const userXp = user.totalXp;
+              const xpPercentage = (userXp / topXp) * 100;
+
+              return (
+                <div
+                  className={clsx(
+                    "grid w-full font-barlow font-bold pl-3 pr-2 rounded-lg shadow-md transition-all duration-300",
+                    "grid-cols-[4rem_1fr_6rem] md:grid-cols-[5rem_1fr_7rem] py-3",
+                    userRank === 0 &&
+                      "bg-amber-500/75 outline-2 outline-amber-500 shadow-amber-500/50 ring-1 ring-offset-1 ring-offset-black ring-amber-400",
+                    userRank === 1 &&
+                      "bg-gray-500/75 outline-2 outline-gray-500 shadow-gray-500/50 ring-1 ring-offset-1 ring-offset-black ring-gray-400",
+                    userRank === 2 &&
+                      "bg-orange-500/75 outline-2 outline-orange-500 shadow-orange-500/50 ring-1 ring-offset-1 ring-offset-black ring-orange-400",
+                    userRank > 2 &&
+                      "bg-purple-500/25 outline-1 outline-purple-500 shadow-purple-500/30"
+                  )}
+                >
+                  <div className="flex items-center justify-start gap-2">
+                    {userMedalIcon && <span className="text-2xl">{userMedalIcon}</span>}
+                    <span
+                      className={clsx(
+                        "font-bold drop-shadow-lg",
+                        userRank === 0 && "text-amber-300",
+                        userRank === 1 && "text-gray-300",
+                        userRank === 2 && "text-orange-300",
+                        userRank > 2 && "text-purple-300"
+                      )}
+                    >
+                      #{userRank + 1}
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between gap-2 p-2 bg-slate-900/60 rounded-full">
+                    <div className="flex items-center justify-center gap-2">
+                      <LevelIndicator xp={user.totalXp} size="sm" />
+                      {user.image ? (
+                        <div
+                          className={clsx(
+                            "rounded-full overflow-hidden border-2 w-8 h-8 border-white/30"
+                          )}
+                        >
+                          <Image
+                            src={user.image}
+                            alt={user.username || ""}
+                            width={32}
+                            height={32}
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                      ) : (
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          strokeWidth={1.5}
+                          stroke="currentColor"
+                          className="size-8"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
+                          />
+                        </svg>
+                      )}
+                    </div>
+                    <span
+                      className={clsx(
+                        "no-wrap truncate font-barlow font-bold drop-shadow-lg max-w-xs"
+                      )}
+                    >
+                      {user.username ? user.username : user.id}
+                    </span>
+                    <div />
+                  </div>
+                  <div className="flex flex-col items-end justify-center gap-1">
+                    <span className="flex items-center justify-center text-center text-green-400 rounded-full bg-slate-900/60 px-3 py-1 border border-green-400/50 drop-shadow-lg font-bold text-sm">
+                      {shortenXp(userXp)} XP
+                    </span>
+                  </div>
+                </div>
+              );
+            })()
+          ) : (
+            <div className="text-center p-8 text-white font-barlow font-bold rounded-lg bg-purple-500/25 outline-1 outline-purple-500">
+              <div className="text-2xl mb-2">📊</div>
               <div>No Data for this month</div>
-            )}
-          </div>
+            </div>
+          )}
           {!user.private ? (
             <div className="text-xs ">
               <p>
@@ -153,7 +319,7 @@ export default function Leaderboard({
         <h1 className="text-start text-3xl font-bold">{headerText}</h1>
         <button
           className={clsx(
-            "p-2 rounded-full  text-md font-semibold",
+            "p-2 px-4 rounded-full  text-md font-semibold",
             buttonText === "Monthly"
               ? "bg-blue-500/35 outline-1 outline-blue-500"
               : "bg-purple-500/35 outline-1 outline-purple-500"
@@ -163,16 +329,7 @@ export default function Leaderboard({
           {buttonText}
         </button>
       </div>
-      <div className="flex flex-col gap-1.5">
-        <div
-          className="grid w-full font-tomorrow font-bold"
-          style={{ gridTemplateColumns: "60px 1fr 80px" }}
-        >
-          <h2 className="text-xl font-bold pl-1 ">Rank</h2>
-          <h2 className="text-xl font-bold text-center no-wrap ">User</h2>
-          <h2 className="text-xl font-bold text-end pr-1">XP</h2>
-        </div>
-        <div className="h-0.5 rounded-full bg-white" />
+      <div className="flex flex-col gap-2">
         <div className="flex flex-col gap-3">
           {buttonText === "Monthly" ? (
             monthlyLeaderBoardData.length === 0 ? (
@@ -184,58 +341,184 @@ export default function Leaderboard({
             ) : (
               monthlyLeaderBoardData
                 .slice(0, showAll ? monthlyLeaderBoardData.length : 10)
-                .map((climber, index) => (
-                  <div
-                    key={climber.user.id}
-                    className={clsx(
-                      "grid w-full font-barlow font-bold py-3 pl-3 pr-1 rounded-md ",
-                      index === 0 && "bg-amber-500/75 outline-1 outline-amber-500",
-                      index === 1 && "bg-gray-500/75 outline-1 outline-gray-500",
-                      index === 2 && "bg-orange-500/75 outline-1 outline-orange-500",
-                      index > 2 && "bg-blue-500/25 outline-1 outline-blue-500"
-                    )}
-                    style={{ gridTemplateColumns: "60px 1fr 80px" }}
-                  >
-                    <span className="text-start">{index + 1}</span>
-                    <div className="flex items-center gap-1.5 justify-center">
-                      <LevelIndicator xp={climber.user.totalXp} size="sm" />
-                      <span className="no-wrap truncate max-w-44 font-barlow font-bold">
-                        {climber.user.username ? climber.user.username : climber.user.id}
-                      </span>
+                .map((climber, index) => {
+                  const medalIcon = getMedalIcon(index);
+
+                  const topXp = monthlyLeaderBoardData[0]?.xp || 1;
+
+                  return (
+                    <div
+                      key={climber.user.id}
+                      className={clsx(
+                        "grid w-full font-barlow font-bold pl-3 pr-2 rounded-lg shadow-md transition-all duration-300",
+                        "grid-cols-[4rem_1fr_6rem] md:grid-cols-[5rem_1fr_7rem] py-3",
+                        index === 0 &&
+                          "bg-amber-500/75 outline-2 outline-amber-500 shadow-amber-500/50 ring-1 ring-offset-1 ring-offset-black ring-amber-400",
+                        index === 1 &&
+                          "bg-gray-500/75 outline-2 outline-gray-500 shadow-gray-500/50 ring-1 ring-offset-1 ring-offset-black ring-gray-400",
+                        index === 2 &&
+                          "bg-orange-500/75 outline-2 outline-orange-500 shadow-orange-500/50 ring-1 ring-offset-1 ring-offset-black ring-orange-400",
+                        index > 2 && "bg-blue-500/25 outline-1 outline-blue-500 shadow-blue-500/30"
+                      )}
+                    >
+                      <div className="flex items-center justify-start gap-2">
+                        {medalIcon && <span className="text-2xl">{medalIcon}</span>}
+                        <span
+                          className={clsx(
+                            "font-bold drop-shadow-lg",
+                            index === 0 && "text-amber-300",
+                            index === 1 && "text-gray-300",
+                            index === 2 && "text-orange-300",
+                            index > 2 && "text-blue-300"
+                          )}
+                        >
+                          #{index + 1}
+                        </span>
+                      </div>
+                      <div className="flex items-center justify-between gap-2 p-2 bg-slate-900/60 rounded-full">
+                        <div className="flex items-center justify-center gap-2">
+                          <LevelIndicator xp={climber.user.totalXp} size="sm" />
+                          {climber.user.image ? (
+                            <div
+                              className={clsx(
+                                "rounded-full overflow-hidden border-2 w-8 h-8 border-white/30"
+                              )}
+                            >
+                              <Image
+                                src={climber.user.image}
+                                alt={climber.user.username || ""}
+                                width={32}
+                                height={32}
+                                className="w-full h-full object-cover"
+                              />
+                            </div>
+                          ) : (
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              strokeWidth={1.5}
+                              stroke="currentColor"
+                              className="size-8"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
+                              />
+                            </svg>
+                          )}
+                        </div>
+                        <span
+                          className={clsx(
+                            "no-wrap truncate font-barlow font-bold drop-shadow-lg max-w-xs"
+                          )}
+                        >
+                          {climber.user.username ? climber.user.username : climber.user.id}
+                        </span>
+                        <div />
+                      </div>
+                      <div className="flex flex-col items-end justify-center gap-1">
+                        <span className="flex items-center justify-center text-center text-green-400 rounded-full bg-slate-900/60 px-3 py-1 border border-green-400/50 drop-shadow-lg font-bold text-sm">
+                          {shortenXp(climber.xp)} XP
+                        </span>
+                      </div>
                     </div>
-                    <span className="text-center text-green-400 px-2 rounded-full bg-slate-900/65 outline-1 outline-green-400">
-                      {shortenXp(climber.xp)}xp
-                    </span>
-                  </div>
-                ))
+                  );
+                })
             )
           ) : (
             totalXpLeaderBoardData
               .slice(0, showAll ? totalXpLeaderBoardData.length : 10)
-              .map((climber, index) => (
-                <div
-                  key={climber.id}
-                  className={clsx(
-                    "grid w-full font-barlow font-bold py-3 pl-3 pr-1 rounded-md ",
-                    index === 0 && "bg-amber-500/75 outline-1 outline-amber-500",
-                    index === 1 && "bg-gray-500/75 outline-1 outline-gray-500",
-                    index === 2 && "bg-orange-500/75 outline-1 outline-orange-500",
-                    index > 2 && "bg-purple-500/25 outline-1 outline-purple-500"
-                  )}
-                  style={{ gridTemplateColumns: "60px 1fr 80px" }}
-                >
-                  <span className="text-start">{index + 1}</span>
-                  <div className="flex items-center gap-1.5 justify-center">
-                    <LevelIndicator xp={climber.totalXp} size="sm" />
-                    <span className="no-wrap truncate max-w-44 ">
-                      {climber.username ? climber.username : climber.id}
-                    </span>
+              .map((climber, index) => {
+                const medalIcon = getMedalIcon(index);
+
+                const topXp = totalXpLeaderBoardData[0]?.totalXp || 1;
+
+                return (
+                  <div
+                    key={climber.id}
+                    className={clsx(
+                      "grid w-full font-barlow font-bold pl-3 pr-2 rounded-lg shadow-md transition-all duration-300",
+                      "grid-cols-[4rem_1fr_6rem] md:grid-cols-[5rem_1fr_7rem] py-3",
+                      index === 0 &&
+                        "bg-amber-500/75 outline-2 outline-amber-500 shadow-amber-500/50 ring-1 ring-offset-1 ring-offset-black ring-amber-400",
+                      index === 1 &&
+                        "bg-gray-500/75 outline-2 outline-gray-500 shadow-gray-500/50 ring-1 ring-offset-1 ring-offset-black ring-gray-400",
+                      index === 2 &&
+                        "bg-orange-500/75 outline-2 outline-orange-500 shadow-orange-500/50 ring-1 ring-offset-1 ring-offset-black ring-orange-400",
+                      index > 2 &&
+                        "bg-purple-500/25 outline-1 outline-purple-500 shadow-purple-500/30"
+                    )}
+                  >
+                    <div className="flex items-center justify-start gap-2">
+                      {medalIcon ? (
+                        <span className="text-2xl">{medalIcon}</span>
+                      ) : (
+                        <span
+                          className={clsx(
+                            "font-bold drop-shadow-lg",
+                            index === 0 && "text-amber-300",
+                            index === 1 && "text-gray-300",
+                            index === 2 && "text-orange-300",
+                            index > 2 && "text-purple-300"
+                          )}
+                        >
+                          #{index + 1}
+                        </span>
+                      )}
+                    </div>
+                    <div className="flex items-center justify-between gap-2 p-2 bg-slate-900/60 rounded-full ">
+                      <div className="flex items-center justify-center gap-2">
+                        <LevelIndicator xp={climber.totalXp} size="sm" />
+                        {climber.image ? (
+                          <div
+                            className={clsx(
+                              "rounded-full overflow-hidden border-2 w-8 h-8 border-white/30"
+                            )}
+                          >
+                            <Image
+                              src={climber.image}
+                              alt={climber.username || ""}
+                              width={32}
+                              height={32}
+                              className="w-full h-full object-cover"
+                            />
+                          </div>
+                        ) : (
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            strokeWidth={1.5}
+                            stroke="currentColor"
+                            className="size-8 "
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
+                            />
+                          </svg>
+                        )}
+                      </div>
+                      <span
+                        className={clsx(
+                          "no-wrap truncate font-barlow font-bold drop-shadow-lg max-w-xs"
+                        )}
+                      >
+                        {climber.username ? climber.username : climber.id}
+                      </span>
+                      <div />
+                    </div>
+                    <div className="flex flex-col items-end justify-center gap-1">
+                      <span className="flex items-center justify-center text-center text-green-400 rounded-full bg-slate-900/60 px-3 py-1 border border-green-400/50 drop-shadow-lg font-bold text-sm">
+                        {shortenXp(climber.totalXp)} XP
+                      </span>
+                    </div>
                   </div>
-                  <span className="text-center  text-green-400 px-2 rounded-full bg-slate-900/65 outline-1 outline-green-400">
-                    {shortenXp(climber.totalXp)}xp
-                  </span>
-                </div>
-              ))
+                );
+              })
           )}
         </div>
 

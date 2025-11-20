@@ -29,18 +29,21 @@ export default function ClientGraphs({
   boulderTotal: number;
 }) {
   return (
-    <div className="flex flex-col gap-4 ">
-      <div className="flex items-center gap-2">
-        <div className="w-20 flex items-center justify-center">
-          <h2 className="text-white font-bold text-4xl rotate-270 whitespace-nowrap">
-            Boulders <span className="text-xl">{`(${boulderTotal})`}</span>
+    <div className="flex flex-col justify-between ">
+      <div
+        className="flex items-center w-[75vw] h-[30vh]"
+        style={{ gap: "clamp(0.5rem, 1vw, 1rem)" }}
+      >
+        <div className="flex items-center justify-center w-20">
+          <h2 className="text-white font-bold rotate-270 whitespace-nowrap text-6xl">
+            Boulders <span className="text-4xl">{`(${boulderTotal})`}</span>
           </h2>
         </div>
-        <div className="h-80 w-6xl">
+        <div className="w-full h-full">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart
               data={boulderCounts}
-              margin={{ top: 20, right: 0, left: -40, bottom: -20 }}
+              margin={{ top: 0, right: 0, left: 0, bottom: 75 }}
               barCategoryGap="10%"
             >
               <CartesianGrid strokeDasharray="3 3" className="stroke-gray-600" />
@@ -49,8 +52,8 @@ export default function ClientGraphs({
                 dataKey="grade"
                 angle={-45}
                 textAnchor="end"
-                height={80}
-                fontSize={20}
+                width={120}
+                className="text-4xl"
                 stroke="white"
                 tick={{ fill: "white", fontWeight: "bold" }}
               />
@@ -58,6 +61,7 @@ export default function ClientGraphs({
                 type="number"
                 dataKey="count"
                 allowDecimals={false}
+                className="text-4xl"
                 stroke="white"
                 tick={{ fill: "white", fontWeight: "bold" }}
               />
@@ -73,17 +77,20 @@ export default function ClientGraphs({
           </ResponsiveContainer>
         </div>
       </div>
-      <div className="flex items-center gap-2">
-        <div className="w-20 flex items-center justify-center">
-          <h2 className="text-white font-bold text-4xl rotate-270 whitespace-nowrap">
-            Ropes <span className="text-xl">{`(${ropeTotal})`}</span>
+      <div
+        className="flex items-center w-[75vw] h-[30vh]"
+        style={{ gap: "clamp(0.5rem, 1vw, 1rem)" }}
+      >
+        <div className="flex items-center justify-center w-20">
+          <h2 className="text-white font-bold rotate-270 whitespace-nowrap text-6xl">
+            Ropes <span className="text-4xl">{`(${ropeTotal})`}</span>
           </h2>
         </div>
-        <div className="h-80 w-6xl py-2">
+        <div className="w-full h-full">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart
               data={ropeCounts}
-              margin={{ top: 20, right: 0, left: -40, bottom: -20 }}
+              margin={{ top: 0, right: 0, left: 0, bottom: 75 }}
               barCategoryGap="10%"
             >
               <CartesianGrid strokeDasharray="3 3" className="stroke-gray-600" />
@@ -92,8 +99,8 @@ export default function ClientGraphs({
                 dataKey="grade"
                 angle={-45}
                 textAnchor="end"
-                height={80}
-                fontSize={20}
+                width={120}
+                className="text-4xl"
                 stroke="white"
                 tick={{ fill: "white", fontWeight: "bold" }}
               />
@@ -101,6 +108,7 @@ export default function ClientGraphs({
                 type="number"
                 dataKey="count"
                 allowDecimals={false}
+                className="text-4xl"
                 stroke="white"
                 tick={{ fill: "white", fontWeight: "bold" }}
               />

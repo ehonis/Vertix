@@ -13,7 +13,7 @@ export default function LevelIndicator({
     <div
       className={clsx(
         "flex items-center font-tomorrow justify-center rounded-full outline-2 bg-gray-900/80",
-        size === "lg" && "!text-2xl size-6 p-4",
+        size === "lg" && "!text-2xl size-8 p-6",
         size === "md" && "text-lg size-5 p-4",
         size === "sm" && "!text-sm size-4 p-3",
         size === "xs" && "!text-xs size-3 p-2",

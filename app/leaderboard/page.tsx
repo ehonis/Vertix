@@ -1,11 +1,11 @@
 import { auth } from "@/auth";
 import prisma from "@/prisma";
-import MonthlyLeaderboard from "../ui/leaderboard/leaderboard";
+import Leaderboard from "../ui/leaderboard/leaderboard";
 import { Suspense } from "react";
 import ThreeDotLoading from "../ui/general/three-dot-loading";
 import { User } from "@prisma/client";
 
-export default async function Leaderboard() {
+export default async function LeaderboardPage() {
   const session = await auth();
   const user = session?.user;
 
@@ -53,6 +53,7 @@ export default async function Leaderboard() {
           id: true,
           totalXp: true,
           username: true,
+          image: true,
         },
       },
       xp: true,
@@ -89,7 +90,7 @@ export default async function Leaderboard() {
           <div className="md:w-lg w-xs h-1 rounded-full bg-white" />
         </div>
 
-        <MonthlyLeaderboard
+        <Leaderboard
           monthlyLeaderBoardData={monthlyLeaderBoardData}
           totalXpLeaderBoardData={totalXpLeaderBoardData}
           foundIndexOfUserTotal={userTotalIndex}

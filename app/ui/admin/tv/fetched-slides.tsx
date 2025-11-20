@@ -13,7 +13,7 @@ export default async function FetchedSlides() {
     <div className="flex gap-5 ">
       {fetchedSlides.length > 0 &&
         fetchedSlides.map(slide => (
-          <div key={slide.id} className="h-32 w-56 flex-shrink-0">
+          <div key={slide.id} className="h-32 w-56 ">
             {slide.type === "LEADERBOARD" && <LeaderBoardSlide />}
             {slide.type === "IMAGE" && (
               <div className="flex items-center justify-center purple-button p-2 rounded-md h-full w-full">

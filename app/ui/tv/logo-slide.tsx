@@ -1,32 +1,30 @@
 import Image from "next/image";
+import VertixLogo from "./vertix-logo";
 
 export default function LogoSlide() {
   return (
-    <div className="flex items-center justify-center rounded-md  h-full w-full gap-16">
-      <Image
-        src="/img/upscalemedia-transformed.webp"
-        alt="Logo"
-        width={500}
-        height={500}
-        className="z-10 -ml-[3rem]"
-      />
+    <div className="flex items-center justify-center rounded-md h-full w-full gap-28 ml-28">
+      <div className="z-10">
+        <Image
+          src="/img/upscalemedia-transformed.webp"
+          alt="Logo"
+          width={1000}
+          height={1000}
+          className="w-full h-full object-contain scale-125"
+        />
+      </div>
       <svg
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
         viewBox="0 0 24 24"
         strokeWidth={1.5}
         stroke="currentColor"
-        className="size-16 stroke-white stroke-2 mt-5 z-10"
+        className="stroke-white stroke-2 z-10 size-24"
       >
         <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
       </svg>
 
-      <div className="flex flex-col items-center justify-center z-10 -mt-10">
-        <p className="text-white font-jost text-[10rem]">Vertix</p>
-        <p className="text-white font-barlow text-xl -mr-32 -mt-16">
-          All of your climbing data, in one place
-        </p>
-      </div>
+      <VertixLogo />
       <div
         className="absolute inset-0 opacity-100 "
         style={{
