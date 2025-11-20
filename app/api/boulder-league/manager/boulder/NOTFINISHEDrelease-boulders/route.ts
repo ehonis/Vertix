@@ -47,6 +47,7 @@ export async function POST(req: NextRequest) {
           createdByUserID: session.user.id || null,
           order: null,
           xp: 0,
+          bonusXp: 0,
         }));
 
         // Create all routes and store them to get their IDs
