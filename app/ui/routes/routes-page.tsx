@@ -2,7 +2,7 @@
 
 import { CommunityGrade, RouteAttempt, RouteCompletion, User } from "@prisma/client";
 import TopDown from "./topdown";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import WallRoutes from "./wall-routes";
 import SearchRoutes from "./search-routes";
 import { Locations } from "@prisma/client";
@@ -14,12 +14,19 @@ import clsx from "clsx";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { RouteCompletionProvider } from "@/app/contexts/routeCompletionContext";
+import {
+  findCommunityGradeForRoute,
+  calculateCompletionXpForRoute,
+  isGradeHigher,
+} from "@/lib/route";
+import { RouteWithExtraData } from "@/app/api/routes/get-wall-routes-non-archive/route";
 
 export default function RoutesPage({ user }: { user: User | null | undefined }) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [isLoading, setIsLoading] = useState(false);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
+  const isClosingRef = useRef(false);
 
   /**
    * Get initial wall selection from URL params or localStorage
@@ -118,6 +125,82 @@ export default function RoutesPage({ user }: { user: User | null | undefined }) 
     }
   }, [wall]);
 
+  // Check for route ID in URL and open popup if present
+  useEffect(() => {
+    // Don't open if we're in the process of closing
+    if (isClosingRef.current) {
+      return;
+    }
+    const routeId = searchParams.get("route");
+    // Only open if route ID exists, it's different from current, and popup is not already open
+    if (routeId && routeId !== routePopUpId && !isRoutePopUp) {
+      const fetchAndOpenRoute = async () => {
+        try {
+          const queryParams = new URLSearchParams({
+            routeId: routeId,
+            ...(user?.id && { userId: user.id }),
+          });
+          const response = await fetch(`/api/routes/get-route-by-id?${queryParams.toString()}`);
+          if (!response.ok) {
+            console.error("Failed to fetch route");
+            return;
+          }
+          const { data } = await response.json();
+          const route: RouteWithExtraData = data;
+
+          // Calculate community grade
+          const communityGrade =
+            route.grade.toLowerCase() === "vfeature" || route.grade.toLowerCase() === "5.feature"
+              ? "none"
+              : findCommunityGradeForRoute(route.communityGrades);
+
+          // Get user grade if user exists
+          let userGrade: string | null = null;
+          if (
+            user &&
+            route.grade.toLowerCase() !== "vfeature" &&
+            route.grade.toLowerCase() !== "5.feature"
+          ) {
+            userGrade =
+              route.communityGrades.find(grade => grade.userId === user.id)?.grade || null;
+          }
+
+          // Calculate XP
+          let xp: {
+            xp: number;
+            baseXp: number;
+            xpExtrapolated: { type: string; xp: number }[];
+          } | null = null;
+          if (user && !route.isArchive) {
+            const routeType = route.grade.startsWith("5") ? "rope" : "boulder";
+            xp = calculateCompletionXpForRoute({
+              grade: route.grade,
+              previousCompletions: route.completions.length,
+              newHighestGrade: isGradeHigher(user as User, route.grade, routeType),
+            });
+          }
+
+          // Open the popup
+          handleRoutePopUp(
+            route.id,
+            route.title,
+            route.grade,
+            route.color,
+            route.completions,
+            route.attempts,
+            userGrade,
+            communityGrade,
+            xp,
+            route.isArchive
+          );
+        } catch (error) {
+          console.error("Error fetching route:", error);
+        }
+      };
+      fetchAndOpenRoute();
+    }
+  }, [searchParams, user, routePopUpId, isRoutePopUp]);
+
   const searchInputVariants = {
     hidden: {
       width: 0,
@@ -185,8 +268,18 @@ export default function RoutesPage({ user }: { user: User | null | undefined }) 
     setRoutePopUpXp(xp);
     setRoutePopUpIsArchived(isArchived);
     setIsRoutePopUp(true);
+
+    // Add route ID to URL
+    if (typeof window !== "undefined") {
+      const url = new URL(window.location.href);
+      url.searchParams.set("route", routeId);
+      window.history.pushState({}, "", url.toString());
+    }
   };
   const handleRoutePopUpCancel = () => {
+    // Set flag to prevent reopening during close
+    isClosingRef.current = true;
+
     setRoutePopUpId("");
     setRoutePopUpName("");
     setRoutePopUpGrade("");
@@ -197,6 +290,20 @@ export default function RoutesPage({ user }: { user: User | null | undefined }) 
     setRoutePopUpUserGrade(null);
     setRoutePopUpIsArchived(false);
     setIsRoutePopUp(false);
+
+    // Remove route ID from URL using Next.js router to ensure searchParams updates
+    if (typeof window !== "undefined") {
+      const url = new URL(window.location.href);
+      url.searchParams.delete("route");
+      const newUrl = url.pathname + (url.search ? url.search : "");
+      router.replace(newUrl, { scroll: false });
+    }
+
+    // Reset flag after a short delay to allow URL to update
+    setTimeout(() => {
+      isClosingRef.current = false;
+    }, 100);
+
     // Trigger a refresh of the WallRoutes component data
     setRefreshTrigger(prev => prev + 1);
   };

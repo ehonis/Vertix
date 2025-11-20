@@ -34,6 +34,9 @@ export default async function FetchedDefaultSlides() {
 
               {slide.type === TVSlideType.STATS && <StatsSlide />}
               {slide.type === TVSlideType.LEADERBOARD && <LeaderBoardSlide />}
+              {slide.type === TVSlideType.FEATURED_ROUTE && (
+                <FeaturedRouteSlide routes={[]} featuredRoute={null} />
+              )}
             </div>
             <p className=" md:text-2xl text-sm font-bold text-white">{slide.text} Slide</p>
             <Toggle slideId={slide.id} isActive={slide.isActive} />

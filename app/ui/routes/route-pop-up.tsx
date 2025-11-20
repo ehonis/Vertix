@@ -345,7 +345,7 @@ export default function RoutePopUp({
           exit={{ scale: 0.8 }}
           transition={{ duration: 0.2 }}
           className={clsx(
-            "bg-slate-900/35 p-3 rounded-lg shadow-lg text-white max-w-[23rem] w-full relative flex flex-col gap-10 z-30 outline-2 h-max justify-between",
+            "bg-slate-900/35 p-3 rounded-lg shadow-lg text-white max-w-92 w-full relative flex flex-col gap-10 z-30 outline-2 h-max justify-between",
             {
               "outline-green-400": color === "green",
               "outline-red-400": color === "red",
