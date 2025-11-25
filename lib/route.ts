@@ -552,7 +552,7 @@ export function getGradeRange(grade: string) {
 
 export function getRouteXp(grade: string) {
   const boulderGrades = {
-    vfeature: 200, // Special grade, fixed XP
+    vfeature: 0, // Feature routes have no base XP, only bonus XP
     vb: 10, // Manual override for easiest grade
     v0: 20,
     v1: 21,
@@ -568,7 +568,7 @@ export function getRouteXp(grade: string) {
   };
 
   const ropeGrades = {
-    "5.feature": 200, // Special grade, fixed XP
+    "5.feature": 0, // Feature routes have no base XP, only bonus XP
     "5.b": 10, // Manual override for easiest grade (similar to VB)
     "5.7-": 20, // Between 5.6 and 5.7. Could map to Index 0 or 0.5 for finer control
     "5.7": 20, // Index 0: round(20 + (0^1.7))
@@ -614,16 +614,19 @@ export function calculateCompletionXpForRoute({
   const newHighestGradeBonusXP = 250;
 
   const baseXp = getRouteXp(grade);
+  const isFeatureRoute = grade.toLowerCase() === "vfeature" || grade.toLowerCase() === "5.feature";
 
-  if ((grade === "vfeature" || grade === "5.feature") && previousCompletions > 0) {
+  if (isFeatureRoute && previousCompletions > 0) {
     return { xp: 0, baseXp: 0, xpExtrapolated: [{ type: "Repeated Feature Route", xp: 0 }] };
   }
 
   const xpExtrapolated: { type: string; xp: number }[] = [];
 
   let totalXp = 0;
-  // Base XP for completing the route
-  totalXp += baseXp;
+  // Base XP for completing the route (0 for feature routes)
+  if (!isFeatureRoute) {
+    totalXp += baseXp;
+  }
 
   // First time completion bonus
   if (previousCompletions === 0) {
@@ -641,8 +644,8 @@ export function calculateCompletionXpForRoute({
     xpExtrapolated.push({ type: "New Highest Grade Bonus", xp: newHighestGradeBonusXP });
   }
 
-  // Additional sends penalty (diminishing returns)
-  if (previousCompletions > 0) {
+  // Additional sends penalty (diminishing returns) - only applies to non-feature routes
+  if (previousCompletions > 0 && !isFeatureRoute) {
     const additionalXp = Math.floor(previousCompletions * (baseXp * 0.2)); // 20% of base XP per additional send
     totalXp -= additionalXp;
     if (totalXp < 0) {
