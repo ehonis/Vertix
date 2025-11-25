@@ -97,11 +97,11 @@ export default function TVSlider({
 
   const slides = tvData.slides.filter(
     slide =>
-      // slide.type == "STATS" ||
-      // slide.type === "LOGO" ||
-      // slide.type === "LEADERBOARD" ||
-      slide.type === "FEATURED_ROUTE"
-    // slide.type === "IMAGE"
+      slide.type == "STATS" ||
+      slide.type === "LOGO" ||
+      slide.type === "LEADERBOARD" ||
+      slide.type === "FEATURED_ROUTE" ||
+      slide.type === "IMAGE"
   );
 
   if (slides.length === 0) {
