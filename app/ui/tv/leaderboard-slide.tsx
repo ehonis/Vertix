@@ -229,7 +229,7 @@ export default function LeaderboardSlide({
               </div>
             </div>
           ) : (
-            monthlyLeaderBoardData.slice(0, 9).map((climber, index) => {
+            monthlyLeaderBoardData.slice(0, 5).map((climber, index) => {
               const medalIcon = getMedalIcon(index);
 
               return (

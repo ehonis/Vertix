@@ -21,7 +21,7 @@ export default function FeaturedRoutes({ slide }: { slide: extendedTVSlide }) {
       <div className="flex items-center justify-between">
         <VertixLogo />
         <div className="flex items-center gap-2 ">
-          <h1 className="text-white text-9xl font-bold -mb-16">Featured Routes</h1>
+          <h1 className="text-white text-8xl font-bold -mb-16">Featured Routes</h1>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -44,8 +44,8 @@ export default function FeaturedRoutes({ slide }: { slide: extendedTVSlide }) {
             <div
               key={route.id}
               className={clsx(
-                "flex flex-col p-10 rounded-3xl relative items-center gap-5 justify-between",
-                "w-[650px] h-[1000px]", // Fixed dimensions for all cards
+                "flex flex-col p-8 rounded-3xl relative items-center gap-5 justify-between",
+                "w-[450px] h-[680px]", // Fixed dimensions for all cards
                 {
                   "bg-green-400/25 outline-8 outline-green-400": route.color === "green",
                   "bg-red-400/25 outline-8 outline-red-400": route.color === "red",
@@ -69,7 +69,7 @@ export default function FeaturedRoutes({ slide }: { slide: extendedTVSlide }) {
               </div>
 
               {/* Fixed size container for image */}
-              <div className="w-full h-[700px] rounded-3xl overflow-hidden shrink-0">
+              <div className="w-full h-[425px] rounded-3xl overflow-hidden shrink-0">
                 {route.images && route.images.length > 0 ? (
                   <Image
                     src={route.images[0].url}
@@ -89,15 +89,15 @@ export default function FeaturedRoutes({ slide }: { slide: extendedTVSlide }) {
                 )}
               </div>
 
-              <div className="flex items-center justify-between w-full grow">
+              <div className="flex items-center justify-between w-full">
                 <div>
                   <h2 className="text-white text-6xl font-bold">{route.title}</h2>
                   <h3 className="text-white text-5xl italic font-bold">{route.grade}</h3>
                 </div>
-                <div className="bg-white rounded-2xl p-3 w-min flex-shrink-0">
+                <div className="bg-white rounded-2xl p-3 ">
                   <QRCodeSVG
                     value={`https://vertixclimb.com/routes?route=${route.id}`}
-                    size={175}
+                    size={145}
                   />
                 </div>
               </div>
