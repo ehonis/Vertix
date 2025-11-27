@@ -124,11 +124,11 @@ export default function Leaderboard({
                     </div>
                     <div className="flex items-center justify-between gap-2 p-2 bg-slate-900/60 rounded-full">
                       <div className="flex items-center justify-center gap-2">
-                        <LevelIndicator xp={user.totalXp} size="sm" />
+                        <LevelIndicator xp={user.totalXp} size="xs" />
                         {user.image ? (
                           <div
                             className={clsx(
-                              "rounded-full overflow-hidden border-2 w-8 h-8 border-white/30"
+                              "rounded-full overflow-hidden border-2 w-7 h-7 border-white/30"
                             )}
                           >
                             <Image
@@ -158,7 +158,7 @@ export default function Leaderboard({
                       </div>
                       <span
                         className={clsx(
-                          "no-wrap truncate font-barlow font-bold drop-shadow-lg max-w-xs text-base"
+                          "no-wrap truncate font-barlow font-bold drop-shadow-lg max-w-xs text-xs"
                         )}
                       >
                         {user.username ? user.username : user.id}
@@ -219,11 +219,11 @@ export default function Leaderboard({
                   </div>
                   <div className="flex items-center justify-between gap-2 p-2 bg-slate-900/60 rounded-full">
                     <div className="flex items-center justify-center gap-2">
-                      <LevelIndicator xp={user.totalXp} size="sm" />
+                      <LevelIndicator xp={user.totalXp} size="xs" />
                       {user.image ? (
                         <div
                           className={clsx(
-                            "rounded-full overflow-hidden border-2 w-8 h-8 border-white/30"
+                            "rounded-full overflow-hidden border-2 w-7 h-7 border-white/30"
                           )}
                         >
                           <Image
@@ -241,7 +241,7 @@ export default function Leaderboard({
                           viewBox="0 0 24 24"
                           strokeWidth={1.5}
                           stroke="currentColor"
-                          className="size-8"
+                          className="size-7"
                         >
                           <path
                             strokeLinecap="round"
@@ -253,7 +253,7 @@ export default function Leaderboard({
                     </div>
                     <span
                       className={clsx(
-                        "no-wrap truncate font-barlow font-bold drop-shadow-lg max-w-xs"
+                        "no-wrap truncate font-barlow font-bold drop-shadow-lg max-w-xs text-xs"
                       )}
                     >
                       {user.username ? user.username : user.id}
@@ -377,11 +377,11 @@ export default function Leaderboard({
                       </div>
                       <div className="flex items-center justify-between gap-2 p-2 bg-slate-900/60 rounded-full">
                         <div className="flex items-center justify-center gap-2">
-                          <LevelIndicator xp={climber.user.totalXp} size="sm" />
+                          <LevelIndicator xp={climber.user.totalXp} size="xs" />
                           {climber.user.image ? (
                             <div
                               className={clsx(
-                                "rounded-full overflow-hidden border-2 w-8 h-8 border-white/30"
+                                "rounded-full overflow-hidden border-2 w-7 h-7 border-white/30"
                               )}
                             >
                               <Image
@@ -399,7 +399,7 @@ export default function Leaderboard({
                               viewBox="0 0 24 24"
                               strokeWidth={1.5}
                               stroke="currentColor"
-                              className="size-8"
+                              className="size-7"
                             >
                               <path
                                 strokeLinecap="round"
@@ -411,7 +411,7 @@ export default function Leaderboard({
                         </div>
                         <span
                           className={clsx(
-                            "no-wrap truncate font-barlow font-bold drop-shadow-lg max-w-xs"
+                            "no-wrap truncate font-barlow font-bold drop-shadow-lg max-w-[70%] text-xs"
                           )}
                         >
                           {climber.user.username ? climber.user.username : climber.user.id}
@@ -470,11 +470,11 @@ export default function Leaderboard({
                     </div>
                     <div className="flex items-center justify-between gap-2 p-2 bg-slate-900/60 rounded-full ">
                       <div className="flex items-center justify-center gap-2">
-                        <LevelIndicator xp={climber.totalXp} size="sm" />
+                        <LevelIndicator xp={climber.totalXp} size="xs" />
                         {climber.image ? (
                           <div
                             className={clsx(
-                              "rounded-full overflow-hidden border-2 w-8 h-8 border-white/30"
+                              "rounded-full overflow-hidden border-2 w-7 h-7 border-white/30"
                             )}
                           >
                             <Image
@@ -492,7 +492,7 @@ export default function Leaderboard({
                             viewBox="0 0 24 24"
                             strokeWidth={1.5}
                             stroke="currentColor"
-                            className="size-8 "
+                            className="size-7 "
                           >
                             <path
                               strokeLinecap="round"
@@ -504,7 +504,7 @@ export default function Leaderboard({
                       </div>
                       <span
                         className={clsx(
-                          "no-wrap truncate font-barlow font-bold drop-shadow-lg max-w-xs"
+                          "no-wrap truncate font-barlow font-bold drop-shadow-lg max-w-xs text-xs"
                         )}
                       >
                         {climber.username ? climber.username : climber.id}

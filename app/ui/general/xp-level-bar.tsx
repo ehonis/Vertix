@@ -164,7 +164,7 @@ export default function XpLevelBar({
           duration: 0.6,
           ease: "easeOut",
         }}
-        className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50 w-11/12 max-w-sm"
+        className="fixed top-4 left-1/2 transform -translate-x-1/2 z-90 w-11/12 max-w-sm"
       >
         <div
           className={`bg-slate-900/65 backdrop-blur-sm rounded-xl shadow-2xl border ${accentColors.border} relative cursor-pointer`}
