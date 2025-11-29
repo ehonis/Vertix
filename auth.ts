@@ -30,10 +30,28 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       return session;
     },
     async redirect({ url, baseUrl }) {
-      // Handle mobile auth callbacks
+      // Check if this is a mobile auth callback
+      // The mobileCallback param is passed through the NextAuth callback URL
+      try {
+        const urlObj = new URL(url, baseUrl);
+        const mobileCallback = urlObj.searchParams.get("mobileCallback");
+        
+        if (mobileCallback) {
+          // Decode and redirect to mobile callback
+          const decodedCallback = decodeURIComponent(mobileCallback);
+          const mobileCallbackUrl = new URL("/api/mobile-auth/callback", baseUrl);
+          mobileCallbackUrl.searchParams.set("callbackUrl", decodedCallback);
+          return mobileCallbackUrl.toString();
+        }
+      } catch (e) {
+        // If URL parsing fails, continue with default behavior
+      }
+      
+      // Handle mobile auth callbacks (direct)
       if (url.includes("/api/mobile-auth/callback")) {
         return url;
       }
+      
       // Default NextAuth redirect behavior
       if (url.startsWith("/")) return `${baseUrl}${url}`;
       if (new URL(url).origin === baseUrl) return url;
