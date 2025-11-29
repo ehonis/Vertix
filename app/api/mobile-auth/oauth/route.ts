@@ -20,15 +20,6 @@ export async function GET(req: NextRequest) {
     const provider = searchParams.get("provider");
     const callbackUrl = searchParams.get("callbackUrl") || "vertixmobile://auth";
 
-    console.log("=== OAuth Initiation ===");
-    console.log("Provider:", provider);
-    console.log("Callback URL:", callbackUrl);
-    console.log("Request URL:", req.url);
-    console.log("Headers:", {
-      host: req.headers.get("host"),
-      "x-forwarded-host": req.headers.get("x-forwarded-host"),
-      "x-forwarded-proto": req.headers.get("x-forwarded-proto"),
-    });
 
     if (!provider || (provider !== "google" && provider !== "github")) {
       return NextResponse.json(
@@ -49,9 +40,6 @@ export async function GET(req: NextRequest) {
     // Use our mobile callback URL directly (must be added to OAuth console)
     // This allows us to handle PKCE manually without NextAuth interference
     const mobileCallbackUrl = `${baseUrl}/api/mobile-auth/callback/${provider}`;
-    
-    console.log("Base URL:", baseUrl);
-    console.log("Mobile Callback URL:", mobileCallbackUrl);
 
     // Build OAuth authorization URL with PKCE
     let authUrl: string;
