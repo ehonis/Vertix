@@ -29,5 +29,15 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       // Include routeSetter flag
       return session;
     },
+    async redirect({ url, baseUrl }) {
+      // Handle mobile auth callbacks
+      if (url.includes("/api/mobile-auth/callback")) {
+        return url;
+      }
+      // Default NextAuth redirect behavior
+      if (url.startsWith("/")) return `${baseUrl}${url}`;
+      if (new URL(url).origin === baseUrl) return url;
+      return baseUrl;
+    },
   },
 });
