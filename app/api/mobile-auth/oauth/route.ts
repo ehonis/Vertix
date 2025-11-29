@@ -14,15 +14,26 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    // Get base URL
-    const host = req.headers.get("host");
-    const protocol = req.headers.get("x-forwarded-proto") || "https";
-    const baseUrl = `${protocol}://${host}`;
+    // Get base URL - use hardcoded production URL to ensure consistency
+    // The redirect URI in Google OAuth console must match exactly
+    const baseUrl = process.env.NEXTAUTH_URL || "https://vertixclimb.com";
 
-    // Set up the callback URL for NextAuth
-    // We'll pass the mobile callback URL as a query param that NextAuth's redirect callback can read
-    const nextAuthCallbackUrl = new URL("/api/auth/callback/" + provider, baseUrl);
-    nextAuthCallbackUrl.searchParams.set("mobileCallback", encodeURIComponent(callbackUrl));
+    // Use NextAuth's standard callback URL (must match Google/GitHub OAuth console settings)
+    // The redirect URI must be exactly: https://vertixclimb.com/api/auth/callback/google
+    // (or /api/auth/callback/github for GitHub)
+    // NO query parameters allowed - they will cause redirect_uri_mismatch
+    const nextAuthCallbackUrl = `${baseUrl}/api/auth/callback/${provider}`;
+    
+    // Store mobile callback URL in cookies so we can retrieve it after OAuth
+    // This way we don't modify the redirect URI that Google expects
+    const response = NextResponse.redirect(""); // We'll set the redirect below
+    response.cookies.set(`mobile_callback_${provider}`, callbackUrl, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "lax",
+      maxAge: 600, // 10 minutes
+      path: "/", // Make sure cookie is accessible
+    });
 
     // Build OAuth authorization URL directly using NextAuth's client IDs
     let authUrl: string;
@@ -36,7 +47,7 @@ export async function GET(req: NextRequest) {
       // Generate state for CSRF protection
       const state = randomBytes(32).toString("base64url");
       
-      const redirectUri = encodeURIComponent(nextAuthCallbackUrl.toString());
+      const redirectUri = encodeURIComponent(nextAuthCallbackUrl);
       
       authUrl = `https://accounts.google.com/o/oauth2/v2/auth?` +
         `client_id=${clientId}&` +
@@ -54,7 +65,7 @@ export async function GET(req: NextRequest) {
       }
       
       const state = randomBytes(32).toString("base64url");
-      const redirectUri = encodeURIComponent(nextAuthCallbackUrl.toString());
+      const redirectUri = encodeURIComponent(nextAuthCallbackUrl);
       
       authUrl = `https://github.com/login/oauth/authorize?` +
         `client_id=${clientId}&` +
@@ -65,7 +76,9 @@ export async function GET(req: NextRequest) {
       throw new Error("Unsupported provider");
     }
 
-    return NextResponse.redirect(authUrl);
+    // Set the redirect URL and return response with cookie
+    response.headers.set("Location", authUrl);
+    return response;
   } catch (error: any) {
     console.error("Mobile OAuth error:", error);
     const errorUrl = new URL(

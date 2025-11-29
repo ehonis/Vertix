@@ -5,9 +5,14 @@ import jwt from "jsonwebtoken";
 
 export async function GET(req: NextRequest) {
   try {
-    const searchParams = req.nextUrl.searchParams;
-    const callbackUrl = searchParams.get("callbackUrl") || "vertixmobile://auth";
-    const error = searchParams.get("error");
+    // Get mobile callback URL from cookie (set during OAuth initiation)
+    // Fallback to query param for backwards compatibility
+    const cookies = req.cookies;
+    const provider = req.nextUrl.searchParams.get("provider") || "google";
+    const callbackUrl = cookies.get(`mobile_callback_${provider}`)?.value || 
+                       req.nextUrl.searchParams.get("callbackUrl") || 
+                       "vertixmobile://auth";
+    const error = req.nextUrl.searchParams.get("error");
 
     if (error) {
       const errorUrl = new URL(callbackUrl);

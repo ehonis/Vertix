@@ -30,21 +30,31 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       return session;
     },
     async redirect({ url, baseUrl }) {
-      // Check if this is a mobile auth callback
-      // The mobileCallback param is passed through the NextAuth callback URL
-      try {
-        const urlObj = new URL(url, baseUrl);
-        const mobileCallback = urlObj.searchParams.get("mobileCallback");
-        
-        if (mobileCallback) {
-          // Decode and redirect to mobile callback
-          const decodedCallback = decodeURIComponent(mobileCallback);
+      // After OAuth callback, check if we have a mobile callback cookie
+      // If so, redirect to mobile callback endpoint
+      // The mobile callback will read the cookie and create JWT token
+      
+      // Default NextAuth redirect behavior first
+      let redirectUrl: string;
+      if (url.startsWith("/")) {
+        redirectUrl = `${baseUrl}${url}`;
+      } else if (new URL(url).origin === baseUrl) {
+        redirectUrl = url;
+      } else {
+        redirectUrl = baseUrl;
+      }
+      
+      // If this is coming from OAuth callback, check for mobile auth
+      // We'll redirect to mobile callback which will check cookies
+      if (url.includes("/api/auth/callback/")) {
+        // Extract provider from callback URL
+        const providerMatch = url.match(/\/api\/auth\/callback\/(google|github)/);
+        if (providerMatch) {
+          const provider = providerMatch[1];
           const mobileCallbackUrl = new URL("/api/mobile-auth/callback", baseUrl);
-          mobileCallbackUrl.searchParams.set("callbackUrl", decodedCallback);
+          mobileCallbackUrl.searchParams.set("provider", provider);
           return mobileCallbackUrl.toString();
         }
-      } catch (e) {
-        // If URL parsing fails, continue with default behavior
       }
       
       // Handle mobile auth callbacks (direct)
@@ -52,10 +62,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         return url;
       }
       
-      // Default NextAuth redirect behavior
-      if (url.startsWith("/")) return `${baseUrl}${url}`;
-      if (new URL(url).origin === baseUrl) return url;
-      return baseUrl;
+      return redirectUrl;
     },
   },
 });
