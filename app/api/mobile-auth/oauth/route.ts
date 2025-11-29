@@ -16,24 +16,14 @@ export async function GET(req: NextRequest) {
     // Get base URL
     const baseUrl = process.env.NEXTAUTH_URL || "https://www.vertixclimb.com";
 
-    // Use NextAuth's built-in sign-in endpoint which handles PKCE automatically
-    // This will properly initiate the OAuth flow with PKCE code verifier
-    // DO NOT pass the mobile callback URL as a query param - NextAuth will reject it
-    // We'll store it in a cookie instead and retrieve it in the redirect callback
-    const nextAuthSignInUrl = `${baseUrl}/api/auth/signin/${provider}`;
-
-    // Create redirect response with cookie for mobile callback URL
-    // Store mobile callback URL in cookies so we can retrieve it after OAuth
-    const response = NextResponse.redirect(nextAuthSignInUrl);
-    response.cookies.set(`mobile_callback_${provider}`, callbackUrl, {
-      httpOnly: true,
-      secure: true,
-      sameSite: "lax",
-      maxAge: 600, // 10 minutes
-      path: "/", // Make sure cookie is accessible
-    });
+    // Redirect to page component that uses Server Action to call signIn
+    // This is necessary because signIn modifies cookies, which can only be done
+    // in Server Actions or Route Handlers, but we need PKCE which signIn handles
+    const pageUrl = new URL("/mobile-auth/oauth", baseUrl);
+    pageUrl.searchParams.set("provider", provider);
+    pageUrl.searchParams.set("callbackUrl", callbackUrl);
     
-    return response;
+    return NextResponse.redirect(pageUrl.toString());
   } catch (error: any) {
     console.error("Mobile OAuth error:", error);
     const errorUrl = new URL(
