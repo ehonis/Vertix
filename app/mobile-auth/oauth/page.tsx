@@ -1,6 +1,5 @@
-import { signIn } from "@/auth";
+import { initiateOAuth } from "./actions";
 import { redirect } from "next/navigation";
-import { headers } from "next/headers";
 
 export default async function MobileOAuthPage({
   searchParams,
@@ -15,20 +14,8 @@ export default async function MobileOAuthPage({
     redirect("/signin?error=invalid_provider");
   }
 
-  // Get the base URL from headers
-  const headersList = await headers();
-  const host = headersList.get("host");
-  const protocol = headersList.get("x-forwarded-proto") || "https";
-  const baseUrl = `${protocol}://${host}`;
-
-  // Set up the callback URL for NextAuth
-  const callbackUrlForNextAuth = new URL("/api/mobile-auth/callback", baseUrl);
-  callbackUrlForNextAuth.searchParams.set("callbackUrl", callbackUrl);
-
-  // Use NextAuth's signIn function - this will redirect to the OAuth provider
-  await signIn(provider, {
-    redirectTo: callbackUrlForNextAuth.toString(),
-  });
+  // Use Server Action to initiate OAuth (allows cookie modification)
+  await initiateOAuth(provider, callbackUrl);
 
   // This shouldn't be reached, but just in case
   return null;
