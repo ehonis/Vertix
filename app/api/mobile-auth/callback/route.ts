@@ -42,7 +42,10 @@ export async function GET(req: NextRequest) {
     }
 
     // Exchange authorization code for access token using PKCE
-    const baseUrl = process.env.NEXTAUTH_URL || "https://www.vertixclimb.com";
+    // Get base URL from request (works with preview deployments)
+    const host = req.headers.get("host") || req.headers.get("x-forwarded-host");
+    const protocol = req.headers.get("x-forwarded-proto") || "https";
+    const baseUrl = `${protocol}://${host}`;
     const redirectUri = `${baseUrl}/api/mobile-auth/callback/${provider}`;
     
     let accessToken: string;
