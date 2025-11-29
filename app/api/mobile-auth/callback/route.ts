@@ -194,43 +194,25 @@ export async function GET(req: NextRequest) {
       { expiresIn: "30d" }
     );
 
-    // Redirect to mobile app with token
-    // Ensure we're using the deep link scheme, not a web URL
-    let redirectUrl: string;
+    // Redirect to an intermediate page that will handle the deep link
+    // Browsers can't redirect directly to custom URL schemes, so we use a page
+    // Reuse baseUrl that was already defined above
+    // Create redirect URL to the callback page with token and user data
+    const redirectUrl = new URL("/mobile-auth/callback", baseUrl);
+    redirectUrl.searchParams.set("token", token);
+    redirectUrl.searchParams.set("user", encodeURIComponent(JSON.stringify({
+      id: user.id,
+      email: user.email,
+      name: user.name,
+      username: user.username,
+      image: user.image,
+      role: user.role,
+    })));
     
-    if (callbackUrl.startsWith('vertixmobile://')) {
-      // Already a deep link, use it directly
-      const mobileUrl = new URL(callbackUrl);
-      mobileUrl.searchParams.set("token", token);
-      mobileUrl.searchParams.set("user", encodeURIComponent(JSON.stringify({
-        id: user.id,
-        email: user.email,
-        name: user.name,
-        username: user.username,
-        image: user.image,
-        role: user.role,
-      })));
-      redirectUrl = mobileUrl.toString();
-    } else {
-      // Fallback: construct deep link
-      const mobileUrl = new URL(`vertixmobile://auth`);
-      mobileUrl.searchParams.set("token", token);
-      mobileUrl.searchParams.set("user", encodeURIComponent(JSON.stringify({
-        id: user.id,
-        email: user.email,
-        name: user.name,
-        username: user.username,
-        image: user.image,
-        role: user.role,
-      })));
-      redirectUrl = mobileUrl.toString();
-    }
-    
-    console.log("Redirecting to mobile app:", redirectUrl);
+    console.log("Redirecting to callback page:", redirectUrl.toString());
     
     // Clear PKCE cookies
-    // Use 302 redirect with the deep link URL
-    const response = NextResponse.redirect(redirectUrl, { status: 302 });
+    const response = NextResponse.redirect(redirectUrl.toString(), { status: 302 });
     response.cookies.delete(`pkce_verifier_${provider}`);
     response.cookies.delete(`oauth_state_${provider}`);
     response.cookies.delete(`mobile_callback_${provider}`);
