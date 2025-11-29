@@ -13,16 +13,12 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    // Redirect to NextAuth's sign-in endpoint
-    // NextAuth will handle the OAuth flow and redirect to our callback
-    const callbackUrlForNextAuth = new URL("/api/mobile-auth/callback", req.nextUrl.origin);
-    callbackUrlForNextAuth.searchParams.set("callbackUrl", callbackUrl);
-
-    // Use NextAuth's built-in sign-in endpoint with callback
-    const signInUrl = new URL(`/api/auth/signin/${provider}`, req.nextUrl.origin);
-    signInUrl.searchParams.set("callbackUrl", callbackUrlForNextAuth.toString());
+    // Redirect to the page route that uses NextAuth's signIn properly
+    const pageUrl = new URL("/mobile-auth/oauth", req.nextUrl.origin);
+    pageUrl.searchParams.set("provider", provider);
+    pageUrl.searchParams.set("callbackUrl", callbackUrl);
     
-    return NextResponse.redirect(signInUrl.toString());
+    return NextResponse.redirect(pageUrl.toString());
   } catch (error: any) {
     console.error("Mobile OAuth error:", error);
     const errorUrl = new URL(
