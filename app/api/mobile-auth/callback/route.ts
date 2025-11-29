@@ -194,25 +194,73 @@ export async function GET(req: NextRequest) {
       { expiresIn: "30d" }
     );
 
-    // Redirect to an intermediate page that will handle the deep link
-    // Browsers can't redirect directly to custom URL schemes, so we use a page
-    // Reuse baseUrl that was already defined above
-    // Create redirect URL to the callback page with token and user data
-    const redirectUrl = new URL("/mobile-auth/callback", baseUrl);
-    redirectUrl.searchParams.set("token", token);
-    redirectUrl.searchParams.set("user", encodeURIComponent(JSON.stringify({
-      id: user.id,
-      email: user.email,
-      name: user.name,
-      username: user.username,
-      image: user.image,
-      role: user.role,
-    })));
+    // Redirect to mobile app with token
+    // CRITICAL: The redirect URL must match EXACTLY what was passed to openAuthSessionAsync
+    // iOS WebAuthenticationSession is very strict about this
+    let redirectUrl: string;
     
-    console.log("Redirecting to callback page:", redirectUrl.toString());
+    console.log("Callback URL from cookie:", callbackUrl);
+    
+    // Parse the callback URL and add query parameters
+    // Handle both vertixmobile://auth and vertixmobile:///auth formats
+    try {
+      // If it's already a proper URL, use it
+      if (callbackUrl.includes('://')) {
+        // Extract scheme and path
+        const urlParts = callbackUrl.split('://');
+        const scheme = urlParts[0];
+        const pathAndQuery = urlParts[1] || '';
+        
+        // Build the redirect URL manually to ensure exact match
+        const baseUrl = `${scheme}://${pathAndQuery.split('?')[0]}`;
+        const existingParams = pathAndQuery.includes('?') 
+          ? new URLSearchParams(pathAndQuery.split('?')[1])
+          : new URLSearchParams();
+        
+        // Add our token and user params
+        existingParams.set("token", token);
+        existingParams.set("user", encodeURIComponent(JSON.stringify({
+          id: user.id,
+          email: user.email,
+          name: user.name,
+          username: user.username,
+          image: user.image,
+          role: user.role,
+        })));
+        
+        redirectUrl = `${baseUrl}?${existingParams.toString()}`;
+      } else {
+        // Fallback: construct deep link
+        const mobileUrl = new URL(`vertixmobile://auth`);
+        mobileUrl.searchParams.set("token", token);
+        mobileUrl.searchParams.set("user", encodeURIComponent(JSON.stringify({
+          id: user.id,
+          email: user.email,
+          name: user.name,
+          username: user.username,
+          image: user.image,
+          role: user.role,
+        })));
+        redirectUrl = mobileUrl.toString();
+      }
+    } catch (error) {
+      console.error("Error constructing redirect URL:", error);
+      // Fallback to simple construction
+      redirectUrl = `${callbackUrl}?token=${encodeURIComponent(token)}&user=${encodeURIComponent(JSON.stringify({
+        id: user.id,
+        email: user.email,
+        name: user.name,
+        username: user.username,
+        image: user.image,
+        role: user.role,
+      }))}`;
+    }
+    
+    console.log("Final redirect URL:", redirectUrl);
     
     // Clear PKCE cookies
-    const response = NextResponse.redirect(redirectUrl.toString(), { status: 302 });
+    // Use 302 redirect with the deep link URL
+    const response = NextResponse.redirect(redirectUrl, { status: 302 });
     response.cookies.delete(`pkce_verifier_${provider}`);
     response.cookies.delete(`oauth_state_${provider}`);
     response.cookies.delete(`mobile_callback_${provider}`);
