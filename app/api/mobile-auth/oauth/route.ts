@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import { signIn } from "@/auth";
 import { auth } from "@/auth";
 import prisma from "@/prisma";
 import jwt from "jsonwebtoken";
@@ -64,17 +63,33 @@ export async function GET(req: NextRequest) {
       return NextResponse.redirect(mobileUrl.toString());
     }
 
-    // No session yet, redirect to OAuth sign-in
-    // The callback will come back to /api/mobile-auth/oauth-callback
-    const signInCallbackUrl = new URL("/api/mobile-auth/oauth-callback", req.nextUrl.origin);
-    signInCallbackUrl.searchParams.set("callbackUrl", callbackUrl);
-    signInCallbackUrl.searchParams.set("provider", provider);
+    // No session yet, we need to initiate OAuth flow
+    // Build the OAuth authorization URL directly
+    const callbackUrlForOAuth = new URL("/api/mobile-auth/oauth-callback", req.nextUrl.origin);
+    callbackUrlForOAuth.searchParams.set("callbackUrl", callbackUrl);
+    callbackUrlForOAuth.searchParams.set("provider", provider);
 
-    // Redirect to NextAuth sign-in (we use NextAuth just for the OAuth flow, not for session management)
-    const signInUrl = new URL(`/api/auth/signin/${provider}`, req.nextUrl.origin);
-    signInUrl.searchParams.set("callbackUrl", signInCallbackUrl.toString());
+    let authUrl: string;
+
+    if (provider === "google") {
+      const clientId = process.env.GOOGLE_CLIENT_ID;
+      if (!clientId) {
+        throw new Error("GOOGLE_CLIENT_ID not configured");
+      }
+      const redirectUri = encodeURIComponent(callbackUrlForOAuth.toString());
+      authUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code&scope=openid%20profile%20email&access_type=offline&prompt=consent`;
+    } else if (provider === "github") {
+      const clientId = process.env.GITHUB_CLIENT_ID;
+      if (!clientId) {
+        throw new Error("GITHUB_CLIENT_ID not configured");
+      }
+      const redirectUri = encodeURIComponent(callbackUrlForOAuth.toString());
+      authUrl = `https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&scope=user:email`;
+    } else {
+      throw new Error("Unsupported provider");
+    }
     
-    return NextResponse.redirect(signInUrl.toString());
+    return NextResponse.redirect(authUrl);
   } catch (error: any) {
     console.error("Mobile OAuth error:", error);
     const errorUrl = new URL(
@@ -84,4 +99,3 @@ export async function GET(req: NextRequest) {
     return NextResponse.redirect(errorUrl.toString());
   }
 }
-
