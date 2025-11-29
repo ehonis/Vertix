@@ -6,10 +6,12 @@ import { redirect } from "next/navigation";
 import { Badge } from "@prisma/client";
 // generate static pages
 export async function generateStaticParams() {
-  const usernames = await prisma.user
-    .findMany()
-    .then(users => users.map(user => ({ slug: user.username })));
-  return usernames;
+  const users = await prisma.user.findMany({
+    where: {
+      username: { not: null },
+    },
+  });
+  return users.map(user => ({ slug: user.username! }));
 }
 
 export default async function ProfilePage({ params }: { params: Promise<{ slug: string }> }) {
