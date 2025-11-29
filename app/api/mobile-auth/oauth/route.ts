@@ -23,17 +23,6 @@ export async function GET(req: NextRequest) {
     // (or /api/auth/callback/github for GitHub)
     // NO query parameters allowed - they will cause redirect_uri_mismatch
     const nextAuthCallbackUrl = `${baseUrl}/api/auth/callback/${provider}`;
-    
-    // Store mobile callback URL in cookies so we can retrieve it after OAuth
-    // This way we don't modify the redirect URI that Google expects
-    const response = NextResponse.redirect(""); // We'll set the redirect below
-    response.cookies.set(`mobile_callback_${provider}`, callbackUrl, {
-      httpOnly: true,
-      secure: true,
-      sameSite: "lax",
-      maxAge: 600, // 10 minutes
-      path: "/", // Make sure cookie is accessible
-    });
 
     // Build OAuth authorization URL directly using NextAuth's client IDs
     let authUrl: string;
@@ -76,8 +65,18 @@ export async function GET(req: NextRequest) {
       throw new Error("Unsupported provider");
     }
 
-    // Set the redirect URL and return response with cookie
-    response.headers.set("Location", authUrl);
+    // Create redirect response with cookie for mobile callback URL
+    // Store mobile callback URL in cookies so we can retrieve it after OAuth
+    // This way we don't modify the redirect URI that Google expects
+    const response = NextResponse.redirect(authUrl);
+    response.cookies.set(`mobile_callback_${provider}`, callbackUrl, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "lax",
+      maxAge: 600, // 10 minutes
+      path: "/", // Make sure cookie is accessible
+    });
+    
     return response;
   } catch (error: any) {
     console.error("Mobile OAuth error:", error);
