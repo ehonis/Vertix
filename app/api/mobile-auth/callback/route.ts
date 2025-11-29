@@ -195,19 +195,42 @@ export async function GET(req: NextRequest) {
     );
 
     // Redirect to mobile app with token
-    const mobileUrl = new URL(callbackUrl);
-    mobileUrl.searchParams.set("token", token);
-    mobileUrl.searchParams.set("user", encodeURIComponent(JSON.stringify({
-      id: user.id,
-      email: user.email,
-      name: user.name,
-      username: user.username,
-      image: user.image,
-      role: user.role,
-    })));
+    // Ensure we're using the deep link scheme, not a web URL
+    let redirectUrl: string;
+    
+    if (callbackUrl.startsWith('vertixmobile://')) {
+      // Already a deep link, use it directly
+      const mobileUrl = new URL(callbackUrl);
+      mobileUrl.searchParams.set("token", token);
+      mobileUrl.searchParams.set("user", encodeURIComponent(JSON.stringify({
+        id: user.id,
+        email: user.email,
+        name: user.name,
+        username: user.username,
+        image: user.image,
+        role: user.role,
+      })));
+      redirectUrl = mobileUrl.toString();
+    } else {
+      // Fallback: construct deep link
+      const mobileUrl = new URL(`vertixmobile://auth`);
+      mobileUrl.searchParams.set("token", token);
+      mobileUrl.searchParams.set("user", encodeURIComponent(JSON.stringify({
+        id: user.id,
+        email: user.email,
+        name: user.name,
+        username: user.username,
+        image: user.image,
+        role: user.role,
+      })));
+      redirectUrl = mobileUrl.toString();
+    }
+    
+    console.log("Redirecting to mobile app:", redirectUrl);
     
     // Clear PKCE cookies
-    const response = NextResponse.redirect(mobileUrl.toString());
+    // Use 302 redirect with the deep link URL
+    const response = NextResponse.redirect(redirectUrl, { status: 302 });
     response.cookies.delete(`pkce_verifier_${provider}`);
     response.cookies.delete(`oauth_state_${provider}`);
     response.cookies.delete(`mobile_callback_${provider}`);
