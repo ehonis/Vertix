@@ -11,16 +11,34 @@ export async function GET(
     const searchParams = req.nextUrl.searchParams;
     const cookies = req.cookies;
     
+    console.log("=== OAuth Callback ===");
+    console.log("Provider:", provider);
+    console.log("Request URL:", req.url);
+    console.log("Pathname:", req.nextUrl.pathname);
+    console.log("Search Params:", Object.fromEntries(searchParams.entries()));
+    
     // Get stored values from cookies
     const codeVerifier = cookies.get(`pkce_verifier_${provider}`)?.value;
     const state = cookies.get(`oauth_state_${provider}`)?.value;
     const callbackUrl = cookies.get(`mobile_callback_${provider}`)?.value || 
                        "vertixmobile://auth";
     
+    console.log("Cookies:", {
+      codeVerifier: codeVerifier ? "present" : "missing",
+      state: state ? "present" : "missing",
+      callbackUrl,
+    });
+    
     // Get OAuth callback parameters
     const code = searchParams.get("code");
     const returnedState = searchParams.get("state");
     const error = searchParams.get("error");
+    
+    console.log("OAuth Parameters:", {
+      code: code ? "present" : "missing",
+      returnedState: returnedState ? "present" : "missing",
+      error: error || "none",
+    });
 
     if (error) {
       const errorUrl = new URL(callbackUrl);
