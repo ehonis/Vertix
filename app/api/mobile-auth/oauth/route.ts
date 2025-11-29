@@ -16,10 +16,11 @@ export async function GET(req: NextRequest) {
 
     // Get base URL - use hardcoded production URL to ensure consistency
     // The redirect URI in Google OAuth console must match exactly
-    const baseUrl = process.env.NEXTAUTH_URL || "https://vertixclimb.com";
+    // Must match: https://www.vertixclimb.com/api/auth/callback/google
+    const baseUrl = process.env.NEXTAUTH_URL || "https://www.vertixclimb.com";
 
     // Use NextAuth's standard callback URL (must match Google/GitHub OAuth console settings)
-    // The redirect URI must be exactly: https://vertixclimb.com/api/auth/callback/google
+    // The redirect URI must be exactly: https://www.vertixclimb.com/api/auth/callback/google
     // (or /api/auth/callback/github for GitHub)
     // NO query parameters allowed - they will cause redirect_uri_mismatch
     const nextAuthCallbackUrl = `${baseUrl}/api/auth/callback/${provider}`;
