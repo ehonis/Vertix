@@ -93,11 +93,12 @@ export async function GET(
       userInfo = await userResponse.json();
       
     } else if (provider === "github") {
-      const clientId = process.env.AUTH_GITHUB_ID || process.env.GITHUB_CLIENT_ID;
-      const clientSecret = process.env.AUTH_GITHUB_SECRET;
+      // Use mobile-specific GitHub OAuth app credentials
+      const clientId = process.env.MOBILE_GITHUB_CLIENT_ID || process.env.AUTH_GITHUB_ID || process.env.GITHUB_CLIENT_ID;
+      const clientSecret = process.env.MOBILE_GITHUB_CLIENT_SECRET || process.env.AUTH_GITHUB_SECRET;
       
       if (!clientId || !clientSecret) {
-        throw new Error("GitHub OAuth not configured");
+        throw new Error("Mobile GitHub OAuth not configured");
       }
 
       // Exchange code for token

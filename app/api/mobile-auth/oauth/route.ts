@@ -65,9 +65,10 @@ export async function GET(req: NextRequest) {
         `code_challenge_method=S256`;
         
     } else if (provider === "github") {
-      const clientId = process.env.AUTH_GITHUB_ID || process.env.GITHUB_CLIENT_ID;
+      // Use mobile-specific GitHub OAuth app credentials
+      const clientId = process.env.MOBILE_GITHUB_CLIENT_ID || process.env.AUTH_GITHUB_ID || process.env.GITHUB_CLIENT_ID;
       if (!clientId) {
-        throw new Error("GITHUB_CLIENT_ID not configured");
+        throw new Error("MOBILE_GITHUB_CLIENT_ID not configured");
       }
       
       const redirectUri = encodeURIComponent(mobileCallbackUrl);
