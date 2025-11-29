@@ -1,18 +1,26 @@
 import { NextRequest, NextResponse } from "next/server";
-import { auth } from "@/auth";
 import prisma from "@/prisma";
 import jwt from "jsonwebtoken";
 
 export async function GET(req: NextRequest) {
   try {
-    // Get mobile callback URL from cookie (set during OAuth initiation)
-    // Fallback to query param for backwards compatibility
+    const searchParams = req.nextUrl.searchParams;
     const cookies = req.cookies;
-    const provider = req.nextUrl.searchParams.get("provider") || "google";
+    
+    // Extract provider from callback URL path
+    const pathParts = req.nextUrl.pathname.split("/");
+    const provider = pathParts[pathParts.length - 1] || "google";
+    
+    // Get stored values from cookies
+    const codeVerifier = cookies.get(`pkce_verifier_${provider}`)?.value;
+    const state = cookies.get(`oauth_state_${provider}`)?.value;
     const callbackUrl = cookies.get(`mobile_callback_${provider}`)?.value || 
-                       req.nextUrl.searchParams.get("callbackUrl") || 
                        "vertixmobile://auth";
-    const error = req.nextUrl.searchParams.get("error");
+    
+    // Get OAuth callback parameters
+    const code = searchParams.get("code");
+    const returnedState = searchParams.get("state");
+    const error = searchParams.get("error");
 
     if (error) {
       const errorUrl = new URL(callbackUrl);
@@ -20,44 +28,164 @@ export async function GET(req: NextRequest) {
       return NextResponse.redirect(errorUrl.toString());
     }
 
-    // Get the session after NextAuth OAuth callback
-    const session = await auth();
-
-    if (!session?.user) {
+    // Validate state (CSRF protection)
+    if (!state || state !== returnedState) {
       const errorUrl = new URL(callbackUrl);
-      errorUrl.searchParams.set("error", "authentication_failed");
+      errorUrl.searchParams.set("error", "invalid_state");
       return NextResponse.redirect(errorUrl.toString());
     }
 
-    const user = session.user;
+    if (!code || !codeVerifier) {
+      const errorUrl = new URL(callbackUrl);
+      errorUrl.searchParams.set("error", "missing_code_or_verifier");
+      return NextResponse.redirect(errorUrl.toString());
+    }
 
-    // Fetch full user data
-    const fullUser = await prisma.user.findUnique({
-      where: { id: user.id },
-      select: {
-        id: true,
-        email: true,
-        name: true,
-        username: true,
-        image: true,
-        role: true,
-      },
+    // Exchange authorization code for access token using PKCE
+    const baseUrl = process.env.NEXTAUTH_URL || "https://www.vertixclimb.com";
+    const redirectUri = `${baseUrl}/api/mobile-auth/callback/${provider}`;
+    
+    let accessToken: string;
+    let userInfo: any;
+
+    if (provider === "google") {
+      const clientId = process.env.AUTH_GOOGLE_ID || process.env.GOOGLE_CLIENT_ID;
+      const clientSecret = process.env.AUTH_GOOGLE_SECRET;
+      
+      if (!clientId || !clientSecret) {
+        throw new Error("Google OAuth not configured");
+      }
+
+      // Exchange code for token
+      const tokenResponse = await fetch("https://oauth2.googleapis.com/token", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: new URLSearchParams({
+          client_id: clientId,
+          client_secret: clientSecret,
+          code,
+          redirect_uri: redirectUri,
+          grant_type: "authorization_code",
+          code_verifier: codeVerifier,
+        }),
+      });
+
+      if (!tokenResponse.ok) {
+        const errorText = await tokenResponse.text();
+        throw new Error(`Token exchange failed: ${errorText}`);
+      }
+
+      const tokenData = await tokenResponse.json();
+      accessToken = tokenData.access_token;
+
+      // Get user info from Google
+      const userResponse = await fetch("https://www.googleapis.com/oauth2/v2/userinfo", {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      });
+
+      if (!userResponse.ok) {
+        throw new Error("Failed to fetch user info from Google");
+      }
+
+      userInfo = await userResponse.json();
+      
+    } else if (provider === "github") {
+      const clientId = process.env.AUTH_GITHUB_ID || process.env.GITHUB_CLIENT_ID;
+      const clientSecret = process.env.AUTH_GITHUB_SECRET;
+      
+      if (!clientId || !clientSecret) {
+        throw new Error("GitHub OAuth not configured");
+      }
+
+      // Exchange code for token
+      const tokenResponse = await fetch("https://github.com/login/oauth/access_token", {
+        method: "POST",
+        headers: { 
+          "Content-Type": "application/x-www-form-urlencoded",
+          Accept: "application/json",
+        },
+        body: new URLSearchParams({
+          client_id: clientId,
+          client_secret: clientSecret,
+          code,
+          redirect_uri: redirectUri,
+          code_verifier: codeVerifier,
+        }),
+      });
+
+      if (!tokenResponse.ok) {
+        const errorText = await tokenResponse.text();
+        throw new Error(`Token exchange failed: ${errorText}`);
+      }
+
+      const tokenData = await tokenResponse.json();
+      accessToken = tokenData.access_token;
+
+      // Get user info from GitHub
+      const userResponse = await fetch("https://api.github.com/user", {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      });
+
+      if (!userResponse.ok) {
+        throw new Error("Failed to fetch user info from GitHub");
+      }
+
+      userInfo = await userResponse.json();
+      
+      // Get email from GitHub (may require separate API call)
+      const emailResponse = await fetch("https://api.github.com/user/emails", {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      });
+      
+      if (emailResponse.ok) {
+        const emails = await emailResponse.json();
+        const primaryEmail = emails.find((e: any) => e.primary) || emails[0];
+        userInfo.email = primaryEmail?.email || userInfo.email;
+      }
+    } else {
+      throw new Error("Unsupported provider");
+    }
+
+    if (!userInfo.email) {
+      const errorUrl = new URL(callbackUrl);
+      errorUrl.searchParams.set("error", "no_email");
+      return NextResponse.redirect(errorUrl.toString());
+    }
+
+    // Find or create user in database
+    let user = await prisma.user.findUnique({
+      where: { email: userInfo.email },
     });
 
-    if (!fullUser) {
-      const errorUrl = new URL(callbackUrl);
-      errorUrl.searchParams.set("error", "user_not_found");
-      return NextResponse.redirect(errorUrl.toString());
+    if (!user) {
+      // Create new user
+      user = await prisma.user.create({
+        data: {
+          email: userInfo.email,
+          name: userInfo.name || userInfo.login || null,
+          image: userInfo.picture || userInfo.avatar_url || null,
+          emailVerified: new Date(),
+        },
+      });
+    } else {
+      // Update user info
+      user = await prisma.user.update({
+        where: { id: user.id },
+        data: {
+          name: userInfo.name || userInfo.login || user.name,
+          image: userInfo.picture || userInfo.avatar_url || user.image,
+        },
+      });
     }
 
-    // Create JWT token for mobile app (independent of NextAuth session)
+    // Create JWT token for mobile app
     const jwtSecret = process.env.JWT_SECRET || process.env.AUTH_SECRET || "your-secret-key-change-in-production";
     const token = jwt.sign(
       {
-        userId: fullUser.id,
-        email: fullUser.email,
-        role: fullUser.role,
-        username: fullUser.username,
+        userId: user.id,
+        email: user.email,
+        role: user.role,
+        username: user.username,
       },
       jwtSecret,
       { expiresIn: "30d" }
@@ -67,15 +195,21 @@ export async function GET(req: NextRequest) {
     const mobileUrl = new URL(callbackUrl);
     mobileUrl.searchParams.set("token", token);
     mobileUrl.searchParams.set("user", encodeURIComponent(JSON.stringify({
-      id: fullUser.id,
-      email: fullUser.email,
-      name: fullUser.name,
-      username: fullUser.username,
-      image: fullUser.image,
-      role: fullUser.role,
+      id: user.id,
+      email: user.email,
+      name: user.name,
+      username: user.username,
+      image: user.image,
+      role: user.role,
     })));
     
-    return NextResponse.redirect(mobileUrl.toString());
+    // Clear PKCE cookies
+    const response = NextResponse.redirect(mobileUrl.toString());
+    response.cookies.delete(`pkce_verifier_${provider}`);
+    response.cookies.delete(`oauth_state_${provider}`);
+    response.cookies.delete(`mobile_callback_${provider}`);
+    
+    return response;
   } catch (error: any) {
     console.error("Mobile OAuth callback error:", error);
     const errorUrl = new URL(
@@ -85,4 +219,3 @@ export async function GET(req: NextRequest) {
     return NextResponse.redirect(errorUrl.toString());
   }
 }
-
