@@ -28,7 +28,7 @@ export async function GET(req: NextRequest) {
     let authUrl: string;
 
     if (provider === "google") {
-      const clientId = process.env.GOOGLE_CLIENT_ID;
+      const clientId = process.env.AUTH_GOOGLE_ID;
       if (!clientId) {
         throw new Error("GOOGLE_CLIENT_ID not configured");
       }
@@ -48,7 +48,7 @@ export async function GET(req: NextRequest) {
         `state=${encodeURIComponent(state)}`;
         
     } else if (provider === "github") {
-      const clientId = process.env.GITHUB_CLIENT_ID;
+      const clientId = process.env.AUTH_GITHUB_ID;
       if (!clientId) {
         throw new Error("GITHUB_CLIENT_ID not configured");
       }
