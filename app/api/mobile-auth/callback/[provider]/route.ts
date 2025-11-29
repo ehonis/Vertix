@@ -2,14 +2,14 @@ import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/prisma";
 import jwt from "jsonwebtoken";
 
-export async function GET(req: NextRequest) {
+export async function GET(
+  req: NextRequest,
+  { params }: { params: Promise<{ provider: string }> }
+) {
   try {
+    const { provider } = await params;
     const searchParams = req.nextUrl.searchParams;
     const cookies = req.cookies;
-    
-    // Extract provider from callback URL path
-    const pathParts = req.nextUrl.pathname.split("/");
-    const provider = pathParts[pathParts.length - 1] || "google";
     
     // Get stored values from cookies
     const codeVerifier = cookies.get(`pkce_verifier_${provider}`)?.value;
@@ -197,64 +197,23 @@ export async function GET(req: NextRequest) {
     // Redirect to mobile app with token
     // CRITICAL: The redirect URL must match EXACTLY what was passed to openAuthSessionAsync
     // iOS WebAuthenticationSession is very strict about this
-    let redirectUrl: string;
-    
     console.log("Callback URL from cookie:", callbackUrl);
     
-    // Parse the callback URL and add query parameters
-    // Handle both vertixmobile://auth and vertixmobile:///auth formats
-    try {
-      // If it's already a proper URL, use it
-      if (callbackUrl.includes('://')) {
-        // Extract scheme and path
-        const urlParts = callbackUrl.split('://');
-        const scheme = urlParts[0];
-        const pathAndQuery = urlParts[1] || '';
-        
-        // Build the redirect URL manually to ensure exact match
-        const baseUrl = `${scheme}://${pathAndQuery.split('?')[0]}`;
-        const existingParams = pathAndQuery.includes('?') 
-          ? new URLSearchParams(pathAndQuery.split('?')[1])
-          : new URLSearchParams();
-        
-        // Add our token and user params
-        existingParams.set("token", token);
-        existingParams.set("user", encodeURIComponent(JSON.stringify({
-          id: user.id,
-          email: user.email,
-          name: user.name,
-          username: user.username,
-          image: user.image,
-          role: user.role,
-        })));
-        
-        redirectUrl = `${baseUrl}?${existingParams.toString()}`;
-      } else {
-        // Fallback: construct deep link
-        const mobileUrl = new URL(`vertixmobile://auth`);
-        mobileUrl.searchParams.set("token", token);
-        mobileUrl.searchParams.set("user", encodeURIComponent(JSON.stringify({
-          id: user.id,
-          email: user.email,
-          name: user.name,
-          username: user.username,
-          image: user.image,
-          role: user.role,
-        })));
-        redirectUrl = mobileUrl.toString();
-      }
-    } catch (error) {
-      console.error("Error constructing redirect URL:", error);
-      // Fallback to simple construction
-      redirectUrl = `${callbackUrl}?token=${encodeURIComponent(token)}&user=${encodeURIComponent(JSON.stringify({
-        id: user.id,
-        email: user.email,
-        name: user.name,
-        username: user.username,
-        image: user.image,
-        role: user.role,
-      }))}`;
-    }
+    // Ensure callbackUrl is exactly vertixmobile://auth (strip any query params that might have been added)
+    const baseCallbackUrl = callbackUrl.split('?')[0];
+    
+    // Build the redirect URL - must match exactly: vertixmobile://auth
+    const userData = {
+      id: user.id,
+      email: user.email,
+      name: user.name,
+      username: user.username,
+      image: user.image,
+      role: user.role,
+    };
+    
+    // Construct URL manually to ensure exact format
+    const redirectUrl = `${baseCallbackUrl}?token=${encodeURIComponent(token)}&user=${encodeURIComponent(JSON.stringify(userData))}`;
     
     console.log("Final redirect URL:", redirectUrl);
     
@@ -275,3 +234,4 @@ export async function GET(req: NextRequest) {
     return NextResponse.redirect(errorUrl.toString());
   }
 }
+
