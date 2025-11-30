@@ -34,6 +34,9 @@ export async function GET(req: NextRequest) {
           username: true,
           image: true,
           role: true,
+          highestRopeGrade: true,
+          highestBoulderGrade: true,
+          totalXp: true,
         },
       });
 
@@ -52,6 +55,9 @@ export async function GET(req: NextRequest) {
           username: user.username,
           image: user.image,
           role: user.role,
+          highestRopeGrade: user.highestRopeGrade,
+          highestBoulderGrade: user.highestBoulderGrade,
+          totalXp: user.totalXp,
         },
       });
     } catch (jwtError) {
