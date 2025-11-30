@@ -208,6 +208,9 @@ export async function GET(
       username: user.username,
       image: user.image,
       role: user.role,
+      highestRopeGrade: user.highestRopeGrade,
+      highestBoulderGrade: user.highestBoulderGrade,
+      totalXp: user.totalXp,
     };
     
     // Construct URL manually to ensure exact format
