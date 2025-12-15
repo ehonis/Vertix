@@ -30,7 +30,7 @@
     "jsonwebtoken": "^9.0.2",
     "lodash": "^4.17.21",
     "motion": "^11.18.2",
-    "next": "^15.2.2",
+    "next": "15.2.8",
     "next-auth": "^5.0.0-beta.25",
     "posthog-js": "^1.235.0",
     "posthog-node": "^4.11.3",
