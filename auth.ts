@@ -26,7 +26,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       session.user.id = user.id; // Include user ID
       session.user.role = user.role; // Include admin flag
       session.user.username = user.username; // Include routeSetter flag
-      // Include routeSetter flag
+      // @ts-ignore - isOnboarded is not in default user type
+      session.user.isOnboarded = (user as any).isOnboarded ?? false;
       return session;
     },
     async redirect({ url, baseUrl }) {

@@ -37,6 +37,7 @@ export async function GET(req: NextRequest) {
           highestRopeGrade: true,
           highestBoulderGrade: true,
           totalXp: true,
+          isOnboarded: true,
         },
       });
 
@@ -58,6 +59,7 @@ export async function GET(req: NextRequest) {
           highestRopeGrade: user.highestRopeGrade,
           highestBoulderGrade: user.highestBoulderGrade,
           totalXp: user.totalXp,
+          isOnboarded: user.isOnboarded ?? false,
         },
       });
     } catch (jwtError) {

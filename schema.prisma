@@ -142,6 +142,7 @@ model User {
     id                  String             @id @default(cuid())
     username            String?            @unique
     name                String?
+    phoneNumber         String?            @unique
     email               String             @unique
     emailVerified       DateTime?
     image               String?

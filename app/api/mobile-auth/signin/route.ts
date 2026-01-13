@@ -125,13 +125,14 @@ export async function POST(req: NextRequest) {
     });
 
     if (!user) {
-      // Create new user
+      // Create new user - set isOnboarded to false for onboarding flow
       user = await prisma.user.create({
         data: {
           email: emailAddress,
           name: userInfo.name || userInfo.login || null,
           image: userInfo.picture || userInfo.avatar_url || null,
           username: userInfo.login || null,
+          isOnboarded: false, // New users need to complete onboarding
         },
       });
 

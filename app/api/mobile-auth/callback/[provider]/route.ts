@@ -162,13 +162,15 @@ export async function GET(
     });
 
     if (!user) {
-      // Create new user
+      // Create new user - set isOnboarded to false for onboarding flow
       user = await prisma.user.create({
         data: {
           email: userInfo.email,
           name: userInfo.name || userInfo.login || null,
           image: userInfo.picture || userInfo.avatar_url || null,
+          username: userInfo.login || null, // GitHub username
           emailVerified: new Date(),
+          isOnboarded: false, // New users need to complete onboarding
         },
       });
     } else {
@@ -211,10 +213,12 @@ export async function GET(
       highestRopeGrade: user.highestRopeGrade,
       highestBoulderGrade: user.highestBoulderGrade,
       totalXp: user.totalXp,
+      isOnboarded: user.isOnboarded,
     };
     
     // Construct URL manually to ensure exact format
-    const redirectUrl = `${baseCallbackUrl}?token=${encodeURIComponent(token)}&user=${encodeURIComponent(JSON.stringify(userData))}`;
+    // Include isOnboarded flag to redirect to onboarding if needed
+    const redirectUrl = `${baseCallbackUrl}?token=${encodeURIComponent(token)}&user=${encodeURIComponent(JSON.stringify(userData))}&isOnboarded=${user.isOnboarded}`;
     
     // Clear PKCE cookies
     // Use 302 redirect with the deep link URL
