@@ -243,6 +243,14 @@ model Account {
     @@id([provider, providerAccountId])
 }
 
+model VerificationCode {
+    phoneNumber String   @id
+    code        String
+    expiresAt   DateTime
+    attempts    Int      @default(0)
+    createdAt   DateTime @default(now())
+}
+
 model Session {
     sessionToken String   @unique
     userId       String

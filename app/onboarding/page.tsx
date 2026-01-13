@@ -2,14 +2,18 @@
 
 import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import ElementLoadingAnimation from "../ui/general/element-loading-animation";
+import { countryCodes, getDefaultCountry, type CountryCode } from "@/utils/countryCodes";
 
 export default function OnboardingPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [selectedCountry, setSelectedCountry] = useState<CountryCode>(getDefaultCountry());
+  const [showCountryDropdown, setShowCountryDropdown] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   // Form state - auto-filled from OAuth data
   const [formData, setFormData] = useState({
@@ -38,6 +42,39 @@ export default function OnboardingPage() {
     }
   }, [status, router]);
 
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setShowCountryDropdown(false);
+      }
+    };
+
+    if (showCountryDropdown) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [showCountryDropdown]);
+
+  // Format phone number as (xxx) xxx-xxxx
+  const formatPhoneNumber = (value: string): string => {
+    // Remove all non-digits
+    const digits = value.replace(/\D/g, "");
+
+    // Limit to 10 digits (US format)
+    const limitedDigits = digits.slice(0, 10);
+
+    // Apply formatting
+    if (limitedDigits.length === 0) return "";
+    if (limitedDigits.length <= 3) return `(${limitedDigits}`;
+    if (limitedDigits.length <= 6)
+      return `(${limitedDigits.slice(0, 3)}) ${limitedDigits.slice(3)}`;
+    return `(${limitedDigits.slice(0, 3)}) ${limitedDigits.slice(3, 6)}-${limitedDigits.slice(6)}`;
+  };
+
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
 
@@ -54,11 +91,11 @@ export default function OnboardingPage() {
     if (!formData.phoneNumber.trim()) {
       newErrors.phoneNumber = "Phone number is required";
     } else {
-      // Basic phone validation (E.164 format)
-      const phoneRegex = /^\+[1-9]\d{1,14}$/;
-      if (!phoneRegex.test(formData.phoneNumber.replace(/\s/g, ""))) {
-        newErrors.phoneNumber =
-          "Please enter a valid phone number with country code (e.g., +1234567890)";
+      // Validate phone number (digits only, no country code needed)
+      const phoneRegex = /^\d{10}$/;
+      const cleanPhone = formData.phoneNumber.replace(/\D/g, "");
+      if (!phoneRegex.test(cleanPhone)) {
+        newErrors.phoneNumber = "Please enter a valid 10-digit phone number";
       }
     }
 
@@ -83,7 +120,7 @@ export default function OnboardingPage() {
         body: JSON.stringify({
           name: formData.name.trim(),
           username: formData.username.trim(),
-          phoneNumber: formData.phoneNumber.replace(/\s/g, ""),
+          phoneNumber: `${selectedCountry.dialCode}${formData.phoneNumber.replace(/\D/g, "")}`,
         }),
       });
 
@@ -178,20 +215,73 @@ export default function OnboardingPage() {
               <label htmlFor="phoneNumber" className="block text-white text-sm font-barlow mb-2">
                 Phone Number *
               </label>
-              <input
-                id="phoneNumber"
-                type="tel"
-                value={formData.phoneNumber}
-                onChange={e => setFormData({ ...formData, phoneNumber: e.target.value })}
-                className="w-full bg-gray-700 text-white rounded-lg px-4 py-2 font-barlow focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="+1 (555) 123-4567"
-                required
-              />
+              <div className="flex gap-2">
+                {/* Country Code Selector */}
+                <div className="relative" ref={dropdownRef}>
+                  <button
+                    type="button"
+                    onClick={() => setShowCountryDropdown(!showCountryDropdown)}
+                    className="bg-gray-700 text-white rounded-lg px-3 py-2 font-barlow focus:outline-none focus:ring-2 focus:ring-blue-500 flex items-center gap-2 min-w-[100px] justify-between"
+                  >
+                    <span className="flex items-center gap-2">
+                      <span className="text-xl">{selectedCountry.flag}</span>
+                      <span className="text-sm">{selectedCountry.dialCode}</span>
+                    </span>
+                    <svg
+                      className={`w-4 h-4 transition-transform ${showCountryDropdown ? "rotate-180" : ""}`}
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M19 9l-7 7-7-7"
+                      />
+                    </svg>
+                  </button>
+                  {showCountryDropdown && (
+                    <div className="absolute z-50 mt-1 bg-gray-800 border border-gray-700 rounded-lg shadow-lg max-h-60 overflow-y-auto w-64">
+                      {countryCodes.map(country => (
+                        <button
+                          key={country.code}
+                          type="button"
+                          onClick={() => {
+                            setSelectedCountry(country);
+                            setShowCountryDropdown(false);
+                          }}
+                          className="w-full px-4 py-2 text-left hover:bg-gray-700 flex items-center gap-3 text-white font-barlow"
+                        >
+                          <span className="text-xl">{country.flag}</span>
+                          <span className="flex-1">{country.name}</span>
+                          <span className="text-gray-400">{country.dialCode}</span>
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+                {/* Phone Number Input */}
+                <input
+                  id="phoneNumber"
+                  type="tel"
+                  value={formData.phoneNumber}
+                  onChange={e => {
+                    // Strip all non-digits and format
+                    const formatted = formatPhoneNumber(e.target.value);
+                    setFormData({ ...formData, phoneNumber: formatted });
+                  }}
+                  className="flex-1 bg-gray-700 text-white rounded-lg px-4 py-2 font-barlow focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="(555) 123-4567"
+                  maxLength={14} // (xxx) xxx-xxxx = 14 characters
+                  required
+                />
+              </div>
               {errors.phoneNumber && (
                 <p className="text-red-400 text-sm mt-1 font-barlow">{errors.phoneNumber}</p>
               )}
               <p className="text-gray-500 text-xs mt-1 font-barlow">
-                Include country code (e.g., +1 for US)
+                Enter your phone number without the country code
               </p>
             </div>
 
