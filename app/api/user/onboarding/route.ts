@@ -1,12 +1,37 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
 import prisma from "@/prisma";
+import jwt from "jsonwebtoken";
 
 export async function POST(req: NextRequest) {
   try {
-    const session = await auth();
+    let userId: string | null = null;
+    
+    // Check for JWT token (mobile authentication)
+    const authHeader = req.headers.get("authorization");
+    if (authHeader && authHeader.startsWith("Bearer ")) {
+      const token = authHeader.substring(7);
+      const jwtSecret = process.env.JWT_SECRET || process.env.AUTH_SECRET;
+      
+      if (jwtSecret) {
+        try {
+          const decoded = jwt.verify(token, jwtSecret) as { userId: string };
+          userId = decoded.userId;
+        } catch (jwtError) {
+          // JWT verification failed, try NextAuth session
+        }
+      }
+    }
+    
+    // If no JWT token, check for NextAuth session (web authentication)
+    if (!userId) {
+      const session = await auth();
+      if (session?.user) {
+        userId = session.user.id;
+      }
+    }
 
-    if (!session?.user) {
+    if (!userId) {
       return NextResponse.json(
         { error: "Unauthorized" },
         { status: 401 }
@@ -58,7 +83,7 @@ export async function POST(req: NextRequest) {
       where: { username: username.trim() },
     });
 
-    if (existingUser && existingUser.id !== session.user.id) {
+    if (existingUser && existingUser.id !== userId) {
       return NextResponse.json(
         { error: "Username is already taken", field: "username" },
         { status: 400 }
@@ -71,7 +96,7 @@ export async function POST(req: NextRequest) {
         where: { phoneNumber: cleanPhone },
       });
 
-      if (existingPhone && existingPhone.id !== session.user.id) {
+      if (existingPhone && existingPhone.id !== userId) {
         return NextResponse.json(
           { error: "Phone number is already registered", field: "phoneNumber" },
           { status: 400 }
@@ -94,7 +119,7 @@ export async function POST(req: NextRequest) {
         where: { email: email.trim() },
       });
 
-      if (existingEmail && existingEmail.id !== session.user.id) {
+      if (existingEmail && existingEmail.id !== userId) {
         return NextResponse.json(
           { error: "Email is already registered", field: "email" },
           { status: 400 }
@@ -126,7 +151,7 @@ export async function POST(req: NextRequest) {
     }
 
     const updatedUser = await prisma.user.update({
-      where: { id: session.user.id },
+      where: { id: userId },
       data: updateData,
     });
 
