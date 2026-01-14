@@ -40,16 +40,17 @@ export async function POST(req: NextRequest) {
 
     // Phone number is optional - only validate if provided
     let cleanPhone: string | null = null;
-    if (phoneNumber && phoneNumber.trim()) {
+    if (phoneNumber && typeof phoneNumber === 'string' && phoneNumber.trim()) {
       // Validate phone number format (E.164)
       const phoneRegex = /^\+[1-9]\d{1,14}$/;
-      cleanPhone = phoneNumber.replace(/\s/g, "");
-      if (!phoneRegex.test(cleanPhone)) {
+      const cleaned = phoneNumber.replace(/\s/g, "");
+      if (!phoneRegex.test(cleaned)) {
         return NextResponse.json(
           { error: "Please enter a valid phone number with country code (e.g., +1234567890)", field: "phoneNumber" },
           { status: 400 }
         );
       }
+      cleanPhone = cleaned;
     }
 
     // Check if username is already taken
