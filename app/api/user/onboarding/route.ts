@@ -26,7 +26,7 @@ export async function POST(req: NextRequest) {
     // If no JWT token, check for NextAuth session (web authentication)
     if (!userId) {
       const session = await auth();
-      if (session?.user) {
+      if (session?.user?.id) {
         userId = session.user.id;
       }
     }
