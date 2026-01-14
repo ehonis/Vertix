@@ -13,7 +13,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const { name, username, phoneNumber } = await req.json();
+    const { name, username, phoneNumber, email } = await req.json();
 
     // Validate required fields
     if (!name || !name.trim()) {
@@ -38,21 +38,18 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    if (!phoneNumber || !phoneNumber.trim()) {
-      return NextResponse.json(
-        { error: "Phone number is required", field: "phoneNumber" },
-        { status: 400 }
-      );
-    }
-
-    // Validate phone number format (E.164)
-    const phoneRegex = /^\+[1-9]\d{1,14}$/;
-    const cleanPhone = phoneNumber.replace(/\s/g, "");
-    if (!phoneRegex.test(cleanPhone)) {
-      return NextResponse.json(
-        { error: "Please enter a valid phone number with country code (e.g., +1234567890)", field: "phoneNumber" },
-        { status: 400 }
-      );
+    // Phone number is optional - only validate if provided
+    let cleanPhone: string | null = null;
+    if (phoneNumber && phoneNumber.trim()) {
+      // Validate phone number format (E.164)
+      const phoneRegex = /^\+[1-9]\d{1,14}$/;
+      cleanPhone = phoneNumber.replace(/\s/g, "");
+      if (!phoneRegex.test(cleanPhone)) {
+        return NextResponse.json(
+          { error: "Please enter a valid phone number with country code (e.g., +1234567890)", field: "phoneNumber" },
+          { status: 400 }
+        );
+      }
     }
 
     // Check if username is already taken
@@ -67,27 +64,69 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Check if phone number is already taken
-    const existingPhone = await prisma.user.findUnique({
-      where: { phoneNumber: cleanPhone },
-    });
+    // Check if phone number is already taken (only if provided)
+    if (cleanPhone) {
+      const existingPhone = await prisma.user.findUnique({
+        where: { phoneNumber: cleanPhone },
+      });
 
-    if (existingPhone && existingPhone.id !== session.user.id) {
-      return NextResponse.json(
-        { error: "Phone number is already registered", field: "phoneNumber" },
-        { status: 400 }
-      );
+      if (existingPhone && existingPhone.id !== session.user.id) {
+        return NextResponse.json(
+          { error: "Phone number is already registered", field: "phoneNumber" },
+          { status: 400 }
+        );
+      }
+    }
+
+    // Validate email if provided
+    if (email && email.trim()) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email.trim())) {
+        return NextResponse.json(
+          { error: "Please enter a valid email address", field: "email" },
+          { status: 400 }
+        );
+      }
+
+      // Check if email is already taken (unless it's the current user's email)
+      const existingEmail = await prisma.user.findUnique({
+        where: { email: email.trim() },
+      });
+
+      if (existingEmail && existingEmail.id !== session.user.id) {
+        return NextResponse.json(
+          { error: "Email is already registered", field: "email" },
+          { status: 400 }
+        );
+      }
     }
 
     // Update user with onboarding data
+    const updateData: {
+      name: string;
+      username: string;
+      phoneNumber?: string | null;
+      email?: string;
+      isOnboarded: boolean;
+    } = {
+      name: name.trim(),
+      username: username.trim(),
+      isOnboarded: true,
+    };
+
+    // Only update phone number if provided
+    if (cleanPhone) {
+      updateData.phoneNumber = cleanPhone;
+    }
+
+    // Only update email if provided (for account recovery, typically for phone-only users)
+    if (email && email.trim()) {
+      updateData.email = email.trim();
+    }
+
     const updatedUser = await prisma.user.update({
       where: { id: session.user.id },
-      data: {
-        name: name.trim(),
-        username: username.trim(),
-        phoneNumber: cleanPhone,
-        isOnboarded: true,
-      },
+      data: updateData,
     });
 
     return NextResponse.json({
