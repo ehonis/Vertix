@@ -10,6 +10,9 @@ export default function SignInForm() {
   const [step, setStep] = useState<AuthStep>("initial");
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
   const [isGithubLoading, setIsGithubLoading] = useState(false);
+  const [isEmailLoading, setIsEmailLoading] = useState(false);
+  const [email, setEmail] = useState("");
+  const [emailSent, setEmailSent] = useState(false);
 
   const handleGoogleSignIn = async () => {
     setIsGoogleLoading(true);
@@ -28,6 +31,25 @@ export default function SignInForm() {
     } catch (error) {
       console.error(error);
       setIsGithubLoading(false);
+    }
+  };
+
+  const handleEmailSignIn = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email.trim()) return;
+
+    setIsEmailLoading(true);
+    try {
+      await signIn("resend", {
+        email: email.trim(),
+        redirectTo: "/redirect",
+        callbackUrl: "/redirect",
+      });
+      setEmailSent(true);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsEmailLoading(false);
     }
   };
 
@@ -61,10 +83,10 @@ export default function SignInForm() {
               disabled={isGoogleLoading || isGithubLoading}
             >
               {!isGoogleLoading ? (
-                <div className="w-full gap-3 items-center p-2 rounded-full text-white bg-white outline-black outline-2 grid grid-cols-3 font-barlow font-medium border">
+                <div className="w-full flex items-center justify-between gap-3 p-2 rounded-full text-white bg-white outline-black outline-2 font-barlow font-medium border">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    className="size-8 bg-white rounded-full"
+                    className="size-6 md:size-8 bg-white rounded-full"
                     viewBox="0 0 48 48"
                   >
                     <path
@@ -84,7 +106,10 @@ export default function SignInForm() {
                       d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z"
                     ></path>
                   </svg>
-                  <p className="font-barlow text-black font-bold text-lg">Continue with Google</p>
+                  <p className="font-barlow text-black font-bold md:text-lg text-base">
+                    Continue with Google
+                  </p>
+                  <div className="md:w-6 w-4" />
                 </div>
               ) : (
                 <div className="bg-white rounded-full w-full flex justify-center py-2">
@@ -98,10 +123,10 @@ export default function SignInForm() {
               disabled={isGoogleLoading || isGithubLoading}
             >
               {!isGithubLoading ? (
-                <div className="bg-black w-full grid grid-cols-3 gap-3 items-center p-2 rounded-full text-white">
+                <div className="bg-black w-full flex items-center justify-between gap-3 p-2 rounded-full text-white">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    className="size-8"
+                    className="size-6 md:size-8"
                     viewBox="0 0 24 24"
                     fill="currentColor"
                   >
@@ -111,7 +136,8 @@ export default function SignInForm() {
                       clipRule="evenodd"
                     />
                   </svg>
-                  <p className="font-barlow font-bold text-lg">Continue with GitHub</p>
+                  <p className="font-barlow font-bold md:text-lg text-base">Continue with GitHub</p>
+                  <div className="w-4" />
                 </div>
               ) : (
                 <div className="bg-slate-900 rounded-full w-full flex justify-center py-2">
@@ -159,6 +185,50 @@ export default function SignInForm() {
         >
           ← Back
         </button>
+
+        {/* Email Sign In */}
+        <form onSubmit={handleEmailSignIn} className="w-full">
+          <div className="flex flex-col gap-2 mb-4">
+            <label htmlFor="email" className="text-white font-barlow text-sm">
+              Email
+            </label>
+            <input
+              id="email"
+              type="email"
+              value={email}
+              onChange={e => {
+                setEmail(e.target.value);
+                setEmailSent(false);
+              }}
+              placeholder="your@email.com"
+              className="bg-gray-700 text-white rounded-lg md:px-4 px-3 md:py-3 py-2 font-barlow focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
+              disabled={isEmailLoading}
+            />
+          </div>
+          {emailSent ? (
+            <div className="bg-green-900/50 border border-green-500 text-green-200 rounded-lg px-4 py-3 mb-4 font-barlow text-sm">
+              Check your email for a magic link to sign in!
+            </div>
+          ) : (
+            <button
+              type="submit"
+              disabled={isEmailLoading || !email.trim()}
+              className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white font-barlow font-semibold md:py-3 py-2 md:px-4 px-3 rounded-full transition-colors mb-4"
+            >
+              {isEmailLoading ? (
+                <div className="flex justify-center">
+                  <ElementLoadingAnimation size={7} />
+                </div>
+              ) : (
+                <p className="font-barlow font-semibold md:text-lg text-base">Sign In with Email</p>
+              )}
+            </button>
+          )}
+        </form>
+
+        <div className="h-0.5 w-full bg-white/30 rounded-sm my-2" />
+
         <div className="flex flex-col gap-3 w-full">
           <button
             onClick={handleGoogleSignIn}
@@ -166,10 +236,10 @@ export default function SignInForm() {
             disabled={isGoogleLoading || isGithubLoading}
           >
             {!isGoogleLoading ? (
-              <div className="w-full gap-3 items-center p-2 rounded-full text-white bg-white outline-black outline-2 grid grid-cols-3 font-barlow font-medium border">
+              <div className="w-full flex items-center justify-between gap-3 p-2 rounded-full text-white bg-white outline-black outline-2 font-barlow font-medium border">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  className="size-8 bg-white rounded-full"
+                  className="size-6 md:size-8 bg-white rounded-full"
                   viewBox="0 0 48 48"
                 >
                   <path
@@ -189,7 +259,10 @@ export default function SignInForm() {
                     d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z"
                   ></path>
                 </svg>
-                <p className="font-barlow text-black font-bold text-lg">Continue with Google</p>
+                <p className="font-barlow text-black font-bold md:text-lg text-base">
+                  Continue with Google
+                </p>
+                <div className="md:w-6 w-4" />
               </div>
             ) : (
               <div className="bg-white rounded-full w-full flex justify-center py-2">
@@ -203,10 +276,10 @@ export default function SignInForm() {
             disabled={isGoogleLoading || isGithubLoading}
           >
             {!isGithubLoading ? (
-              <div className="bg-black w-full grid grid-cols-3 gap-3 items-center p-2 rounded-full text-white">
+              <div className="bg-black w-full flex items-center justify-between gap-3 p-2 rounded-full text-white">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  className="size-8"
+                  className="size-6 md:size-8"
                   viewBox="0 0 24 24"
                   fill="currentColor"
                 >
@@ -216,7 +289,8 @@ export default function SignInForm() {
                     clipRule="evenodd"
                   />
                 </svg>
-                <p className="font-barlow font-bold text-lg">Continue with GitHub</p>
+                <p className="font-barlow font-bold md:text-lg text-base">Continue with GitHub</p>
+                <div className="md:w-6 w-4" />
               </div>
             ) : (
               <div className="bg-slate-900 rounded-full w-full flex justify-center py-2">
@@ -225,10 +299,6 @@ export default function SignInForm() {
             )}
           </button>
         </div>
-        {/* Placeholder for phone number input - will be added later */}
-        <p className="text-white/50 font-barlow text-sm text-center mt-2">
-          Phone number authentication coming soon
-        </p>
       </div>
       <p className="text-center italic font-barlow text-white text-xs mt-5 z-10">
         Having trouble logging in? Please reach out by emailing{" "}

@@ -7,7 +7,7 @@ import ElementLoadingAnimation from "../ui/general/element-loading-animation";
 import { countryCodes, getDefaultCountry, type CountryCode } from "@/utils/countryCodes";
 
 export default function OnboardingPage() {
-  const { data: session, status } = useSession();
+  const { data: session, status, update } = useSession();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -23,13 +23,18 @@ export default function OnboardingPage() {
     email: "",
   });
 
+  // Check if user signed up with phone number (has phoneNumber in session)
+  // For web users, we'll check if they have a phoneNumber field
+  // OAuth/Email users won't have phoneNumber initially
+  const isPhoneUser = session?.user && (session.user as any).phoneNumber;
+
   // Load user data from session
   useEffect(() => {
     if (status === "authenticated" && session?.user) {
       setFormData({
         name: session.user.name || "",
         username: session.user.username || "",
-        phoneNumber: "",
+        phoneNumber: (session.user as any).phoneNumber ? "" : "", // Start empty for all users
         email: session.user.email || "",
       });
     }
@@ -88,15 +93,18 @@ export default function OnboardingPage() {
       newErrors.username = "Username can only contain letters, numbers, underscores, and hyphens";
     }
 
-    if (!formData.phoneNumber.trim()) {
-      newErrors.phoneNumber = "Phone number is required";
-    } else {
+    // Phone number is only required if user signed up with phone
+    // For OAuth/Email users, phone is optional
+    if (formData.phoneNumber.trim()) {
       // Validate phone number (digits only, no country code needed)
       const phoneRegex = /^\d{10}$/;
       const cleanPhone = formData.phoneNumber.replace(/\D/g, "");
       if (!phoneRegex.test(cleanPhone)) {
         newErrors.phoneNumber = "Please enter a valid 10-digit phone number";
       }
+    } else if (isPhoneUser) {
+      // Phone users must provide phone number
+      newErrors.phoneNumber = "Phone number is required";
     }
 
     setErrors(newErrors);
@@ -112,16 +120,27 @@ export default function OnboardingPage() {
 
     setIsLoading(true);
     try {
+      // Build request body - only include phoneNumber if provided
+      const requestBody: {
+        name: string;
+        username: string;
+        phoneNumber?: string;
+      } = {
+        name: formData.name.trim(),
+        username: formData.username.trim(),
+      };
+
+      // Only include phone number if provided
+      if (formData.phoneNumber.trim()) {
+        requestBody.phoneNumber = `${selectedCountry.dialCode}${formData.phoneNumber.replace(/\D/g, "")}`;
+      }
+
       const response = await fetch("/api/user/onboarding", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          name: formData.name.trim(),
-          username: formData.username.trim(),
-          phoneNumber: `${selectedCountry.dialCode}${formData.phoneNumber.replace(/\D/g, "")}`,
-        }),
+        body: JSON.stringify(requestBody),
       });
 
       if (!response.ok) {
@@ -135,11 +154,12 @@ export default function OnboardingPage() {
         return;
       }
 
-      // Refresh session to get updated user data
-      await signIn(undefined, { redirect: false });
+      // Force session update to refresh isOnboarded status
+      await update();
 
-      // Redirect to home/dashboard
-      router.push("/");
+      // Redirect to /redirect which will check onboarding status and redirect appropriately
+      // This ensures the session is properly refreshed with the updated isOnboarded status
+      router.push("/redirect");
     } catch (error) {
       console.error("Onboarding error:", error);
       setErrors({ submit: "An unexpected error occurred" });
@@ -213,7 +233,7 @@ export default function OnboardingPage() {
             {/* Phone Number Field */}
             <div>
               <label htmlFor="phoneNumber" className="block text-white text-sm font-barlow mb-2">
-                Phone Number *
+                Phone Number {isPhoneUser ? "*" : "(optional)"}
               </label>
               <div className="flex gap-2">
                 {/* Country Code Selector */}
@@ -274,14 +294,16 @@ export default function OnboardingPage() {
                   className="flex-1 bg-gray-700 text-white rounded-lg px-4 py-2 font-barlow focus:outline-none focus:ring-2 focus:ring-blue-500"
                   placeholder="(555) 123-4567"
                   maxLength={14} // (xxx) xxx-xxxx = 14 characters
-                  required
+                  required={isPhoneUser}
                 />
               </div>
               {errors.phoneNumber && (
                 <p className="text-red-400 text-sm mt-1 font-barlow">{errors.phoneNumber}</p>
               )}
               <p className="text-gray-500 text-xs mt-1 font-barlow">
-                Enter your phone number without the country code
+                {isPhoneUser
+                  ? "Enter your phone number without the country code"
+                  : "Optionally add your phone number for account recovery"}
               </p>
             </div>
 

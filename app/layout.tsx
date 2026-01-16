@@ -15,6 +15,7 @@ import { ourFileRouter } from "./api/uploadthing/core";
 import { PostHogProvider } from "../components/PostHogProvider";
 import Footer from "./ui/general/footer";
 import { headers } from "next/headers";
+import { SessionProviderWrapper } from "../components/SessionProviderWrapper";
 
 const barlow = Barlow({
   subsets: ["latin"],
@@ -57,23 +58,25 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       <body
         className={`${geistMono.variable} ${tomorrow.variable} ${barlow.variable} ${jost.variable} antialiased bg-black min-h-screen flex flex-col`}
       >
-        <PostHogProvider>
-          <NotificationProvider>
-            <XpProvider initialXp={0}>
-              <AnnouncementProvider>
-                <NextSSRPlugin routerConfig={extractRouterConfig(ourFileRouter)} />
-                <Notification />
-                <Announcement />
-                {!isTVPage && <NavBar />}
-                <SpeedInsights />
+        <SessionProviderWrapper>
+          <PostHogProvider>
+            <NotificationProvider>
+              <XpProvider initialXp={0}>
+                <AnnouncementProvider>
+                  <NextSSRPlugin routerConfig={extractRouterConfig(ourFileRouter)} />
+                  <Notification />
+                  <Announcement />
+                  {!isTVPage && <NavBar />}
+                  <SpeedInsights />
 
-                <main className="flex-1">{children}</main>
-                <Footer />
-                <XpLevelBarWrapper />
-              </AnnouncementProvider>
-            </XpProvider>
-          </NotificationProvider>
-        </PostHogProvider>
+                  <main className="flex-1">{children}</main>
+                  <Footer />
+                  <XpLevelBarWrapper />
+                </AnnouncementProvider>
+              </XpProvider>
+            </NotificationProvider>
+          </PostHogProvider>
+        </SessionProviderWrapper>
       </body>
     </html>
   );

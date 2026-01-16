@@ -7,6 +7,9 @@ import prisma from "@/prisma";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   adapter: PrismaAdapter(prisma),
+  pages: {
+    signIn: "/signin",
+  },
   providers: [
     Github({
       clientId: process.env.GITHUB_CLIENT_ID,
@@ -28,6 +31,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       session.user.username = user.username; // Include routeSetter flag
       // @ts-ignore - isOnboarded is not in default user type
       session.user.isOnboarded = (user as any).isOnboarded ?? false;
+      // @ts-ignore - phoneNumber is not in default user type
+      session.user.phoneNumber = (user as any).phoneNumber ?? null;
       return session;
     },
     async redirect({ url, baseUrl }) {
