@@ -1,0 +1,112 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - navigation [ref=e2]:
+    - link "Vertix alpha" [ref=e3] [cursor=pointer]:
+      - /url: /
+      - heading "Vertix" [level=1] [ref=e4]
+      - paragraph [ref=e5]: alpha
+    - generic [ref=e6]:
+      - link "Routes" [ref=e7] [cursor=pointer]:
+        - /url: /routes
+      - link "Comps" [ref=e8] [cursor=pointer]:
+        - /url: /competitions
+      - link "Leaderboard" [ref=e9] [cursor=pointer]:
+        - /url: /leaderboard
+      - link "FAQ" [ref=e10] [cursor=pointer]:
+        - /url: /faq
+    - link "Sign In" [ref=e13] [cursor=pointer]:
+      - /url: /signin
+  - main [ref=e14]:
+    - generic [ref=e15]:
+      - generic [ref=e16]:
+        - generic [ref=e17]:
+          - generic [ref=e18]:
+            - paragraph [ref=e19]: A new
+            - paragraph [ref=e20]: way to
+            - generic [ref=e21]: Compete|
+          - generic [ref=e22]:
+            - link "Sign In" [ref=e23] [cursor=pointer]:
+              - /url: /signin
+            - link "Sign Up" [ref=e24] [cursor=pointer]:
+              - /url: /signin
+        - generic [ref=e26]:
+          - generic [ref=e28]:
+            - paragraph [ref=e29]: Vertix
+            - paragraph [ref=e30]: All of your climbing data, in one place
+          - generic [ref=e32]:
+            - img "picture of route page" [ref=e34]
+            - link "Routes" [ref=e35] [cursor=pointer]:
+              - /url: /routes
+              - paragraph [ref=e36]: Routes
+              - img [ref=e37]
+          - generic [ref=e40]:
+            - img "picture of route page" [ref=e42]
+            - link "Comps" [ref=e43] [cursor=pointer]:
+              - /url: /competitions
+              - paragraph [ref=e44]: Comps
+              - img [ref=e45]
+      - generic [ref=e50]:
+        - generic [ref=e51]:
+          - img [ref=e53]
+          - heading "Metrics" [level=2] [ref=e55]
+          - paragraph [ref=e56]: Detailed and Personalized tracking for routes, competitions, and workouts
+        - generic [ref=e57]:
+          - img [ref=e59]
+          - heading "Competitions" [level=2] [ref=e61]
+          - paragraph [ref=e62]: Live competitions featuring automatic scoring and leaderboards.
+        - generic [ref=e63]:
+          - img [ref=e65]
+          - heading "Community" [level=2] [ref=e67]
+          - paragraph [ref=e68]: Contribute to the community with community grades and ratings!
+      - generic [ref=e69]:
+        - heading "Gym Routes Stats" [level=1] [ref=e70]
+        - generic [ref=e72]:
+          - generic [ref=e73]:
+            - heading "Boulders (37)" [level=2] [ref=e74]
+            - img [ref=e78]:
+              - generic [ref=e83]:
+                - generic [ref=e85]: vfeature
+                - generic [ref=e87]: vb
+                - generic [ref=e89]: v0
+                - generic [ref=e91]: v1
+                - generic [ref=e93]: v2
+                - generic [ref=e95]: v3
+                - generic [ref=e97]: v4
+                - generic [ref=e99]: v5
+                - generic [ref=e101]: v6
+              - generic [ref=e103]:
+                - generic [ref=e105]: "0"
+                - generic [ref=e107]: "3"
+                - generic [ref=e109]: "6"
+                - generic [ref=e111]: "9"
+                - generic [ref=e113]: "12"
+          - generic [ref=e135]:
+            - heading "Ropes (58)" [level=2] [ref=e136]
+            - img [ref=e140]:
+              - generic [ref=e145]:
+                - generic [ref=e147]: 5.B
+                - generic [ref=e149]: "5.7"
+                - generic [ref=e151]: "5.8"
+                - generic [ref=e153]: 5.8+
+                - generic [ref=e155]: "5.9"
+                - generic [ref=e157]: 5.9+
+                - generic [ref=e159]: 5.10-
+                - generic [ref=e161]: "5.10"
+                - generic [ref=e163]: 5.10+
+                - generic [ref=e165]: 5.11-
+                - generic [ref=e167]: "5.11"
+                - generic [ref=e169]: 5.11+
+                - generic [ref=e171]: 5.12-
+              - generic [ref=e173]:
+                - generic [ref=e175]: "0"
+                - generic [ref=e177]: "3"
+                - generic [ref=e179]: "6"
+                - generic [ref=e181]: "9"
+                - generic [ref=e183]: "12"
+  - contentinfo [ref=e213]:
+    - paragraph [ref=e215]: © 2025 Vertix ⋅ v0.2.3
+  - alert [ref=e216]
+  - generic [ref=e217]: 5.B
+```
