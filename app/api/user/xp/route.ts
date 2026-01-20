@@ -1,19 +1,43 @@
 import { NextRequest, NextResponse } from "next/server";
+import jwt from "jsonwebtoken";
 
 import { auth } from "@/auth";
 
 import prisma from "@/prisma";
 
+// Helper to get userId from JWT token or NextAuth session
+async function getUserId(req: NextRequest): Promise<string | null> {
+  // First, check for JWT token (mobile authentication)
+  const authHeader = req.headers.get("authorization");
+  if (authHeader && authHeader.startsWith("Bearer ")) {
+    const token = authHeader.substring(7);
+    const jwtSecret = process.env.JWT_SECRET || process.env.AUTH_SECRET;
+
+    if (jwtSecret) {
+      try {
+        const decoded = jwt.verify(token, jwtSecret) as { userId: string };
+        return decoded.userId;
+      } catch (jwtError) {
+        // JWT verification failed, try NextAuth session
+      }
+    }
+  }
+
+  // If no JWT token, check for NextAuth session (web authentication)
+  const session = await auth();
+  return session?.user?.id || null;
+}
+
 export async function GET(req: NextRequest) {
   try {
-    const session = await auth();
+    const userId = await getUserId(req);
 
-    if (!session?.user?.id) {
+    if (!userId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const user = await prisma.user.findUnique({
-      where: { id: session.user.id },
+      where: { id: userId },
       select: {
         totalXp: true,
         monthlyXp: {
@@ -46,9 +70,9 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
-    const session = await auth();
+    const userId = await getUserId(req);
 
-    if (!session?.user?.id) {
+    if (!userId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
@@ -66,7 +90,7 @@ export async function POST(req: NextRequest) {
     const result = await prisma.$transaction(async tx => {
       // Update total XP
       const updatedUser = await tx.user.update({
-        where: { id: session.user.id! },
+        where: { id: userId },
         data: { totalXp: { increment: xpGained } },
         select: { totalXp: true },
       });
@@ -75,7 +99,7 @@ export async function POST(req: NextRequest) {
       await tx.monthlyXp.upsert({
         where: {
           userId_month_year: {
-            userId: session.user.id!,
+            userId: userId,
             month: currentMonth,
             year: currentYear,
           },
@@ -84,7 +108,7 @@ export async function POST(req: NextRequest) {
           xp: { increment: xpGained },
         },
         create: {
-          userId: session.user.id!,
+          userId: userId,
           month: currentMonth,
           year: currentYear,
           xp: xpGained,
