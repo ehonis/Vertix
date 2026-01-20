@@ -251,6 +251,14 @@ model VerificationCode {
     createdAt   DateTime @default(now())
 }
 
+model EmailVerificationCode {
+    email     String   @id
+    code      String
+    expiresAt DateTime
+    attempts  Int      @default(0)
+    createdAt DateTime @default(now())
+}
+
 model Session {
     sessionToken String   @unique
     userId       String

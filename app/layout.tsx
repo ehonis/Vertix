@@ -59,23 +59,23 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         className={`${geistMono.variable} ${tomorrow.variable} ${barlow.variable} ${jost.variable} antialiased bg-black min-h-screen flex flex-col`}
       >
         <SessionProviderWrapper>
-          <PostHogProvider>
-            <NotificationProvider>
-              <XpProvider initialXp={0}>
-                <AnnouncementProvider>
-                  <NextSSRPlugin routerConfig={extractRouterConfig(ourFileRouter)} />
-                  <Notification />
-                  <Announcement />
-                  {!isTVPage && <NavBar />}
-                  <SpeedInsights />
+        <PostHogProvider>
+          <NotificationProvider>
+            <XpProvider initialXp={0}>
+              <AnnouncementProvider>
+                <NextSSRPlugin routerConfig={extractRouterConfig(ourFileRouter)} />
+                <Notification />
+                <Announcement />
+                {!isTVPage && <NavBar />}
+                <SpeedInsights />
 
-                  <main className="flex-1">{children}</main>
-                  <Footer />
-                  <XpLevelBarWrapper />
-                </AnnouncementProvider>
-              </XpProvider>
-            </NotificationProvider>
-          </PostHogProvider>
+                <main className="flex-1">{children}</main>
+                <Footer />
+                <XpLevelBarWrapper />
+              </AnnouncementProvider>
+            </XpProvider>
+          </NotificationProvider>
+        </PostHogProvider>
         </SessionProviderWrapper>
       </body>
     </html>
