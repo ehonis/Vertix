@@ -36,16 +36,17 @@ function useClickState(
   return [fillColor, handleClick];
 }
 
-function RopeSouthWest({ selectedPart, setSelectedPart }: WallProps) {
+function RopeSouth({ selectedPart, setSelectedPart }: WallProps) {
   const [fillColor, handleClick] = useClickState(
     "#FFFFFF",
-    "ropeSouthWest",
+    "ropeSouth",
     selectedPart,
     setSelectedPart
   );
 
   return (
     <g className="cursor-pointer" fill={fillColor} onClick={handleClick}>
+      {/* Combined from ropeSouthWest */}
       <rect
         id="ropeSouthWest1"
         width="10.0940994"
@@ -63,19 +64,7 @@ function RopeSouthWest({ selectedPart, setSelectedPart }: WallProps) {
         y="254.11948"
         className=""
       />
-    </g>
-  );
-}
-
-function RopeSouthEast({ selectedPart, setSelectedPart }: WallProps) {
-  const [fillColor, handleClick] = useClickState(
-    "#FFFFFF",
-    "ropeSouthEast",
-    selectedPart,
-    setSelectedPart
-  );
-  return (
-    <g className="cursor-pointer" fill={fillColor} onClick={handleClick}>
+      {/* Combined from ropeSouthEast */}
       <rect
         id="ropeSouthEast1"
         width="10.0286111"
@@ -225,16 +214,17 @@ function RopeNorthEast({ selectedPart, setSelectedPart }: WallProps) {
     </g>
   );
 }
-function BoulderNorthCave({ selectedPart, setSelectedPart }: WallProps) {
+function BoulderNorth({ selectedPart, setSelectedPart }: WallProps) {
   const [fillColor, handleClick] = useClickState(
     "#FFFFFF",
-    "boulderNorthCave",
+    "boulderNorth",
     selectedPart,
     setSelectedPart
   );
 
   return (
     <g className="cursor-pointer" fill={fillColor} onClick={handleClick}>
+      {/* Combined from boulderNorthCave */}
       <rect
         id="cave"
         width="10.0286111"
@@ -243,7 +233,6 @@ function BoulderNorthCave({ selectedPart, setSelectedPart }: WallProps) {
         y="-208.62723"
         transform="scale(-1)"
       />
-
       <rect
         id="vert1"
         width="10.0286111"
@@ -252,19 +241,7 @@ function BoulderNorthCave({ selectedPart, setSelectedPart }: WallProps) {
         y="161.36197"
         transform="rotate(-90)"
       />
-    </g>
-  );
-}
-function BoulderNorthSlab({ selectedPart, setSelectedPart }: WallProps) {
-  const [fillColor, handleClick] = useClickState(
-    "#FFFFFF",
-    "boulderNorthSlab",
-    selectedPart,
-    setSelectedPart
-  );
-
-  return (
-    <g className="cursor-pointer" fill={fillColor} onClick={handleClick}>
+      {/* Combined from boulderNorthSlab */}
       <rect
         id="RightofSlabWall"
         width="9.0286111"
@@ -409,14 +386,12 @@ export default function MobileTopdownParts({
 
   return (
     <>
-      <RopeSouthWest selectedPart={selectedPart} setSelectedPart={setSelectedPart} />
-      <RopeSouthEast selectedPart={selectedPart} setSelectedPart={setSelectedPart} />
+      <RopeSouth selectedPart={selectedPart} setSelectedPart={setSelectedPart} />
       <ABWall selectedPart={selectedPart} setSelectedPart={setSelectedPart} />
       <RopeNorthWest selectedPart={selectedPart} setSelectedPart={setSelectedPart} />
       <RopeNorth selectedPart={selectedPart} setSelectedPart={setSelectedPart} />
       <RopeNorthEast selectedPart={selectedPart} setSelectedPart={setSelectedPart} />
-      <BoulderNorthCave selectedPart={selectedPart} setSelectedPart={setSelectedPart} />
-      <BoulderNorthSlab selectedPart={selectedPart} setSelectedPart={setSelectedPart} />
+      <BoulderNorth selectedPart={selectedPart} setSelectedPart={setSelectedPart} />
       <BoulderMiddle selectedPart={selectedPart} setSelectedPart={setSelectedPart} />
       <BoulderSouth selectedPart={selectedPart} setSelectedPart={setSelectedPart} />
     </>

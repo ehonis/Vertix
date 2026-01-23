@@ -334,10 +334,8 @@ export default function EditRoute({
                   <option value={Locations.ABWall}>AB Wall</option>
                   <option value={Locations.ropeNorthWest}>ropeNorthWest</option>
                   <option value={Locations.ropeNorthEast}>ropeNorthEast</option>
-                  <option value={Locations.ropeSouthWest}>ropeSouthWest</option>
-                  <option value={Locations.ropeSouthEast}>ropeSouthEast</option>
-                  <option value={Locations.boulderNorthSlab}>boulderNorthSlab</option>
-                  <option value={Locations.boulderNorthCave}>boulderNorthCave</option>
+                  <option value={Locations.ropeSouth}>ropeSouth</option>
+                  <option value={Locations.boulderNorth}>boulderNorth</option>
                   <option value={Locations.boulderMiddle}>boulderMiddle</option>
                   <option value={Locations.boulderSouth}>boulderSouth</option>
                 </select>
