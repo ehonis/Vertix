@@ -40,69 +40,71 @@ export default function FeaturedRoutes({ slide }: { slide: extendedTVSlide }) {
       </div>
       <div className="flex flex-col items-center ">
         <div className="flex items-center justify-center gap-24">
-          {slide.routes?.map(route => (
-            <div
-              key={route.id}
-              className={clsx(
-                "flex flex-col p-8 rounded-3xl relative items-center gap-5 justify-between",
-                "w-[450px] h-[680px]", // Fixed dimensions for all cards
-                {
-                  "bg-green-400/25 outline-8 outline-green-400": route.color === "green",
-                  "bg-red-400/25 outline-8 outline-red-400": route.color === "red",
-                  "bg-blue-400/45 outline-8 outline-blue-400": route.color === "blue",
-                  "bg-yellow-400/45 outline-8 outline-yellow-400": route.color === "yellow",
-                  "bg-purple-600/45 outline-8 outline-purple-400": route.color === "purple",
-                  "bg-orange-400/45 outline-8 outline-orange-400": route.color === "orange",
-                  "bg-white": route.color === "white",
-                  "bg-black/45 outline-8 outline-white": route.color === "black",
-                  "bg-slate-400/45 outline-8 outline-white": route.color === "defaultColor",
-                  "bg-pink-400/45 outline-8 outline-pink-400": route.color === "pink",
-                }
-              )}
-            >
-              <div className="absolute -top-12 -right-16 font-extrabold italic font-barlow text-green-400 font backdrop-blur-2xl outline outline-green-400 rounded-full px-8 py-4">
-                {route.grade === "vfeature" || route.grade === "5.feature" ? (
-                  <h4 className="text-green-400 text-6xl font-bold">+200 XP</h4>
-                ) : (
-                  <h4 className="text-green-400 text-6xl font-bold">+{route.bonusXp}XP</h4>
+          {slide.routes?.map(route => {
+            return (
+              <div
+                key={route.id}
+                className={clsx(
+                  "flex flex-col p-8 rounded-3xl relative items-center gap-5 justify-between",
+                  "w-[450px] h-[680px]", // Fixed dimensions for all cards
+                  {
+                    "bg-green-400/25 outline-8 outline-green-400": route.color === "green",
+                    "bg-red-400/25 outline-8 outline-red-400": route.color === "red",
+                    "bg-blue-400/45 outline-8 outline-blue-400": route.color === "blue",
+                    "bg-yellow-400/45 outline-8 outline-yellow-400": route.color === "yellow",
+                    "bg-purple-600/45 outline-8 outline-purple-400": route.color === "purple",
+                    "bg-orange-400/45 outline-8 outline-orange-400": route.color === "orange",
+                    "bg-white": route.color === "white",
+                    "bg-black/45 outline-8 outline-white": route.color === "black",
+                    "bg-slate-400/45 outline-8 outline-white": route.color === "defaultColor",
+                    "bg-pink-400/45 outline-8 outline-pink-400": route.color === "pink",
+                  }
                 )}
-              </div>
-
-              {/* Fixed size container for image */}
-              <div className="w-full h-[425px] rounded-3xl overflow-hidden shrink-0">
-                {route.images && route.images.length > 0 ? (
-                  <Image
-                    src={route.images[0].url}
-                    alt={route.title}
-                    width={1000}
-                    height={1000}
-                    className="w-full h-full object-cover rounded-3xl"
-                  />
-                ) : (
-                  <Image
-                    src="https://8jiyvthxbb.ufs.sh/f/bujx12z5cHJj9I5odjMwBODg1ThMEexA6Qt5k279NjYZiLzI"
-                    alt="Default Route Image"
-                    width={500}
-                    height={500}
-                    className="w-full h-full object-cover rounded-3xl"
-                  />
-                )}
-              </div>
-
-              <div className="flex items-center justify-between w-full">
-                <div>
-                  <h2 className="text-white text-6xl font-bold">{route.title}</h2>
-                  <h3 className="text-white text-5xl italic font-bold">{route.grade}</h3>
+              >
+                <div className="absolute -top-12 -right-16 font-extrabold italic font-barlow text-green-400 font backdrop-blur-2xl outline outline-green-400 rounded-full px-8 py-4">
+                  {route.grade === "vfeature" || route.grade === "5.feature" ? (
+                    <h4 className="text-green-400 text-6xl font-bold">+200 XP</h4>
+                  ) : (
+                    <h4 className="text-green-400 text-6xl font-bold">+{route.bonusXp}XP</h4>
+                  )}
                 </div>
-                <div className="bg-white rounded-2xl p-3 ">
-                  <QRCodeSVG
-                    value={`https://vertixclimb.com/routes?route=${route.id}`}
-                    size={145}
-                  />
+
+                {/* Fixed size container for image */}
+                <div className="w-full h-[425px] rounded-3xl overflow-hidden shrink-0">
+                  {route.images && route.images.length > 0 ? (
+                    <Image
+                      src={route.images[0].url}
+                      alt={route.title}
+                      width={1000}
+                      height={1000}
+                      className="w-full h-full object-cover rounded-3xl"
+                    />
+                  ) : (
+                    <Image
+                      src="https://8jiyvthxbb.ufs.sh/f/bujx12z5cHJj9I5odjMwBODg1ThMEexA6Qt5k279NjYZiLzI"
+                      alt="Default Route Image"
+                      width={500}
+                      height={500}
+                      className="w-full h-full object-cover rounded-3xl"
+                    />
+                  )}
+                </div>
+
+                <div className="flex items-center justify-between w-full">
+                  <div>
+                    <h2 className="text-white text-6xl font-bold">{route.title}</h2>
+                    <h3 className="text-white text-5xl italic font-bold">{route.grade}</h3>
+                  </div>
+                  <div className="bg-white rounded-2xl p-3 ">
+                    <QRCodeSVG
+                      value={`https://vertixclimb.com/routes?route=${route.id}`}
+                      size={145}
+                    />
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </div>

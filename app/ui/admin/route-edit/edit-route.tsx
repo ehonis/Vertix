@@ -53,7 +53,13 @@ export default function EditRoute({
   }, [grade, route.grade]);
 
   useEffect(() => {
-    if (grade === "5.feature" || grade === "5.B" || grade === "5.7" || grade.startsWith("v")) {
+    if (
+      grade === "competition" ||
+      grade === "5.feature" ||
+      grade === "5.B" ||
+      grade === "5.7" ||
+      grade.startsWith("v")
+    ) {
       setIsModifier(false);
     } else {
       setIsModifier(true);
@@ -261,6 +267,7 @@ export default function EditRoute({
                       value={grade}
                       onChange={handleRopeGradeChange}
                     >
+                      <option value="competition">COMPETITION</option>
                       <option value="5.feature">5.FEATURE</option>
                       <option value="5.B">5.B</option>
                       <option value="5.7">5.7</option>
@@ -293,6 +300,7 @@ export default function EditRoute({
                     value={grade}
                     onChange={handleBoulderGradeChange}
                   >
+                    <option value="competition">COMPETITION</option>
                     <option value="vfeature">vFEATURE</option>
                     <option value="vb">VB</option>
                     <option value="v0">V0</option>
