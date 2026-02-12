@@ -49,6 +49,8 @@ model Route {
     order           Int?
     tvSlides        TVSlide[]
     bonusXp         Int?              @default(0)
+    x               Float?
+    y               Float?
 }
 
 model RouteImage {

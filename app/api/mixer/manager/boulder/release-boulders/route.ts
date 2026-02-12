@@ -45,6 +45,8 @@ export async function POST(req: NextRequest) {
           isArchive: false,
           id: boulder.id,
           createdByUserID: session.user.id || null,
+          x: null,
+          y: null,
           order: null,
           xp: 0,
           bonusXp: 0,

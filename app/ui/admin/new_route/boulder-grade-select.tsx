@@ -14,6 +14,7 @@ export default function BoulderGradeSelect({
       className="bg-slate-900 rounded-sm text-white font-barlow font-bold p-1 text-lg"
     >
       <option value="">Grade</option>
+      <option value="competition">COMPETITION</option>
       <option value="vfeature">vFEATURE</option>
       <option value="vb">VB</option>
       <option value="v0">V0</option>

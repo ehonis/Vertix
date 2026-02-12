@@ -42,6 +42,7 @@ export default function RopeGradeSelect({
         className="bg-slate-900 rounded-sm text-white font-barlow font-bold p-1 text-lg"
       >
         <option value="">Grade</option>
+        <option value="competition">COMPETITION</option>
         <option value="5.feature">5.FEATURE</option>
         <option value="5.B">5.B</option>
         <option value="5.7">5.7</option>
@@ -52,7 +53,7 @@ export default function RopeGradeSelect({
         <option value="5.12">5.12</option>
         <option value="5.13">5.13</option>
       </select>
-      {grade !== "5.feature" && grade !== "5.B" && grade !== "5.7" && (
+      {grade !== "competition" && grade !== "5.feature" && grade !== "5.B" && grade !== "5.7" && (
         <select
           name="modifier"
           id=""

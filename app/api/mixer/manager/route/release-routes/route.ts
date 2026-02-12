@@ -47,6 +47,8 @@ export async function POST(req: NextRequest) {
           isArchive: false,
           id: route.id,
           createdByUserID: session.user.id || null,
+          x: null,
+          y: null,
           order: null,
           bonusXp: 0,
         }));

@@ -538,13 +538,13 @@ export function getGradeRange(grade: string) {
   if (index === -1) return []; // Handle case where grade isn't found
 
   if (isBoulderGrade) {
-    if (index === 0) return ["vfeature", "vb", "v0"];
-    if (index === 1) return ["vfeature", "vb", "v0", "v1"];
+    if (index === 0) return [ "vb", "v0"];
+    if (index === 1) return [ "vb", "v0", "v1"];
     if (index === gradeList.length - 1) return ["v8", "v9", "v10"];
     return gradeList.slice(Math.max(0, index - 1), Math.min(gradeList.length, index + 2));
   } else {
-    if (index === 0) return ["5.feature", "5.B", "5.7-", "5.7"];
-    if (index <= 2) return ["5.feature", "5.B", "5.7-", "5.7", "5.7+", "5.8-"];
+    if (index === 0) return [ "5.B", "5.7-", "5.7"];
+    if (index <= 2) return [ "5.B", "5.7-", "5.7", "5.7+", "5.8-"];
     if (index >= gradeList.length - 3) return ["5.12", "5.12+", "5.13-", "5.13", "5.13+"];
     return gradeList.slice(index - 2, index + 3);
   }

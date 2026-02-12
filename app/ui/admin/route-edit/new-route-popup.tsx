@@ -102,6 +102,8 @@ export default function NewRoutePopup({
         createdByUserID: null,
         xp: 0,
         bonusXp: 0,
+        x: null,
+        y: null,
       },
       ...routes,
     ]);
