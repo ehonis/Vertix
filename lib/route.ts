@@ -552,6 +552,7 @@ export function getGradeRange(grade: string) {
 
 export function getRouteXp(grade: string) {
   const boulderGrades = {
+    competition: 0,
     vfeature: 0, // Feature routes have no base XP, only bonus XP
     vb: 10, // Manual override for easiest grade
     v0: 20,
@@ -568,6 +569,7 @@ export function getRouteXp(grade: string) {
   };
 
   const ropeGrades = {
+    competition: 0,
     "5.feature": 0, // Feature routes have no base XP, only bonus XP
     "5.b": 10, // Manual override for easiest grade (similar to VB)
     "5.7-": 20, // Between 5.6 and 5.7. Could map to Index 0 or 0.5 for finer control
@@ -614,7 +616,7 @@ export function calculateCompletionXpForRoute({
   const newHighestGradeBonusXP = 250;
 
   const baseXp = getRouteXp(grade);
-  const isFeatureRoute = grade.toLowerCase() === "vfeature" || grade.toLowerCase() === "5.feature";
+  const isFeatureRoute = grade.toLowerCase() === "vfeature" || grade.toLowerCase() === "5.feature" || grade.toLowerCase() === "competition";
 
   if (isFeatureRoute && previousCompletions > 0) {
     return { xp: 0, baseXp: 0, xpExtrapolated: [{ type: "Repeated Feature Route", xp: 0 }] };

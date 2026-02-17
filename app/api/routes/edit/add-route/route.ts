@@ -17,7 +17,7 @@ export async function POST(req: Request) {
   const { newRoute } = await req.json();
 
   const routeXp = getRouteXp(newRoute.grade);
-  const isFeaturedGrade = newRoute.grade.toLowerCase() === "vfeature" || newRoute.grade.toLowerCase() === "5.feature";
+  const isFeaturedGrade = newRoute.grade.toLowerCase() === "vfeature" || newRoute.grade.toLowerCase() === "5.feature" || newRoute.grade.toLowerCase() === "competition";
 
   if (!newRoute) {
     return NextResponse.json({ message: "No new route" }, { status: 400 });
