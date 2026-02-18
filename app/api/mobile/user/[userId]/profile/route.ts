@@ -57,7 +57,7 @@ export async function GET(
       take: 5,
       select: {
         route: {
-          select: { grade: true },
+          select: { grade: true, title: true, color: true },
         },
       },
     });
@@ -69,7 +69,7 @@ export async function GET(
       totalXp: user.totalXp,
       highestRopeGrade: user.highestRopeGrade,
       highestBoulderGrade: user.highestBoulderGrade,
-      last5Completions: lastCompletions.map((c) => ({ grade: c.route.grade })),
+      last5Completions: lastCompletions.map((c) => ({ grade: c.route.grade, title: c.route.title, color: c.route.color })),
     });
   } catch (error) {
     console.error("Error fetching user profile:", error);
