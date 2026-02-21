@@ -1,11 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/prisma";
-import { Route, RouteCompletion, RouteAttempt, CommunityGrade } from "@prisma/client";
+import { Route, RouteCompletion, RouteAttempt, CommunityGrade, Bounty } from "@prisma/client";
+import { calculateDynamicBountyXp } from "@/lib/route";
 
 export type RouteWithExtraData = Route & {
   completions: RouteCompletion[];
   attempts: RouteAttempt[];
   communityGrades: CommunityGrade[];
+  bounties: Bounty[];
 };
 
 export async function GET(req: NextRequest) {
@@ -38,6 +40,16 @@ export async function GET(req: NextRequest) {
               userId: userId,
             },
           },
+          bounties: {
+            where: {
+              isActive: true,
+              claimedAt: null,
+            },
+            orderBy: {
+              startedAt: "asc",
+            },
+            take: 1,
+          },
         },
         orderBy: {
           setDate: "desc",
@@ -53,6 +65,16 @@ export async function GET(req: NextRequest) {
         },
         include: {
           tags: true,
+          bounties: {
+            where: {
+              isActive: true,
+              claimedAt: null,
+            },
+            orderBy: {
+              startedAt: "asc",
+            },
+            take: 1,
+          },
         },
         orderBy: {
           setDate: "desc",
@@ -71,6 +93,16 @@ export async function GET(req: NextRequest) {
     const routesWithCompletedFlag = routesWithCompletion.map(route => ({
       ...route,
       completed: userId ? route.completions.length > 0 : false,
+      isBounty: route.bounties.length > 0,
+      bountyStartedAt: route.bounties[0]?.startedAt ?? null,
+      bountyXp:
+        route.bounties.length > 0
+          ? calculateDynamicBountyXp({
+              startedAt: route.bounties[0].startedAt,
+              baseXp: route.bounties[0].baseXp,
+              dailyIncrementXp: route.bounties[0].dailyIncrementXp,
+            })
+          : null,
     }));
 
     return NextResponse.json({ data: routesWithCompletedFlag });
