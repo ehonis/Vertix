@@ -51,6 +51,7 @@ model Route {
     bonusXp         Int?              @default(0)
     x               Float?
     y               Float?
+    bounties        Bounty[]
 }
 
 model RouteImage {
@@ -70,8 +71,30 @@ model RouteCompletion {
     flash          Boolean  @default(false)
     completionDate DateTime @default(now())
     xpEarned       Int      @default(0) // Track XP earned for this specific completion
+    claimedBounty  Bounty?
 
     @@index([userId, routeId]) // Remove unique constraint to allow multiple completions
+}
+
+model Bounty {
+    id                  String           @id @default(cuid())
+    routeId             String
+    route               Route            @relation(fields: [routeId], references: [id], onDelete: Cascade)
+    startedAt           DateTime         @default(now())
+    claimedAt           DateTime?
+    isActive            Boolean          @default(true)
+    baseXp              Int              @default(100)
+    dailyIncrementXp    Int              @default(50)
+    claimedByUserId     String?
+    claimedByUser       User?            @relation("ClaimedBounties", fields: [claimedByUserId], references: [id], onDelete: SetNull)
+    claimedOnCompletionId Int?           @unique
+    claimedOnCompletion RouteCompletion? @relation(fields: [claimedOnCompletionId], references: [id], onDelete: SetNull)
+    createdAt           DateTime         @default(now())
+    updatedAt           DateTime         @updatedAt
+
+    @@index([isActive, claimedAt])
+    @@index([routeId, isActive, claimedAt])
+    @@index([startedAt])
 }
 
 model RouteStar {
@@ -172,6 +195,7 @@ model User {
     monthlyXp           MonthlyXp[]
     totalXp             Int                @default(0) @db.SmallInt
     seenAnnouncements   UserAnnouncement[]
+    claimedBounties     Bounty[]           @relation("ClaimedBounties")
 }
 
 model Announcement {

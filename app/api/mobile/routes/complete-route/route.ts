@@ -6,6 +6,7 @@ import {
   findIfBoulderGradeIsHigher,
   findIfRopeGradeIsHigher,
   calculateCompletionXpForRoute,
+  calculateDynamicBountyXp,
 } from "@/lib/route";
 
 export async function POST(req: NextRequest) {
@@ -48,6 +49,9 @@ export async function POST(req: NextRequest) {
 
     if (!route) {
       return NextResponse.json({ message: "Route not found" }, { status: 404 });
+    }
+    if (!user) {
+      return NextResponse.json({ message: "User not found" }, { status: 404 });
     }
 
     // Get current completion count for XP calculation
@@ -96,20 +100,73 @@ export async function POST(req: NextRequest) {
       bonusXp: route.bonusXp || 0,
     });
 
-    // Create new completion record
-    await prisma.routeCompletion.create({
-      data: {
-        userId: userId,
-        routeId: routeId,
-        xpEarned: xpData.xp,
-        completionDate: date ? new Date(date) : new Date(),
-        flash: flash || false,
-      },
+    const completionDate = date ? new Date(date) : new Date();
+    const completionResult = await prisma.$transaction(async tx => {
+      const completion = await tx.routeCompletion.create({
+        data: {
+          userId: userId,
+          routeId: routeId,
+          xpEarned: xpData.xp,
+          completionDate,
+          flash: flash || false,
+        },
+      });
+
+      const activeBounty = await tx.bounty.findFirst({
+        where: {
+          routeId,
+          isActive: true,
+          claimedAt: null,
+        },
+        orderBy: {
+          startedAt: "asc",
+        },
+      });
+
+      if (!activeBounty) {
+        return { bountyClaimed: false, bountyXpEarned: 0, totalXpEarned: xpData.xp };
+      }
+
+      const bountyXp = calculateDynamicBountyXp({
+        startedAt: activeBounty.startedAt,
+        baseXp: activeBounty.baseXp,
+        dailyIncrementXp: activeBounty.dailyIncrementXp,
+        now: completionDate,
+      });
+
+      const claimResult = await tx.bounty.updateMany({
+        where: {
+          id: activeBounty.id,
+          isActive: true,
+          claimedAt: null,
+        },
+        data: {
+          isActive: false,
+          claimedAt: completionDate,
+          claimedByUserId: userId,
+          claimedOnCompletionId: completion.id,
+        },
+      });
+
+      if (claimResult.count === 0) {
+        return { bountyClaimed: false, bountyXpEarned: 0, totalXpEarned: xpData.xp };
+      }
+
+      const totalXpEarned = xpData.xp + bountyXp;
+      await tx.routeCompletion.update({
+        where: { id: completion.id },
+        data: { xpEarned: totalXpEarned },
+      });
+
+      return { bountyClaimed: true, bountyXpEarned: bountyXp, totalXpEarned };
     });
 
     return NextResponse.json({
       message: "Successfully Completed Route",
       status: 200,
+      bountyClaimed: completionResult.bountyClaimed,
+      bountyXpEarned: completionResult.bountyXpEarned,
+      totalXpEarned: completionResult.totalXpEarned,
     });
   } catch (error) {
     console.error("Error completing route:", error);

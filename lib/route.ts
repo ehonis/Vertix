@@ -659,6 +659,22 @@ export function calculateCompletionXpForRoute({
   return { xp: totalXp, baseXp, xpExtrapolated };
 }
 
+export function calculateDynamicBountyXp({
+  startedAt,
+  baseXp,
+  dailyIncrementXp,
+  now = new Date(),
+}: {
+  startedAt: Date;
+  baseXp: number;
+  dailyIncrementXp: number;
+  now?: Date;
+}) {
+  const elapsedMs = now.getTime() - startedAt.getTime();
+  const elapsedDays = Math.max(0, Math.floor(elapsedMs / (24 * 60 * 60 * 1000)));
+  return baseXp + elapsedDays * dailyIncrementXp;
+}
+
 export function getLevelForXp(xp: number) {
   if (xp < 0) return 0;
   const K = 10;
