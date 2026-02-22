@@ -7,7 +7,7 @@ import Image from "next/image";
 import { useCallback, useEffect } from "react";
 import ElementLoadingAnimation from "../../general/element-loading-animation";
 import { useRouter } from "next/navigation";
-import { User } from "@prisma/client";
+import { User } from "@/generated/prisma/browser";
 
 // A debounce function that returns a cancel function for cleanup.
 const debounce = (

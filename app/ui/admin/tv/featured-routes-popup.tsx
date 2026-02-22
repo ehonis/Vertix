@@ -2,14 +2,12 @@
 
 import { motion } from "framer-motion";
 import { useState } from "react";
-import { useEffect } from "react";
 import { UploadButton } from "@/utils/uploadthing";
-import { RouteImage, TVSlideType } from "@prisma/client";
+import { RouteImage } from "@/generated/prisma/browser";
 import { useNotification } from "@/app/contexts/NotificationContext";
-import SimpleToggle from "../../general/simple-toggle";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { Route } from "@prisma/client";
+import { Route } from "@/generated/prisma/browser";
 import ElementLoadingAnimation from "../../general/element-loading-animation";
 import clsx from "clsx";
 import ConfirmationPopUp from "../../general/confirmation-pop-up";

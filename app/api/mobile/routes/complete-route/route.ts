@@ -1,7 +1,7 @@
 import prisma from "@/prisma";
 import { NextResponse, NextRequest } from "next/server";
 import jwt from "jsonwebtoken";
-import { CompetitionType, RouteType, SessionStatus, User } from "@prisma/client";
+import { CompetitionType, RouteType, SessionStatus, User } from "@/generated/prisma/client";
 import {
   findIfBoulderGradeIsHigher,
   findIfRopeGradeIsHigher,

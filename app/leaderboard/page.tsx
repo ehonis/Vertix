@@ -1,9 +1,8 @@
 import { auth } from "@/auth";
 import prisma from "@/prisma";
 import Leaderboard from "../ui/leaderboard/leaderboard";
-import { Suspense } from "react";
-import ThreeDotLoading from "../ui/general/three-dot-loading";
-import { User } from "@prisma/client";
+
+import { User } from "@/generated/prisma/client";
 
 export default async function LeaderboardPage() {
   const session = await auth();

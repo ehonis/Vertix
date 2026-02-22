@@ -1,8 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import MobileTopdownParts from "./mobile-topdown-parts";
-import { Locations } from "@prisma/client";
+import { Locations } from "@/generated/prisma/browser";
 
 /**
  * TopDown component - Interactive wall selection interface

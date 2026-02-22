@@ -1,6 +1,6 @@
 "use client";
 
-import { Locations } from "@prisma/client";
+import { Locations } from "@/generated/prisma/browser";
 import { useState, useEffect, useCallback } from "react";
 
 interface WallProps {

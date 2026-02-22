@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/prisma";
-import { Route, RouteCompletion, RouteAttempt, CommunityGrade } from "@prisma/client";
+import { Route, RouteCompletion, RouteAttempt, CommunityGrade } from "@/generated/prisma/client";
 import { RouteWithExtraData } from "../get-wall-routes-non-archive/route";
 
 type RouteWithCompletions = RouteWithExtraData & {

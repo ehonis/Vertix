@@ -1,7 +1,3 @@
-import { Suspense } from "react";
-import prisma from "@/prisma";
-import { getAllGradeCounts } from "@/lib/homepage";
-import ElementLoadingAnimation from "../general/element-loading-animation";
 import ClientGraphs from "./client-graphs";
 import VertixLogo from "./vertix-logo";
 

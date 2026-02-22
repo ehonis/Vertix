@@ -1,6 +1,6 @@
 import { NextResponse, NextRequest } from "next/server";
 import prisma from "@/prisma";
-import { RouteType, UserRole, Locations } from "@prisma/client";
+import { RouteType, UserRole, Locations } from "@/generated/prisma/client";
 import jwt from "jsonwebtoken";
 import { getRouteXp } from "@/lib/route";
 import { addRouteToFeaturedSlide } from "@/lib/tvSlideHelpers";

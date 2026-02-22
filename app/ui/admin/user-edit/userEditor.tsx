@@ -2,8 +2,7 @@
 import Image from "next/image";
 import { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
-import { User } from "@prisma/client";
-import { motion } from "framer-motion";
+import { User } from "@/generated/prisma/browser";
 import clsx from "clsx";
 import ElementLoadingAnimation from "../../general/element-loading-animation";
 

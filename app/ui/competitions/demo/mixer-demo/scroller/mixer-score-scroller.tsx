@@ -5,7 +5,7 @@ import MixerCountdownTimer from "./mixer-count-down-timer";
 import TypeToggleSwitch from "./mixer-type-toggle";
 import MixerRopeScorer from "./mixerRopeSwiper";
 import MixerBoulderScorer from "./mixerBoulderSwiper";
-import { MixerBoulder } from "@prisma/client";
+import { MixerBoulder } from "@/generated/prisma/browser";
 type RouteData = {
   name: string;
   id: string;

@@ -5,9 +5,9 @@ import prisma from "@/prisma";
 import { Suspense } from "react";
 import clsx from "clsx";
 import ElementLoadingAnimation from "../ui/general/element-loading-animation";
-import { CompetitionStatus } from "@prisma/client";
+import { CompetitionStatus, UserRole } from "@/generated/prisma/client";
 import { auth } from "@/auth";
-import { UserRole } from "@prisma/client";
+
 async function TestComps() {
   const session = await auth();
   const user = session?.user;

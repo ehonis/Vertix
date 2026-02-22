@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
-import { CommunityGrade, RouteCompletion, RouteAttempt, User } from "@prisma/client";
+import { useEffect, useState } from "react";
+import { CommunityGrade, RouteCompletion, RouteAttempt, User } from "@/generated/prisma/browser";
 import ElementLoadingAnimation from "../general/element-loading-animation";
 import { motion } from "framer-motion";
 import { AnimatePresence } from "framer-motion";

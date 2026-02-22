@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { UploadButton } from "@/utils/uploadthing";
 import { useNotification } from "@/app/contexts/NotificationContext";
 import { useRouter } from "next/navigation";
-import { User } from "@prisma/client";
+import { User } from "@/generated/prisma/browser";
 
 type ImageUploaderPopUpData = {
   onCancel: () => void;

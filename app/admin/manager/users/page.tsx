@@ -1,6 +1,5 @@
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
-import prisma from "@/prisma";
 
 import Link from "next/link";
 import { Suspense } from "react";

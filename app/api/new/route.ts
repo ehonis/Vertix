@@ -1,8 +1,7 @@
 import prisma from "@/prisma";
 import { NextResponse, NextRequest } from "next/server";
 import { parseDateString } from "@/lib/dates";
-import { Locations, RouteType } from "@prisma/client";
-import { CompetitionStatus } from "@prisma/client";
+import { Locations, RouteType, CompetitionStatus } from "@/generated/prisma/client";
 import { addRouteToFeaturedSlide } from "@/lib/tvSlideHelpers";
 
 type compData = {

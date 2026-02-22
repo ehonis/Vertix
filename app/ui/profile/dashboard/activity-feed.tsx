@@ -1,4 +1,3 @@
-import { RouteAttempt, RouteCompletion, RouteType } from "@prisma/client";
 import prisma from "@/prisma";
 import clsx from "clsx";
 import Link from "next/link";

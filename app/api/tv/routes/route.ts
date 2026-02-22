@@ -1,7 +1,7 @@
 import { NextResponse, NextRequest } from "next/server";
 import prisma from "@/prisma";
-import { getAllGradeCounts } from "@/lib/homepage";
-import { Route } from "@prisma/client";
+
+import { Route } from "@/generated/prisma/client";
 
 export const dynamic = "force-dynamic";
 

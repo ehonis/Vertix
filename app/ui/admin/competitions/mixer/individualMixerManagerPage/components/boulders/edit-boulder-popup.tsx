@@ -2,8 +2,6 @@
 
 import { motion } from "framer-motion";
 import { useState } from "react";
-import clsx from "clsx";
-import BoulderGradeSelect from "@/app/ui/admin/new_route/boulder-grade-select";
 
 type EditRoutePopUpData = {
   onCancel: () => void;

@@ -1,9 +1,8 @@
 "use client";
 
-import { TVSlide, TVSlideType } from "@prisma/client";
+import { TVSlide } from "@/generated/prisma/browser";
 import { useState } from "react";
 import { FeaturedRoutesPopup } from "./featured-routes-popup";
-import { Route } from "@prisma/client";
 import { RouteWithExtraData } from "./featured-routes-popup";
 export function FeaturedRoutesButton({
   featuredRoutes,

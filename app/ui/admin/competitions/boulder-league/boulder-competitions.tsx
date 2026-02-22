@@ -1,7 +1,7 @@
 import Link from "next/link";
 import prisma from "@/prisma";
 import Image from "next/image";
-import { CompetitionStatus } from "@prisma/client";
+import { CompetitionStatus } from "@/generated/prisma/client";
 import clsx from "clsx";
 
 export default async function BoulderLeagueCompetitions({

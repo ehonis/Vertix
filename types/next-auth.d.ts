@@ -1,6 +1,6 @@
 import { DefaultUser } from "next-auth";
 import { AdapterUser } from "@auth/core/adapters";
-import { UserRole } from "@prisma/client";
+import type { UserRole } from "@/generated/prisma/client";
 
 declare module "next-auth" {
   interface User extends DefaultUser {

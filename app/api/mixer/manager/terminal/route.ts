@@ -1,6 +1,6 @@
 import { NextResponse, NextRequest } from "next/server";
 import prisma from "@/prisma";
-import { CompletionType } from "@prisma/client";
+import { CompletionType } from "@/generated/prisma/client";
 import { v4 as uuidv4 } from "uuid";
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);

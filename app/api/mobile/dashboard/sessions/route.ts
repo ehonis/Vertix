@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/prisma";
 import jwt from "jsonwebtoken";
-import { SessionStatus } from "@prisma/client";
+import { SessionStatus } from "@/generated/prisma/client";
 
 function getUserIdFromAuthHeader(req: NextRequest): string | null {
   const authHeader = req.headers.get("authorization");

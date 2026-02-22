@@ -1,4 +1,4 @@
-import { RouteType } from "@prisma/client";
+import { RouteType } from "@/generated/prisma/client";
 import prisma from "@/prisma";
 
 export const BOUNTY_BASE_XP = 100;

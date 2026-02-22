@@ -1,10 +1,9 @@
 import Link from "next/link";
 import prisma from "@/prisma";
 import { auth } from "@/auth";
-import { CompetitionStatus } from "@prisma/client";
+import { CompetitionStatus, ClimberStatus } from "@/generated/prisma/client";
 import { redirect } from "next/navigation";
 import Image from "next/image";
-import { ClimberStatus } from "@prisma/client";
 import PasscodeValidation from "@/app/ui/competitions/mixer/passcode-validation";
 
 export default async function page({ params }: { params: Promise<{ slug: string }> }) {

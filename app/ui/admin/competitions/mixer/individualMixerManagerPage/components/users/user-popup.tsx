@@ -7,7 +7,7 @@ import FindUserPopUp from "./find-user-popup";
 import { useNotification } from "@/app/contexts/NotificationContext";
 import { useRouter } from "next/navigation";
 import ConfirmationPopUp from "@/app/ui/general/confirmation-pop-up";
-import { ClimberStatus } from "@prisma/client";
+import { ClimberStatus } from "@/generated/prisma/browser";
 import AllCompletionsPopUp from "./all-completions-popup";
 import {
   MixerClimber,
@@ -15,7 +15,7 @@ import {
   MixerBoulderScore,
   MixerRopeScore,
   User,
-} from "@prisma/client";
+} from "@/generated/prisma/browser";
 
 type EditUserPopupData = {
   compId: string;

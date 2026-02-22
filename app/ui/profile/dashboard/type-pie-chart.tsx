@@ -1,9 +1,9 @@
 "use client";
 
-import { splitRoutesByType } from "@/lib/dashboard";
-import { RouteType } from "@prisma/client";
+import { splitRoutesByType } from "@/lib/dashboard-shared";
+import { RouteType } from "@/generated/prisma/browser";
 import { ResponsiveContainer, PieChart, Pie, Legend, Tooltip } from "recharts";
-import { RouteCompletion } from "@prisma/client";
+import { RouteCompletion } from "@/generated/prisma/browser";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import clsx from "clsx";

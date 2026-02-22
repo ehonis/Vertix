@@ -2,10 +2,10 @@
 
 import clsx from "clsx";
 import { useEffect, useState } from "react";
-import { findCommunityGradeForRoute, getBoulderGradeMapping, isGradeHigher } from "@/lib/route";
-import { RouteAttempt, RouteCompletion, User } from "@prisma/client";
-import { CommunityGrade } from "@prisma/client";
-import { calculateCompletionXpForRoute } from "@/lib/route";
+import { findCommunityGradeForRoute, getBoulderGradeMapping, isGradeHigher } from "@/lib/route-shared";
+import { RouteAttempt, RouteCompletion, User } from "@/generated/prisma/browser";
+import { CommunityGrade } from "@/generated/prisma/browser";
+import { calculateCompletionXpForRoute } from "@/lib/route-shared";
 
 export default function RouteTile({
   user,

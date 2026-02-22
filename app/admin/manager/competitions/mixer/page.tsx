@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Suspense } from "react";
 import ElementLoadingAnimation from "@/app/ui/general/element-loading-animation";
-import { CompetitionStatus } from "@prisma/client";
+import { CompetitionStatus } from "@/generated/prisma/client";
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import MixerCompetitions from "@/app/ui/admin/competitions/mixer/mixer-competitions";

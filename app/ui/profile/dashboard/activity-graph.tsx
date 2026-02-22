@@ -1,6 +1,6 @@
 "use client";
 
-import { RouteAttempt, RouteCompletion, RouteType } from "@prisma/client";
+import { RouteAttempt, RouteCompletion, RouteType } from "@/generated/prisma/browser";
 import { useEffect, useRef, useState } from "react";
 import InformationalPopUp from "../../general/informational-pop-up";
 

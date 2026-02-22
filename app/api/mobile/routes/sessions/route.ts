@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/prisma";
 import jwt from "jsonwebtoken";
-import { CompetitionType, SessionStatus, SessionType } from "@prisma/client";
-
+import { CompetitionType, SessionStatus, SessionType } from "@/generated/prisma/client";
 const MAX_SESSIONS_PER_DAY = 4;
 
 function getUserIdFromAuthHeader(req: NextRequest): string | null {

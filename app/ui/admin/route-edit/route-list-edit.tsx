@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import clsx from "clsx";
-import { Route } from "@prisma/client";
+import { Route } from "@/generated/prisma/browser";
 import Link from "next/link";
 import { formatDateMMDD } from "@/lib/date";
 import { useNotification } from "@/app/contexts/NotificationContext";

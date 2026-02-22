@@ -1,7 +1,7 @@
 "use client";
 
 import { getAllGradeCounts } from "@/lib/homepage";
-import { Route, RouteType } from "@prisma/client";
+import { Route, RouteType } from "@/generated/prisma/browser";
 import Link from "next/link";
 import { useState } from "react";
 import clsx from "clsx";

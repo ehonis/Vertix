@@ -5,12 +5,10 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { auth } from "@/auth";
 import prisma from "@/prisma";
-import RouteListEdit from "@/app/ui/admin/route-edit/route-list-edit";
-import NewRoutePopup from "@/app/ui/admin/route-edit/new-route-popup";
-import { UserRole } from "@prisma/client";
+
+import { UserRole } from "@/generated/prisma/client";
 import NewRouteButton from "@/app/ui/admin/route-edit/new-route-button";
 import RouteEditListByWall from "@/app/ui/admin/route-edit/route-edit-list-by-wall";
-import { Locations } from "@prisma/client";
 
 const getRoutes = async () => {
   const routes = await prisma.route.findMany({

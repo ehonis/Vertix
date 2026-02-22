@@ -1,12 +1,12 @@
 import prisma from "@/prisma";
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
-import ConstructionBlur from "@/app/ui/general/construction-blur";
+
 import { getCompletionData, getAttemptsData } from "@/lib/dashboard";
 import PyramidGraph from "@/app/ui/profile/dashboard/pyramid-graph";
 import TypePieChart from "@/app/ui/profile/dashboard/type-pie-chart";
 import GradeCompletionsOverTime from "@/app/ui/profile/dashboard/grade-completions-over-time";
-import ActivityGraph from "@/app/ui/profile/dashboard/activity-graph";
+
 import ImageNamePlate from "@/app/ui/profile/dashboard/image-name-plate";
 import ActivityFeed from "@/app/ui/profile/dashboard/activity-feed";
 import XpLevelDisplay from "@/app/ui/profile/dashboard/xp-level-display";

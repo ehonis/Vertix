@@ -1,7 +1,6 @@
 import { auth } from "@/auth";
 import RoutesPage from "../ui/routes/routes-page";
-import { User } from "@prisma/client";
-import ConstructionBlur from "../ui/general/construction-blur";
+import { User } from "@/generated/prisma/client";
 
 export default async function RoutePage() {
   const session = await auth();

@@ -1,8 +1,7 @@
 import prisma from "@/prisma";
-import { Route, TVSlideType } from "@prisma/client";
+import { TVSlideType } from "@/generated/prisma/client";
 import Image from "next/image";
 import Toggle from "./toggle";
-import FeaturedRouteSlide from "./featured-route-slide";
 export default async function CreatedSlides() {
   const createdSlides = await prisma.tVSlide.findMany({
     where: {

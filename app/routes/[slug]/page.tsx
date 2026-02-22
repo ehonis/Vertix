@@ -1,6 +1,5 @@
 import {
   getRouteById,
-  getRouteImagesById,
   findRating,
   findIfCompleted,
   findAllTotalSends,
@@ -9,7 +8,7 @@ import {
   findCommunityGrade,
   getBoulderGradeMapping,
 } from "@/lib/route";
-import { formatDate, findDaysOld, formatDateMMDDYY } from "@/lib/date";
+import { findDaysOld, formatDateMMDDYY } from "@/lib/date";
 import Image from "next/image";
 import clsx from "clsx";
 
@@ -18,7 +17,7 @@ import Link from "next/link";
 import prisma from "@/prisma";
 import StarRating from "@/app/ui/general/star-rating";
 import FunctionButton from "@/app/ui/routes/individualRoutePage/function-button";
-import { Route, RouteType, User } from "@prisma/client";
+import { Route, RouteType, User } from "@/generated/prisma/client";
 
 export const revalidate = 120;
 

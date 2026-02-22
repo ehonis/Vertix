@@ -7,11 +7,10 @@ import "swiper/css";
 import Image from "next/image";
 import LeaderBoardSlide from "./leaderboard-slide";
 import LogoSlide from "./logo-slide";
-import StatsSlide from "../admin/tv/stats-slide";
-import FeaturedRouteSlide from "../admin/tv/featured-route-slide";
+
 import GymStatsSlide from "./gym-stats-slide";
 import FeaturedRoutes from "./featured-routes";
-import { Route, RouteImage, TVSlide } from "@prisma/client";
+import { Route, RouteImage, TVSlide } from "@/generated/prisma/browser";
 
 type RouteWithImages = Route & {
   images: RouteImage[];

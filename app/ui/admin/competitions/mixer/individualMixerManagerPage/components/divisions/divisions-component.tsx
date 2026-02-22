@@ -4,7 +4,7 @@ import EditDivisionPopUp from "./mixer-edit-division-popup";
 import { useEffect, useState } from "react";
 import { useNotification } from "@/app/contexts/NotificationContext";
 import { useRouter } from "next/navigation";
-import { MixerDivision } from "@prisma/client";
+import { MixerDivision } from "@/generated/prisma/browser";
 import clsx from "clsx";
 
 type DivisionsComponentData = {

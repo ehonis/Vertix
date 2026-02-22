@@ -4,7 +4,7 @@ import EditBoulderPopUp from "./edit-boulder-popup";
 import NewBoulderPopUp from "./new-boulder-pop-up";
 import { clsx } from "clsx";
 import { useNotification } from "@/app/contexts/NotificationContext";
-import { MixerBoulder, CompetitionStatus } from "@prisma/client";
+import { MixerBoulder, CompetitionStatus } from "@/generated/prisma/browser";
 import ElementLoadingAnimation from "@/app/ui/general/element-loading-animation";
 import { useRouter } from "next/navigation";
 

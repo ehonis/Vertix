@@ -3,7 +3,8 @@ import clsx from "clsx";
 import GradeSelect from "../new_route/grade-select";
 import TopDown from "../../routes/topdown";
 import ErrorPopUp from "./error-pop-up";
-import { Locations, RouteTag } from "@prisma/client";
+import { Locations } from "@/generated/prisma/browser";
+import type { RouteTag } from "@/generated/prisma/browser";
 import ConfirmationPopUp from "../../general/confirmation-pop-up";
 
 import { useNotification } from "@/app/contexts/NotificationContext";

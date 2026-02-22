@@ -1,14 +1,5 @@
 "use client";
-import {
-  BarChart,
-  ResponsiveContainer,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-} from "recharts";
+import { BarChart, ResponsiveContainer, Bar, XAxis, YAxis, CartesianGrid } from "recharts";
 
 export default function ClientRouteGraphs({
   boulderCounts,

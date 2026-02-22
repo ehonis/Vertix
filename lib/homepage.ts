@@ -1,4 +1,4 @@
-import { Route, RouteType } from "@prisma/client";
+import { Route, RouteType } from "@/generated/prisma/browser";
 
 // Helper function to split routes into boulder and rope routes
 function splitRoutesByType(routes: Route[]) {

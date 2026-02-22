@@ -1,8 +1,5 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useNotification } from "@/app/contexts/NotificationContext";
-import { useRouter } from "next/navigation";
 export default function SimpleToggle({
   value,
   onValueChange,

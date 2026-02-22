@@ -1,7 +1,7 @@
 import Link from "next/link";
 import prisma from "@/prisma";
 import { auth } from "@/auth";
-import { CompetitionStatus } from "@prisma/client";
+import { CompetitionStatus } from "@/generated/prisma/client";
 import { redirect } from "next/navigation";
 import Image from "next/image";
 export default async function page({ params }: { params: Promise<{ slug: string }> }) {

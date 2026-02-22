@@ -1,7 +1,7 @@
 "use client";
 
-import { User } from "@prisma/client";
-import { getLevelForXp, getXpForLevel } from "@/lib/route";
+import { User } from "@/generated/prisma/browser";
+import { getLevelForXp, getXpForLevel } from "@/lib/route-shared";
 
 interface XpLevelDisplayProps {
   user: User;

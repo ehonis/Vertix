@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useInitializeXp, useXp } from "@/app/contexts/XpContext";
-import { calculateCompletionXpForRoute } from "@/lib/route";
+import { calculateCompletionXpForRoute } from "@/lib/route-shared";
 
 // Hook for easy XP integration in components
 export function useXpIntegration(userId?: string) {

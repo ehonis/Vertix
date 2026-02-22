@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/prisma";
-import { Route, RouteCompletion, RouteAttempt, CommunityGrade, Bounty } from "@prisma/client";
+import { Route, RouteCompletion, RouteAttempt, CommunityGrade, Bounty } from "@/generated/prisma/client";
 import { calculateDynamicBountyXp } from "@/lib/route";
 
 export type RouteWithExtraData = Route & {

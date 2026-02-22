@@ -3,11 +3,10 @@
 import { motion } from "motion/react";
 import { useState, useEffect } from "react";
 import ElementLoadingAnimation from "@/app/ui/general/element-loading-animation";
-import clsx from "clsx";
 import { useNotification } from "@/app/contexts/NotificationContext";
-import { MixerCompletion } from "@prisma/client";
-import { MixerClimber } from "@prisma/client";
-import { CompletionType } from "@prisma/client";
+import { MixerCompletion } from "@/generated/prisma/browser";
+import { MixerClimber } from "@/generated/prisma/browser";
+import { CompletionType } from "@/generated/prisma/browser";
 type CompletionsUserPopUpData = {
   onCancel: () => void;
   climber: MixerClimber;

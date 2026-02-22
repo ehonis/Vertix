@@ -4,7 +4,7 @@ import EditDivisionPopUp from "./division-popup";
 import { useEffect, useState } from "react";
 import { useNotification } from "@/app/contexts/NotificationContext";
 import { useRouter } from "next/navigation";
-import { BLDivision } from "@prisma/client";
+import { BLDivision } from "@/generated/prisma/browser";
 import clsx from "clsx";
 
 type DivisionsComponentData = {

@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import NewRoute from "@/app/ui/admin/new/new-route";
 import NewComp from "./new-comp";
 import { v4 as uuidv4 } from "uuid";
@@ -7,8 +7,8 @@ import ErrorPopUp from "./error-pop-up";
 import { useNotification } from "@/app/contexts/NotificationContext";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Locations, RouteTag } from "@prisma/client";
-import { CompetitionStatus } from "@prisma/client";
+import { Locations, RouteTag } from "@/generated/prisma/browser";
+import { CompetitionStatus } from "@/generated/prisma/browser";
 import React from "react";
 
 type compData = {

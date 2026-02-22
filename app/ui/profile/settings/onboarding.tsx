@@ -6,7 +6,7 @@ import { useNotification } from "@/app/contexts/NotificationContext";
 import ImageUploaderPopUp from "./image-uploader-popup";
 import { useRouter } from "next/navigation";
 import clsx from "clsx";
-import { User } from "@prisma/client";
+import { User } from "@/generated/prisma/browser";
 
 // A debounce function that returns a cancel function for cleanup.
 const debounce = <T extends (...args: unknown[]) => void>(func: T, wait: number): (() => void) => {

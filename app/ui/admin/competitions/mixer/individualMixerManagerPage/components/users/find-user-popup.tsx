@@ -4,7 +4,7 @@ import { motion } from "motion/react";
 import { useState, useCallback, useMemo } from "react";
 import ElementLoadingAnimation from "@/app/ui/general/element-loading-animation";
 import clsx from "clsx";
-import { User } from "@prisma/client";
+import { User } from "@/generated/prisma/browser";
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function debounce<T extends (...args: any[]) => void>(
   func: T,

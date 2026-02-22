@@ -8,7 +8,7 @@ import {
   CommunityGrade,
   User,
   RouteType,
-} from "@prisma/client";
+} from "@/generated/prisma/client";
 
 // Type definitions for better type safety
 type RouteWithImages = Route & {

@@ -1,7 +1,7 @@
 import prisma from "@/prisma";
 import { NextResponse, NextRequest } from "next/server";
 import jwt from "jsonwebtoken";
-import { RouteType } from "@prisma/client";
+import { RouteType } from "@/generated/prisma/client";
 import {
   getGradeIndex,
   type GradeType,

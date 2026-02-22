@@ -1,10 +1,10 @@
 "use client";
 
 import { motion } from "motion/react";
-import { getPointPrediction, getTopScores, getRouteNameById } from "@/lib/mixer";
+import { getPointPrediction } from "@/lib/mixer";
 import { useEffect, useState } from "react";
 import clsx from "clsx";
-import { MixerRoute } from "@prisma/client";
+import { MixerRoute } from "@/generated/prisma/browser";
 
 interface PredictionInfo {
   id: string;

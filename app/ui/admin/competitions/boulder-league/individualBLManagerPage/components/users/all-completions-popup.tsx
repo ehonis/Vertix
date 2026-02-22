@@ -3,11 +3,9 @@
 import { motion } from "motion/react";
 import { useState, useEffect } from "react";
 import ElementLoadingAnimation from "@/app/ui/general/element-loading-animation";
-import clsx from "clsx";
 import { useNotification } from "@/app/contexts/NotificationContext";
-import { BLCompletion } from "@prisma/client";
-import { BLClimber } from "@prisma/client";
-import { CompletionType } from "@prisma/client";
+import { BLCompletion } from "@/generated/prisma/browser";
+import { BLClimber } from "@/generated/prisma/browser";
 type CompletionsUserPopUpData = {
   onCancel: () => void;
   climber: BLClimber;

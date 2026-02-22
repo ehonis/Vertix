@@ -1,4 +1,4 @@
-import { Route, RouteImage, TVSlide } from "@prisma/client";
+import { Route, RouteImage, TVSlide } from "@/generated/prisma/client";
 import Image from "next/image";
 import LogoSlide from "../admin/tv/logo-slide";
 import VertixLogo from "./vertix-logo";

@@ -4,7 +4,7 @@ import {
   MixerCompletion,
   MixerDivision,
   MixerRopeScore,
-} from "@prisma/client";
+} from "@/generated/prisma/client";
 import prisma from "@/prisma";
 
 // Types for spreadsheet data structures

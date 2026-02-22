@@ -1,5 +1,5 @@
 "use client";
-import { BarChart, ResponsiveContainer, Bar, XAxis, YAxis, CartesianGrid, Tooltip } from "recharts";
+import { BarChart, ResponsiveContainer, Bar, XAxis, YAxis, CartesianGrid } from "recharts";
 
 // Type definitions for tooltip payload
 type TooltipPayload = {

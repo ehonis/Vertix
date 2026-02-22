@@ -1,5 +1,5 @@
 import prisma from "@/prisma";
-import { Route, TVSlideType } from "@prisma/client";
+import { TVSlideType } from "@/generated/prisma/client";
 import LogoSlide from "./logo-slide";
 import StatsSlide from "./stats-slide";
 import LeaderBoardSlide from "./leaderboard-slide";

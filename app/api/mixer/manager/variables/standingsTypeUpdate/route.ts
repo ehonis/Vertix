@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/prisma";
 import { auth } from "@/auth";
-import { StandingsType } from "@prisma/client";
+import { StandingsType } from "@/generated/prisma/client";
 export async function POST(req: NextRequest) {
   const session = await auth();
   if (!session) {

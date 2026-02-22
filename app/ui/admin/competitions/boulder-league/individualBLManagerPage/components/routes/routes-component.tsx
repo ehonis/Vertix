@@ -4,7 +4,7 @@ import EditRoutePopUp from "./mixer-edit-route-popup";
 import NewRoutePopUp from "./new-route-popop";
 import { clsx } from "clsx";
 import { useNotification } from "@/app/contexts/NotificationContext";
-import { MixerRoute, CompetitionStatus } from "@prisma/client";
+import { MixerRoute, CompetitionStatus } from "@/generated/prisma/browser";
 import ElementLoadingAnimation from "@/app/ui/general/element-loading-animation";
 import { useRouter } from "next/navigation";
 type holdData = {

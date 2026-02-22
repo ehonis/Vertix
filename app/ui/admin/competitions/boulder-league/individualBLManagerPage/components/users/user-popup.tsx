@@ -7,9 +7,14 @@ import FindUserPopUp from "./find-user-popup";
 import { useNotification } from "@/app/contexts/NotificationContext";
 import { useRouter } from "next/navigation";
 import ConfirmationPopUp from "@/app/ui/general/confirmation-pop-up";
-import { ClimberStatus } from "@prisma/client";
 import AllCompletionsPopUp from "./all-completions-popup";
-import { BLClimber, BLDivision, BLBoulderScore, User } from "@prisma/client";
+import {
+  BLClimber,
+  BLDivision,
+  BLBoulderScore,
+  User,
+  ClimberStatus,
+} from "@/generated/prisma/browser";
 
 type EditUserPopupData = {
   compId: string;

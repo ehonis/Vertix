@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import { getGradeRange } from "@/lib/routes";
+import { getGradeRange } from "@/lib/routes-shared";
 import { useRouter } from "next/navigation";
 import { useNotification } from "@/app/contexts/NotificationContext";
 

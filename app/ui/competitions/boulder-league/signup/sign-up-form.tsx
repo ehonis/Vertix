@@ -2,9 +2,8 @@
 
 import { useState } from "react";
 import { useNotification } from "@/app/contexts/NotificationContext";
-import { redirect } from "next/navigation";
 import { useRouter } from "next/navigation";
-import { BLDivision, BLClimber, BLCompetition, User } from "@prisma/client";
+import { BLDivision, User } from "@/generated/prisma/browser";
 
 type BoulderLeagueSignUpFormProps = {
   divisions: BLDivision[];

@@ -1,5 +1,5 @@
 import prisma from "@/prisma";
-import { TVSlideType } from "@prisma/client";
+import { TVSlideType } from "@/generated/prisma/client";
 
 /**
  * Get or create the featured route TV slide

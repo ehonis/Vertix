@@ -1,8 +1,6 @@
 "use client";
 
-import Image from "next/image";
-import { useEffect, useState } from "react";
-import { Route } from "@prisma/client";
+import { Route } from "@/generated/prisma/browser";
 export default function FeaturedRouteSlide({
   routes,
   featuredRoute,

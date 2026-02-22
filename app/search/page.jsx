@@ -1,12 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 import SearchTextBox from "../ui/search/search-text-box";
 import Image from "next/image";
 import Link from "next/link";
 import clsx from "clsx";
-import ConstructionBlur from "../ui/general/construction-blur";
 
 export default function Search() {
   const [fetchedData, setFetchedData] = useState(null);

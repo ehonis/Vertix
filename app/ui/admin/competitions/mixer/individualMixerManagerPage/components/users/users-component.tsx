@@ -3,7 +3,12 @@
 import { useEffect, useState } from "react";
 import { clsx } from "clsx";
 import EditUserPopUp from "./user-popup";
-import { MixerClimber, MixerRopeScore, MixerBoulderScore, MixerDivision } from "@prisma/client";
+import {
+  MixerClimber,
+  MixerRopeScore,
+  MixerBoulderScore,
+  MixerDivision,
+} from "@/generated/prisma/browser";
 type UsersData = {
   compId: string;
   climbers: MixerClimber[];

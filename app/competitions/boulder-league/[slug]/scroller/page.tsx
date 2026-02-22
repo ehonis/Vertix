@@ -8,7 +8,7 @@ import {
   BLCompetition,
   BLClimber,
   BLCompletion,
-} from "@prisma/client";
+} from "@/generated/prisma/client";
 
 export default async function Mixer({ params }: { params: Promise<{ slug: string }> }) {
   const session = await auth();

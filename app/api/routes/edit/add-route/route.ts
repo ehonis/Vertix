@@ -1,8 +1,7 @@
 import { NextResponse } from "next/server";
 import prisma from "@/prisma";
-import { RouteType } from "@prisma/client";
+import { RouteType, UserRole } from "@/generated/prisma/client";
 import { auth } from "@/auth";
-import { UserRole } from "@prisma/client";
 import { getRouteXp } from "@/lib/route";
 import { addRouteToFeaturedSlide } from "@/lib/tvSlideHelpers";
 

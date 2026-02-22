@@ -1,5 +1,5 @@
 import { auth } from "@/auth";
-import { ClimberStatus } from "@prisma/client";
+import { ClimberStatus } from "@/generated/prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/prisma";
 

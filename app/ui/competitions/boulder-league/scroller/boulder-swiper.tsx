@@ -4,10 +4,10 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Swiper as SwiperType } from "swiper/types";
 import { Virtual } from "swiper/modules";
 import clsx from "clsx";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import "swiper/css";
 import { useNotification } from "@/app/contexts/NotificationContext";
-import { BLBoulder, BLCompletion } from "@prisma/client";
+import { BLBoulder, BLCompletion } from "@/generated/prisma/browser";
 
 type BoulderLeagueScrollerData = {
   compId: string;

@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import { useNotification } from "@/app/contexts/NotificationContext";
 
 import TopDown from "../../routes/topdown";
-import { Locations, Route, RouteTag, RouteType } from "@prisma/client";
+import { Locations, Route, RouteTag, RouteType } from "@/generated/prisma/browser";
 
 import RopeGradeSelect from "../new_route/rope-grade-select";
 import BoulderGradeSelect from "../new_route/boulder-grade-select";

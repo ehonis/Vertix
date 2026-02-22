@@ -7,7 +7,7 @@ import clsx from "clsx";
 import { useState, useRef, useEffect } from "react";
 import "swiper/css";
 import { useNotification } from "@/app/contexts/NotificationContext";
-import { MixerBoulder } from "@prisma/client";
+import { MixerBoulder } from "@/generated/prisma/browser";
 type MixeBoulderScrollerData = {
   mixerBoulders: MixerBoulder[];
 };

@@ -1,10 +1,10 @@
 import { NextResponse, NextRequest } from "next/server";
 import prisma from "@/prisma";
-import { Prisma } from "@prisma/client";
+import { Prisma } from "@/generated/prisma/client";
 import { addRouteToFeaturedSlide, removeRouteFromAllSlides } from "@/lib/tvSlideHelpers";
 import { auth } from "@/auth";
 import jwt from "jsonwebtoken";
-import { UserRole } from "@prisma/client";
+import { UserRole } from "@/generated/prisma/client";
 
 async function getUserIdAndRole(request: NextRequest): Promise<{ userId: string; role: UserRole } | null> {
   const session = await auth();

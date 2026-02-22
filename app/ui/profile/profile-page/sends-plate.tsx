@@ -1,4 +1,4 @@
-import { Badge } from "@prisma/client";
+import { Badge } from "@/generated/prisma/client";
 
 type SendsPlateBadge = {
   completions: number | undefined;

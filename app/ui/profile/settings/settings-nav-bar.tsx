@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import ProfileSettingsPane from "./profile-settings-pane";
 import clsx from "clsx";
 import Onboarding from "./onboarding";
-import { User } from "@prisma/client";
+import { User } from "@/generated/prisma/browser";
 export default function SettingsNavBar({ user }: { user: User }) {
   const [activeTab, setActiveTab] = useState(
     user.isOnboarded ? "profile-settings" : "finish-onboarding"

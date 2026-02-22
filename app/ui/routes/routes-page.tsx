@@ -1,15 +1,14 @@
 "use client";
 
-import { CommunityGrade, RouteAttempt, RouteCompletion, User } from "@prisma/client";
+import { CommunityGrade, RouteAttempt, RouteCompletion, User } from "@/generated/prisma/browser";
 import TopDown from "./topdown";
 import { useState, useEffect, useCallback, useRef } from "react";
 import WallRoutes from "./wall-routes";
 import SearchRoutes from "./search-routes";
-import { Locations } from "@prisma/client";
+import { Locations } from "@/generated/prisma/browser";
 import { motion } from "framer-motion";
 import { AnimatePresence } from "framer-motion";
 import RoutePopUp from "./route-pop-up";
-import clsx from "clsx";
 
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
@@ -18,13 +17,13 @@ import {
   findCommunityGradeForRoute,
   calculateCompletionXpForRoute,
   isGradeHigher,
-} from "@/lib/route";
+} from "@/lib/route-shared";
 import { RouteWithExtraData } from "@/app/api/routes/get-wall-routes-non-archive/route";
 
 export default function RoutesPage({ user }: { user: User | null | undefined }) {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [isLoading, setIsLoading] = useState(false);
+
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const isClosingRef = useRef(false);
 
@@ -163,7 +162,8 @@ export default function RoutesPage({ user }: { user: User | null | undefined }) 
             route.grade.toLowerCase() !== "5.feature"
           ) {
             userGrade =
-              route.communityGrades.find(grade => grade.userId === user.id)?.grade || null;
+              route.communityGrades.find((grade: CommunityGrade) => grade.userId === user.id)
+                ?.grade || null;
           }
 
           // Calculate XP

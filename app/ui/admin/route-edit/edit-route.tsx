@@ -1,15 +1,13 @@
 "use client";
 import clsx from "clsx";
 import Link from "next/link";
-import { formatDate, formatDateToYYYYMMDD, parseDateString } from "@/lib/dates";
-import ImageSlider from "../../routes/individualRoutePage/route-image-slider";
-import Image from "next/image";
+import { formatDateToYYYYMMDD, parseDateString } from "@/lib/dates";
 import StarRating from "../../general/star-rating";
-import { splitGradeModifier } from "@/lib/routes";
+import { splitGradeModifier } from "@/lib/routes-shared";
 import { useState, useEffect } from "react";
 import { useNotification } from "@/app/contexts/NotificationContext";
 import { useRouter } from "next/navigation";
-import { Route, RouteImage, Locations, RouteType } from "@prisma/client";
+import { Route, RouteImage, Locations, RouteType } from "@/generated/prisma/browser";
 
 export default function EditRoute({
   route,

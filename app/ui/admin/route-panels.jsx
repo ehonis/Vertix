@@ -1,7 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
-import clsx from "clsx";
+import { useState } from "react";
 import RoutePanel from "./route-panel";
 import ConfirmationPopUp from "../general/confirmation-pop-up";
 import { useNotification } from "@/app/contexts/NotificationContext";

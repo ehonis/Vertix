@@ -12,7 +12,7 @@ import { getPoints } from "@/lib/mixer";
 import MixerInfoPopup from "./info-popup";
 import SwipeAnimation from "@/app/ui/general/swipe-animation";
 import { getTopScores } from "@/lib/mixer";
-import { MixerCompletion } from "@prisma/client";
+import { MixerCompletion } from "@/generated/prisma/browser";
 import RouteImagePopup from "./route-image-popup";
 type routeHold = {
   holdNumber: number;

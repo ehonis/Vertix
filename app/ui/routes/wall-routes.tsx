@@ -1,11 +1,4 @@
-import {
-  User,
-  Route,
-  RouteTag,
-  CommunityGrade,
-  RouteAttempt,
-  RouteCompletion,
-} from "@prisma/client";
+import { User, RouteAttempt, RouteCompletion } from "@/generated/prisma/client";
 import { useEffect, useState } from "react";
 import { useNotification } from "@/app/contexts/NotificationContext";
 import RouteTile from "./route-tile";

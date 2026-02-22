@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import NewRoutePopup from "./new-route-popup";
-import { RouteTag } from "@prisma/client";
+import { RouteTag } from "@/generated/prisma/browser";
 
 export default function NewRouteButton({ tags }: { tags: RouteTag[] }) {
   const [isNewRoutePopupOpen, setIsNewRoutePopupOpen] = useState(false);

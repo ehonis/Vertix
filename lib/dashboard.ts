@@ -1,5 +1,5 @@
 import prisma from "@/prisma";
-import { RouteCompletion, RouteType } from "@prisma/client";
+import { RouteCompletion, RouteType } from "@/generated/prisma/client";
 
 export async function getCompletionData(userId: string) {
   const completedRoutes = await prisma.routeCompletion.findMany({

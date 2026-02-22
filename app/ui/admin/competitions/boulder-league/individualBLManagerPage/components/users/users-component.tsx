@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { clsx } from "clsx";
 import EditUserPopUp from "./user-popup";
-import { BLClimber, BLBoulderScore, BLDivision } from "@prisma/client";
+import { BLClimber, BLBoulderScore, BLDivision } from "@/generated/prisma/browser";
 type UsersData = {
   compId: string;
   climbers: BLClimber[];

@@ -1,7 +1,7 @@
 import prisma from "@/prisma";
 import { NextResponse, NextRequest } from "next/server";
 import { auth } from "@/auth";
-import { RouteType, User } from "@prisma/client";
+import { RouteType, User } from "@/generated/prisma/client";
 import {
   findIfBoulderGradeIsHigher,
   findIfRopeGradeIsHigher,

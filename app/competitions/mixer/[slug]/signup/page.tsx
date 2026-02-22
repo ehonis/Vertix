@@ -2,7 +2,6 @@ import prisma from "@/prisma";
 import Link from "next/link";
 import { auth } from "@/auth";
 import SignUpForm from "@/app/ui/competitions/mixer/signup/sign-up-form";
-import { CompetitionStatus } from "@prisma/client";
 import { redirect } from "next/navigation";
 export default async function Signup({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;

@@ -1,8 +1,8 @@
 "use client";
 import { useState } from "react";
 import clsx from "clsx";
-import ErrorPopUp from "./error-pop-up";
-import { CompetitionStatus } from "@prisma/client";
+
+import { CompetitionStatus } from "@/generated/prisma/browser";
 import ConfirmationPopUp from "../../general/confirmation-pop-up";
 import { useNotification } from "@/app/contexts/NotificationContext";
 type compData = {

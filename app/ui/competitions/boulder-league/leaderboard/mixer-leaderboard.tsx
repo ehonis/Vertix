@@ -1,10 +1,10 @@
 "use client";
 import clsx from "clsx";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { ClimberStanding, DivisionStanding, Score } from "@/lib/mixers";
+import { ClimberStanding, DivisionStanding, Score } from "@/lib/mixers-shared";
 import { User } from "next-auth";
-import { MixerCompetition } from "@prisma/client";
+import { MixerCompetition } from "@/generated/prisma/browser";
 type Props = {
   comp: MixerCompetition;
   user: User | null;

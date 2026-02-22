@@ -2,11 +2,10 @@
 import Image from "next/image";
 import { useState, useEffect, useCallback } from "react";
 import ConfirmationPopUp from "@/app/ui/general/confirmation-pop-up";
-import { User, UserRole } from "@prisma/client";
+import { User, UserRole } from "@/generated/prisma/browser";
 import { useNotification } from "@/app/contexts/NotificationContext";
 import { useRouter } from "next/navigation";
 import clsx from "clsx";
-import InformationalPopUp from "../../general/informational-pop-up";
 
 export default function IndividualUserEdit({ user }: { user: User }) {
   const { showNotification } = useNotification();

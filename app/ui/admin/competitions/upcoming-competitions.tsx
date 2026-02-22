@@ -2,7 +2,7 @@ import prisma from "@/prisma";
 import Link from "next/link";
 import Image from "next/image";
 import clsx from "clsx";
-import { CompetitionStatus } from "@prisma/client";
+import { CompetitionStatus } from "@/generated/prisma/client";
 export default async function UpComingCompetitions() {
   const mixerUpComingCompetitions = await prisma.mixerCompetition.findMany({
     where: {

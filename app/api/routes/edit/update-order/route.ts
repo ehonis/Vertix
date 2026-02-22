@@ -1,7 +1,7 @@
 import { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import prisma from "@/prisma";
-import { Route } from "@prisma/client";
+import { Route } from "@/generated/prisma/client";
 
 export async function PATCH(request: NextRequest) {
   try {

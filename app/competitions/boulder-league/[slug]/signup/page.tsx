@@ -2,7 +2,7 @@ import prisma from "@/prisma";
 import Link from "next/link";
 import { auth } from "@/auth";
 import BoulderLeagueSignUpForm from "@/app/ui/competitions/boulder-league/signup/sign-up-form";
-import { CompetitionStatus, User } from "@prisma/client";
+import { User } from "@/generated/prisma/client";
 import { redirect } from "next/navigation";
 export default async function Signup({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;

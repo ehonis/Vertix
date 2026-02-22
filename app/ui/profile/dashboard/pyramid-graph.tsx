@@ -1,10 +1,9 @@
 "use client";
 
-import { RouteCompletion, RouteType } from "@prisma/client";
+import { RouteCompletion, RouteType } from "@/generated/prisma/browser";
 import { useState, useEffect } from "react";
-import { splitRoutesByType, getRouteGradeCounts } from "@/lib/dashboard";
+import { splitRoutesByType, getRouteGradeCounts } from "@/lib/dashboard-shared";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from "recharts";
-import clsx from "clsx";
 
 // Type definitions for tooltip payload
 type TooltipPayload = {

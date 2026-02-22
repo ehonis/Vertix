@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import ElementLoadingAnimation from "@/app/ui/general/element-loading-animation";
 import { useNotification } from "@/app/contexts/NotificationContext";
 import { useRouter } from "next/navigation";
-import { User } from "@prisma/client";
+import { User } from "@/generated/prisma/browser";
 import { useXpIntegration } from "@/app/hooks/useXpIntegration";
 import { useRouteCompletion } from "@/app/contexts/routeCompletionContext";
 import Link from "next/link";
@@ -13,7 +13,7 @@ import {
   getGradeRange,
   isGradeHigher,
   calculateCompletionXpForRoute,
-} from "@/lib/route";
+} from "@/lib/route-shared";
 
 export default function RoutePopUp({
   id,

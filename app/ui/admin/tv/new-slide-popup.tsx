@@ -2,9 +2,8 @@
 
 import { motion } from "framer-motion";
 import { useState } from "react";
-import { useEffect } from "react";
 import { UploadButton } from "@/utils/uploadthing";
-import { TVSlideType } from "@prisma/client";
+import { TVSlideType } from "@/generated/prisma/browser";
 import { useNotification } from "@/app/contexts/NotificationContext";
 import SimpleToggle from "../../general/simple-toggle";
 import Image from "next/image";

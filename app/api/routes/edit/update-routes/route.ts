@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 import prisma from "@/prisma";
-import { RouteType } from "@prisma/client";
+import { UserRole } from "@/generated/prisma/client";
 import { auth } from "@/auth";
-import { UserRole } from "@prisma/client";
+
 import { TransformedRoute } from "@/app/ui/admin/route-edit/new-route-popup";
 export async function PATCH(req: Request) {
   const session = await auth();

@@ -1,6 +1,6 @@
 import prisma from "@/prisma";
 import { NextResponse } from "next/server";
-import { calculateCompletionXpForRoute, getRouteXp } from "@/lib/route";
+import { calculateCompletionXpForRoute } from "@/lib/route";
 
 export async function POST(request) {
   const { userId, routeId, cases, selectedGrade, selectedSends } = await request.json();

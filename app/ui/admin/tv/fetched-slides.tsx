@@ -3,7 +3,6 @@ import Image from "next/image";
 import LeaderBoardSlide from "./leaderboard-slide";
 import LogoSlide from "./logo-slide";
 import StatsSlide from "./stats-slide";
-import FeaturedRouteSlide from "./featured-route-slide";
 export default async function FetchedSlides() {
   const fetchedSlides = await prisma.tVSlide.findMany({
     where: { isActive: true },

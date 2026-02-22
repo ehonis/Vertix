@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { User } from "@prisma/client";
+import { User } from "@/generated/prisma/browser";
 import clsx from "clsx";
 import Link from "next/link";
 import LevelIndicator from "../general/level-indicator";

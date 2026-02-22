@@ -1,4 +1,4 @@
-import { getLevelForXp } from "@/lib/route";
+import { getLevelForXp } from "@/lib/route-shared";
 import clsx from "clsx";
 
 export default function LevelIndicator({

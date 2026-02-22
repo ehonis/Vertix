@@ -2,7 +2,13 @@
 
 import { useState, useEffect } from "react";
 import BoulderLeagueBoulderScorer from "./boulder-swiper";
-import { ClimberStatus, BLCompetition, BLBoulder, BLClimber, BLCompletion } from "@prisma/client";
+import {
+  ClimberStatus,
+  BLCompetition,
+  BLBoulder,
+  BLClimber,
+  BLCompletion,
+} from "@/generated/prisma/browser";
 import { useRouter } from "next/navigation";
 import { useNotification } from "@/app/contexts/NotificationContext";
 import ConfirmationPopUp from "@/app/ui/general/confirmation-pop-up";

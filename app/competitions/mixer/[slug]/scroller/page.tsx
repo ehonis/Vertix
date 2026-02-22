@@ -2,7 +2,12 @@ import MixerScoreScroller from "@/app/ui/competitions/mixer/scroller/score-scrol
 import prisma from "@/prisma";
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
-import { ClimberStatus, MixerCompetition, MixerClimber, CompetitionStatus } from "@prisma/client";
+import {
+  ClimberStatus,
+  MixerCompetition,
+  MixerClimber,
+  CompetitionStatus,
+} from "@/generated/prisma/client";
 
 export default async function Mixer({ params }: { params: Promise<{ slug: string }> }) {
   const session = await auth();

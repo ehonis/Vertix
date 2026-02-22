@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { User } from "@prisma/client";
+import { User } from "@/generated/prisma/client";
 
 type ImageNamePlate = {
   user: User;

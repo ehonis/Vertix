@@ -1,9 +1,8 @@
 import { NextResponse, NextRequest } from "next/server";
 import prisma from "@/prisma";
 import { auth } from "@/auth";
-import { ClimberStatus, Route, RouteType } from "@prisma/client";
-import { Locations } from "@prisma/client";
-import { MixerRoute } from "@prisma/client";
+import { ClimberStatus, Route, RouteType, MixerRoute, Locations } from "@/generated/prisma/client";
+
 import { isGradeHigher } from "@/lib/route";
 
 export async function POST(req: NextRequest) {

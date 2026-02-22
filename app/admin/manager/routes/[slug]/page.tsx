@@ -2,7 +2,7 @@ import IndividualRoutePageLoad from "@/app/ui/admin/route-edit/individualpageloa
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import prisma from "@/prisma";
-import { UserRole } from "@prisma/client";
+import { UserRole } from "@/generated/prisma/client";
 
 export const revalidate = 120;
 

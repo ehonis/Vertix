@@ -4,7 +4,7 @@ import prisma from "@/prisma";
 import { Suspense } from "react";
 import clsx from "clsx";
 import ElementLoadingAnimation from "@/app/ui/general/element-loading-animation";
-import { CompetitionStatus } from "@prisma/client";
+import { CompetitionStatus } from "@/generated/prisma/client";
 async function DemoComps() {
   const demoCompetitions = await prisma.mixerCompetition.findMany({
     where: {

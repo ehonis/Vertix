@@ -1,5 +1,5 @@
 import prisma from "@/prisma";
-import { Locations, RouteType } from "@prisma/client";
+import { Locations, RouteType } from "@/generated/prisma/client";
 import ClientGraph from "@/app/ui/admin/gym-statistics/client-graph";
 
 const getCurrentRopesABExcluded = async () => {

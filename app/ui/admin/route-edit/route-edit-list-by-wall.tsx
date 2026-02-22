@@ -1,9 +1,9 @@
 "use client";
 
-import { Locations } from "@prisma/client";
+import { Locations } from "@/generated/prisma/browser";
 import TopDown from "../../routes/topdown";
 import { useState, useMemo, useCallback, useEffect } from "react";
-import { Route } from "@prisma/client";
+import { Route } from "@/generated/prisma/browser";
 import { motion } from "framer-motion";
 import clsx from "clsx";
 import { formatDateMMDD } from "@/lib/date";

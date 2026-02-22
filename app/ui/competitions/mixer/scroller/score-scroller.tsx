@@ -11,7 +11,7 @@ import {
   MixerCompletion,
   MixerCompetition,
   ClimberStatus,
-} from "@prisma/client";
+} from "@/generated/prisma/browser";
 import { useRouter } from "next/navigation";
 import { useNotification } from "@/app/contexts/NotificationContext";
 import ConfirmationPopUp from "@/app/ui/general/confirmation-pop-up";

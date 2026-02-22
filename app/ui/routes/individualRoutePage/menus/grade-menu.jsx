@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNotification } from "@/app/contexts/NotificationContext";
-import { getGradeRange } from "@/lib/routes";
+import { getGradeRange } from "@/lib/routes-shared";
 import { useRouter } from "next/navigation";
 export default function GradeMenu({
   route,

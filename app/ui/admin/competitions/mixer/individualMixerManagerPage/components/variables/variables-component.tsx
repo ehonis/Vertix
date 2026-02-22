@@ -8,8 +8,8 @@ import Image from "next/image";
 import ImagePopUp from "./image-uploader-popup";
 import { useNotification } from "@/app/contexts/NotificationContext";
 import { useRouter } from "next/navigation";
-import { CompetitionStatus, StandingsType } from "@prisma/client";
-import { generateCompetitionCsv, StandingsData } from "@/lib/mixers";
+import { CompetitionStatus, StandingsType } from "@/generated/prisma/browser";
+import { generateCompetitionCsv, StandingsData } from "@/lib/mixers-shared";
 import MixerCountdownTimer from "@/app/ui/competitions/generic/mixer-inprogress-timer";
 
 type VariableDataProps = {

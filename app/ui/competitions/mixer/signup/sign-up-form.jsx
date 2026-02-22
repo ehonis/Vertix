@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { useNotification } from "@/app/contexts/NotificationContext";
-import { redirect } from "next/navigation";
 import { useRouter } from "next/navigation";
 export default function SignUpForm({ divisions, user, compId }) {
   const router = useRouter();

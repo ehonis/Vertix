@@ -3,7 +3,7 @@ import prisma from "@/prisma";
 import MixerLeaderBoard from "../../../../ui/competitions/mixer/leaderboard/mixer-leaderboard";
 import { auth } from "@/auth";
 import ThreeDotLoading from "@/app/ui/general/three-dot-loading";
-import { StandingsType } from "@prisma/client";
+import { StandingsType } from "@/generated/prisma/client";
 import { calculateStandings, calculateStandingsWithAverageDownwardMovement } from "@/lib/mixers";
 import { ClimberStanding, DivisionStanding, Score } from "@/lib/mixers";
 

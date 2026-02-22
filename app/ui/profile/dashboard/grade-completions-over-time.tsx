@@ -1,6 +1,5 @@
 "use client";
 
-import clsx from "clsx";
 import {
   Line,
   LineChart,
@@ -14,8 +13,8 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 
 import { useState } from "react";
-import { RouteCompletion, RouteType } from "@prisma/client";
-import { getLineChartCompletionsData } from "@/lib/dashboard";
+import { RouteCompletion, RouteType } from "@/generated/prisma/browser";
+import { getLineChartCompletionsData } from "@/lib/dashboard-shared";
 type TooltipPayload = {
   name: string;
   value: number;
