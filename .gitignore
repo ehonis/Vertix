@@ -39,7 +39,7 @@ next-env.d.ts
 .env
 
 # generated files
-prisma/generated/
+generated/
 
 
 
