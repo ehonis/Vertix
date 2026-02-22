@@ -28,6 +28,29 @@ enum RouteType {
     ROPE
 }
 
+enum SessionType {
+    AUTO
+    POWER
+    POWER_ENDURANCE
+    TENSION_BOARD
+    COMPETITION
+    ENDURANCE
+    WORKOUT
+    CUSTOM
+    FUN
+}
+
+enum SessionStatus {
+    ACTIVE
+    COMPLETED
+    CANCELLED
+}
+
+enum CompetitionType {
+    ONE_DAY_COMP
+    THREE_WEEK_COMP
+}
+
 model Route {
     id              String            @id @default(cuid())
     title           String
@@ -54,6 +77,32 @@ model Route {
     bounties        Bounty[]
 }
 
+model ClimbingSession {
+    id              String            @id @default(cuid())
+    userId          String
+    user            User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+    type            SessionType       @default(AUTO)
+    name            String?
+    status          SessionStatus     @default(ACTIVE)
+    startedAt       DateTime          @default(now())
+    endedAt         DateTime?
+    lastActivityAt  DateTime          @default(now())
+    sessionDate     DateTime          @default(now())
+    timeSlot        String?
+    isRetroactive   Boolean           @default(false)
+    isCompetition   Boolean           @default(false)
+    competitionType CompetitionType?
+    competitionId   String?
+    completions     RouteCompletion[]
+    createdAt       DateTime          @default(now())
+    updatedAt       DateTime          @updatedAt
+
+    @@index([userId, status])
+    @@index([userId, sessionDate])
+    @@index([userId, lastActivityAt])
+    @@index([competitionType, competitionId])
+}
+
 model RouteImage {
     id        String   @id @default(cuid())
     url       String // URL of the image
@@ -63,34 +112,42 @@ model RouteImage {
 }
 
 model RouteCompletion {
-    id             Int      @id @default(autoincrement())
-    user           User     @relation(fields: [userId], references: [id])
-    userId         String
-    route          Route    @relation(fields: [routeId], references: [id], onDelete: Cascade)
-    routeId        String
-    flash          Boolean  @default(false)
-    completionDate DateTime @default(now())
-    xpEarned       Int      @default(0) // Track XP earned for this specific completion
-    claimedBounty  Bounty?
+    id              Int              @id @default(autoincrement())
+    user            User             @relation(fields: [userId], references: [id])
+    userId          String
+    route           Route            @relation(fields: [routeId], references: [id], onDelete: Cascade)
+    routeId         String
+    sessionId       String?
+    session         ClimbingSession? @relation(fields: [sessionId], references: [id], onDelete: SetNull)
+    flash           Boolean          @default(false)
+    completionDate  DateTime         @default(now())
+    xpEarned        Int              @default(0) // Track XP earned for this specific completion
+    isCompetition   Boolean          @default(false)
+    competitionType CompetitionType?
+    competitionId   String?
+    claimedBounty   Bounty?
 
     @@index([userId, routeId]) // Remove unique constraint to allow multiple completions
+    @@index([sessionId])
+    @@index([userId, completionDate])
+    @@index([competitionType, competitionId])
 }
 
 model Bounty {
-    id                  String           @id @default(cuid())
-    routeId             String
-    route               Route            @relation(fields: [routeId], references: [id], onDelete: Cascade)
-    startedAt           DateTime         @default(now())
-    claimedAt           DateTime?
-    isActive            Boolean          @default(true)
-    baseXp              Int              @default(100)
-    dailyIncrementXp    Int              @default(50)
-    claimedByUserId     String?
-    claimedByUser       User?            @relation("ClaimedBounties", fields: [claimedByUserId], references: [id], onDelete: SetNull)
-    claimedOnCompletionId Int?           @unique
-    claimedOnCompletion RouteCompletion? @relation(fields: [claimedOnCompletionId], references: [id], onDelete: SetNull)
-    createdAt           DateTime         @default(now())
-    updatedAt           DateTime         @updatedAt
+    id                    String           @id @default(cuid())
+    routeId               String
+    route                 Route            @relation(fields: [routeId], references: [id], onDelete: Cascade)
+    startedAt             DateTime         @default(now())
+    claimedAt             DateTime?
+    isActive              Boolean          @default(true)
+    baseXp                Int              @default(100)
+    dailyIncrementXp      Int              @default(50)
+    claimedByUserId       String?
+    claimedByUser         User?            @relation("ClaimedBounties", fields: [claimedByUserId], references: [id], onDelete: SetNull)
+    claimedOnCompletionId Int?             @unique
+    claimedOnCompletion   RouteCompletion? @relation(fields: [claimedOnCompletionId], references: [id], onDelete: SetNull)
+    createdAt             DateTime         @default(now())
+    updatedAt             DateTime         @updatedAt
 
     @@index([isActive, claimedAt])
     @@index([routeId, isActive, claimedAt])
@@ -177,6 +234,7 @@ model User {
     highestRopeGrade    String?
     highestBoulderGrade String?
     completions         RouteCompletion[] // One-to-many relationship with RouteCompletion
+    climbingSessions    ClimbingSession[]
     attempts            RouteAttempt[] // One-to-many relationship with RouteAttempt
     communityGrades     CommunityGrade[]
     stars               RouteStar[]
