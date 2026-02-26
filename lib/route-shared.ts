@@ -155,18 +155,14 @@ export function isGradeHigher(user: User, newGrade: string, type: string) {
   ];
   const boulderGrades = ["vb", "v0", "v1", "v2", "v3", "v4", "v5", "v6", "v7", "v8", "v9", "v10"];
 
-  if (!user.highestRopeGrade || !user.highestBoulderGrade) {
-    return true;
-  }
-
   if (type === "rope") {
+    if (!user.highestRopeGrade) return false;
     return ropeGrades.indexOf(user.highestRopeGrade) < ropeGrades.indexOf(newGrade);
   }
-
   if (type === "boulder") {
+    if (!user.highestBoulderGrade) return false;
     return boulderGrades.indexOf(user.highestBoulderGrade) < boulderGrades.indexOf(newGrade);
   }
-
   return false;
 }
 

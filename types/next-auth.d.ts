@@ -7,6 +7,8 @@ declare module "next-auth" {
     id: string;
     username?: string;
     role: UserRole;
+    highestRopeGrade?: string | null;
+    highestBoulderGrade?: string | null;
   }
 
   interface Session {

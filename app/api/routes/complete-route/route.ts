@@ -44,39 +44,37 @@ export async function POST(req: NextRequest) {
 
     const completionCount = existingCompletions.length;
 
-    // Check if this is a new highest grade
-    const isNewHighestRope =
-      route.type === RouteType.ROPE && findIfRopeGradeIsHigher(user as User, route);
-    const isNewHighestBoulder =
-      route.type === RouteType.BOULDER && findIfBoulderGradeIsHigher(user as User, route);
+    const u = user as User;
+    // Update DB when: first send (no current highest) OR this route is higher than current
+    const shouldUpdateRope =
+      route.type === RouteType.ROPE && (!u.highestRopeGrade || findIfRopeGradeIsHigher(u, route));
+    const shouldUpdateBoulder =
+      route.type === RouteType.BOULDER &&
+      (!u.highestBoulderGrade || findIfBoulderGradeIsHigher(u, route));
 
-    if (isNewHighestRope) {
+    if (shouldUpdateRope) {
       await prisma.user.update({
-        where: {
-          id: userId,
-        },
-        data: {
-          highestRopeGrade: route.grade,
-        },
+        where: { id: userId },
+        data: { highestRopeGrade: route.grade },
+      });
+    }
+    if (shouldUpdateBoulder) {
+      await prisma.user.update({
+        where: { id: userId },
+        data: { highestBoulderGrade: route.grade },
       });
     }
 
-    if (isNewHighestBoulder) {
-      await prisma.user.update({
-        where: {
-          id: userId,
-        },
-        data: {
-          highestBoulderGrade: route.grade,
-        },
-      });
-    }
-
-    // Calculate XP for this completion
+    // XP "new highest" bonus only when they had a previous highest and beat it (not on first send)
+    const newHighestGrade =
+      (route.type === RouteType.ROPE && !!u.highestRopeGrade && findIfRopeGradeIsHigher(u, route)) ||
+      (route.type === RouteType.BOULDER &&
+        !!u.highestBoulderGrade &&
+        findIfBoulderGradeIsHigher(u, route));
     const xpData = calculateCompletionXpForRoute({
       grade: route.grade,
       previousCompletions: completionCount,
-      newHighestGrade: isNewHighestRope || isNewHighestBoulder,
+      newHighestGrade,
       bonusXp: route.bonusXp || 0,
     });
 

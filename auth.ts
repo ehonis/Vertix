@@ -33,6 +33,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       session.user.isOnboarded = (user as any).isOnboarded ?? false;
       // @ts-ignore - phoneNumber is not in default user type
       session.user.phoneNumber = (user as any).phoneNumber ?? null;
+      session.user.highestRopeGrade = (user as any).highestRopeGrade ?? null;
+      session.user.highestBoulderGrade = (user as any).highestBoulderGrade ?? null;
       return session;
     },
     async redirect({ url, baseUrl }) {

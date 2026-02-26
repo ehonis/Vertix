@@ -421,27 +421,18 @@ export function findIfRopeGradeIsHigher(user: User, route: Route) {
     "5.13",
     "5.13+",
   ];
+  // No previous highest = first send for this type; don't award "new highest" bonus
   if (!user.highestRopeGrade) {
-    return true;
-  } else {
-    if (ropeGrades.indexOf(user.highestRopeGrade) < ropeGrades.indexOf(route.grade)) {
-      return true;
-    } else {
-      return false;
-    }
+    return false;
   }
+  return ropeGrades.indexOf(user.highestRopeGrade) < ropeGrades.indexOf(route.grade);
 }
 export function findIfBoulderGradeIsHigher(user: User, route: Route) {
   const boulderGrades = ["vb", "v0", "v1", "v2", "v3", "v4", "v5", "v6", "v7", "v8", "v9", "v10"];
   if (!user.highestBoulderGrade) {
-    return true;
-  } else {
-    if (boulderGrades.indexOf(user.highestBoulderGrade) < boulderGrades.indexOf(route.grade)) {
-      return true;
-    } else {
-      return false;
-    }
+    return false;
   }
+  return boulderGrades.indexOf(user.highestBoulderGrade) < boulderGrades.indexOf(route.grade);
 }
 export function isGradeHigher(user: User, newGrade: string, type: string) {
   const ropeGrades = [
@@ -470,22 +461,13 @@ export function isGradeHigher(user: User, newGrade: string, type: string) {
   ];
   const boulderGrades = ["vb", "v0", "v1", "v2", "v3", "v4", "v5", "v6", "v7", "v8", "v9", "v10"];
 
-  if (!user.highestRopeGrade || !user.highestBoulderGrade) {
-    return true;
-  } else {
-    if (type === "rope") {
-      if (ropeGrades.indexOf(user.highestRopeGrade) < ropeGrades.indexOf(newGrade)) {
-        return true;
-      } else {
-        return false;
-      }
-    } else if (type === "boulder") {
-      if (boulderGrades.indexOf(user.highestBoulderGrade) < boulderGrades.indexOf(newGrade)) {
-        return true;
-      } else {
-        return false;
-      }
-    }
+  if (type === "rope") {
+    if (!user.highestRopeGrade) return false;
+    return ropeGrades.indexOf(user.highestRopeGrade) < ropeGrades.indexOf(newGrade);
+  }
+  if (type === "boulder") {
+    if (!user.highestBoulderGrade) return false;
+    return boulderGrades.indexOf(user.highestBoulderGrade) < boulderGrades.indexOf(newGrade);
   }
   return false;
 }
