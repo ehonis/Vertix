@@ -6,7 +6,6 @@ import {
   findProposedGrade,
   findStarRating,
   findCommunityGrade,
-  getBoulderGradeMapping,
 } from "@/lib/route";
 import { findDaysOld, formatDateMMDDYY } from "@/lib/date";
 import Image from "next/image";
@@ -115,12 +114,8 @@ function RouteInfo({
   } else {
     type = "Rope";
   }
-  let mappedGrade = "";
-  if (route.grade?.startsWith("v")) {
-    mappedGrade = getBoulderGradeMapping(route.grade);
-  } else {
-    mappedGrade = route.grade;
-  }
+  const mappedGrade = route.grade;
+
   return (
     <>
       <div

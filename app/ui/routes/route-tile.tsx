@@ -2,7 +2,7 @@
 
 import clsx from "clsx";
 import { useEffect, useState } from "react";
-import { findCommunityGradeForRoute, getBoulderGradeMapping, isGradeHigher } from "@/lib/route-shared";
+import { findCommunityGradeForRoute, isGradeHigher } from "@/lib/route-shared";
 import { RouteAttempt, RouteCompletion, User } from "@/generated/prisma/browser";
 import { CommunityGrade } from "@/generated/prisma/browser";
 import { calculateCompletionXpForRoute } from "@/lib/route-shared";
@@ -65,11 +65,7 @@ export default function RouteTile({
   }
 
   useEffect(() => {
-    if (grade.startsWith("v")) {
-      setGradeMapped(getBoulderGradeMapping(grade));
-    } else {
-      setGradeMapped(grade);
-    }
+    setGradeMapped(grade);
   }, [grade]);
 
   useEffect(() => {

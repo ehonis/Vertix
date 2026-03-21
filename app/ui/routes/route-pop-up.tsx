@@ -8,12 +8,7 @@ import { useXpIntegration } from "@/app/hooks/useXpIntegration";
 import { useRouteCompletion } from "@/app/contexts/routeCompletionContext";
 import Link from "next/link";
 import clsx from "clsx";
-import {
-  getBoulderGradeMapping,
-  getGradeRange,
-  isGradeHigher,
-  calculateCompletionXpForRoute,
-} from "@/lib/route-shared";
+import { getGradeRange, isGradeHigher, calculateCompletionXpForRoute } from "@/lib/route-shared";
 
 export default function RoutePopUp({
   id,
@@ -194,11 +189,7 @@ export default function RoutePopUp({
   };
 
   useEffect(() => {
-    if (grade.startsWith("v")) {
-      setGradeMapped(getBoulderGradeMapping(grade));
-    } else {
-      setGradeMapped(grade);
-    }
+    setGradeMapped(grade);
   }, [grade]);
 
   const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
