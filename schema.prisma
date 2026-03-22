@@ -222,6 +222,7 @@ model MonthlyXp {
 
 model User {
     id                  String             @id @default(cuid())
+    clerkId             String?            @unique
     username            String?            @unique
     name                String?
     phoneNumber         String?            @unique

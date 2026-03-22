@@ -1,5 +1,8 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { clerkMiddleware } from '@clerk/nextjs/server';
+
+export default clerkMiddleware();
 
 export function proxy(request: NextRequest) {
   const requestHeaders = new Headers(request.headers);

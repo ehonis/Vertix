@@ -246,6 +246,7 @@ export type MonthlyXpScalarFieldEnum = (typeof MonthlyXpScalarFieldEnum)[keyof t
 
 export const UserScalarFieldEnum = {
   id: 'id',
+  clerkId: 'clerkId',
   username: 'username',
   name: 'name',
   phoneNumber: 'phoneNumber',
