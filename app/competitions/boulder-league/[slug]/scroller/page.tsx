@@ -1,6 +1,6 @@
 import BoulderLeagueScoreScroller from "@/app/ui/competitions/boulder-league/scroller/score-scroller";
 import prisma from "@/prisma";
-import { auth } from "@/auth";
+import { getCurrentAppSession as auth } from "@/lib/getCurrentAppUser";
 import { redirect } from "next/navigation";
 import {
   ClimberStatus,
@@ -12,7 +12,7 @@ import {
 
 export default async function Mixer({ params }: { params: Promise<{ slug: string }> }) {
   const session = await auth();
-  const user = session?.user;
+  const user = session?.user ?? null;
 
   if (!user) {
     redirect("/signin");

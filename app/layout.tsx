@@ -1,22 +1,21 @@
 import localFont from "next/font/local";
 import "./globals.css";
-import NavBar from "./ui/navbar/navbar";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { NotificationProvider } from "./contexts/NotificationContext";
 import { XpProvider } from "./contexts/XpContext";
 import { AnnouncementProvider } from "./contexts/AnnouncementContext";
 import Notification from "./ui/general/notification";
 import Announcement from "./ui/general/announcement";
-import XpLevelBarWrapper from "./components/XpLevelBarWrapper";
 import { Tomorrow, Barlow, Jost } from "next/font/google";
 import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
 import { extractRouterConfig } from "uploadthing/server";
 import { ourFileRouter } from "./api/uploadthing/core";
 import { PostHogProvider } from "../components/PostHogProvider";
-import Footer from "./ui/general/footer";
-import { headers } from "next/headers";
-import { SessionProviderWrapper } from "../components/SessionProviderWrapper";
 import { ClerkProvider } from "@clerk/nextjs";
+import Footer from "./ui/general/footer";
+import NavBar from "./ui/navbar/navbar";
+import XpLevelBarWrapper from "./components/XpLevelBarWrapper";
+import RouteChromeSync from "./components/RouteChromeSync";
 const barlow = Barlow({
   subsets: ["latin"],
   weight: ["100", "200", "300", "400", "500", "600", "700"],
@@ -49,36 +48,31 @@ export const metadata = {
 };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const headersList = await headers();
-  const pathname = headersList.get("x-pathname") || "";
-  const isTVPage = pathname === "/tv";
-
   return (
     <html lang="en">
       <body
         className={`${geistMono.variable} ${tomorrow.variable} ${barlow.variable} ${jost.variable} antialiased bg-black min-h-screen flex flex-col`}
       >
-        <SessionProviderWrapper>
+        <ClerkProvider>
           <PostHogProvider>
             <NotificationProvider>
-              <ClerkProvider>
-                <XpProvider initialXp={0}>
-                  <AnnouncementProvider>
-                    <NextSSRPlugin routerConfig={extractRouterConfig(ourFileRouter)} />
-                    <Notification />
-                    <Announcement />
-                    {!isTVPage && <NavBar />}
-                    <SpeedInsights />
+              <XpProvider initialXp={0}>
+                <AnnouncementProvider>
+                  <NextSSRPlugin routerConfig={extractRouterConfig(ourFileRouter)} />
+                  <RouteChromeSync />
+                  <Notification />
+                  <Announcement />
+                  <NavBar />
+                  <SpeedInsights />
 
-                    <main className="flex-1">{children}</main>
-                    <Footer />
-                    <XpLevelBarWrapper />
-                  </AnnouncementProvider>
-                </XpProvider>
-              </ClerkProvider>
+                  <main className="flex-1">{children}</main>
+                  <Footer />
+                  <XpLevelBarWrapper />
+                </AnnouncementProvider>
+              </XpProvider>
             </NotificationProvider>
           </PostHogProvider>
-        </SessionProviderWrapper>
+        </ClerkProvider>
       </body>
     </html>
   );

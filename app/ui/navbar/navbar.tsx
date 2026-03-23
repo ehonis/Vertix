@@ -1,7 +1,6 @@
 import Link from "next/link";
 import UserProfile from "./UserProfile";
 import HamburgerMenu from "./hamburger";
-import { SessionProvider } from "next-auth/react";
 import { Suspense } from "react";
 import ElementLoadingAnimation from "../general/element-loading-animation";
 
@@ -9,14 +8,10 @@ async function UserStuff() {
   return (
     <div className="justify-self-end">
       <div className="self-center hidden md:block cursor-pointer">
-        <SessionProvider>
-          <UserProfile />
-        </SessionProvider>
+        <UserProfile />
       </div>
       <div className="md:hidden">
-        <SessionProvider>
-          <HamburgerMenu />
-        </SessionProvider>
+        <HamburgerMenu />
       </div>
     </div>
   );

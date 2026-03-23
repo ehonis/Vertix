@@ -2,7 +2,7 @@ import Link from "next/link";
 import UpComingCompetitions from "@/app/ui/admin/competitions/upcoming-competitions";
 import { Suspense } from "react";
 import ElementLoadingAnimation from "@/app/ui/general/element-loading-animation";
-import { auth } from "@/auth";
+import { getCurrentAppSession as auth } from "@/lib/getCurrentAppUser";
 import { redirect } from "next/navigation";
 
 export default async function Page() {
@@ -11,7 +11,7 @@ export default async function Page() {
     { text: "Boulder League", url: "/admin/manager/competitions/boulder-league" },
   ];
   const session = await auth();
-  const user = session?.user || null;
+  const user = session?.user ?? null;
 
   if (!user || user.role !== "ADMIN") {
     redirect("/signin");

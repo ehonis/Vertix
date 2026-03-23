@@ -6,11 +6,11 @@ import { Suspense } from "react";
 import clsx from "clsx";
 import ElementLoadingAnimation from "../ui/general/element-loading-animation";
 import { CompetitionStatus, UserRole } from "@/generated/prisma/client";
-import { auth } from "@/auth";
+import { getCurrentAppSession as auth } from "@/lib/getCurrentAppUser";
 
 async function TestComps() {
   const session = await auth();
-  const user = session?.user;
+  const user = session?.user ?? null;
 
   if (user?.role !== UserRole.ADMIN) {
     return null;

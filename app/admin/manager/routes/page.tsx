@@ -3,7 +3,7 @@
 import Link from "next/link";
 
 import { redirect } from "next/navigation";
-import { auth } from "@/auth";
+import { getCurrentAppSession as auth } from "@/lib/getCurrentAppUser";
 import prisma from "@/prisma";
 
 import { UserRole } from "@/generated/prisma/client";
@@ -24,7 +24,7 @@ const getRoutes = async () => {
 
 export default async function Page() {
   const session = await auth();
-  const user = session?.user || null;
+  const user = session?.user ?? null;
   const routes = await getRoutes();
   const tags = await prisma.routeTag.findMany();
 

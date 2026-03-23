@@ -1,13 +1,15 @@
 "use client";
 
-import { useSession } from "next-auth/react";
+import { useAuth } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import { useEffect, useState, useRef } from "react";
 import ElementLoadingAnimation from "../ui/general/element-loading-animation";
 import { countryCodes, getDefaultCountry, type CountryCode } from "@/utils/countryCodes";
+import { useCurrentAppUser } from "@/lib/useCurrentAppUser";
 
 export default function OnboardingPage() {
-  const { data: session, status, update } = useSession();
+  const { isLoaded, isSignedIn } = useAuth();
+  const { user, isLoading: isAppUserLoading } = useCurrentAppUser();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -26,26 +28,26 @@ export default function OnboardingPage() {
   // Check if user signed up with phone number (has phoneNumber in session)
   // For web users, we'll check if they have a phoneNumber field
   // OAuth/Email users won't have phoneNumber initially
-  const isPhoneUser = session?.user && (session.user as any).phoneNumber;
+  const isPhoneUser = Boolean(user?.phoneNumber);
 
-  // Load user data from session
+  // Load user data from app user record
   useEffect(() => {
-    if (status === "authenticated" && session?.user) {
+    if (user) {
       setFormData({
-        name: session.user.name || "",
-        username: session.user.username || "",
-        phoneNumber: (session.user as any).phoneNumber ? "" : "", // Start empty for all users
-        email: session.user.email || "",
+        name: user.name || "",
+        username: user.username || "",
+        phoneNumber: "",
+        email: user.email || "",
       });
     }
-  }, [session, status]);
+  }, [user]);
 
   // Redirect if not authenticated
   useEffect(() => {
-    if (status === "unauthenticated") {
+    if (isLoaded && !isSignedIn) {
       router.push("/signin");
     }
-  }, [status, router]);
+  }, [isLoaded, isSignedIn, router]);
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -154,11 +156,7 @@ export default function OnboardingPage() {
         return;
       }
 
-      // Force session update to refresh isOnboarded status
-      await update();
-
       // Redirect to /redirect which will check onboarding status and redirect appropriately
-      // This ensures the session is properly refreshed with the updated isOnboarded status
       router.push("/redirect");
     } catch (error) {
       console.error("Onboarding error:", error);
@@ -167,7 +165,7 @@ export default function OnboardingPage() {
     }
   };
 
-  if (status === "loading") {
+  if (!isLoaded || isAppUserLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-black">
         <ElementLoadingAnimation size={7} />
@@ -175,7 +173,7 @@ export default function OnboardingPage() {
     );
   }
 
-  if (status === "unauthenticated") {
+  if (!isSignedIn || !user) {
     return null;
   }
 

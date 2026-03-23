@@ -1,5 +1,5 @@
 import prisma from "@/prisma";
-import { auth } from "@/auth";
+import { getCurrentAppSession as auth } from "@/lib/getCurrentAppUser";
 import { NextResponse, NextRequest } from "next/server";
 
 export async function POST(req: NextRequest) {

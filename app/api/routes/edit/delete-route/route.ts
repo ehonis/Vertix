@@ -1,7 +1,7 @@
 import { NextResponse, NextRequest } from "next/server";
 import prisma from "@/prisma";
 import { Route, UserRole } from "@/generated/prisma/client";
-import { auth } from "@/auth";
+import { getCurrentAppSession as auth } from "@/lib/getCurrentAppUser";
 import { removeRoutesFromAllSlides } from "@/lib/tvSlideHelpers";
 import jwt from "jsonwebtoken";
 

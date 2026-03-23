@@ -1,12 +1,12 @@
 import prisma from "@/prisma";
 import Link from "next/link";
-import { auth } from "@/auth";
+import { getCurrentAppSession as auth } from "@/lib/getCurrentAppUser";
 import SignUpForm from "@/app/ui/competitions/mixer/signup/sign-up-form";
 import { redirect } from "next/navigation";
 export default async function Signup({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const session = await auth();
-  const user = session?.user || null;
+  const user = session?.user ?? null;
 
   const competition = await prisma.mixerCompetition.findUnique({
     where: {

@@ -1,10 +1,10 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { UploadButton } from "@/utils/uploadthing";
 import { useNotification } from "@/app/contexts/NotificationContext";
 import { useRouter } from "next/navigation";
 import { User } from "@/generated/prisma/browser";
+import { useRef, useState } from "react";
 
 type ImageUploaderPopUpData = {
   onCancel: () => void;
@@ -14,49 +14,58 @@ export default function ImageUploaderPopUp({ onCancel, user }: ImageUploaderPopU
   const { showNotification } = useNotification();
 
   const router = useRouter();
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [isUploading, setIsUploading] = useState(false);
 
-  const handleImageUpload = async (url: string) => {
-    if (url) {
-      const data = { newImage: url, userId: user.id };
+  const handleImageUpload = async (file: File | null) => {
+    if (!file) {
+      showNotification({ message: "Please choose an image first", color: "red" });
+      return;
+    }
 
-      try {
-        const response = await fetch("/api/user/settings/imageUpload", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(data),
-        });
+    const formData = new FormData();
+    formData.append("image", file);
 
-        if (!response.ok) {
-          showNotification({
-            message: "Error uploading image, try again later",
-            color: "red",
-          });
-        } else {
-          showNotification({
-            message: "Successfully Uploaded Image",
-            color: "green",
-          });
+    setIsUploading(true);
 
-          router.refresh();
-          onCancel();
-        }
-      } catch (error) {
+    try {
+      const response = await fetch("/api/user/settings/imageUpload", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!response.ok) {
         showNotification({
           message: "Error uploading image, try again later",
           color: "red",
         });
+        return;
       }
-    } else {
-      showNotification({ message: "could not find image on client", color: "red" });
+
+      showNotification({
+        message: "Successfully uploaded image",
+        color: "green",
+      });
+
+      router.refresh();
+      onCancel();
+    } catch {
+      showNotification({
+        message: "Error uploading image, try again later",
+        color: "red",
+      });
+    } finally {
+      setIsUploading(false);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
     }
   };
+
   const handleRemoveImage = async () => {
-    const data = { userId: user.id };
     try {
       const response = await fetch("/api/user/settings/removeImage", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
       });
       if (!response.ok) {
         showNotification({
@@ -109,20 +118,26 @@ export default function ImageUploaderPopUp({ onCancel, user }: ImageUploaderPopU
           </button>
           <h2 className="text-xl">Upload Image</h2>
 
-          <UploadButton
-            className="m-4 ut-button:bg-blue-500/25 ut-button:outline-2 ut-button:outline-blue-500 ut-button:ut-readying:bg-blue-500-500/50 ut-allowed-content:text-white "
-            endpoint="imageUploader"
-            onClientUploadComplete={res => {
-              handleImageUpload(res[0].ufsUrl);
-            }}
-            onUploadError={error => {
-              console.log(error);
-              showNotification({
-                message: "Could not uploaded image",
-                color: "red",
-              });
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            className="hidden"
+            onChange={event => {
+              const file = event.target.files?.[0] ?? null;
+              handleImageUpload(file);
             }}
           />
+
+          <button
+            type="button"
+            className="m-4 rounded-md bg-blue-500/25 p-2 font-bold text-white outline outline-2 outline-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
+            onClick={() => fileInputRef.current?.click()}
+            disabled={isUploading}
+          >
+            {isUploading ? "Uploading..." : "Choose image from device"}
+          </button>
+
           {user.image && (
             <button
               className="bg-red-500 text-white p-1 rounded-md font-bold"

@@ -1,11 +1,11 @@
 import SettingsNavBar from "@/app/ui/profile/settings/settings-nav-bar";
 import { redirect } from "next/navigation";
-import { auth } from "@/auth";
 import prisma from "@/prisma";
 import SignOut from "@/app/ui/general/sign-out-button";
+import { getCurrentAppUser } from "@/lib/getCurrentAppUser";
 
 export default async function Settings({ params }: { params: Promise<{ slug: string }> }) {
-  const session = await auth();
+  const currentUser = await getCurrentAppUser();
   const { slug } = await params;
 
   const user = await prisma.user.findUnique({
@@ -14,7 +14,7 @@ export default async function Settings({ params }: { params: Promise<{ slug: str
     },
   });
 
-  if (user && user.id === session?.user?.id) {
+  if (user && currentUser && user.id === currentUser.id) {
     return (
       <div className="w-screen flex flex-col items-center px-5 ">
         <div className="px-4 pt-2 flex flex-col gap-4 items-center w-full">

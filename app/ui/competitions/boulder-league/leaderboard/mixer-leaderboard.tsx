@@ -3,11 +3,11 @@ import clsx from "clsx";
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { ClimberStanding, DivisionStanding, Score } from "@/lib/mixers-shared";
-import { User } from "next-auth";
 import { MixerCompetition } from "@/generated/prisma/browser";
+import { AppUser } from "@/lib/appUser";
 type Props = {
   comp: MixerCompetition;
-  user: User | null;
+  user: AppUser | null;
   combinedScores: ClimberStanding[];
   adjustedRankings: DivisionStanding[];
   boulderScoresRanked: Score[];

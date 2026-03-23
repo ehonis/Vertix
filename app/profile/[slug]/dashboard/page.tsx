@@ -1,6 +1,6 @@
 import prisma from "@/prisma";
-import { auth } from "@/auth";
 import { redirect } from "next/navigation";
+import { getCurrentAppUser } from "@/lib/getCurrentAppUser";
 
 import { getCompletionData, getAttemptsData } from "@/lib/dashboard";
 import PyramidGraph from "@/app/ui/profile/dashboard/pyramid-graph";
@@ -14,9 +14,9 @@ import XpLevelDisplay from "@/app/ui/profile/dashboard/xp-level-display";
 export const revalidate = 100;
 
 export default async function Dashboard({ params }: { params: Promise<{ slug: string }> }) {
-  const session = await auth();
+  const currentUser = await getCurrentAppUser();
 
-  if (!session?.user) {
+  if (!currentUser) {
     redirect("/signin");
     return;
   }
@@ -31,7 +31,7 @@ export default async function Dashboard({ params }: { params: Promise<{ slug: st
     where: { username: slug },
   });
 
-  if (!user || user.username !== session?.user?.username) {
+  if (!user || user.id !== currentUser.id) {
     redirect("/signin");
   }
 

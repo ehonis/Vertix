@@ -1,5 +1,5 @@
 import { NextResponse, NextRequest } from "next/server";
-import { auth } from "@/auth";
+import { getCurrentAppSession as auth } from "@/lib/getCurrentAppUser";
 import { calculateStandings, calculateStandingsWithAverageDownwardMovement } from "@/lib/mixers";
 export async function POST(req: NextRequest) {
   const session = await auth();

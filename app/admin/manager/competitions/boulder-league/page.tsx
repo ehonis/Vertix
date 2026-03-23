@@ -2,13 +2,13 @@ import Link from "next/link";
 import { Suspense } from "react";
 import ElementLoadingAnimation from "@/app/ui/general/element-loading-animation";
 import { CompetitionStatus } from "@/generated/prisma/client";
-import { auth } from "@/auth";
+import { getCurrentAppSession as auth } from "@/lib/getCurrentAppUser";
 import { redirect } from "next/navigation";
 import BoulderLeagueCompetitions from "@/app/ui/admin/competitions/boulder-league/boulder-competitions";
 
 export default async function BoulderLeagueManager() {
   const session = await auth();
-  const user = session?.user;
+  const user = session?.user ?? null;
   if (!user || user.role !== "ADMIN") {
     redirect("/signin");
   }

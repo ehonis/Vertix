@@ -10,9 +10,9 @@ import clsx from "clsx";
 import Link from "next/link";
 
 import "swiper/css";
-import { User } from "next-auth";
+import { AppUser } from "@/lib/appUser";
 
-export default function LandingComponent({ user }: { user: User | null }) {
+export default function LandingComponent({ user }: { user: AppUser | null }) {
   const [displayText, setDisplayText] = useState("");
   const [wordIndex, setWordIndex] = useState(0);
   const [charIndex, setCharIndex] = useState(0);
@@ -59,9 +59,7 @@ export default function LandingComponent({ user }: { user: User | null }) {
   return (
     <div className="relative flex flex-col md:grid md:grid-cols-2 md:flex-none justify-between items-center md:items-center w-full text-white p-5 md:pr-20 h-[calc(100svh)] md:h-lvh font-barlow -mt-[48px] md:-mt-[65px]">
       {/* Radial gradient with center at bottom right corner */}
-      {/* <div className="md:hidden mt-16 text-center">
-        <Announcement />
-      </div> */}
+      <div className="md:hidden mt-16 text-center">{/* <Announcement /> */}</div>
       <div className="z-20 text-6xl lg:text-8xl font-barlow font-light text-center flex flex-col gap-3 mt-8 md:mt-0 ">
         <div className="flex flex-col">
           <p>A new </p> <p>way to</p>

@@ -1,6 +1,6 @@
-import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import Link from "next/link";
+import { getCurrentAppUser } from "@/lib/getCurrentAppUser";
 
 interface AdminPanel {
   text: string;
@@ -9,8 +9,7 @@ interface AdminPanel {
 }
 
 export default async function AdminCenter() {
-  const session = await auth();
-  const user = session?.user || null;
+  const user = await getCurrentAppUser();
 
   if (!user) {
     redirect("/signin");

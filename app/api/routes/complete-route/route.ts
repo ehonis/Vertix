@@ -1,6 +1,6 @@
 import prisma from "@/prisma";
 import { NextResponse, NextRequest } from "next/server";
-import { auth } from "@/auth";
+import { getCurrentAppSession as auth } from "@/lib/getCurrentAppUser";
 import { RouteType, User } from "@/generated/prisma/client";
 import {
   findIfBoulderGradeIsHigher,

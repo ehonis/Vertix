@@ -1,13 +1,31 @@
 import prisma from "@/prisma";
 import { NextResponse, NextRequest } from "next/server";
+import { auth, clerkClient } from "@clerk/nextjs/server";
 
 export async function POST(req: NextRequest) {
   try {
-    const { newImage, userId } = await req.json();
+    const { userId } = await auth();
+
+    if (!userId) {
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+    }
+
+    const formData = await req.formData();
+    const image = formData.get("image");
+
+    if (!(image instanceof File)) {
+      return NextResponse.json({ message: "Image file is required" }, { status: 400 });
+    }
+
+    const clerk = await clerkClient();
+    const clerkUser = await clerk.users.updateUserProfileImage(userId, {
+      file: image,
+    });
+
     await prisma.user.update({
-      where: { id: userId },
+      where: { clerkId: userId },
       data: {
-        image: newImage,
+        image: clerkUser.imageUrl,
       },
     });
 

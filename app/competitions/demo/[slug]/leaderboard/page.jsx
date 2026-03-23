@@ -2,7 +2,7 @@ import prisma from "@/prisma";
 import { formatMixerDataFromDatabase, calculateScores } from "@/lib/mixer";
 import { unstable_cache } from "next/cache";
 import MixerLeaderBoard from "@/app/ui/competitions/demo/mixer-demo/mixer-leaderboard/mixer-leaderboard";
-import { auth } from "@/auth";
+import { getCurrentAppSession as auth } from "@/lib/getCurrentAppUser";
 
 const getBoulderScores = async id => {
   return await prisma.MixerBoulderScore.findMany({
@@ -72,7 +72,7 @@ export default async function MixerDemoLeaderboard({ params }) {
   const { combinedScores, adjustedRankings, boulderScoresRanked, ropeScoresRanked } =
     calculateScores(formattedBoulderScores, formattedRopeScores, formattedDivisions);
   const session = await auth();
-  const user = session?.user || null;
+  const user = session?.user ?? null;
   return (
     <>
       <MixerLeaderBoard

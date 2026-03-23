@@ -1,12 +1,14 @@
-import { auth } from "@/auth";
 import { redirect } from "next/navigation";
+import { getCurrentAppUser } from "@/lib/getCurrentAppUser";
 
 export default async function profile() {
-  const session = await auth();
-  if (!session) {
+  const user = await getCurrentAppUser();
+
+  if (!user) {
     redirect("/");
   } else {
-    redirect(`/profile/${session.user.username}`);
+    redirect(`/profile/${user.username ?? user.id}`);
   }
+
   return <div>Redirecting to Profile</div>;
 }

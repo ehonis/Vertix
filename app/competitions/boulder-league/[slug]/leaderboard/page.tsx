@@ -1,11 +1,12 @@
 import prisma from "@/prisma";
 
 import MixerLeaderBoard from "../../../../ui/competitions/mixer/leaderboard/mixer-leaderboard";
-import { auth } from "@/auth";
+import { getCurrentAppSession as auth } from "@/lib/getCurrentAppUser";
 import ThreeDotLoading from "@/app/ui/general/three-dot-loading";
 import { StandingsType } from "@/generated/prisma/client";
 import { calculateStandings, calculateStandingsWithAverageDownwardMovement } from "@/lib/mixers";
 import { ClimberStanding, DivisionStanding, Score } from "@/lib/mixers";
+import { normalizeAppUser } from "@/lib/appUser";
 
 export default async function MixerDemoLeaderboard({
   params,
@@ -81,7 +82,7 @@ export default async function MixerDemoLeaderboard({
   }
 
   const session = await auth();
-  const user = session?.user || null;
+  const user = normalizeAppUser(session?.user ?? null);
 
   if (combinedScores.length < 3) {
     return (

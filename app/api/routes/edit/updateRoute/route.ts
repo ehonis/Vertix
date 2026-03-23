@@ -2,22 +2,22 @@ import { NextResponse, NextRequest } from "next/server";
 import prisma from "@/prisma";
 import { Prisma } from "@/generated/prisma/client";
 import { addRouteToFeaturedSlide, removeRouteFromAllSlides } from "@/lib/tvSlideHelpers";
-import { auth } from "@/auth";
 import jwt from "jsonwebtoken";
 import { UserRole } from "@/generated/prisma/client";
+import { getCurrentAppUser } from "@/lib/getCurrentAppUser";
 
-async function getUserIdAndRole(request: NextRequest): Promise<{ userId: string; role: UserRole } | null> {
-  const session = await auth();
-  if (session?.user?.id && session.user.role) {
-    return { userId: session.user.id, role: session.user.role as UserRole };
+async function getUserIdAndRole(
+  request: NextRequest
+): Promise<{ userId: string; role: UserRole } | null> {
+  const currentUser = await getCurrentAppUser();
+  if (currentUser?.id && currentUser.role) {
+    return { userId: currentUser.id, role: currentUser.role as UserRole };
   }
   const authHeader = request.headers.get("authorization");
   if (authHeader?.startsWith("Bearer ")) {
     const token = authHeader.substring(7);
     const jwtSecret =
-      process.env.JWT_SECRET ||
-      process.env.AUTH_SECRET ||
-      "your-secret-key-change-in-production";
+      process.env.JWT_SECRET || process.env.AUTH_SECRET || "your-secret-key-change-in-production";
     try {
       const decoded = jwt.verify(token, jwtSecret) as { userId: string };
       const user = await prisma.user.findUnique({
@@ -42,7 +42,8 @@ export async function PATCH(request: NextRequest) {
     return NextResponse.json({ message: "Not Authorized" }, { status: 403 });
   }
 
-  const { routeId, newTitle, newType, newGrade, newDate, newLocation, newX, newY } = await request.json();
+  const { routeId, newTitle, newType, newGrade, newDate, newLocation, newX, newY } =
+    await request.json();
 
   try {
     const currentRoute = await prisma.route.findUnique({

@@ -2,13 +2,13 @@ import Link from "next/link";
 import { Suspense } from "react";
 import ElementLoadingAnimation from "@/app/ui/general/element-loading-animation";
 import { CompetitionStatus } from "@/generated/prisma/client";
-import { auth } from "@/auth";
+import { getCurrentAppSession as auth } from "@/lib/getCurrentAppUser";
 import { redirect } from "next/navigation";
 import MixerCompetitions from "@/app/ui/admin/competitions/mixer/mixer-competitions";
 
 export default async function MixerManager() {
   const session = await auth();
-  const user = session?.user;
+  const user = session?.user ?? null;
   if (!user || user.role !== "ADMIN") {
     redirect("/signin");
   }

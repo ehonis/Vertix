@@ -3,12 +3,11 @@ import Image from "next/image";
 import { useState, useRef, useEffect } from "react";
 import clsx from "clsx";
 import Link from "next/link";
-import { useSession } from "next-auth/react";
 import SignOut from "../general/sign-out-button";
+import { useCurrentAppUser } from "@/lib/useCurrentAppUser";
 
 export default function UserProfile() {
-  const { data: session } = useSession();
-  const user = session?.user;
+  const { user } = useCurrentAppUser();
 
   const [isProfilePopUp, setIsProfilePopUp] = useState(false);
 

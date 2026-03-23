@@ -4,11 +4,10 @@ import { useState } from "react";
 import Link from "next/link";
 import SignOut from "../general/sign-out-button";
 import Image from "next/image";
-import { useSession } from "next-auth/react";
+import { useCurrentAppUser } from "@/lib/useCurrentAppUser";
 
 export default function HamburgerMenu() {
-  const { data: session } = useSession();
-  const user = session?.user;
+  const { user } = useCurrentAppUser();
   const [isOpen, setIsOpen] = useState(false);
 
   const handleClick = () => {

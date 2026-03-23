@@ -1,6 +1,6 @@
 import Link from "next/link";
 import prisma from "@/prisma";
-import { auth } from "@/auth";
+import { getCurrentAppSession as auth } from "@/lib/getCurrentAppUser";
 import { CompetitionStatus, ClimberStatus } from "@/generated/prisma/client";
 import { redirect } from "next/navigation";
 import Image from "next/image";
@@ -19,7 +19,7 @@ export default async function page({ params }: { params: Promise<{ slug: string 
   }
 
   const session = await auth();
-  const user = session?.user || null;
+  const user = session?.user ?? null;
 
   let climberExists = null;
 

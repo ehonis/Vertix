@@ -1,4 +1,4 @@
-import { auth } from "@/auth";
+import { getCurrentAppSession as auth } from "@/lib/getCurrentAppUser";
 import prisma from "@/prisma";
 import Leaderboard from "../ui/leaderboard/leaderboard";
 
@@ -6,7 +6,7 @@ import { User } from "@/generated/prisma/client";
 
 export default async function LeaderboardPage() {
   const session = await auth();
-  const user = session?.user;
+  const user = session?.user ?? null;
 
   // Add user check
   if (!user) {

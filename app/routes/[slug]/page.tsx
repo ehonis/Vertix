@@ -11,7 +11,7 @@ import { findDaysOld, formatDateMMDDYY } from "@/lib/date";
 import Image from "next/image";
 import clsx from "clsx";
 
-import { auth } from "@/auth";
+import { getCurrentAppSession as auth } from "@/lib/getCurrentAppUser";
 import Link from "next/link";
 import prisma from "@/prisma";
 import StarRating from "@/app/ui/general/star-rating";
@@ -243,7 +243,7 @@ function StatCard({ value, label }: { value: number; label: string }) {
 
 export default async function IndividualRoute({ params }: { params: Promise<{ slug: string }> }) {
   const session = await auth();
-  const user = session?.user || null;
+  const user = session?.user ?? null;
   const { slug } = await params;
   const routeId = slug;
 

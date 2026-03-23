@@ -1,4 +1,4 @@
-import { auth } from "@/auth";
+import { getCurrentAppSession as auth } from "@/lib/getCurrentAppUser";
 import { redirect } from "next/navigation";
 
 import Link from "next/link";
@@ -8,7 +8,7 @@ import UserEditor from "@/app/ui/admin/user-edit/userEditor";
 
 export default async function UserAdmin() {
   const session = await auth();
-  const user = session?.user || null;
+  const user = session?.user ?? null;
 
   if (!user || user?.role !== "ADMIN") {
     redirect("/signin");

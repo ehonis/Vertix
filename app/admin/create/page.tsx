@@ -1,11 +1,11 @@
-import { auth } from "@/auth";
+import { getCurrentAppSession as auth } from "@/lib/getCurrentAppUser";
 import NewWrapper from "@/app/ui/admin/new/new-wrapper";
 import { redirect } from "next/navigation";
 import prisma from "@/prisma";
 
 export default async function Page() {
   const session = await auth();
-  const user = session?.user || null;
+  const user = session?.user ?? null;
 
   if (!user || user.role !== "ADMIN") {
     redirect("/signin");

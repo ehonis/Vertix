@@ -1,10 +1,10 @@
-import { auth } from "@/auth";
+import { getCurrentAppSession as auth } from "@/lib/getCurrentAppUser";
 import RoutesPage from "../ui/routes/routes-page";
 import { User } from "@/generated/prisma/client";
 
 export default async function RoutePage() {
   const session = await auth();
-  const user = session?.user || null;
+  const user = session?.user ?? null;
 
   return (
     <>

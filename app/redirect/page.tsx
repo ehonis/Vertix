@@ -1,11 +1,10 @@
-import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import prisma from "@/prisma";
 import ElementLoadingAnimation from "../ui/general/element-loading-animation";
+import { getCurrentAppUser } from "@/lib/getCurrentAppUser";
 
 export default async function Redirect() {
-  const session = await auth();
-  const user = session?.user;
+  const user = await getCurrentAppUser();
 
   if (!user) {
     redirect("/signin");
@@ -43,8 +42,8 @@ export default async function Redirect() {
     return null;
   }
 
-  // Redirect to home
-  redirect("/");
+  // Redirect signed-in users to routes by default
+  redirect("/routes");
 
   return (
     <div className="flex flex-col h-screen-of-screen w-screen items-center justify-center font-barlow font-bold text-2xl">

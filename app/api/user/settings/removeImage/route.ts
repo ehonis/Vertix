@@ -1,11 +1,20 @@
 import prisma from "@/prisma";
-import { NextResponse, NextRequest } from "next/server";
+import { NextResponse } from "next/server";
+import { auth, clerkClient } from "@clerk/nextjs/server";
 
-export async function POST(req: NextRequest) {
+export async function POST() {
   try {
-    const { userId } = await req.json();
+    const { userId } = await auth();
+
+    if (!userId) {
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+    }
+
+    const clerk = await clerkClient();
+    await clerk.users.deleteUserProfileImage(userId);
+
     await prisma.user.update({
-      where: { id: userId },
+      where: { clerkId: userId },
       data: {
         image: null,
       },

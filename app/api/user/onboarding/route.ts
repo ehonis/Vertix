@@ -1,18 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
-import { auth } from "@/auth";
 import prisma from "@/prisma";
 import jwt from "jsonwebtoken";
+import { getCurrentAppUser } from "@/lib/getCurrentAppUser";
 
 export async function POST(req: NextRequest) {
   try {
     let userId: string | null = null;
-    
+
     // Check for JWT token (mobile authentication)
     const authHeader = req.headers.get("authorization");
     if (authHeader && authHeader.startsWith("Bearer ")) {
       const token = authHeader.substring(7);
       const jwtSecret = process.env.JWT_SECRET || process.env.AUTH_SECRET;
-      
+
       if (jwtSecret) {
         try {
           const decoded = jwt.verify(token, jwtSecret) as { userId: string };
@@ -22,30 +22,24 @@ export async function POST(req: NextRequest) {
         }
       }
     }
-    
-    // If no JWT token, check for NextAuth session (web authentication)
+
+    // If no JWT token, check for Clerk-backed web authentication
     if (!userId) {
-      const session = await auth();
-      if (session?.user?.id) {
-        userId = session.user.id;
+      const user = await getCurrentAppUser();
+      if (user?.id) {
+        userId = user.id;
       }
     }
 
     if (!userId) {
-      return NextResponse.json(
-        { error: "Unauthorized" },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const { name, username, phoneNumber, email } = await req.json();
 
     // Validate required fields
     if (!name || !name.trim()) {
-      return NextResponse.json(
-        { error: "Name is required", field: "name" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Name is required", field: "name" }, { status: 400 });
     }
 
     if (!username || !username.trim()) {
@@ -58,20 +52,26 @@ export async function POST(req: NextRequest) {
     // Validate username format
     if (!/^[a-zA-Z0-9_-]+$/.test(username)) {
       return NextResponse.json(
-        { error: "Username can only contain letters, numbers, underscores, and hyphens", field: "username" },
+        {
+          error: "Username can only contain letters, numbers, underscores, and hyphens",
+          field: "username",
+        },
         { status: 400 }
       );
     }
 
     // Phone number is optional - only validate if provided
     let cleanPhone: string | null = null;
-    if (phoneNumber && typeof phoneNumber === 'string' && phoneNumber.trim()) {
+    if (phoneNumber && typeof phoneNumber === "string" && phoneNumber.trim()) {
       // Validate phone number format (E.164)
       const phoneRegex = /^\+[1-9]\d{1,14}$/;
       const cleaned = phoneNumber.replace(/\s/g, "");
       if (!phoneRegex.test(cleaned)) {
         return NextResponse.json(
-          { error: "Please enter a valid phone number with country code (e.g., +1234567890)", field: "phoneNumber" },
+          {
+            error: "Please enter a valid phone number with country code (e.g., +1234567890)",
+            field: "phoneNumber",
+          },
           { status: 400 }
         );
       }
@@ -173,4 +173,3 @@ export async function POST(req: NextRequest) {
     );
   }
 }
-

@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import prisma from "@/prisma";
 import { UserRole } from "@/generated/prisma/client";
-import { auth } from "@/auth";
+import { getCurrentAppSession as auth } from "@/lib/getCurrentAppUser";
 
 import { TransformedRoute } from "@/app/ui/admin/route-edit/new-route-popup";
 export async function PATCH(req: Request) {

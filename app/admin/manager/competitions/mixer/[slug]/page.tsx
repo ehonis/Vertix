@@ -2,7 +2,7 @@ export const dynamic = "force-dynamic";
 
 import Link from "next/link";
 import prisma from "@/prisma";
-import { auth } from "@/auth";
+import { getCurrentAppSession as auth } from "@/lib/getCurrentAppUser";
 import { redirect } from "next/navigation";
 import VariablesComponent from "@/app/ui/admin/competitions/mixer/individualMixerManagerPage/components/variables/variables-component";
 import RoutesComponent from "@/app/ui/admin/competitions/mixer/individualMixerManagerPage/components/routes/routes-component";
@@ -13,7 +13,7 @@ import TerminalComponent from "@/app/ui/admin/competitions/mixer/individualMixer
 
 export default async function page({ params }: { params: Promise<{ slug: string }> }) {
   const session = await auth();
-  const user = session?.user || null;
+  const user = session?.user ?? null;
   if (!user || user.role !== "ADMIN") {
     redirect("/signin");
   }

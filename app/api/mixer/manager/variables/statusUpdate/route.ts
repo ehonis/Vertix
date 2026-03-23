@@ -1,6 +1,6 @@
 import prisma from "@/prisma";
 import { NextRequest, NextResponse } from "next/server";
-import { auth } from "@/auth";
+import { getCurrentAppSession as auth } from "@/lib/getCurrentAppUser";
 import { CompetitionStatus } from "@/generated/prisma/client";
 export async function POST(req: NextRequest) {
   const session = await auth();
