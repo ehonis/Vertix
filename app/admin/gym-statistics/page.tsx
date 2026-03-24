@@ -1,39 +1,44 @@
-import prisma from "@/prisma";
-import { RouteType } from "@/generated/prisma/client";
+import { api } from "@/convex/_generated/api";
+import { createConvexServerClient } from "@/lib/convexServer";
 import ClientGraph from "@/app/ui/admin/gym-statistics/client-graph";
+import type { RouteStatsRoute } from "@/lib/routeStats";
 
 const getCurrentRopesABExcluded = async () => {
-  const currentRoutes = await prisma?.route.findMany({
-    where: {
-      isArchive: false,
-      location: {
-        not: "ABWall",
-      },
-      type: RouteType.ROPE,
-    },
-  });
-  return currentRoutes;
+  const routes = await getAllRoutes();
+  return routes.filter(
+    route => !route.isArchive && route.type === "ROPE" && route.location !== "ABWall"
+  );
 };
 
 const getCurrentBoulders = async () => {
-  const currentBoulders = await prisma?.route.findMany({
-    where: {
-      isArchive: false,
-      type: RouteType.BOULDER,
-    },
-  });
-  return currentBoulders;
+  const routes = await getAllRoutes();
+  return routes.filter(route => !route.isArchive && route.type === "BOULDER");
 };
 const getAutoBelayRoutes = async () => {
-  const autoBelayRoutes = await prisma?.route.findMany({
-    where: {
-      isArchive: false,
-      type: RouteType.ROPE,
-      location: "ABWall",
-    },
-  });
-  return autoBelayRoutes;
+  const routes = await getAllRoutes();
+  return routes.filter(
+    route => !route.isArchive && route.type === "ROPE" && route.location === "ABWall"
+  );
 };
+
+async function getAllRoutes(): Promise<Array<RouteStatsRoute & { location: string }>> {
+  const result = await createConvexServerClient().query(api.routes.searchRoutes, {
+    text: "",
+    take: 10000,
+    skip: 0,
+  });
+
+  return result.data.map(route => ({
+    id: route.id,
+    title: route.title,
+    grade: route.grade,
+    type: route.type,
+    color: route.color,
+    setDate: new Date(route.setDate),
+    isArchive: route.isArchive,
+    location: route.location,
+  }));
+}
 
 export default async function GymStatistics() {
   const currentRopesABExcluded = await getCurrentRopesABExcluded();

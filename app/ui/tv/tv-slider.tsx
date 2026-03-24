@@ -10,35 +10,7 @@ import LogoSlide from "./logo-slide";
 
 import GymStatsSlide from "./gym-stats-slide";
 import FeaturedRoutes from "./featured-routes";
-import { Route, RouteImage, TVSlide } from "@/generated/prisma/browser";
-
-type RouteWithImages = Route & {
-  images: RouteImage[];
-};
-
-type MonthlyLeaderBoardData = {
-  user: {
-    name: string | null;
-    id: string;
-    totalXp: number;
-    username: string | null;
-    image: string | null;
-  };
-  xp: number;
-}[];
-
-type TVData = {
-  slides: extendedTVSlide[];
-  monthlyLeaderBoardData: MonthlyLeaderBoardData;
-  boulderGradeCounts: { grade: string; count: number }[];
-  ropeGradeCounts: { grade: string; count: number }[];
-  ropeTotal: number;
-  boulderTotal: number;
-};
-
-type extendedTVSlide = TVSlide & {
-  routes: RouteWithImages[];
-};
+import type { TVData, TVSlide } from "@/lib/tvTypes";
 
 export default function TVSlider({
   slides: initialSlides,
@@ -48,8 +20,8 @@ export default function TVSlider({
   ropeTotal: initialRopeTotal,
   boulderTotal: initialBoulderTotal,
 }: {
-  slides: extendedTVSlide[];
-  monthlyLeaderBoardData: MonthlyLeaderBoardData;
+  slides: TVSlide[];
+  monthlyLeaderBoardData: TVData["monthlyLeaderBoardData"];
   boulderGradeCounts: { grade: string; count: number }[];
   ropeGradeCounts: { grade: string; count: number }[];
   ropeTotal: number;

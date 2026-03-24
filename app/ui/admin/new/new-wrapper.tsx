@@ -6,7 +6,6 @@ import ErrorPopUp from "./error-pop-up";
 import { useNotification } from "@/app/contexts/NotificationContext";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import type { RouteTag } from "@/generated/prisma/browser";
 import type { LegacyLocationKey } from "@/lib/wallLocations";
 import React from "react";
 
@@ -19,7 +18,7 @@ type routeData = {
   wall: LegacyLocationKey;
   type: string;
 };
-export default function NewWrapper({ tags }: { tags: RouteTag[] }) {
+export default function NewWrapper({ tags }: { tags: Array<{ name: string }> }) {
   const { showNotification } = useNotification();
   const router = useRouter();
   const options = ["Route"];

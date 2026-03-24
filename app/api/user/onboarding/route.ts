@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import prisma from "@/prisma";
 import jwt from "jsonwebtoken";
 import { getCurrentAppUser } from "@/lib/getCurrentAppUser";
+import { api } from "@/convex/_generated/api";
+import { createConvexServerClient } from "@/lib/convexServer";
 
 export async function POST(req: NextRequest) {
   try {
@@ -79,11 +80,12 @@ export async function POST(req: NextRequest) {
     }
 
     // Check if username is already taken
-    const existingUser = await prisma.user.findUnique({
-      where: { username: username.trim() },
+    const convex = createConvexServerClient();
+    const existingUser = await convex.query(api.users.getUserByUsername, {
+      username: username.trim(),
     });
 
-    if (existingUser && existingUser.id !== userId) {
+    if (existingUser && existingUser._id !== userId) {
       return NextResponse.json(
         { error: "Username is already taken", field: "username" },
         { status: 400 }
@@ -92,11 +94,11 @@ export async function POST(req: NextRequest) {
 
     // Check if phone number is already taken (only if provided)
     if (cleanPhone) {
-      const existingPhone = await prisma.user.findUnique({
-        where: { phoneNumber: cleanPhone },
+      const existingPhone = await convex.query(api.users.getUserByPhoneNumber, {
+        phoneNumber: cleanPhone,
       });
 
-      if (existingPhone && existingPhone.id !== userId) {
+      if (existingPhone && existingPhone._id !== userId) {
         return NextResponse.json(
           { error: "Phone number is already registered", field: "phoneNumber" },
           { status: 400 }
@@ -115,11 +117,11 @@ export async function POST(req: NextRequest) {
       }
 
       // Check if email is already taken (unless it's the current user's email)
-      const existingEmail = await prisma.user.findUnique({
-        where: { email: email.trim() },
+      const existingEmail = await convex.query(api.users.getUserByEmail, {
+        email: email.trim(),
       });
 
-      if (existingEmail && existingEmail.id !== userId) {
+      if (existingEmail && existingEmail._id !== userId) {
         return NextResponse.json(
           { error: "Email is already registered", field: "email" },
           { status: 400 }
@@ -150,19 +152,23 @@ export async function POST(req: NextRequest) {
       updateData.email = email.trim();
     }
 
-    const updatedUser = await prisma.user.update({
-      where: { id: userId },
-      data: updateData,
+    const updatedUser = await convex.mutation(api.users.updateUserProfile, {
+      userId: userId as any,
+      name: updateData.name,
+      username: updateData.username,
+      phoneNumber: updateData.phoneNumber ?? null,
+      email: updateData.email ?? null,
+      isOnboarded: true,
     });
 
     return NextResponse.json({
       message: "Onboarding completed successfully",
       user: {
-        id: updatedUser.id,
-        name: updatedUser.name,
-        username: updatedUser.username,
-        phoneNumber: updatedUser.phoneNumber,
-        isOnboarded: updatedUser.isOnboarded,
+        id: updatedUser?._id,
+        name: updatedUser?.name,
+        username: updatedUser?.username,
+        phoneNumber: updatedUser?.phoneNumber,
+        isOnboarded: updatedUser?.isOnboarded,
       },
     });
   } catch (error: any) {

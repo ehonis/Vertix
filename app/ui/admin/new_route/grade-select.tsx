@@ -3,7 +3,8 @@
 import RopeGradeSelect from "./rope-grade-select";
 import BoulderGradeSelect from "./boulder-grade-select";
 import { useState } from "react";
-import { RouteType } from "@/generated/prisma/browser";
+
+type RouteType = "BOULDER" | "ROPE";
 
 export default function GradeSelect({ onGradeChange }: { onGradeChange: (grade: string) => void }) {
   const [type, setType] = useState<RouteType | undefined>(undefined);

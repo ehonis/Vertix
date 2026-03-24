@@ -4,29 +4,43 @@ import Link from "next/link";
 
 import { redirect } from "next/navigation";
 import { getCurrentAppSession as auth } from "@/lib/getCurrentAppUser";
-import prisma from "@/prisma";
-
-import { UserRole } from "@/generated/prisma/client";
 import NewRouteButton from "@/app/ui/admin/route-edit/new-route-button";
 import RouteEditListByWall from "@/app/ui/admin/route-edit/route-edit-list-by-wall";
+import { api } from "@/convex/_generated/api";
+import { createConvexServerClient } from "@/lib/convexServer";
 
 const getRoutes = async () => {
-  const routes = await prisma.route.findMany({
-    where: {
-      isArchive: false,
-    },
-    orderBy: [{ x: "asc" }, { y: "asc" }, { setDate: "asc" }],
+  const result = await createConvexServerClient().query(api.routes.searchRoutes, {
+    text: "",
+    take: 10000,
+    skip: 0,
   });
-  return routes;
+  return result.data
+    .filter(route => !route.isArchive)
+    .map(route => ({
+      id: route.id,
+      title: route.title,
+      grade: route.grade,
+      color: route.color,
+      setDate: new Date(route.setDate),
+      type: route.type,
+      location: route.location,
+      x: route.x,
+      y: route.y,
+      order: route.order,
+      isArchive: route.isArchive,
+      xp: route.xp,
+      bonusXp: route.bonusXp,
+      createdByUserID: null,
+    }));
 };
 
 export default async function Page() {
   const session = await auth();
   const user = session?.user ?? null;
   const routes = await getRoutes();
-  const tags = await prisma.routeTag.findMany();
 
-  if (user?.role !== UserRole.ADMIN && user?.role !== UserRole.ROUTE_SETTER) {
+  if (user?.role !== "ADMIN" && user?.role !== "ROUTE_SETTER") {
     redirect("/signin");
   } else {
     return (
@@ -50,7 +64,7 @@ export default async function Page() {
               </svg>
               <p className="font-barlow font-bold text-xs text-white">Admin Center</p>
             </Link>
-            <NewRouteButton tags={tags} />
+            <NewRouteButton tags={[]} />
           </div>
 
           <RouteEditListByWall routes={routes} />

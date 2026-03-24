@@ -1,16 +1,18 @@
 import { NextResponse } from "next/server";
-import { RouteType, UserRole } from "@/generated/prisma/client";
 import { getCurrentAppSession as auth } from "@/lib/getCurrentAppUser";
 import { getRouteXp } from "@/lib/route";
 import { api } from "@/convex/_generated/api";
 import { createConvexServerClient } from "@/lib/convexServer";
 import { toWallPartKey } from "@/lib/wallLocations";
 
+const ADMIN = "ADMIN";
+const ROUTE_SETTER = "ROUTE_SETTER";
+
 export async function POST(req: Request) {
   const session = await auth();
   if (!session) {
     return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
-  } else if (session.user.role != UserRole.ADMIN && session.user.role != UserRole.ROUTE_SETTER) {
+  } else if (session.user.role != ADMIN && session.user.role != ROUTE_SETTER) {
     return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
   }
 
@@ -39,7 +41,7 @@ export async function POST(req: Request) {
     setDate: new Date(newRoute.date).getTime(),
     sortOrder: newRoute.order ?? undefined,
     wallPart,
-    type: newRoute.type as RouteType,
+    type: newRoute.type,
     color: newRoute.color,
     xp: routeXp,
     createdByUserId: session.user.id as any,

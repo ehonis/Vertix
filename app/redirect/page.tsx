@@ -1,7 +1,8 @@
 import { redirect } from "next/navigation";
-import prisma from "@/prisma";
 import ElementLoadingAnimation from "../ui/general/element-loading-animation";
 import { getCurrentAppUser } from "@/lib/getCurrentAppUser";
+import { api } from "@/convex/_generated/api";
+import { createConvexServerClient } from "@/lib/convexServer";
 
 export default async function Redirect() {
   const user = await getCurrentAppUser();
@@ -12,20 +13,9 @@ export default async function Redirect() {
   }
 
   // Check if user needs onboarding
-  const dbUser = await prisma.user.findUnique({
-    where: { id: user.id },
-    select: { isOnboarded: true, username: true, phoneNumber: true },
+  const dbUser = await createConvexServerClient().query(api.users.getUserById, {
+    userId: user.id as any,
   });
-
-  // If user was created by NextAuth and doesn't have isOnboarded set, set it to false
-  if (dbUser && dbUser.isOnboarded === null) {
-    await prisma.user.update({
-      where: { id: user.id },
-      data: { isOnboarded: false },
-    });
-    redirect("/onboarding");
-    return null;
-  }
 
   if (dbUser && !dbUser.isOnboarded) {
     redirect("/onboarding");
@@ -34,11 +24,11 @@ export default async function Redirect() {
 
   // Legacy: Set username if missing (for old accounts)
   if (user && !user.username) {
-    await prisma.user.update({
-      where: { id: user?.id },
-      data: { username: user?.id },
+    await createConvexServerClient().mutation(api.users.updateUserProfile, {
+      userId: user.id as any,
+      username: user.id,
     });
-    redirect(`/profile/${user?.id}/settings`);
+    redirect(`/profile/${user.id}/settings`);
     return null;
   }
 

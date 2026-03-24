@@ -3,11 +3,16 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { UploadButton } from "@/utils/uploadthing";
-import { TVSlideType } from "@/generated/prisma/browser";
 import { useNotification } from "@/app/contexts/NotificationContext";
 import SimpleToggle from "../../general/simple-toggle";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+
+type TVSlideType = "LOGO" | "STATS" | "LEADERBOARD" | "FEATURED_ROUTE" | "IMAGE" | "TEXT";
+const TV_SLIDE_TYPE = {
+  IMAGE: "IMAGE" as TVSlideType,
+  FEATURED_ROUTE: "FEATURED_ROUTE" as TVSlideType,
+};
 
 export default function NewSlidePopup({ onCancel }: { onCancel: () => void }) {
   const router = useRouter();
@@ -108,7 +113,7 @@ export default function NewSlidePopup({ onCancel }: { onCancel: () => void }) {
               <button
                 className="bg-blue-500 text-white p-2 rounded-md font-bold"
                 onClick={() => {
-                  setType(TVSlideType.IMAGE);
+                  setType(TV_SLIDE_TYPE.IMAGE);
                   setHeader("New Image Slide");
                 }}
               >
@@ -125,7 +130,7 @@ export default function NewSlidePopup({ onCancel }: { onCancel: () => void }) {
               className="rounded-md place-self-center"
             />
           )}
-          {type === TVSlideType.IMAGE && (
+          {type === TV_SLIDE_TYPE.IMAGE && (
             <div className="flex flex-col gap-2 justify-center w-full">
               {!imageUrl ? (
                 <UploadButton
@@ -181,7 +186,7 @@ export default function NewSlidePopup({ onCancel }: { onCancel: () => void }) {
               )}
             </div>
           )}
-          {type === TVSlideType.FEATURED_ROUTE && (
+          {type === TV_SLIDE_TYPE.FEATURED_ROUTE && (
             <div className="flex flex-col gap-2 justify-center w-full">
               <p className="text-center text-gray-400 italic  text-sm">
                 Take picture of the featured route

@@ -1,5 +1,6 @@
 import { Suspense } from "react";
-import prisma from "@/prisma";
+import { api } from "@/convex/_generated/api";
+import { createConvexServerClient } from "@/lib/convexServer";
 import { getAllGradeCounts } from "@/lib/homepage";
 import ElementLoadingAnimation from "../general/element-loading-animation";
 import ClientRouteGraphs from "./client-route-graphs";
@@ -7,11 +8,24 @@ import ClientRouteGraphs from "./client-route-graphs";
 export const revalidate = 1000;
 
 async function RoutesGraph() {
-  const routes = await prisma.route.findMany({
-    where: { isArchive: false },
+  const routes = await createConvexServerClient().query(api.routes.searchRoutes, {
+    text: "",
+    take: 10000,
+    skip: 0,
   });
-  const { boulderGradeCounts, ropeGradeCounts, ropeTotal, boulderTotal } =
-    getAllGradeCounts(routes);
+  const { boulderGradeCounts, ropeGradeCounts, ropeTotal, boulderTotal } = getAllGradeCounts(
+    routes.data
+      .filter(route => !route.isArchive)
+      .map(route => ({
+        id: route.id,
+        title: route.title,
+        grade: route.grade,
+        type: route.type,
+        color: route.color,
+        setDate: new Date(route.setDate),
+        isArchive: route.isArchive,
+      }))
+  );
   return (
     <div>
       <ClientRouteGraphs

@@ -1,18 +1,15 @@
-import prisma from "@/prisma";
-import { TVSlideType } from "@/generated/prisma/client";
 import Image from "next/image";
 import Toggle from "./toggle";
+import { getTvData } from "@/lib/tv";
+
+const TVSlideType = {
+  IMAGE: "IMAGE",
+  TEXT: "TEXT",
+} as const;
 export default async function CreatedSlides() {
-  const createdSlides = await prisma.tVSlide.findMany({
-    where: {
-      type: {
-        in: [TVSlideType.IMAGE, TVSlideType.TEXT],
-      },
-    },
-    orderBy: {
-      createdAt: "asc",
-    },
-  });
+  const createdSlides = (await getTvData()).slides.filter(slide =>
+    [TVSlideType.IMAGE, TVSlideType.TEXT].includes(slide.type as "IMAGE" | "TEXT")
+  );
 
   return (
     <div className="flex flex-col gap-2 w-full">

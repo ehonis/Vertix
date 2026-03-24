@@ -1,17 +1,18 @@
 import { NextResponse, NextRequest } from "next/server";
-import { UserRole } from "@/generated/prisma/client";
 import { getCurrentAppSession as auth } from "@/lib/getCurrentAppUser";
 import { removeRoutesFromAllSlides } from "@/lib/tvSlideHelpers";
 import jwt from "jsonwebtoken";
 import { api } from "@/convex/_generated/api";
 import { createConvexServerClient } from "@/lib/convexServer";
 
+const ADMIN = "ADMIN";
+
 async function getUserIdAndRole(
   request: NextRequest
-): Promise<{ userId: string; role: UserRole } | null> {
+): Promise<{ userId: string; role: string } | null> {
   const session = await auth();
   if (session?.user?.id && session.user.role) {
-    return { userId: session.user.id, role: session.user.role as UserRole };
+    return { userId: session.user.id, role: session.user.role };
   }
   const authHeader = request.headers.get("authorization");
   if (authHeader?.startsWith("Bearer ")) {
@@ -36,7 +37,7 @@ export async function PATCH(request: NextRequest) {
   if (!authResult) {
     return NextResponse.json({ message: "Not Authenicated" }, { status: 403 });
   }
-  if (authResult.role !== UserRole.ADMIN) {
+  if (authResult.role !== ADMIN) {
     return NextResponse.json({ message: "Not Authorized" }, { status: 403 });
   }
   const { routes }: { routes: Array<{ id: string }> } = await request.json();

@@ -1,14 +1,9 @@
-import prisma from "@/prisma";
+import { api } from "@/convex/_generated/api";
+import { createConvexServerClient } from "@/lib/convexServer";
 
 export async function getUserById(id: string) {
-  const user = await prisma.user.findUnique({
-    where: { id },
-  });
-  return user;
+  return await createConvexServerClient().query(api.users.getUserById, { userId: id as any });
 }
 export async function getUserByUsername(username: string) {
-  const user = await prisma.user.findUnique({
-    where: { username },
-  });
-  return user;
+  return await createConvexServerClient().query(api.users.getUserByUsername, { username });
 }

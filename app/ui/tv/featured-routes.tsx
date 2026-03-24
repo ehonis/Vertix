@@ -1,19 +1,11 @@
-import { Route, RouteImage, TVSlide } from "@/generated/prisma/client";
 import Image from "next/image";
 import LogoSlide from "../admin/tv/logo-slide";
 import VertixLogo from "./vertix-logo";
 import QRCodeSVG from "react-qr-code";
 import clsx from "clsx";
+import type { TVSlide } from "@/lib/tvTypes";
 
-type RouteWithImages = Route & {
-  images: RouteImage[];
-};
-
-type extendedTVSlide = TVSlide & {
-  routes: RouteWithImages[]; // Make routes optional
-};
-
-export default function FeaturedRoutes({ slide }: { slide: extendedTVSlide }) {
+export default function FeaturedRoutes({ slide }: { slide: TVSlide }) {
   // Safety check: ensure routes exists and is an array
 
   return (

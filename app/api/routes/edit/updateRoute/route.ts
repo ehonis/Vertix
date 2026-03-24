@@ -1,17 +1,19 @@
 import { NextResponse, NextRequest } from "next/server";
 import { addRouteToFeaturedSlide, removeRouteFromAllSlides } from "@/lib/tvSlideHelpers";
 import jwt from "jsonwebtoken";
-import { UserRole } from "@/generated/prisma/client";
 import { getCurrentAppUser } from "@/lib/getCurrentAppUser";
 import { api } from "@/convex/_generated/api";
 import { createConvexServerClient } from "@/lib/convexServer";
 
+const ADMIN = "ADMIN";
+const ROUTE_SETTER = "ROUTE_SETTER";
+
 async function getUserIdAndRole(
   request: NextRequest
-): Promise<{ userId: string; role: UserRole } | null> {
+): Promise<{ userId: string; role: string } | null> {
   const currentUser = await getCurrentAppUser();
   if (currentUser?.id && currentUser.role) {
-    return { userId: currentUser.id, role: currentUser.role as UserRole };
+    return { userId: currentUser.id, role: currentUser.role };
   }
   const authHeader = request.headers.get("authorization");
   if (authHeader?.startsWith("Bearer ")) {
@@ -36,7 +38,7 @@ export async function PATCH(request: NextRequest) {
   if (!authResult) {
     return NextResponse.json({ message: "Not Authenticated" }, { status: 403 });
   }
-  if (authResult.role !== UserRole.ADMIN && authResult.role !== UserRole.ROUTE_SETTER) {
+  if (authResult.role !== ADMIN && authResult.role !== ROUTE_SETTER) {
     return NextResponse.json({ message: "Not Authorized" }, { status: 403 });
   }
 

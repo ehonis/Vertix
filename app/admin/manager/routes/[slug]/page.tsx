@@ -1,16 +1,11 @@
 import IndividualRoutePageLoad from "@/app/ui/admin/route-edit/individualpageload";
 import { getCurrentAppSession as auth } from "@/lib/getCurrentAppUser";
 import { redirect } from "next/navigation";
-import prisma from "@/prisma";
-import { UserRole } from "@/generated/prisma/client";
 
 export const revalidate = 120;
 
 export function generateStaticParams() {
-  const ids = prisma.route.findMany().then(routes => {
-    return routes.map(route => ({ slug: route.id }));
-  });
-  return ids;
+  return [];
 }
 
 export default async function EditRoute({ params }: { params: Promise<{ slug: string }> }) {
@@ -19,7 +14,7 @@ export default async function EditRoute({ params }: { params: Promise<{ slug: st
   const routeId = slug;
   const user = session?.user ?? null;
 
-  if (user?.role !== UserRole.ADMIN && user?.role !== UserRole.ROUTE_SETTER) {
+  if (user?.role !== "ADMIN" && user?.role !== "ROUTE_SETTER") {
     redirect("/dashboard");
   }
   return (

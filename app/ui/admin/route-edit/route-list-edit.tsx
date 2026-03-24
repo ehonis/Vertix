@@ -107,17 +107,17 @@ export default function RouteListEdit({ ropes, boulders }: RouteListEditProps) {
 
   const handleRopeDelete = async () => {
     try {
-      const response = await fetch("/api/routes/edit/delete-route", {
-        method: "DELETE",
+      const response = await fetch("/api/routes/edit/archive-route", {
+        method: "PATCH",
         body: JSON.stringify({ routes: selectedRoutes }),
       });
       if (response.ok) {
-        showNotification({ message: "Routes deleted successfully", color: "green" });
+        showNotification({ message: "Routes archived successfully", color: "green" });
       } else {
-        showNotification({ message: "Error deleting routes", color: "red" });
+        showNotification({ message: "Error archiving routes", color: "red" });
       }
     } catch (error) {
-      showNotification({ message: "Error deleting routes", color: "red" });
+      showNotification({ message: "Error archiving routes", color: "red" });
     } finally {
       setIsDeleteConfirmationRope(false);
       setIsRouteEdit(false);
@@ -126,17 +126,17 @@ export default function RouteListEdit({ ropes, boulders }: RouteListEditProps) {
   };
   const handleBoulderDelete = async () => {
     try {
-      const response = await fetch("/api/routes/edit/delete-route", {
-        method: "DELETE",
+      const response = await fetch("/api/routes/edit/archive-route", {
+        method: "PATCH",
         body: JSON.stringify({ routes: selectedBoulders }),
       });
       if (response.ok) {
-        showNotification({ message: "Routes deleted successfully", color: "green" });
+        showNotification({ message: "Routes archived successfully", color: "green" });
       } else {
-        showNotification({ message: "Error deleting routes", color: "red" });
+        showNotification({ message: "Error archiving routes", color: "red" });
       }
     } catch (error) {
-      showNotification({ message: "Error deleting routes", color: "red" });
+      showNotification({ message: "Error archiving routes", color: "red" });
     } finally {
       setIsDeleteConfirmationBoulder(false);
       setIsBoulderEdit(false);

@@ -18,6 +18,17 @@ type MigrationLookups = {
   routes: Array<{ id: string; legacyPrismaId?: string }>;
 };
 
+type LegacyTvSlideRow = {
+  id: string;
+  type: "LOGO" | "STATS" | "LEADERBOARD" | "FEATURED_ROUTE" | "IMAGE" | "TEXT";
+  imageUrl?: string | null;
+  text?: string | null;
+  isActive: boolean;
+  createdAt?: string;
+  routes?: Array<{ id: string } | string> | null;
+  routeIds?: string[] | null;
+};
+
 type ScriptOptions = {
   dryRun: boolean;
   batchSize: number;
@@ -109,6 +120,7 @@ type MigrationStats = {
     routeCompletions: number;
     communityGrades: number;
     monthlyXp: number;
+    tvSlides: number;
   };
   dropped: {
     routesFromUnresolvedWalls: number;
@@ -259,6 +271,18 @@ async function main() {
     preparedAfterUsers.monthlyXp,
     options.batchSize
   );
+  const tvSlides = resolveTvSlideRouteIds(
+    preparedAfterUsers.tvSlides,
+    routeIdLookup,
+    preparedAfterUsers.unresolved.routes
+  );
+  await sendBatches(
+    convex,
+    api.routeMigrations.upsertTvSlides,
+    migrationSecret,
+    tvSlides,
+    options.batchSize
+  );
 
   console.log("Route migration complete.");
 }
@@ -272,7 +296,16 @@ async function loadExportFiles() {
     routeCompletions: await readJsonFile<LegacyRouteCompletionRow[]>("routeCompletions.json"),
     communityGrades: await readJsonFile<LegacyCommunityGradeRow[]>("communityGrades.json"),
     monthlyXp: await readJsonFile<LegacyMonthlyXpRow[]>("monthlyXp.json"),
+    tvSlides: await readOptionalJsonFile<LegacyTvSlideRow[]>("tvSlides.json"),
   };
+}
+
+async function readOptionalJsonFile<T>(fileName: string): Promise<T> {
+  try {
+    return await readJsonFile<T>(fileName);
+  } catch {
+    return [] as T;
+  }
 }
 
 async function readJsonFile<T>(fileName: string): Promise<T> {
@@ -309,6 +342,7 @@ function prepareImportPayload(
       routeCompletions: source.routeCompletions.length,
       communityGrades: source.communityGrades.length,
       monthlyXp: source.monthlyXp.length,
+      tvSlides: source.tvSlides.length,
     },
     dropped: {
       routesFromUnresolvedWalls: 0,
@@ -460,6 +494,16 @@ function prepareImportPayload(
     ];
   });
 
+  const tvSlides = source.tvSlides.map((slide, index) => ({
+    legacyPrismaId: slide.id,
+    type: slide.type,
+    imageUrl: slide.imageUrl ?? undefined,
+    text: slide.text ?? undefined,
+    isActive: slide.isActive,
+    sortOrder: slide.createdAt ? new Date(slide.createdAt).getTime() : index,
+    routeLegacyPrismaIds: normalizeTvSlideRouteIds(slide),
+  }));
+
   return {
     routes,
     routeImages,
@@ -467,6 +511,7 @@ function prepareImportPayload(
     routeCompletions,
     communityGrades,
     monthlyXp,
+    tvSlides,
     unresolved,
     stats,
   };
@@ -525,6 +570,49 @@ function resolveRouteIds<T extends RouteLinkedRow>(
   });
 }
 
+function normalizeTvSlideRouteIds(slide: LegacyTvSlideRow) {
+  if (Array.isArray(slide.routeIds)) {
+    return slide.routeIds;
+  }
+
+  if (Array.isArray(slide.routes)) {
+    return slide.routes.map(route => (typeof route === "string" ? route : route.id));
+  }
+
+  return [];
+}
+
+function resolveTvSlideRouteIds(
+  rows: Array<{
+    legacyPrismaId: string;
+    type: LegacyTvSlideRow["type"];
+    imageUrl?: string;
+    text?: string;
+    isActive: boolean;
+    sortOrder?: number;
+    routeLegacyPrismaIds: string[];
+  }>,
+  routeIdLookup: Map<string, string>,
+  unresolvedRoutes: Set<string>
+) {
+  return rows.map(row => ({
+    legacyPrismaId: row.legacyPrismaId,
+    type: row.type,
+    imageUrl: row.imageUrl,
+    text: row.text,
+    isActive: row.isActive,
+    sortOrder: row.sortOrder,
+    routeIds: row.routeLegacyPrismaIds.flatMap(routeLegacyPrismaId => {
+      const routeId = routeIdLookup.get(routeLegacyPrismaId);
+      if (!routeId) {
+        unresolvedRoutes.add(routeLegacyPrismaId);
+        return [];
+      }
+      return [routeId];
+    }),
+  }));
+}
+
 function resolveConvexUserId(
   legacyUserId: string | null,
   sourceUsers: LegacyUserRow[],
@@ -573,12 +661,14 @@ function logSummary(prepared: PreparedImportPayload) {
   console.log(`- source routeCompletions: ${prepared.stats.source.routeCompletions}`);
   console.log(`- source communityGrades: ${prepared.stats.source.communityGrades}`);
   console.log(`- source monthlyXp: ${prepared.stats.source.monthlyXp}`);
+  console.log(`- source tvSlides: ${prepared.stats.source.tvSlides}`);
   console.log(`- routes: ${prepared.routes.length}`);
   console.log(`- routeImages: ${prepared.routeImages.length}`);
   console.log(`- routeAttempts: ${prepared.routeAttempts.length}`);
   console.log(`- routeCompletions: ${prepared.routeCompletions.length}`);
   console.log(`- communityGrades: ${prepared.communityGrades.length}`);
   console.log(`- monthlyXp: ${prepared.monthlyXp.length}`);
+  console.log(`- tvSlides: ${prepared.tvSlides.length}`);
   console.log(
     `- dropped routeCompletions from unresolved users: ${prepared.stats.dropped.routeCompletionsFromUnresolvedUsers}`
   );

@@ -1,44 +1,28 @@
-import prisma from "@/prisma";
-import { TVSlideType } from "@/generated/prisma/client";
 import LogoSlide from "./logo-slide";
 import StatsSlide from "./stats-slide";
 import LeaderBoardSlide from "./leaderboard-slide";
 import FeaturedRouteSlide from "./featured-route-slide";
 import Toggle from "./toggle";
 import { FeaturedRoutesButton } from "./featured-routes-button";
+import { findFeaturedRoutes, getTvData } from "@/lib/tv";
+
+const TVSlideType = {
+  LOGO: "LOGO",
+  STATS: "STATS",
+  LEADERBOARD: "LEADERBOARD",
+  FEATURED_ROUTE: "FEATURED_ROUTE",
+} as const;
 export default async function FetchedDefaultSlides() {
-  const fetchedDefaultSlides = await prisma.tVSlide.findMany({
-    where: {
-      type: {
-        in: [
-          TVSlideType.LOGO,
-          TVSlideType.STATS,
-          TVSlideType.LEADERBOARD,
-          TVSlideType.FEATURED_ROUTE,
-        ],
-      },
-    },
-    orderBy: {
-      createdAt: "asc",
-    },
-    include: {
-      routes: true,
-    },
-  });
-  const featuredRoutes = await prisma.route.findMany({
-    where: {
-      isArchive: false,
-      tvSlides: {
-        some: {
-          type: TVSlideType.FEATURED_ROUTE,
-        },
-      },
-    },
-    include: {
-      tvSlides: true,
-      images: true,
-    },
-  });
+  const tvData = await getTvData();
+  const fetchedDefaultSlides = tvData.slides.filter(slide =>
+    [
+      TVSlideType.LOGO,
+      TVSlideType.STATS,
+      TVSlideType.LEADERBOARD,
+      TVSlideType.FEATURED_ROUTE,
+    ].includes(slide.type as (typeof TVSlideType)[keyof typeof TVSlideType])
+  );
+  const featuredRoutes = findFeaturedRoutes(tvData.slides);
 
   return (
     <div className="flex flex-col gap-2 w-full">

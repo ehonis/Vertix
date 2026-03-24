@@ -6,7 +6,6 @@ import clsx from "clsx";
 import { useRouter } from "next/navigation";
 import { useNotification } from "@/app/contexts/NotificationContext";
 
-import { RouteTag, RouteType } from "@/generated/prisma/browser";
 import RoutesMapShell from "../../routes/routes-map-shell";
 import {
   legacyLocationsForWallPart,
@@ -17,13 +16,24 @@ import {
 import RopeGradeSelect from "../new_route/rope-grade-select";
 import BoulderGradeSelect from "../new_route/boulder-grade-select";
 
-export default function NewRoutePopup({ onCancel }: { onCancel: () => void; tags: RouteTag[] }) {
+type RouteType = "BOULDER" | "ROPE";
+const ROUTE_TYPE = {
+  BOULDER: "BOULDER" as RouteType,
+  ROPE: "ROPE" as RouteType,
+};
+
+export default function NewRoutePopup({
+  onCancel,
+}: {
+  onCancel: () => void;
+  tags: Array<{ name: string }>;
+}) {
   const [name, setName] = useState("");
   const router = useRouter();
   const { showNotification } = useNotification();
   const [isFirstStep, setIsFirstStep] = useState(true);
   const [isSecondStep, setIsSecondStep] = useState(false);
-  const [type, setType] = useState<RouteType>(RouteType.BOULDER);
+  const [type, setType] = useState<RouteType>(ROUTE_TYPE.BOULDER);
   const [selectedDate, setSelectedDate] = useState("");
   const [isToday, setIsToday] = useState(false);
   const [location, setLocation] = useState<LegacyLocationKey>();
@@ -34,7 +44,7 @@ export default function NewRoutePopup({ onCancel }: { onCancel: () => void; tags
   const handleLocationSelect = (data: WallPartKey | null) => {
     if (!data) return;
     const routeType =
-      data.startsWith("rope") || data.startsWith("AB") ? RouteType.ROPE : RouteType.BOULDER;
+      data.startsWith("rope") || data.startsWith("AB") ? ROUTE_TYPE.ROPE : ROUTE_TYPE.BOULDER;
     setType(routeType);
     setLocation(legacyLocationsForWallPart(data)[0]);
     setIsFirstStep(false);

@@ -1,108 +1,47 @@
-import prisma from "@/prisma";
-import { TVSlideType } from "@/generated/prisma/client";
+import { getTvData, updateTvSlideRoutes } from "@/lib/tv";
 
-/**
- * Get or create the featured route TV slide
- */
 export async function getOrCreateFeaturedRouteSlide() {
-  let featuredSlide = await prisma.tVSlide.findFirst({
-    where: {
-      type: TVSlideType.FEATURED_ROUTE,
-      isActive: true,
-    },
-  });
-
-  if (!featuredSlide) {
-    featuredSlide = await prisma.tVSlide.create({
-      data: {
-        type: TVSlideType.FEATURED_ROUTE,
-        isActive: true,
-      },
-    });
-  }
-
-  return featuredSlide;
+  const data = await getTvData();
+  const featuredSlide = data.slides.find(slide => slide.type === "FEATURED_ROUTE");
+  return featuredSlide ?? null;
 }
 
-/**
- * Add a route to the featured route TV slide (only for vfeature/5.feature routes)
- */
 export async function addRouteToFeaturedSlide(routeId: string, grade: string) {
   const isFeaturedGrade = grade.toLowerCase() === "vfeature" || grade.toLowerCase() === "5.feature";
-  
   if (!isFeaturedGrade) {
-    return; // Only add featured grade routes
+    return;
   }
 
   const featuredSlide = await getOrCreateFeaturedRouteSlide();
-  
-  await prisma.tVSlide.update({
-    where: { id: featuredSlide.id },
-    data: {
-      routes: {
-        connect: { id: routeId },
-      },
-    },
+  if (!featuredSlide) {
+    return;
+  }
+
+  await updateTvSlideRoutes({
+    functionName: "addRoute",
+    routeId,
+    slideId: featuredSlide.id,
   });
 }
 
-/**
- * Remove a route from all TV slides
- */
 export async function removeRouteFromAllSlides(routeId: string) {
-  // Find all TV slides that contain this route
-  const slidesWithRoute = await prisma.tVSlide.findMany({
-    where: {
-      routes: {
-        some: {
-          id: routeId,
-        },
-      },
-    },
-  });
-
-  // Remove the route from all slides
+  const data = await getTvData();
+  const slidesWithRoute = data.slides.filter(slide =>
+    slide.routes.some(route => route.id === routeId)
+  );
   await Promise.all(
     slidesWithRoute.map(slide =>
-      prisma.tVSlide.update({
-        where: { id: slide.id },
-        data: {
-          routes: {
-            disconnect: { id: routeId },
-          },
-        },
+      updateTvSlideRoutes({
+        functionName: "removeRoute",
+        routeId,
+        slideId: slide.id,
       })
     )
   );
 }
 
-/**
- * Remove multiple routes from all TV slides
- */
 export async function removeRoutesFromAllSlides(routeIds: string[]) {
-  // Find all TV slides that contain any of these routes
-  const slidesWithRoutes = await prisma.tVSlide.findMany({
-    where: {
-      routes: {
-        some: {
-          id: { in: routeIds },
-        },
-      },
-    },
-  });
-
-  // Remove all routes from all affected slides
-  await Promise.all(
-    slidesWithRoutes.map(slide =>
-      prisma.tVSlide.update({
-        where: { id: slide.id },
-        data: {
-          routes: {
-            disconnect: routeIds.map(id => ({ id })),
-          },
-        },
-      })
-    )
-  );
+  for (const routeId of routeIds) {
+    await removeRouteFromAllSlides(routeId);
+  }
 }
-

@@ -1,5 +1,6 @@
 import { getUserById } from "@/lib/users";
 import IndividualUserEdit from "@/app/ui/admin/user-edit/individual-user-edit";
+import { normalizeAppUser } from "@/lib/appUser";
 
 import Link from "next/link";
 // export async function generateStaticParams() {
@@ -17,7 +18,7 @@ import Link from "next/link";
 
 export default async function Page({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const user = await getUserById(slug);
+  const user = normalizeAppUser(await getUserById(slug));
 
   if (!user) {
     return <div>User Not Found</div>;

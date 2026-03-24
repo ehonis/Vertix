@@ -1,15 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
-import prisma from "@/prisma";
+import { api } from "@/convex/_generated/api";
+import { createConvexServerClient } from "@/lib/convexServer";
 
 export async function POST(req: NextRequest) {
   try {
     const { userId } = await req.json();
 
-    await prisma.user.update({
-      where: { id: userId },
-      data: {
-        image: null,
-      },
+    await createConvexServerClient().mutation(api.users.updateUserProfile, {
+      userId,
+      image: null,
     });
 
     return NextResponse.json({ status: 200 });

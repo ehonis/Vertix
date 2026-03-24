@@ -4,12 +4,11 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "prisma generate && next build",
+    "build": "next build",
     "start": "next start",
     "lint": "eslint .",
     "convex:dev": "convex dev",
     "convex:deploy": "convex deploy",
-    "postinstall": "prisma generate",
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,css,scss,md}\"",
     "migrate:users-to-clerk": "node --import tsx scripts/migrate-users-to-clerk.ts",
     "migrate:user-images-to-clerk": "node --import tsx scripts/migrate-user-images-to-clerk.ts",

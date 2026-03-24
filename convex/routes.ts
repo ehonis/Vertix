@@ -4,6 +4,14 @@ import { mutation, query, QueryCtx, MutationCtx } from "./_generated/server";
 import { Doc } from "./_generated/dataModel";
 
 const routeTypeValidator = v.union(v.literal("BOULDER"), v.literal("ROPE"));
+const tvSlideTypeValidator = v.union(
+  v.literal("LOGO"),
+  v.literal("STATS"),
+  v.literal("LEADERBOARD"),
+  v.literal("FEATURED_ROUTE"),
+  v.literal("IMAGE"),
+  v.literal("TEXT")
+);
 
 type RouteReadModel = {
   id: string;
@@ -618,6 +626,238 @@ export const setRouteArchived = mutation({
   },
 });
 
+export const getTvData = query({
+  args: {},
+  handler: async (
+    ctx
+  ): Promise<{
+    slides: Array<{
+      id: string;
+      type: "LOGO" | "STATS" | "LEADERBOARD" | "FEATURED_ROUTE" | "IMAGE" | "TEXT";
+      imageUrl: string | null;
+      text: string | null;
+      isActive: boolean;
+      sortOrder: number | null;
+      routes: Array<{
+        id: string;
+        title: string;
+        grade: string;
+        color: string;
+        type: "BOULDER" | "ROPE";
+        setDate: number;
+        bonusXp: number | null;
+        images: Array<{ id: string; url: string; sortOrder: number | null }>;
+      }>;
+    }>;
+    monthlyLeaderBoardData: Array<{
+      user: {
+        id: string;
+        name: string | null;
+        username: string | null;
+        image: string | null;
+        totalXp: number;
+        private: boolean;
+      };
+      xp: number;
+    }>;
+    boulderGradeCounts: { grade: string; count: number }[];
+    ropeGradeCounts: { grade: string; count: number }[];
+    ropeTotal: number;
+    boulderTotal: number;
+  }> => {
+    const slides = await ctx.db.query("tvSlides").take(1000);
+    const activeSlides = slides
+      .filter(slide => slide.isActive)
+      .sort((a, b) => (a.sortOrder ?? 0) - (b.sortOrder ?? 0));
+
+    const hydratedSlides = await Promise.all(
+      activeSlides.map(async slide => ({
+        id: slide.legacyPrismaId ?? slide._id,
+        type: slide.type,
+        imageUrl: slide.imageUrl ?? null,
+        text: slide.text ?? null,
+        isActive: slide.isActive,
+        sortOrder: slide.sortOrder ?? null,
+        routes: (
+          await Promise.all(
+            slide.routeIds.map(async routeId => {
+              const route = await ctx.db.get(routeId);
+              if (!route) {
+                return null;
+              }
+              const images = await ctx.db
+                .query("routeImages")
+                .withIndex("by_route", q => q.eq("routeId", route._id))
+                .take(20);
+              return {
+                id: route.legacyPrismaId ?? route._id,
+                title: route.title,
+                grade: route.grade,
+                color: route.color,
+                type: route.type,
+                setDate: route.setDate,
+                bonusXp: route.bonusXp ?? null,
+                images: images.map(image => ({
+                  id: image.legacyPrismaId ?? image._id,
+                  url: image.url,
+                  sortOrder: image.sortOrder ?? null,
+                })),
+              };
+            })
+          )
+        ).filter((route): route is NonNullable<typeof route> => route !== null),
+      }))
+    );
+
+    const leaderboardData = await ctx.runQuery(api.routes.getLeaderboardData, {});
+    const allRoutes = await ctx.db.query("routes").take(10000);
+    const currentRoutes = allRoutes
+      .filter(route => !route.isArchived)
+      .map(route => ({
+        id: route.legacyPrismaId ?? route._id,
+        title: route.title,
+        grade: route.grade,
+        type: route.type,
+        color: route.color,
+        setDate: route.setDate,
+        isArchive: route.isArchived,
+      }));
+    const counts = getGradeCountsForTv(currentRoutes);
+
+    return {
+      slides: hydratedSlides,
+      monthlyLeaderBoardData: leaderboardData.monthly,
+      boulderGradeCounts: counts.boulderGradeCounts,
+      ropeGradeCounts: counts.ropeGradeCounts,
+      ropeTotal: counts.ropeTotal,
+      boulderTotal: counts.boulderTotal,
+    };
+  },
+});
+
+export const searchTvRoutes = query({
+  args: {
+    text: v.string(),
+    slideId: v.optional(v.string()),
+  },
+  handler: async (ctx, args) => {
+    const allSlides = await ctx.db.query("tvSlides").take(1000);
+    const excludedRouteIds = new Set(
+      allSlides
+        .filter(slide => (slide.legacyPrismaId ?? slide._id) === args.slideId)
+        .flatMap(slide => slide.routeIds)
+    );
+    const allRoutes = await ctx.db.query("routes").take(10000);
+    const filtered = allRoutes.filter(route => {
+      if (route.isArchived) {
+        return false;
+      }
+      if (excludedRouteIds.has(route._id)) {
+        return false;
+      }
+      return args.text.length > 3 && route.title.toLowerCase().includes(args.text.toLowerCase());
+    });
+
+    return filtered.slice(0, 20).map(route => ({
+      id: route.legacyPrismaId ?? route._id,
+      title: route.title,
+      grade: route.grade,
+      color: route.color,
+      setDate: route.setDate,
+      bonusXp: route.bonusXp ?? null,
+    }));
+  },
+});
+
+export const setTvSlideActive = mutation({
+  args: {
+    slideId: v.string(),
+    isActive: v.boolean(),
+  },
+  handler: async (ctx, args) => {
+    const slide = await findTvSlideByLegacyOrConvexId(ctx, args.slideId);
+    if (!slide) {
+      throw new Error("Slide not found");
+    }
+    await ctx.db.patch(slide._id, { isActive: args.isActive });
+    return { ok: true };
+  },
+});
+
+export const createTvSlide = mutation({
+  args: {
+    type: tvSlideTypeValidator,
+    imageUrl: v.optional(v.string()),
+    text: v.optional(v.string()),
+    isActive: v.boolean(),
+  },
+  handler: async (ctx, args) => {
+    const slides = await ctx.db.query("tvSlides").take(1000);
+    const maxSortOrder = Math.max(-1, ...slides.map(slide => slide.sortOrder ?? -1));
+    return await ctx.db.insert("tvSlides", {
+      type: args.type,
+      imageUrl: args.imageUrl,
+      text: args.text,
+      isActive: args.isActive,
+      routeIds: [],
+      sortOrder: maxSortOrder + 1,
+    });
+  },
+});
+
+export const updateTvSlideRoutes = mutation({
+  args: {
+    functionName: v.union(
+      v.literal("addRoute"),
+      v.literal("removeRoute"),
+      v.literal("uploadImage")
+    ),
+    routeId: v.string(),
+    slideId: v.optional(v.string()),
+    imageUrl: v.optional(v.string()),
+  },
+  handler: async (ctx, args) => {
+    const route = await findRouteByLegacyOrConvexId(ctx, args.routeId);
+    if (!route) {
+      throw new Error("Route not found");
+    }
+
+    if (args.functionName === "uploadImage") {
+      if (!args.imageUrl) {
+        throw new Error("Image URL required");
+      }
+      await ctx.db.insert("routeImages", {
+        routeId: route._id,
+        url: args.imageUrl,
+      });
+      return { ok: true };
+    }
+
+    if (!args.slideId) {
+      throw new Error("Slide ID required");
+    }
+
+    const slide = await findTvSlideByLegacyOrConvexId(ctx, args.slideId);
+    if (!slide) {
+      throw new Error("Slide not found");
+    }
+
+    if (args.functionName === "addRoute") {
+      const nextRouteIds = slide.routeIds.includes(route._id)
+        ? slide.routeIds
+        : [...slide.routeIds, route._id];
+      await ctx.db.patch(slide._id, { routeIds: nextRouteIds });
+      await ctx.db.patch(route._id, { bonusXp: 50 });
+      return { ok: true };
+    }
+
+    const nextRouteIds = slide.routeIds.filter((id: Doc<"routes">["_id"]) => id !== route._id);
+    await ctx.db.patch(slide._id, { routeIds: nextRouteIds });
+    await ctx.db.patch(route._id, { bonusXp: 0 });
+    return { ok: true };
+  },
+});
+
 async function getRouteCompletionsForUser(
   ctx: QueryCtx,
   routeId: Doc<"routes">["_id"],
@@ -878,6 +1118,94 @@ function isHigherGrade(
 
   const grades = routeType === "ROPE" ? ropeGrades : boulderGrades;
   return grades.indexOf(currentGrade.toLowerCase()) < grades.indexOf(nextGrade.toLowerCase());
+}
+
+function getGradeCountsForTv(
+  routes: Array<{
+    grade: string;
+    type: "BOULDER" | "ROPE";
+  }>
+) {
+  const boulderGradeCounts = [
+    { grade: "vfeature", count: 0 },
+    { grade: "vb", count: 0 },
+    { grade: "v0", count: 0 },
+    { grade: "v1", count: 0 },
+    { grade: "v2", count: 0 },
+    { grade: "v3", count: 0 },
+    { grade: "v4", count: 0 },
+    { grade: "v5", count: 0 },
+    { grade: "v6", count: 0 },
+    { grade: "v7", count: 0 },
+    { grade: "v8", count: 0 },
+    { grade: "v9", count: 0 },
+    { grade: "v10", count: 0 },
+    { grade: "v11", count: 0 },
+    { grade: "v12", count: 0 },
+    { grade: "v13", count: 0 },
+    { grade: "v14", count: 0 },
+    { grade: "v15", count: 0 },
+  ];
+  const ropeGradeCounts = [
+    { grade: "5.feature", count: 0 },
+    { grade: "5.B", count: 0 },
+    { grade: "5.7", count: 0 },
+    { grade: "5.8", count: 0 },
+    { grade: "5.8+", count: 0 },
+    { grade: "5.9", count: 0 },
+    { grade: "5.9+", count: 0 },
+    { grade: "5.10-", count: 0 },
+    { grade: "5.10", count: 0 },
+    { grade: "5.10+", count: 0 },
+    { grade: "5.11-", count: 0 },
+    { grade: "5.11", count: 0 },
+    { grade: "5.11+", count: 0 },
+    { grade: "5.12-", count: 0 },
+    { grade: "5.12", count: 0 },
+    { grade: "5.12+", count: 0 },
+    { grade: "5.13-", count: 0 },
+    { grade: "5.13", count: 0 },
+    { grade: "5.13+", count: 0 },
+    { grade: "5.14-", count: 0 },
+    { grade: "5.14", count: 0 },
+    { grade: "5.14+", count: 0 },
+    { grade: "5.15-", count: 0 },
+  ];
+
+  for (const route of routes) {
+    const counts = route.type === "BOULDER" ? boulderGradeCounts : ropeGradeCounts;
+    const entry = counts.find(count => count.grade === route.grade);
+    if (entry) {
+      entry.count += 1;
+    }
+  }
+
+  const ropeTotal = routes.filter(route => route.type === "ROPE").length;
+  const boulderTotal = routes.filter(route => route.type === "BOULDER").length;
+
+  return {
+    boulderGradeCounts: boulderGradeCounts.filter(count => count.count > 0),
+    ropeGradeCounts: ropeGradeCounts.filter(count => count.count > 0),
+    ropeTotal,
+    boulderTotal,
+  };
+}
+
+async function findTvSlideByLegacyOrConvexId(ctx: QueryCtx | MutationCtx, slideId: string) {
+  const byLegacy = await ctx.db
+    .query("tvSlides")
+    .withIndex("by_legacy_prisma_id", q => q.eq("legacyPrismaId", slideId))
+    .unique();
+
+  if (byLegacy) {
+    return byLegacy;
+  }
+
+  try {
+    return await ctx.db.get(slideId as Doc<"tvSlides">["_id"]);
+  } catch {
+    return null;
+  }
 }
 
 async function resolveLocationForRoute(ctx: QueryCtx | MutationCtx, route: Doc<"routes">) {

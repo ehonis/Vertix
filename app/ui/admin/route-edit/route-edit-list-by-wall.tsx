@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useMemo, useCallback, useEffect } from "react";
-import { Route } from "@/generated/prisma/browser";
 import { motion } from "framer-motion";
 import clsx from "clsx";
 import { formatDateMMDD } from "@/lib/date";
@@ -12,12 +11,29 @@ import ConfirmationPopUp from "../../general/confirmation-pop-up";
 import RoutesMapShell from "../../routes/routes-map-shell";
 import { legacyLocationsForWallPart, toWallPartKey, type WallPartKey } from "@/lib/wallLocations";
 
-export default function RouteEditListByWall({ routes }: { routes: Route[] }) {
+type AdminRoute = {
+  id: string;
+  title: string;
+  grade: string;
+  color: string;
+  setDate: Date;
+  type: "BOULDER" | "ROPE";
+  location: string;
+  x: number | null;
+  y: number | null;
+  order: number | null;
+  isArchive: boolean;
+  xp: number;
+  bonusXp: number | null;
+  createdByUserID: string | null;
+};
+
+export default function RouteEditListByWall({ routes }: { routes: AdminRoute[] }) {
   const { showNotification } = useNotification();
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const sortRoutesForWall = useCallback((wallRoutes: Route[]) => {
+  const sortRoutesForWall = useCallback((wallRoutes: AdminRoute[]) => {
     return [...wallRoutes].sort((a, b) => {
       const ax = typeof a.x === "number" ? a.x : Number.POSITIVE_INFINITY;
       const bx = typeof b.x === "number" ? b.x : Number.POSITIVE_INFINITY;
@@ -69,8 +85,8 @@ export default function RouteEditListByWall({ routes }: { routes: Route[] }) {
   const [isRouteEdit, setIsRouteEdit] = useState(false);
   const [isArchiveConfirmationRope, setIsArchiveConfirmationRope] = useState(false);
   const [isDeleteConfirmationRope, setIsDeleteConfirmationRope] = useState(false);
-  const [selectedRoutes, setSelectedRoutes] = useState<Route[]>([]);
-  const [currentRoutes, setCurrentRoutes] = useState<Route[]>([]);
+  const [selectedRoutes, setSelectedRoutes] = useState<AdminRoute[]>([]);
+  const [currentRoutes, setCurrentRoutes] = useState<AdminRoute[]>([]);
   const [isArchiveLoading, setIsArchiveLoading] = useState(false);
   const [isDeleteLoading, setIsDeleteLoading] = useState(false);
 
@@ -116,7 +132,11 @@ export default function RouteEditListByWall({ routes }: { routes: Route[] }) {
       } else {
         const legacyLocations = legacyLocationsForWallPart(data);
         setCurrentRoutes(
-          sortRoutesForWall(routes.filter(route => legacyLocations.includes(route.location)))
+          sortRoutesForWall(
+            routes.filter(route =>
+              legacyLocations.includes(route.location as (typeof legacyLocations)[number])
+            )
+          )
         );
       }
     },
@@ -132,7 +152,11 @@ export default function RouteEditListByWall({ routes }: { routes: Route[] }) {
     if (selectedWall) {
       const legacyLocations = legacyLocationsForWallPart(selectedWall);
       setCurrentRoutes(
-        sortRoutesForWall(routes.filter(route => legacyLocations.includes(route.location)))
+        sortRoutesForWall(
+          routes.filter(route =>
+            legacyLocations.includes(route.location as (typeof legacyLocations)[number])
+          )
+        )
       );
     }
   }, [selectedWall, routes, sortRoutesForWall]);
@@ -144,7 +168,7 @@ export default function RouteEditListByWall({ routes }: { routes: Route[] }) {
    *
    * @param route - The route to toggle selection for
    */
-  const handleRouteSelect = (route: Route) => {
+  const handleRouteSelect = (route: AdminRoute) => {
     if (selectedRoutes.some(r => r.id === route.id)) {
       setSelectedRoutes(prev => prev.filter(r => r.id !== route.id));
     } else {
@@ -182,12 +206,12 @@ export default function RouteEditListByWall({ routes }: { routes: Route[] }) {
   const handleDelete = async () => {
     setIsDeleteLoading(true);
     try {
-      const response = await fetch("/api/routes/edit/delete-route", {
-        method: "DELETE",
+      const response = await fetch("/api/routes/edit/archive-route", {
+        method: "PATCH",
         body: JSON.stringify({ routes: selectedRoutes }),
       });
       if (response.ok) {
-        showNotification({ message: "Routes deleted successfully", color: "green" });
+        showNotification({ message: "Routes archived successfully", color: "green" });
 
         // Clear selected routes and refresh the display
         setSelectedRoutes([]);
@@ -195,10 +219,10 @@ export default function RouteEditListByWall({ routes }: { routes: Route[] }) {
           prev.filter(route => !selectedRoutes.some(selected => selected.id === route.id))
         );
       } else {
-        showNotification({ message: "Error deleting routes", color: "red" });
+        showNotification({ message: "Error archiving routes", color: "red" });
       }
     } catch (error) {
-      showNotification({ message: "Error deleting routes", color: "red" });
+      showNotification({ message: "Error archiving routes", color: "red" });
     } finally {
       setIsDeleteConfirmationRope(false);
       setIsRouteEdit(false);
@@ -214,7 +238,7 @@ export default function RouteEditListByWall({ routes }: { routes: Route[] }) {
     <div className="w-full flex flex-col items-center gap-1 place-self-center">
       {isDeleteConfirmationRope && (
         <ConfirmationPopUp
-          message="Are you sure you want to delete these routes?"
+          message="Are you sure you want to archive these routes?"
           onConfirmation={handleDelete}
           onCancel={() => setIsDeleteConfirmationRope(false)}
           submessage="This action cannot be undone."

@@ -1,6 +1,8 @@
-import prisma from "@/prisma";
 import { NextResponse, NextRequest } from "next/server";
 import { auth, clerkClient } from "@clerk/nextjs/server";
+import { api } from "@/convex/_generated/api";
+import { createConvexServerClient } from "@/lib/convexServer";
+import { getCurrentAppUser } from "@/lib/getCurrentAppUser";
 
 export async function POST(req: NextRequest) {
   try {
@@ -22,12 +24,13 @@ export async function POST(req: NextRequest) {
       file: image,
     });
 
-    await prisma.user.update({
-      where: { clerkId: userId },
-      data: {
+    const currentUser = await getCurrentAppUser();
+    if (currentUser) {
+      await createConvexServerClient().mutation(api.users.updateUserProfile, {
+        userId: currentUser.id as any,
         image: clerkUser.imageUrl,
-      },
-    });
+      });
+    }
 
     return NextResponse.json({ message: "Successfully added Image" }, { status: 200 });
   } catch (error) {

@@ -1,12 +1,12 @@
 "use client";
 
-import { Route } from "@/generated/prisma/browser";
+import type { TVRoute } from "@/lib/tvTypes";
 export default function FeaturedRouteSlide({
   routes,
   featuredRoute,
 }: {
-  routes: Route[];
-  featuredRoute: Route | null;
+  routes: TVRoute[];
+  featuredRoute: TVRoute | null;
 }) {
   return (
     <div className="flex flex-col items-center justify-between md:p-5 p-2 rounded-md bg-blue-500/25 outline outline-blue-500 h-full w-full">

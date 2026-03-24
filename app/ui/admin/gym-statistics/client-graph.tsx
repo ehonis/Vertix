@@ -1,7 +1,7 @@
 "use client";
 
 import { getAllGradeCounts } from "@/lib/homepage";
-import { Route, RouteType } from "@/generated/prisma/browser";
+import type { RouteStatsRoute } from "@/lib/routeStats";
 import Link from "next/link";
 import { useState } from "react";
 import clsx from "clsx";
@@ -17,7 +17,13 @@ import {
 } from "recharts";
 import { formatDateMMDD } from "@/lib/date";
 
-export default function ClientGraph({ routes, fillColor }: { routes: Route[]; fillColor: string }) {
+export default function ClientGraph({
+  routes,
+  fillColor,
+}: {
+  routes: Array<RouteStatsRoute & { location?: string }>;
+  fillColor: string;
+}) {
   const { boulderGradeCounts, ropeGradeCounts, ropeTotal, boulderTotal } =
     getAllGradeCounts(routes);
 
@@ -28,7 +34,9 @@ export default function ClientGraph({ routes, fillColor }: { routes: Route[]; fi
     counts = boulderGradeCounts;
   }
   const [selectedGrade, setSelectedGrade] = useState<string | null>(null);
-  const [selectedRoutes, setSelectedRoutes] = useState<Route[]>([]);
+  const [selectedRoutes, setSelectedRoutes] = useState<
+    Array<RouteStatsRoute & { location?: string }>
+  >([]);
 
   const handleBarClick = (data: { grade: string; count: number } | null) => {
     if (data && data.grade) {

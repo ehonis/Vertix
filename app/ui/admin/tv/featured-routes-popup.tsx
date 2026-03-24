@@ -3,18 +3,15 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { UploadButton } from "@/utils/uploadthing";
-import { RouteImage } from "@/generated/prisma/browser";
 import { useNotification } from "@/app/contexts/NotificationContext";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { Route } from "@/generated/prisma/browser";
 import ElementLoadingAnimation from "../../general/element-loading-animation";
 import clsx from "clsx";
 import ConfirmationPopUp from "../../general/confirmation-pop-up";
+import type { TVRoute } from "@/lib/tvTypes";
 
-export type RouteWithExtraData = Route & {
-  images: RouteImage[];
-};
+export type RouteWithExtraData = TVRoute;
 export function FeaturedRoutesPopup({
   routes,
   onCancel,
@@ -26,7 +23,7 @@ export function FeaturedRoutesPopup({
 }) {
   const router = useRouter();
   const [confirmationPopUp, setConfirmationPopUp] = useState(false);
-  const [searchedRoutes, setSearchedRoutes] = useState<Route[]>([]);
+  const [searchedRoutes, setSearchedRoutes] = useState<RouteWithExtraData[]>([]);
   const [search, setSearch] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [hasSearched, setHasSearched] = useState(false);

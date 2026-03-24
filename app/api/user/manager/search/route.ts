@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
-import prisma from "@/prisma";
+import { api } from "@/convex/_generated/api";
+import { createConvexServerClient } from "@/lib/convexServer";
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const search = searchParams.get("search");
@@ -9,11 +10,8 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: "Search parameter is required" }, { status: 400 });
   }
 
-  const users = await prisma.user.findMany({
-    where: {
-      name: { contains: search, mode: "insensitive" },
-      username: { contains: search, mode: "insensitive" },
-    },
+  const users = await createConvexServerClient().query(api.users.searchUsers, {
+    search,
     take: take ? parseInt(take) : 10,
   });
 

@@ -3,7 +3,8 @@ import jwt from "jsonwebtoken";
 
 import { getCurrentAppSession as auth } from "@/lib/getCurrentAppUser";
 
-import prisma from "@/prisma";
+import { api } from "@/convex/_generated/api";
+import { createConvexServerClient } from "@/lib/convexServer";
 
 // Helper to get userId from JWT token or NextAuth session
 async function getUserId(req: NextRequest): Promise<string | null> {
@@ -36,27 +37,17 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const user = await prisma.user.findUnique({
-      where: { id: userId },
-      select: {
-        totalXp: true,
-        monthlyXp: {
-          where: {
-            year: new Date().getFullYear(),
-            month: new Date().getMonth() + 1,
-          },
-          select: {
-            xp: true,
-          },
-        },
-      },
-    });
+    const leaderboardData = await createConvexServerClient().query(
+      api.routes.getLeaderboardData,
+      {}
+    );
+    const user = leaderboardData.total.find(entry => entry.id === userId) ?? null;
 
     if (!user) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
-    const currentMonthXp = user.monthlyXp[0]?.xp || 0;
+    const currentMonthXp = leaderboardData.monthly.find(entry => entry.user.id === userId)?.xp || 0;
 
     return NextResponse.json({
       xp: user.totalXp || 0,
@@ -82,47 +73,12 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Invalid XP value" }, { status: 400 });
     }
 
-    const currentDate = new Date();
-    const currentYear = currentDate.getFullYear();
-    const currentMonth = currentDate.getMonth() + 1;
-
-    // Update total XP and monthly XP in a transaction
-    const result = await prisma.$transaction(async tx => {
-      // Update total XP
-      const updatedUser = await tx.user.update({
-        where: { id: userId },
-        data: { totalXp: { increment: xpGained } },
-        select: { totalXp: true },
-      });
-
-      // Update or create monthly XP record
-      await tx.monthlyXp.upsert({
-        where: {
-          userId_month_year: {
-            userId: userId,
-            month: currentMonth,
-            year: currentYear,
-          },
-        },
-        update: {
-          xp: { increment: xpGained },
-        },
-        create: {
-          userId: userId,
-          month: currentMonth,
-          year: currentYear,
-          xp: xpGained,
-        },
-      });
-
-      return updatedUser;
-    });
-
-    return NextResponse.json({
-      success: true,
-      newTotalXp: result.totalXp,
-      monthlyXp: xpGained, // Return the XP gained this month
-    });
+    return NextResponse.json(
+      {
+        error: "XP write endpoint is obsolete under Convex-backed route completion",
+      },
+      { status: 410 }
+    );
   } catch (error) {
     console.error("Error updating user XP:", error);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });

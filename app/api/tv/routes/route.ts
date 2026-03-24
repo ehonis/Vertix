@@ -1,7 +1,5 @@
 import { NextResponse, NextRequest } from "next/server";
-import prisma from "@/prisma";
-
-import { Route } from "@/generated/prisma/client";
+import { searchTvRoutes, updateTvSlideRoutes } from "@/lib/tv";
 
 export const dynamic = "force-dynamic";
 
@@ -11,23 +9,9 @@ export async function GET(req: NextRequest) {
   const searchTerm = searchParams.get("text") || "";
   const slideId = searchParams.get("slideId") || "";
 
-
-
-
-
-  let routes: Route[] = [];
+  let routes: Awaited<ReturnType<typeof searchTvRoutes>> = [];
   if (searchTerm.length > 3) {
-    routes = await prisma.route.findMany({
-      where: {
-        title: { contains: searchTerm, mode: "insensitive" as const },
-        isArchive: false,
-        tvSlides: {
-          none: {
-            id: slideId,
-          },
-        },
-      },
-    });
+    routes = await searchTvRoutes(searchTerm, slideId);
   }
 
   return NextResponse.json({
@@ -38,34 +22,27 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   const { functionName, routeId, imageUrl, slideId } = await req.json();
   if (functionName === "addRoute") {
-    const route = await prisma.route.update({
-      where: { id: routeId },
-      data: {bonusXp: 50}
-    });
-   
-    if (!route) {
-      return NextResponse.json({ error: "Route not found" }, { status: 404 });
-    }
-    await prisma.tVSlide.update({
-      where: { id: slideId },
-      data: { routes: { connect: { id: routeId } } },
+    await updateTvSlideRoutes({
+      functionName,
+      routeId,
+      slideId,
     });
     return NextResponse.json({ message: "Route added successfully" }, { status: 200 });
   }
-  if(functionName === "uploadImage") {
-    const image = await prisma.routeImage.create({
-      data: { url: imageUrl, routeId: routeId },
+  if (functionName === "uploadImage") {
+    await updateTvSlideRoutes({
+      functionName,
+      routeId,
+      imageUrl,
+      slideId,
     });
     return NextResponse.json({ message: "Image uploaded successfully" }, { status: 200 });
   }
-  if(functionName === "removeRoute") {
-    const route = await prisma.route.update({
-      where: { id: routeId },
-      data: { bonusXp: 0 },
-    });
-    await prisma.tVSlide.update({
-      where: { id: slideId },
-      data: { routes: { disconnect: { id: routeId } } },
+  if (functionName === "removeRoute") {
+    await updateTvSlideRoutes({
+      functionName,
+      routeId,
+      slideId,
     });
     return NextResponse.json({ message: "Route removed successfully" }, { status: 200 });
   }

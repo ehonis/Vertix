@@ -1,13 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
-import prisma from "@/prisma";
+import { api } from "@/convex/_generated/api";
+import { createConvexServerClient } from "@/lib/convexServer";
 
 export async function POST(req: NextRequest) {
   try {
     const { userId } = await req.json();
 
-    await prisma.user.delete({
-      where: { id: userId },
-    });
+    await createConvexServerClient().mutation(api.users.deleteUser, { userId });
 
     return NextResponse.json({ status: 200 });
   } catch (error) {

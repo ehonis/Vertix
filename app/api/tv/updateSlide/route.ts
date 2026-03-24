@@ -1,22 +1,20 @@
 import { getCurrentAppSession as auth } from "@/lib/getCurrentAppUser";
-import { UserRole } from "@/generated/prisma/client";
 import { NextResponse } from "next/server";
-import prisma from "@/prisma";
+import { createTvSlide, setTvSlideActive } from "@/lib/tv";
+
+const ADMIN = "ADMIN";
 
 export async function PUT(req: Request) {
   const session = await auth();
   if (!session) {
     return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
-  } else if (session.user.role != UserRole.ADMIN) {
+  } else if (session.user.role != ADMIN) {
     return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
   }
 
   const { slideId, isActive } = await req.json();
 
-  await prisma.tVSlide.update({
-    where: { id: slideId },
-    data: { isActive },
-  });
+  await setTvSlideActive(slideId, isActive);
 
   return NextResponse.json({ message: "Slide updated successfully" }, { status: 200 });
 }
@@ -27,20 +25,13 @@ export async function POST(req: Request) {
   console.log(session?.user);
   if (!session) {
     return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
-  } else if (session.user.role != UserRole.ADMIN) {
+  } else if (session.user.role != ADMIN) {
     return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
   }
 
   const { type, imageUrl, text, isActive } = await req.json();
 
-  await prisma.tVSlide.create({
-    data: {
-      type,
-      imageUrl,
-      text,
-      isActive,
-    },
-  });
+  await createTvSlide({ type, imageUrl, text, isActive });
 
   return NextResponse.json({ message: "Slide created successfully" }, { status: 200 });
 }

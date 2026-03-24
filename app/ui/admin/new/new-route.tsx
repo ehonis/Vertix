@@ -3,7 +3,6 @@ import clsx from "clsx";
 import GradeSelect from "../new_route/grade-select";
 import TopDown from "../../routes/topdown";
 import ErrorPopUp from "./error-pop-up";
-import type { RouteTag } from "@/generated/prisma/browser";
 import ConfirmationPopUp from "../../general/confirmation-pop-up";
 import RoutesMapShell from "../../routes/routes-map-shell";
 import {
@@ -34,7 +33,7 @@ export default function NewRoute({
   id: string;
   onCommit: (data: routeData) => void;
   onUncommit: (id: string) => void;
-  tags: RouteTag[];
+  tags: Array<{ name: string }>;
   onDelete: (id: string) => void;
 }) {
   const { showNotification } = useNotification();

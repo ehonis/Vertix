@@ -85,6 +85,25 @@ const monthlyXpRowValidator = v.object({
   xp: v.number(),
 });
 
+const tvSlideTypeValidator = v.union(
+  v.literal("LOGO"),
+  v.literal("STATS"),
+  v.literal("LEADERBOARD"),
+  v.literal("FEATURED_ROUTE"),
+  v.literal("IMAGE"),
+  v.literal("TEXT")
+);
+
+const tvSlideRowValidator = v.object({
+  legacyPrismaId: v.string(),
+  type: tvSlideTypeValidator,
+  imageUrl: v.optional(v.string()),
+  text: v.optional(v.string()),
+  isActive: v.boolean(),
+  routeIds: v.array(v.id("routes")),
+  sortOrder: v.optional(v.number()),
+});
+
 type LookupResult = {
   users: Array<{ id: Id<"users">; legacyPrismaId?: string; email: string }>;
   gymWalls: Array<{
@@ -219,6 +238,14 @@ export const upsertMonthlyXp = mutation({
   },
 });
 
+export const upsertTvSlides = mutation({
+  args: { secret: v.string(), rows: v.array(tvSlideRowValidator) },
+  handler: async (ctx, args) => {
+    assertSecret(args.secret);
+    return await upsertByLegacyId(ctx, "tvSlides", args.rows);
+  },
+});
+
 function assertSecret(secret: string) {
   if (!process.env.ROUTE_MIGRATION_SECRET) {
     throw new Error("Missing ROUTE_MIGRATION_SECRET in Convex env");
@@ -236,7 +263,8 @@ async function upsertByLegacyId<
     | "routeAttempts"
     | "routeCompletions"
     | "communityGrades"
-    | "monthlyXp",
+    | "monthlyXp"
+    | "tvSlides",
 >(ctx: MutationCtx, table: T, rows: Array<Omit<Doc<T>, "_id" | "_creationTime">>) {
   let inserted = 0;
   let updated = 0;
