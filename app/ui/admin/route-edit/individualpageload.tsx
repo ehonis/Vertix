@@ -4,6 +4,7 @@ import { getRouteImagesById } from "@/lib/routes";
 import { findDaysOld } from "@/lib/dates";
 import { findAllTotalSends } from "@/lib/routes";
 import { findStarRating } from "@/lib/route";
+import { toWallPartKey } from "@/lib/wallLocations";
 export default async function IndividualRoutePageLoad({ routeId }: { routeId: string }) {
   const route = await getRouteById(routeId);
   if (!route) {
@@ -14,9 +15,19 @@ export default async function IndividualRoutePageLoad({ routeId }: { routeId: st
   const totalSends = await findAllTotalSends(route.id);
   const starRating = await findStarRating(route.id);
 
+  const routeForEditor = {
+    ...route,
+    setDate: new Date(route.setDate),
+    type: route.type,
+    isArchive: route.isArchive,
+    order: route.order,
+    location: toWallPartKey(route.location) ?? "boulderSouth",
+    createdByUserID: null,
+  };
+
   return (
     <EditRoute
-      route={route}
+      route={routeForEditor as any}
       images={images}
       daysOld={daysOld}
       totalSends={totalSends}

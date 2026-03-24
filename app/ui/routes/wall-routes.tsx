@@ -1,6 +1,9 @@
-import { User, RouteAttempt, RouteCompletion } from "@/generated/prisma/client";
-import { useEffect, useState } from "react";
+import type { AppRouteAttempt, AppRouteCompletion } from "@/lib/appTypes";
+import type { AppUser } from "@/lib/appUser";
+import { useEffect, useMemo, useState } from "react";
 import { useNotification } from "@/app/contexts/NotificationContext";
+import { useQuery } from "convex/react";
+import { api } from "@/convex/_generated/api";
 import RouteTile from "./route-tile";
 import ElementLoadingAnimation from "../general/element-loading-animation";
 import { RouteWithExtraData } from "@/app/api/routes/get-wall-routes-non-archive/route";
@@ -8,14 +11,14 @@ import type { WallPartKey } from "@/lib/wallLocations";
 
 interface WallRoutesProps {
   wall: WallPartKey | null;
-  user: User;
+  user: AppUser;
   onData: (
     routeId: string,
     name: string,
     grade: string,
     color: string,
-    completions: RouteCompletion[],
-    attempts: RouteAttempt[],
+    completions: AppRouteCompletion[],
+    attempts: AppRouteAttempt[],
     userGrade: string | null,
     communityGrade: string,
     xp: { xp: number; baseXp: number; xpExtrapolated: { type: string; xp: number }[] } | null,
@@ -32,13 +35,40 @@ export default function WallRoutes({ wall, user, onData, refreshTrigger }: WallR
 
   const [isFiltered, setIsFiltered] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const convexWallRoutes = useQuery(api.routes.getWallRoutes, wall ? { wallPart: wall } : "skip");
+
+  const convexRoutes = useMemo(() => {
+    if (!convexWallRoutes?.routes) {
+      return [];
+    }
+
+    return convexWallRoutes.routes.map(route => ({
+      ...route,
+      setDate: new Date(route.setDate),
+    })) as unknown as RouteWithExtraData[];
+  }, [convexWallRoutes]);
+
+  const hasConvexRouteData = convexWallRoutes?.hasRouteData ?? false;
 
   useEffect(() => {
-    const findRoutes = async () => {
-      if (!wall) {
+    if (!wall) {
+      setRoutes([]);
+      setIsLoading(false);
+      return;
+    }
+
+    if (convexWallRoutes) {
+      if (hasConvexRouteData) {
+        setRoutes(convexRoutes);
+        setIsLoading(false);
         return;
       }
+    } else {
+      setIsLoading(true);
+      return;
+    }
 
+    const findRoutes = async () => {
       const queryData = new URLSearchParams({
         wall: wall,
         page: "1",
@@ -67,7 +97,15 @@ export default function WallRoutes({ wall, user, onData, refreshTrigger }: WallR
     };
 
     findRoutes();
-  }, [wall, refreshTrigger]);
+  }, [
+    wall,
+    refreshTrigger,
+    convexWallRoutes,
+    convexRoutes,
+    hasConvexRouteData,
+    showNotification,
+    user?.id,
+  ]);
 
   return (
     <div>
@@ -95,25 +133,23 @@ export default function WallRoutes({ wall, user, onData, refreshTrigger }: WallR
         {isLoading ? (
           <ElementLoadingAnimation />
         ) : !isFiltered && routes && routes.length > 0 ? (
-          routes
-            .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
-            .map(route => (
-              <RouteTile
-                user={user}
-                key={route.id}
-                color={route.color}
-                name={route.title}
-                grade={route.grade}
-                id={route.id}
-                isArchived={route.isArchive}
-                isSearched={false}
-                onData={onData}
-                completions={route.completions}
-                attempts={route.attempts}
-                communityGrades={route.communityGrades}
-                bonusXp={route.bonusXp || 0}
-              />
-            ))
+          routes.map(route => (
+            <RouteTile
+              user={user}
+              key={route.id}
+              color={route.color}
+              name={route.title}
+              grade={route.grade}
+              id={route.id}
+              isArchived={route.isArchive}
+              isSearched={false}
+              onData={onData}
+              completions={route.completions}
+              attempts={route.attempts}
+              communityGrades={route.communityGrades}
+              bonusXp={route.bonusXp || 0}
+            />
+          ))
         ) : null}
         {isFiltered && filteredRoutes.length === 0 && (
           <p>No Routes found for this combination of tags and wall</p>

@@ -12,7 +12,8 @@
     "postinstall": "prisma generate",
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,css,scss,md}\"",
     "migrate:users-to-clerk": "node --import tsx scripts/migrate-users-to-clerk.ts",
-    "migrate:user-images-to-clerk": "node --import tsx scripts/migrate-user-images-to-clerk.ts"
+    "migrate:user-images-to-clerk": "node --import tsx scripts/migrate-user-images-to-clerk.ts",
+    "migrate:routes-to-convex": "node --import tsx scripts/migrate-routes-to-convex.ts"
   },
   "dependencies": {
     "@clerk/nextjs": "^7.0.6",

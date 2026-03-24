@@ -1,8 +1,7 @@
 import { getCurrentAppSession as auth } from "@/lib/getCurrentAppUser";
-import prisma from "@/prisma";
+import { api } from "@/convex/_generated/api";
+import { createConvexServerClient } from "@/lib/convexServer";
 import Leaderboard from "../ui/leaderboard/leaderboard";
-
-import { User } from "@/generated/prisma/client";
 
 export default async function LeaderboardPage() {
   const session = await auth();
@@ -17,47 +16,13 @@ export default async function LeaderboardPage() {
     );
   }
 
-  const totalXpLeaderBoardData = await prisma.user.findMany({
-    where: {
-      totalXp: {
-        gt: 0, // Only show users with XP
-      },
-      private: false,
-    },
-    orderBy: {
-      totalXp: "desc",
-    },
-    take: 100, // Limit to top 100 for performance
-  });
+  const convex = createConvexServerClient();
+  const leaderboardData = await convex.query(api.routes.getLeaderboardData, {});
+  const totalXpLeaderBoardData = leaderboardData.total;
 
   const today = new Date();
-  const month = today.getMonth() + 1;
   const monthName = today.toLocaleString("default", { month: "long" });
-
-  const monthlyLeaderBoardData = await prisma.monthlyXp.findMany({
-    where: {
-      month: month,
-      year: today.getFullYear(),
-      user: {
-        private: false,
-      },
-    },
-    orderBy: {
-      xp: "desc",
-    },
-    select: {
-      user: {
-        select: {
-          name: true,
-          id: true,
-          totalXp: true,
-          username: true,
-          image: true,
-        },
-      },
-      xp: true,
-    },
-  });
+  const monthlyLeaderBoardData = leaderboardData.monthly;
 
   let foundIndexOfUserMonthly;
 
@@ -94,7 +59,7 @@ export default async function LeaderboardPage() {
           totalXpLeaderBoardData={totalXpLeaderBoardData}
           foundIndexOfUserTotal={userTotalIndex}
           foundIndexOfUserMonthly={foundIndexOfUserMonthly}
-          user={user as User}
+          user={user}
         />
 
         {/* <div

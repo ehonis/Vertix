@@ -1,16 +1,15 @@
-import { RouteCompletion, RouteType } from "@/generated/prisma/browser";
+import type { AppRouteCompletion } from "@/lib/appTypes";
 
-export function splitRoutesByType(
-  routes: (RouteCompletion & { route: { type: RouteType; grade: string } })[]
-) {
-  const boulderRoutes = routes.filter(route => route.route.type === RouteType.BOULDER);
-  const ropeRoutes = routes.filter(route => route.route.type === RouteType.ROPE);
+export function splitRoutesByType(routes: AppRouteCompletion[]) {
+  const hydratedRoutes = routes.filter(route => route.route && route.completionDate);
+  const boulderRoutes = hydratedRoutes.filter(route => route.route?.type === "BOULDER");
+  const ropeRoutes = hydratedRoutes.filter(route => route.route?.type === "ROPE");
   return { boulderRoutes, ropeRoutes };
 }
 
 export function getRouteGradeCounts(
-  ropeRoutes: (RouteCompletion & { route: { type: RouteType; grade: string } })[],
-  boulderRoutes: (RouteCompletion & { route: { type: RouteType; grade: string } })[]
+  ropeRoutes: AppRouteCompletion[],
+  boulderRoutes: AppRouteCompletion[]
 ) {
   const boulderGradeCounts = [
     { grade: "vfeature", count: 0 },
@@ -45,7 +44,8 @@ export function getRouteGradeCounts(
   ];
 
   boulderRoutes.forEach(route => {
-    const grade = route.route.grade;
+    const grade = route.route?.grade;
+    if (!grade) return;
     const gradeCount = boulderGradeCounts.find(g => g.grade === grade);
     if (gradeCount) {
       gradeCount.count++;
@@ -53,7 +53,8 @@ export function getRouteGradeCounts(
   });
 
   ropeRoutes.forEach(route => {
-    const grade = route.route.grade;
+    const grade = route.route?.grade;
+    if (!grade) return;
     const gradeCount = ropeGradeCounts.find(g => g.grade === grade);
     if (gradeCount) {
       gradeCount.count++;
@@ -84,7 +85,7 @@ interface DetailedCompletionData {
 }
 
 export function getLineChartCompletionsData(
-  routes: (RouteCompletion & { route: { type: RouteType; grade: string } })[],
+  routes: AppRouteCompletion[],
   timeFrame: "weekToDate" | "monthToDate" | "yearToDate" | "allTime"
 ): DetailedCompletionData {
   const { boulderRoutes, ropeRoutes } = splitRoutesByType(routes);
@@ -148,6 +149,7 @@ export function getLineChartCompletionsData(
   const ropeBreakdown: TimePeriodCounts = {};
 
   boulderRoutes.forEach(route => {
+    if (!route.completionDate) return;
     const routeDate = new Date(route.completionDate);
     if (timeFrame === "weekToDate" && !isInCurrentWeek(routeDate)) {
       return;
@@ -163,6 +165,7 @@ export function getLineChartCompletionsData(
   });
 
   ropeRoutes.forEach(route => {
+    if (!route.completionDate) return;
     const routeDate = new Date(route.completionDate);
     if (timeFrame === "weekToDate" && !isInCurrentWeek(routeDate)) {
       return;
@@ -187,7 +190,7 @@ export function getLineChartCompletionsData(
         const allRoutes = [...boulderRoutes, ...ropeRoutes];
         if (allRoutes.length === 0) return [];
 
-        const dates = allRoutes.map(route => new Date(route.completionDate));
+        const dates = allRoutes.map(route => new Date(route.completionDate ?? new Date(0)));
         const earliestDate = new Date(Math.min(...dates.map(d => d.getTime())));
         const latestDate = new Date(Math.max(...dates.map(d => d.getTime())));
 

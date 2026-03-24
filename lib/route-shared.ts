@@ -335,6 +335,73 @@ export function calculateCompletionXpForRoute({
   return { xp: totalXp, baseXp, xpExtrapolated };
 }
 
+export function findIfRopeGradeIsHigher(
+  user: { highestRopeGrade?: string | null },
+  route: { grade: string }
+) {
+  const ropeGrades = [
+    "5.b",
+    "5.7-",
+    "5.7",
+    "5.7+",
+    "5.8-",
+    "5.8",
+    "5.8+",
+    "5.9-",
+    "5.9",
+    "5.9+",
+    "5.10-",
+    "5.10",
+    "5.10+",
+    "5.11-",
+    "5.11",
+    "5.11+",
+    "5.12-",
+    "5.12",
+    "5.12+",
+    "5.13-",
+    "5.13",
+    "5.13+",
+  ];
+  if (!user.highestRopeGrade) return false;
+  return (
+    ropeGrades.indexOf(user.highestRopeGrade.toLowerCase()) <
+    ropeGrades.indexOf(route.grade.toLowerCase())
+  );
+}
+
+export function findIfBoulderGradeIsHigher(
+  user: { highestBoulderGrade?: string | null },
+  route: { grade: string }
+) {
+  const boulderGrades = ["vb", "v0", "v1", "v2", "v3", "v4", "v5", "v6", "v7", "v8", "v9", "v10"];
+  if (!user.highestBoulderGrade) return false;
+  return (
+    boulderGrades.indexOf(user.highestBoulderGrade.toLowerCase()) <
+    boulderGrades.indexOf(route.grade.toLowerCase())
+  );
+}
+
+export function calculateDynamicBountyXp({
+  startedAt,
+  baseXp,
+  dailyIncrementXp,
+  now,
+}: {
+  startedAt: Date;
+  baseXp: number;
+  dailyIncrementXp: number;
+  now?: Date;
+}) {
+  const effectiveNow = now ?? new Date();
+  const millisecondsPerDay = 24 * 60 * 60 * 1000;
+  const elapsedDays = Math.max(
+    0,
+    Math.floor((effectiveNow.getTime() - startedAt.getTime()) / millisecondsPerDay)
+  );
+  return baseXp + elapsedDays * dailyIncrementXp;
+}
+
 export function getLevelForXp(xp: number) {
   if (xp < 0) return 0;
   const K = 10;

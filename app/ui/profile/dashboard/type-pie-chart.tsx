@@ -1,9 +1,8 @@
 "use client";
 
 import { splitRoutesByType } from "@/lib/dashboard-shared";
-import { RouteType } from "@/generated/prisma/browser";
+import type { AppRouteCompletion } from "@/lib/appTypes";
 import { ResponsiveContainer, PieChart, Pie, Legend, Tooltip } from "recharts";
-import { RouteCompletion } from "@/generated/prisma/browser";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import clsx from "clsx";
@@ -44,11 +43,7 @@ function CustomTooltip({ active, payload }: CustomTooltipProps) {
   return null;
 }
 
-export default function TypePieChart({
-  completionData,
-}: {
-  completionData: (RouteCompletion & { route: { type: RouteType; grade: string } })[];
-}) {
+export default function TypePieChart({ completionData }: { completionData: AppRouteCompletion[] }) {
   const [isExpanded, setIsExpanded] = useState(false);
 
   const { boulderRoutes, ropeRoutes } = splitRoutesByType(completionData);

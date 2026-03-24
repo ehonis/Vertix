@@ -1,21 +1,20 @@
 import { NextResponse, NextRequest } from "next/server";
-import prisma from "@/prisma";
+import { api } from "@/convex/_generated/api";
+import { createConvexServerClient } from "@/lib/convexServer";
 import { removeRouteFromAllSlides } from "@/lib/tvSlideHelpers";
 
 export async function PATCH(request: NextRequest) {
   const { routeId, isArchive } = await request.json();
 
   try {
-    // If archiving, remove from all TV slides
     if (isArchive) {
       await removeRouteFromAllSlides(routeId);
     }
-    
-    await prisma.route.update({
-      where: { id: routeId },
-      data: {
-        isArchive: isArchive,
-      },
+
+    const convex = createConvexServerClient();
+    await convex.mutation(api.routes.setRouteArchived, {
+      routeIds: [routeId],
+      isArchived: Boolean(isArchive),
     });
     return NextResponse.json({ message: "Successfully updated route" }, { status: 200 });
   } catch (error) {

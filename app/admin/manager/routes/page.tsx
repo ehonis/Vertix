@@ -15,9 +15,7 @@ const getRoutes = async () => {
     where: {
       isArchive: false,
     },
-    orderBy: {
-      setDate: "asc",
-    },
+    orderBy: [{ x: "asc" }, { y: "asc" }, { setDate: "asc" }],
   });
   return routes;
 };

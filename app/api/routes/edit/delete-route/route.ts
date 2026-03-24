@@ -1,12 +1,14 @@
 import { NextResponse, NextRequest } from "next/server";
-import prisma from "@/prisma";
-import { Route, UserRole } from "@/generated/prisma/client";
+import { UserRole } from "@/generated/prisma/client";
 import { getCurrentAppSession as auth } from "@/lib/getCurrentAppUser";
 import { removeRoutesFromAllSlides } from "@/lib/tvSlideHelpers";
 import jwt from "jsonwebtoken";
+import { api } from "@/convex/_generated/api";
+import { createConvexServerClient } from "@/lib/convexServer";
 
-
-async function getUserIdAndRole(request: NextRequest): Promise<{ userId: string; role: UserRole } | null> {
+async function getUserIdAndRole(
+  request: NextRequest
+): Promise<{ userId: string; role: UserRole } | null> {
   const session = await auth();
   if (session?.user?.id && session.user.role) {
     return { userId: session.user.id, role: session.user.role as UserRole };
@@ -15,16 +17,12 @@ async function getUserIdAndRole(request: NextRequest): Promise<{ userId: string;
   if (authHeader?.startsWith("Bearer ")) {
     const token = authHeader.substring(7);
     const jwtSecret =
-      process.env.JWT_SECRET ||
-      process.env.AUTH_SECRET ||
-      "your-secret-key-change-in-production";
+      process.env.JWT_SECRET || process.env.AUTH_SECRET || "your-secret-key-change-in-production";
     try {
       const decoded = jwt.verify(token, jwtSecret) as { userId: string };
-      const user = await prisma.user.findUnique({
-        where: { id: decoded.userId },
-        select: { id: true, role: true },
-      });
-      if (user) return { userId: user.id, role: user.role };
+      const currentUser = await createConvexServerClient().query(api.users.getCurrent, {});
+      const user = currentUser && currentUser._id === decoded.userId ? currentUser : null;
+      if (user) return { userId: user._id, role: user.role };
     } catch {
       // invalid JWT
     }
@@ -41,20 +39,21 @@ export async function DELETE(request: NextRequest) {
   if (authResult.role !== UserRole.ADMIN) {
     return NextResponse.json({ message: "Not Authorized" }, { status: 403 });
   }
-  const { routes }: { routes: Route[] } = await request.json();
+  const { routes }: { routes: Array<{ id: string }> } = await request.json();
 
   try {
     const routeIds = routes.map(route => route.id);
-    
+
     // Remove routes from all TV slides before deleting
     await removeRoutesFromAllSlides(routeIds);
-    
-    await prisma.route.deleteMany({
-      where: { id: { in: routeIds } },
+
+    await createConvexServerClient().mutation(api.routes.setRouteArchived, {
+      routeIds,
+      isArchived: true,
     });
-    return NextResponse.json({ message: "Successfully deleted routes" }, { status: 200 });
+    return NextResponse.json({ message: "Successfully archived routes" }, { status: 200 });
   } catch (error) {
     console.log(error);
-    return NextResponse.json({ error: "Failed to delete routes" }, { status: 500 });
+    return NextResponse.json({ error: "Failed to archive routes" }, { status: 500 });
   }
 }

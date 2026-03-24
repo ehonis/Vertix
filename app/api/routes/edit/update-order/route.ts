@@ -1,27 +1,29 @@
-import { NextRequest } from "next/server";
-import { NextResponse } from "next/server";
-import prisma from "@/prisma";
-import { Route } from "@/generated/prisma/client";
+import { NextRequest, NextResponse } from "next/server";
+import { api } from "@/convex/_generated/api";
+import { createConvexServerClient } from "@/lib/convexServer";
+import { getCurrentAppSession as auth } from "@/lib/getCurrentAppUser";
 
 export async function PATCH(request: NextRequest) {
+  const session = await auth();
+
+  if (!session) {
+    return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+  }
+
   try {
     const routes = await request.json();
-    console.log(routes);
+    const convex = createConvexServerClient();
 
-    // Use a transaction to update each route individually with its specific order
-    // This is necessary because updateMany can only set the same value for all records
-    const updatedRoutes = await prisma.$transaction(
-      routes.map((route: Route) =>
-        prisma.route.update({
-          where: { id: route.id },
-          data: { order: route.order },
-        })
-      )
-    );
+    const result = await convex.mutation(api.routes.updateRouteSortOrders, {
+      routes: routes.map((route: { id: string; order: number }) => ({
+        id: route.id,
+        order: route.order,
+      })),
+    });
 
     return NextResponse.json({
       message: "Order updated successfully",
-      updatedCount: updatedRoutes.length,
+      updatedCount: result.updatedCount,
     });
   } catch (error) {
     console.error("Error updating route order:", error);

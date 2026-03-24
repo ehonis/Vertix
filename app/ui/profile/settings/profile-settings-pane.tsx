@@ -7,7 +7,7 @@ import Image from "next/image";
 import { useCallback, useEffect } from "react";
 import ElementLoadingAnimation from "../../general/element-loading-animation";
 import { useRouter } from "next/navigation";
-import { User } from "@/generated/prisma/browser";
+import type { AppUser } from "@/lib/appUser";
 
 // A debounce function that returns a cancel function for cleanup.
 const debounce = (
@@ -25,7 +25,7 @@ const debounce = (
   return debouncedFunction;
 };
 
-export default function ProfileSettingsPane({ user }: { user: User }) {
+export default function ProfileSettingsPane({ user }: { user: AppUser }) {
   const { showNotification } = useNotification();
   const router = useRouter();
   const [name, setName] = useState<string>(user.name ?? "");

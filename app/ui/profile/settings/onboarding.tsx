@@ -6,7 +6,7 @@ import { useNotification } from "@/app/contexts/NotificationContext";
 import ImageUploaderPopUp from "./image-uploader-popup";
 import { useRouter } from "next/navigation";
 import clsx from "clsx";
-import { User } from "@/generated/prisma/browser";
+import type { AppUser } from "@/lib/appUser";
 
 // A debounce function that returns a cancel function for cleanup.
 const debounce = <T extends (...args: unknown[]) => void>(func: T, wait: number): (() => void) => {
@@ -18,7 +18,7 @@ const debounce = <T extends (...args: unknown[]) => void>(func: T, wait: number)
   };
 };
 
-export default function Onboarding({ user }: { user: User }) {
+export default function Onboarding({ user }: { user: AppUser }) {
   const { showNotification } = useNotification();
   const router = useRouter();
 
@@ -136,7 +136,7 @@ export default function Onboarding({ user }: { user: User }) {
             className="flex flex-col items-center justify-center"
             onClick={() => setIsImageUploader(true)}
           >
-            {image === null ? (
+            {!image ? (
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"

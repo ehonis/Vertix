@@ -1,6 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/prisma";
-import { Route, RouteCompletion, RouteAttempt, CommunityGrade, Bounty } from "@/generated/prisma/client";
+import {
+  Route,
+  RouteCompletion,
+  RouteAttempt,
+  CommunityGrade,
+  Bounty,
+} from "@/generated/prisma/client";
 import { calculateDynamicBountyXp } from "@/lib/route";
 
 export type RouteWithExtraData = Route & {
@@ -51,9 +57,7 @@ export async function GET(req: NextRequest) {
             take: 1,
           },
         },
-        orderBy: {
-          setDate: "desc",
-        },
+        orderBy: [{ x: "asc" }, { y: "asc" }, { setDate: "desc" }],
       })) as RouteWithExtraData[];
 
       routesWithCompletion = routes;
@@ -76,9 +80,7 @@ export async function GET(req: NextRequest) {
             take: 1,
           },
         },
-        orderBy: {
-          setDate: "desc",
-        },
+        orderBy: [{ x: "asc" }, { y: "asc" }, { setDate: "desc" }],
       });
 
       routesWithCompletion = routes.map(route => ({
@@ -117,4 +119,3 @@ export async function GET(req: NextRequest) {
     );
   }
 }
-

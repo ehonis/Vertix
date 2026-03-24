@@ -13,7 +13,7 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 
 import { useState } from "react";
-import { RouteCompletion, RouteType } from "@/generated/prisma/browser";
+import type { AppRouteCompletion } from "@/lib/appTypes";
 import { getLineChartCompletionsData } from "@/lib/dashboard-shared";
 type TooltipPayload = {
   name: string;
@@ -48,7 +48,7 @@ type TimeFrame = "allTime" | "weekToDate" | "monthToDate" | "yearToDate";
 export default function GradeCompletionsOverTime({
   completionData,
 }: {
-  completionData: (RouteCompletion & { route: { type: RouteType; grade: string } })[];
+  completionData: AppRouteCompletion[];
 }) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [timeFrame, setTimeFrame] = useState<TimeFrame>("allTime");

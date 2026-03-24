@@ -6,7 +6,7 @@ import clsx from "clsx";
 import { useRouter } from "next/navigation";
 import { useNotification } from "@/app/contexts/NotificationContext";
 
-import { Route, RouteTag, RouteType } from "@/generated/prisma/browser";
+import { RouteTag, RouteType } from "@/generated/prisma/browser";
 import RoutesMapShell from "../../routes/routes-map-shell";
 import {
   legacyLocationsForWallPart,
@@ -16,58 +16,20 @@ import {
 
 import RopeGradeSelect from "../new_route/rope-grade-select";
 import BoulderGradeSelect from "../new_route/boulder-grade-select";
-import { v4 as uuidv4 } from "uuid";
 
-// Type for the transformed route data used in sorting and filtering
-export type TransformedRoute = {
-  id: string;
-  name: string;
-  order: number;
-};
-
-export default function NewRoutePopup({
-  onCancel,
-  tags,
-}: {
-  onCancel: () => void;
-  tags: RouteTag[];
-}) {
+export default function NewRoutePopup({ onCancel }: { onCancel: () => void; tags: RouteTag[] }) {
   const [name, setName] = useState("");
   const router = useRouter();
   const { showNotification } = useNotification();
-  const [tempTags, setTempTags] = useState<string[]>(tags.map(tag => tag.name));
-  const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [isFirstStep, setIsFirstStep] = useState(true);
   const [isSecondStep, setIsSecondStep] = useState(false);
-  const [isThirdStep, setIsThirdStep] = useState(false);
   const [type, setType] = useState<RouteType>(RouteType.BOULDER);
   const [selectedDate, setSelectedDate] = useState("");
   const [isToday, setIsToday] = useState(false);
-  const [id, setId] = useState("");
   const [location, setLocation] = useState<LegacyLocationKey>();
   const [color, setColor] = useState("black");
   const [grade, setGrade] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-
-  const [routes, setRoutes] = useState<Route[]>([]);
-
-  const findRoutesFromLocation = async (location: LegacyLocationKey) => {
-    try {
-      const response = await fetch(`/api/routes/get-wall-routes-non-archive?wall=${location}`);
-      const data = await response.json();
-      setRoutes(data.data || []);
-    } catch (error) {
-      console.error("Error fetching routes:", error);
-      setRoutes([]);
-    }
-  };
-
-  useEffect(() => {
-    console.log("location", location);
-    if (location) {
-      findRoutesFromLocation(location);
-    }
-  }, [location]);
 
   const handleLocationSelect = (data: WallPartKey | null) => {
     if (!data) return;
@@ -76,58 +38,20 @@ export default function NewRoutePopup({
     setType(routeType);
     setLocation(legacyLocationsForWallPart(data)[0]);
     setIsFirstStep(false);
-    setIsThirdStep(false);
-    setIsSecondStep(true);
-  };
-
-  const handleFirstStepNextClick = () => {
-    setIsFirstStep(false);
-    setIsThirdStep(false);
     setIsSecondStep(true);
   };
 
   const handleSecondStepNextClick = () => {
-    const newId = uuidv4();
-    setId(newId);
     if (!location) {
       showNotification({ message: "Please select a wall", color: "red" });
       return;
     }
-    setRoutes([
-      {
-        id: newId,
-        title: name,
-        color: color,
-        grade: grade,
-        setDate: new Date(selectedDate),
-        order: -1,
-        location: location,
-        type: type,
-        isArchive: false,
-        createdByUserID: null,
-        xp: 0,
-        bonusXp: 0,
-        x: null,
-        y: null,
-      },
-      ...routes,
-    ]);
-    setIsSecondStep(false);
-    setIsFirstStep(false);
-    setIsThirdStep(true);
+    void handleSubmit();
   };
 
   const handleSecondStepBackClick = () => {
     setIsSecondStep(false);
     setIsFirstStep(true);
-  };
-
-  const handleTagClick = (tag: string) => {
-    if (selectedTags.includes(tag)) {
-      setSelectedTags(prev => prev.filter(t => t !== tag));
-    } else {
-      setSelectedTags(prev => [...prev, tag]);
-    }
   };
 
   const handleNowButton = () => {
@@ -151,121 +75,34 @@ export default function NewRoutePopup({
     }
   }, [selectedDate]);
 
-  const handleThirdStepBackClick = () => {
-    setIsSecondStep(true);
-    setIsFirstStep(false);
-    setIsThirdStep(false);
-  };
-
-  const handleMoveUp = () => {
-    const currentRoute = routes.find(route => route.id === id);
-    if (!currentRoute || currentRoute.order === null) return;
-    const currentOrder = currentRoute.order;
-
-    const newRoutes = routes.map(route => {
-      if (route.id === id) {
-        return { ...route, order: (route.order ?? 0) - 1 };
-      }
-      if (route.order === currentOrder - 1) {
-        return { ...route, order: (route.order ?? 0) + 1 };
-      }
-      return route;
-    });
-    setRoutes(newRoutes);
-  };
-
-  const handleMoveDown = () => {
-    const currentRoute = routes.find(route => route.id === id);
-    if (!currentRoute || currentRoute.order === null) return;
-    const currentOrder = currentRoute.order;
-
-    const newRoutes = routes.map(route => {
-      if (route.id === id) {
-        return { ...route, order: (route.order ?? 0) + 1 };
-      }
-      if (route.order === currentOrder + 1) {
-        return { ...route, order: (route.order ?? 0) - 1 };
-      }
-      return route;
-    });
-    setRoutes(newRoutes);
-  };
-
-  const removeAttribuitesAndSortByOrder = (routes: Route[]): TransformedRoute[] => {
-    const removedAttribuites = routes.map(route => {
-      return {
-        id: route.id,
-        name: route.title,
-        order: route.order ?? 0,
-      };
-    });
-    const addOneToOrder = removedAttribuites.map((route, index) => {
-      return { ...route, order: index };
-    });
-    const sortedByOrder = addOneToOrder.sort((a, b) => a.order - b.order);
-    return sortedByOrder;
-  };
-
-  const removeUnchangedOrder = (
-    routes: TransformedRoute[],
-    orderNumber: number
-  ): TransformedRoute[] => {
-    const changedRoutes = routes.filter(route => route.order >= orderNumber + 1);
-    return changedRoutes;
-  };
-
   const handleSubmit = async () => {
-    const filteredRoutes = removeAttribuitesAndSortByOrder(routes);
-    const foundRoute = filteredRoutes.find(route => route.id === id);
-    const routeOrderNumber = foundRoute?.order;
-    const routesToChange = removeUnchangedOrder(filteredRoutes, routeOrderNumber || 0);
     setIsLoading(true);
     try {
       const response = await fetch("/api/routes/edit/add-route", {
         method: "POST",
         body: JSON.stringify({
           newRoute: {
-            id: id,
             title: name,
             color: color,
             grade: grade,
             date: selectedDate,
-            order: routeOrderNumber,
             location: location,
             type: type,
           },
         }),
       });
-      const data = await response.json();
+
       if (response.ok) {
         showNotification({ message: "Route added successfully", color: "green" });
+        router.refresh();
         onCancel();
       } else {
         showNotification({ message: "Error adding route", color: "red" });
       }
     } catch (error) {
       console.error("Error submitting route:", error);
-    }
-
-    try {
-      const response = await fetch("/api/routes/edit/update-routes", {
-        method: "PATCH",
-        body: JSON.stringify({
-          routesToChange: routesToChange,
-        }),
-      });
-      const data = await response.json();
-      if (response.ok) {
-        showNotification({ message: "Route updated successfully", color: "green" });
-        router.refresh();
-        onCancel();
-        setIsLoading(false);
-      } else {
-        showNotification({ message: "Error updating route", color: "red" });
-        setIsLoading(false);
-      }
-    } catch (error) {
-      console.error("Error submitting route:", error);
+      showNotification({ message: "Error adding route", color: "red" });
+    } finally {
       setIsLoading(false);
     }
   };
@@ -402,105 +239,6 @@ export default function NewRoutePopup({
                     Next →
                   </button>
                 )}
-              </div>
-            </div>
-          )}
-          {isThirdStep && (
-            <div className="flex flex-col gap-3">
-              <p className="text-white font-barlow font-bold text-lg">Sort Route {"(L → R)"}</p>
-              <div className="flex flex-col gap-2 overflow-y-scroll h-96 p-2">
-                {Array.isArray(routes) &&
-                  routes
-                    .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
-                    .map(route => (
-                      <div key={route.id} className="flex gap-2 items-center">
-                        <div
-                          className={clsx("flex w-full rounded-md p-2 outline-2", {
-                            "outline-green-400": route.color === "green",
-                            "outline-red-400": route.color === "red",
-                            "outline-blue-400": route.color === "blue",
-                            "outline-yellow-400": route.color === "yellow",
-                            "outline-purple-400": route.color === "purple",
-                            "outline-orange-400": route.color === "orange",
-                            "outline-white": route.color === "white",
-                            "outline-black": route.color === "black",
-                            "outline-pink-400": route.color === "pink",
-                            "outline-amber-950": route.color === "brown",
-                          })}
-                        >
-                          <div>
-                            <p className="text-white font-barlow font-bold text-lg">
-                              {route.title}
-                            </p>
-                            <p className="text-white font-barlow font-bold text-lg">
-                              {route.grade}
-                            </p>
-                          </div>
-                        </div>
-                        <div
-                          className={clsx("flex flex-col justify-between h-full py-1 ", {
-                            "justify-end": route.order === -1,
-                          })}
-                        >
-                          {route.order !== -1 && route.id === id && (
-                            <button
-                              className="flex bg-gray-600 items-center justify-center rounded "
-                              onClick={() => handleMoveUp()}
-                            >
-                              <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                strokeWidth={1.5}
-                                stroke="currentColor"
-                                className="size-7 stroke-2"
-                              >
-                                <path
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  d="m4.5 15.75 7.5-7.5 7.5 7.5"
-                                />
-                              </svg>
-                            </button>
-                          )}
-                          {route.order !== routes.length - 2 && route.id === id && (
-                            <button
-                              className="flex bg-gray-600 items-center justify-center justify-self-end rounded"
-                              onClick={() => handleMoveDown()}
-                            >
-                              <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                strokeWidth={1.5}
-                                stroke="currentColor"
-                                className="size-7 stroke-2"
-                              >
-                                <path
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  d="m19.5 8.25-7.5 7.5-7.5-7.5"
-                                />
-                              </svg>
-                            </button>
-                          )}
-                        </div>
-                      </div>
-                    ))}
-              </div>
-              <div className="flex w-full justify-between mt-3">
-                <button
-                  className="rounded bg-gray-400 font-barlow px-2 py-1 text-lg font-semibold items-center flex"
-                  onClick={handleThirdStepBackClick}
-                >
-                  ← Back
-                </button>
-                <button
-                  className="rounded bg-green-500 font-barlow px-2 py-1 text-lg font-semibold items-center flex"
-                  onClick={handleSubmit}
-                >
-                  Submit
-                </button>
               </div>
             </div>
           )}

@@ -1,4 +1,3 @@
-import prisma from "@/prisma";
 import { redirect } from "next/navigation";
 import { getCurrentAppUser } from "@/lib/getCurrentAppUser";
 
@@ -27,16 +26,14 @@ export default async function Dashboard({ params }: { params: Promise<{ slug: st
     return;
   }
 
-  const user = await prisma.user.findUnique({
-    where: { username: slug },
-  });
+  const user = currentUser.username === slug ? currentUser : null;
 
   if (!user || user.id !== currentUser.id) {
     redirect("/signin");
   }
 
-  const completionData = await getCompletionData(user.id);
-  const attemptsData = await getAttemptsData(user.id);
+  const completionData = await getCompletionData(slug);
+  const attemptsData = await getAttemptsData(slug);
 
   return (
     <div className="flex flex-col p-5 gap-2 w-screen items-center">
@@ -47,7 +44,7 @@ export default async function Dashboard({ params }: { params: Promise<{ slug: st
       <div className="flex flex-col w-xs md:w-md gap-3">
         <XpLevelDisplay user={user} />
         <h2 className="font-barlow text-white text-2xl font-bold">Recent Tix & Attempts</h2>
-        <ActivityFeed userId={user.id} />
+        <ActivityFeed username={slug} />
         <h2 className="font-barlow text-white text-2xl font-bold">Total Tix</h2>
         <PyramidGraph completionData={completionData} />
         <div className="flex flex-row gap-2">

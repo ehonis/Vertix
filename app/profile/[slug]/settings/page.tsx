@@ -1,6 +1,5 @@
 import SettingsNavBar from "@/app/ui/profile/settings/settings-nav-bar";
 import { redirect } from "next/navigation";
-import prisma from "@/prisma";
 import SignOut from "@/app/ui/general/sign-out-button";
 import { getCurrentAppUser } from "@/lib/getCurrentAppUser";
 
@@ -8,11 +7,7 @@ export default async function Settings({ params }: { params: Promise<{ slug: str
   const currentUser = await getCurrentAppUser();
   const { slug } = await params;
 
-  const user = await prisma.user.findUnique({
-    where: {
-      username: slug,
-    },
-  });
+  const user = currentUser?.username === slug ? currentUser : null;
 
   if (user && currentUser && user.id === currentUser.id) {
     return (

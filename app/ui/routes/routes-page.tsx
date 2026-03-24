@@ -1,6 +1,6 @@
 "use client";
 
-import { CommunityGrade, RouteAttempt, RouteCompletion, User } from "@/generated/prisma/browser";
+import type { AppRouteAttempt, AppRouteCompletion } from "@/lib/appTypes";
 import { useState, useEffect, useCallback, useRef } from "react";
 import WallRoutes from "./wall-routes";
 import SearchRoutes from "./search-routes";
@@ -24,8 +24,6 @@ import type { AppUser } from "@/lib/appUser";
 export default function RoutesPage({ user }: { user: AppUser | null | undefined }) {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const prismaLikeUser = user ? ({ ...user, id: user.id } as unknown as User) : null;
-
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const isClosingRef = useRef(false);
 
@@ -155,7 +153,16 @@ export default function RoutesPage({ user }: { user: AppUser | null | undefined 
           const communityGrade =
             route.grade.toLowerCase() === "vfeature" || route.grade.toLowerCase() === "5.feature"
               ? "none"
-              : findCommunityGradeForRoute(route.communityGrades);
+              : findCommunityGradeForRoute(
+                  route.communityGrades.map(grade => ({
+                    id: typeof grade.id === "number" ? grade.id : 0,
+                    grade: grade.grade,
+                    routeId: grade.routeId,
+                    userId: grade.userId,
+                    createdAt: grade.createdAt ?? new Date(0),
+                    updatedAt: grade.updatedAt ?? new Date(0),
+                  }))
+                );
 
           // Get user grade if user exists
           let userGrade: string | null = null;
@@ -165,8 +172,7 @@ export default function RoutesPage({ user }: { user: AppUser | null | undefined 
             route.grade.toLowerCase() !== "5.feature"
           ) {
             userGrade =
-              route.communityGrades.find((grade: CommunityGrade) => grade.userId === user.id)
-                ?.grade || null;
+              route.communityGrades.find(grade => grade.userId === user.id)?.grade || null;
           }
 
           // Calculate XP
@@ -180,7 +186,7 @@ export default function RoutesPage({ user }: { user: AppUser | null | undefined 
             xp = calculateCompletionXpForRoute({
               grade: route.grade,
               previousCompletions: route.completions.length,
-              newHighestGrade: isGradeHigher(prismaLikeUser as User, route.grade, routeType),
+              newHighestGrade: isGradeHigher(user as any, route.grade, routeType),
               bonusXp: route.bonusXp || 0,
             });
           }
@@ -191,8 +197,8 @@ export default function RoutesPage({ user }: { user: AppUser | null | undefined 
             route.title,
             route.grade,
             route.color,
-            route.completions,
-            route.attempts,
+            route.completions as AppRouteCompletion[],
+            route.attempts as AppRouteAttempt[],
             userGrade,
             communityGrade,
             xp,
@@ -256,8 +262,8 @@ export default function RoutesPage({ user }: { user: AppUser | null | undefined 
     name: string,
     grade: string,
     color: string,
-    completions: RouteCompletion[],
-    attempts: RouteAttempt[],
+    completions: AppRouteCompletion[],
+    attempts: AppRouteAttempt[],
     userGrade: string | null,
     communityGrade: string | null,
     xp: { xp: number; baseXp: number; xpExtrapolated: { type: string; xp: number }[] } | null,
@@ -332,7 +338,7 @@ export default function RoutesPage({ user }: { user: AppUser | null | undefined 
               id={routePopUpId}
               name={routePopUpName}
               grade={routePopUpGrade}
-              user={prismaLikeUser}
+              user={user}
               color={routePopUpColor}
               completions={routePopUpCompletions}
               attempts={routePopUpAttempts}
@@ -403,12 +409,14 @@ export default function RoutesPage({ user }: { user: AppUser | null | undefined 
           </div>
           {isSearch && (
             <div>
-              <SearchRoutes
-                searchText={searchText}
-                onData={handleRoutePopUp}
-                user={prismaLikeUser as User}
-                refreshTrigger={refreshTrigger}
-              />
+              {user ? (
+                <SearchRoutes
+                  searchText={searchText}
+                  onData={handleRoutePopUp}
+                  user={user}
+                  refreshTrigger={refreshTrigger}
+                />
+              ) : null}
             </div>
           )}
           <AnimatePresence>
@@ -433,14 +441,16 @@ export default function RoutesPage({ user }: { user: AppUser | null | undefined 
             {isTopDownActive && (
               <motion.div variants={topDownVariants} animate="visible" exit="exit" className="mt-3">
                 <h2 className="font-barlow text-white font-bold text-2xl text-start place-self-start mb-2">
-                  Sorted Left → Right
+                  Sorted by wall position
                 </h2>
-                <WallRoutes
-                  wall={wall}
-                  user={prismaLikeUser as User}
-                  onData={handleRoutePopUp}
-                  refreshTrigger={refreshTrigger}
-                />
+                {user ? (
+                  <WallRoutes
+                    wall={wall}
+                    user={user}
+                    onData={handleRoutePopUp}
+                    refreshTrigger={refreshTrigger}
+                  />
+                ) : null}
               </motion.div>
             )}
           </AnimatePresence>

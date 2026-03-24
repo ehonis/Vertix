@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { CommunityGrade, RouteCompletion, RouteAttempt, User } from "@/generated/prisma/browser";
+import type { AppCommunityGrade, AppRouteCompletion, AppRouteAttempt } from "@/lib/appTypes";
+import type { AppUser } from "@/lib/appUser";
 import ElementLoadingAnimation from "../general/element-loading-animation";
 import { motion } from "framer-motion";
 import { AnimatePresence } from "framer-motion";
@@ -21,15 +22,15 @@ export default function SearchRoutes({
     name: string,
     grade: string,
     color: string,
-    completions: RouteCompletion[],
-    attempts: RouteAttempt[],
+    completions: AppRouteCompletion[],
+    attempts: AppRouteAttempt[],
     userGrade: string | null,
     communityGrade: string,
     xp: { xp: number; baseXp: number; xpExtrapolated: { type: string; xp: number }[] } | null,
     isArchived: boolean,
     bonusXp?: number
   ) => void;
-  user: User;
+  user: AppUser;
   refreshTrigger?: number;
 }) {
   const [routes, setRoutes] = useState<RouteWithExtraData[]>([]);

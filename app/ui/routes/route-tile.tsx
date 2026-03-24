@@ -3,8 +3,8 @@
 import clsx from "clsx";
 import { useEffect, useState } from "react";
 import { findCommunityGradeForRoute, isGradeHigher } from "@/lib/route-shared";
-import { RouteAttempt, RouteCompletion, User } from "@/generated/prisma/browser";
-import { CommunityGrade } from "@/generated/prisma/browser";
+import type { AppRouteAttempt, AppRouteCompletion, AppCommunityGrade } from "@/lib/appTypes";
+import type { AppUser } from "@/lib/appUser";
 import { calculateCompletionXpForRoute } from "@/lib/route-shared";
 
 export default function RouteTile({
@@ -20,7 +20,7 @@ export default function RouteTile({
   communityGrades,
   bonusXp = 0,
 }: {
-  user: User;
+  user: AppUser;
   id: string;
   color: string;
   name: string;
@@ -32,8 +32,8 @@ export default function RouteTile({
     name: string,
     grade: string,
     color: string,
-    completions: RouteCompletion[],
-    attempts: RouteAttempt[],
+    completions: AppRouteCompletion[],
+    attempts: AppRouteAttempt[],
     userGrade: string | null,
     communityGrade: string,
     xp: { xp: number; baseXp: number; xpExtrapolated: { type: string; xp: number }[] } | null,
@@ -41,9 +41,9 @@ export default function RouteTile({
     bonusXp?: number
   ) => void;
 
-  completions: RouteCompletion[];
-  attempts: RouteAttempt[];
-  communityGrades: CommunityGrade[];
+  completions: AppRouteCompletion[];
+  attempts: AppRouteAttempt[];
+  communityGrades: AppCommunityGrade[];
   bonusXp?: number;
 }) {
   const [gradeMapped, setGradeMapped] = useState("");
@@ -51,7 +51,16 @@ export default function RouteTile({
   const [communityGrade, setCommunityGrade] = useState<string>(
     grade.toLowerCase() === "vfeature" || grade.toLowerCase() === "5.feature"
       ? "none"
-      : findCommunityGradeForRoute(communityGrades)
+      : findCommunityGradeForRoute(
+          communityGrades.map(communityGrade => ({
+            id: typeof communityGrade.id === "number" ? communityGrade.id : 0,
+            grade: communityGrade.grade,
+            userId: communityGrade.userId,
+            routeId: communityGrade.routeId,
+            createdAt: communityGrade.createdAt ?? new Date(0),
+            updatedAt: communityGrade.updatedAt ?? new Date(0),
+          }))
+        )
   );
   const [xp, setXp] = useState<{
     xp: number;
@@ -78,7 +87,7 @@ export default function RouteTile({
         calculateCompletionXpForRoute({
           grade,
           previousCompletions: sends,
-          newHighestGrade: isGradeHigher(user as User, grade, routeType),
+          newHighestGrade: isGradeHigher(user as any, grade, routeType),
           bonusXp: bonusXp || 0,
         })
       );

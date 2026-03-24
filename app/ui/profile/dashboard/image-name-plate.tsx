@@ -1,14 +1,12 @@
 import Image from "next/image";
-import { User } from "@/generated/prisma/client";
+import type { AppUser } from "@/lib/appUser";
 
 type ImageNamePlate = {
-  user: User;
+  user: AppUser;
 };
 
 export default function ImageNamePlate({ user }: ImageNamePlate) {
-  if (user.username === null) {
-    user.username = user.id;
-  }
+  const username = user.username ?? user.id;
 
   return (
     <>
@@ -23,7 +21,7 @@ export default function ImageNamePlate({ user }: ImageNamePlate) {
               className="rounded-full border-4 border-slate-900 size-36 object-cover"
               alt="picture of user"
             />
-          ) : (
+          ) : user.image ? (
             <Image
               src={user.image}
               width={120}
@@ -31,7 +29,7 @@ export default function ImageNamePlate({ user }: ImageNamePlate) {
               className="rounded-full border-4 border-slate-900 size-36 object-cover"
               alt="picture of user"
             />
-          )}
+          ) : null}
 
           <div className="absolute bottom-0 -right-5 bg-white text-black text-xs px-2 py-1 rounded-full drop-shadow-customBlack">
             {user.tag}
@@ -45,7 +43,7 @@ export default function ImageNamePlate({ user }: ImageNamePlate) {
               {user.name}
             </h1>
             <h2 className="text-gray-400 font-barlow font-bold text-start text-sm drop-shadow-customBlack">
-              @{user.username}
+              @{username}
             </h2>
           </div>
           <div className="font-barlow text-white flex flex-col justify-center items-center gap-1">

@@ -1,35 +1,37 @@
-import prisma from "@/prisma";
 import clsx from "clsx";
 import Link from "next/link";
-export default async function ActivityFeed({ userId }: { userId: string }) {
-  const completionData = await prisma.routeCompletion.findMany({
-    where: {
-      userId: userId,
-    },
-    include: {
-      route: true,
-    },
-  });
-  const attemptsData = await prisma.routeAttempt.findMany({
-    where: {
-      userId: userId,
-    },
-    include: {
-      route: true,
-    },
-  });
-  const data = [...completionData, ...attemptsData];
+import { getAttemptsData, getCompletionData } from "@/lib/dashboard";
+import type { AppRouteAttempt, AppRouteCompletion } from "@/lib/appTypes";
+
+function isCompletion(
+  activity: AppRouteCompletion | AppRouteAttempt
+): activity is AppRouteCompletion {
+  return "completionDate" in activity;
+}
+
+export default async function ActivityFeed({ username }: { username: string }) {
+  const completionData = await getCompletionData(username);
+  const attemptsData = await getAttemptsData(username);
+  const data = [...completionData, ...attemptsData].filter(
+    activity =>
+      activity.route && (isCompletion(activity) ? activity.completionDate : activity.attemptDate)
+  ) as Array<AppRouteCompletion | AppRouteAttempt>;
   data.sort((a, b) => {
-    const dateA = "completionDate" in a ? a.completionDate : a.attemptDate;
-    const dateB = "completionDate" in b ? b.completionDate : b.attemptDate;
+    const dateA = isCompletion(a)
+      ? (a.completionDate ?? new Date(0))
+      : (a.attemptDate ?? new Date(0));
+    const dateB = isCompletion(b)
+      ? (b.completionDate ?? new Date(0))
+      : (b.attemptDate ?? new Date(0));
     return new Date(dateB).getTime() - new Date(dateA).getTime();
   });
 
   // Group activities by date
   const groupedData = data.slice(0, 20).reduce(
     (groups, activity) => {
-      const activityDate =
-        "completionDate" in activity ? activity.completionDate : activity.attemptDate;
+      const activityDate = isCompletion(activity)
+        ? (activity.completionDate ?? new Date(0))
+        : (activity.attemptDate ?? new Date(0));
       const dateKey = activityDate.toLocaleDateString("en-US", {
         month: "2-digit",
         day: "2-digit",
@@ -59,31 +61,30 @@ export default async function ActivityFeed({ userId }: { userId: string }) {
 
             {/* Activities for this date */}
             {activities.map(activity => {
-              const activityType = "completionDate" in activity ? "Tick" : "Attempt";
-              const activityDate =
-                "completionDate" in activity ? activity.completionDate : activity.attemptDate;
+              const activityType = isCompletion(activity) ? "Tick" : "Attempt";
+              const activityDate = isCompletion(activity)
+                ? (activity.completionDate ?? new Date(0))
+                : (activity.attemptDate ?? new Date(0));
+              const route = activity.route!;
               return (
                 <Link
-                  href={`/routes/${activity.route.id}`}
+                  href={`/routes/${route.id}`}
                   key={activity.id}
                   className={clsx("flex justify-between items-center bg-gray-700 rounded-md p-2", {
-                    "bg-green-400/35 outline outline-green-400": activity.route.color === "green",
-                    "bg-red-400/35 outline outline-red-400": activity.route.color === "red",
-                    "bg-blue-400/35 outline outline-blue-400": activity.route.color === "blue",
-                    "bg-yellow-400/35 outline outline-yellow-400":
-                      activity.route.color === "yellow",
-                    "bg-purple-400/35 outline outline-purple-400":
-                      activity.route.color === "purple",
-                    "bg-orange-400/35 outline outline-orange-400":
-                      activity.route.color === "orange",
-                    "bg-white/35 outline outline-white": activity.route.color === "white",
-                    "bg-slate-900/35 outline outline-white": activity.route.color === "black",
-                    "bg-pink-400/35 outline outline-pink-400": activity.route.color === "pink",
+                    "bg-green-400/35 outline outline-green-400": route.color === "green",
+                    "bg-red-400/35 outline outline-red-400": route.color === "red",
+                    "bg-blue-400/35 outline outline-blue-400": route.color === "blue",
+                    "bg-yellow-400/35 outline outline-yellow-400": route.color === "yellow",
+                    "bg-purple-400/35 outline outline-purple-400": route.color === "purple",
+                    "bg-orange-400/35 outline outline-orange-400": route.color === "orange",
+                    "bg-white/35 outline outline-white": route.color === "white",
+                    "bg-slate-900/35 outline outline-white": route.color === "black",
+                    "bg-pink-400/35 outline outline-pink-400": route.color === "pink",
                   })}
                 >
                   <div className="flex flex-col">
-                    <p className="text-lg font-bold">{activity.route.title}</p>
-                    <p className="">{activity.route.grade}</p>
+                    <p className="text-lg font-bold">{route.title}</p>
+                    <p className="">{route.grade}</p>
                     <p className="text-xs">{activityType}</p>
                   </div>
                   <p>

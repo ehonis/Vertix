@@ -1,22 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { User } from "@/generated/prisma/browser";
 import clsx from "clsx";
 import Link from "next/link";
 import LevelIndicator from "../general/level-indicator";
 import Image from "next/image";
+import type { AppUser } from "@/lib/appUser";
+import type { LeaderboardUser, MonthlyLeaderboardEntry } from "@/lib/appTypes";
 
-export type MonthlyLeaderBoardData = {
-  user: {
-    name: string | null;
-    id: string;
-    totalXp: number;
-    username: string | null;
-    image: string | null;
-  };
-  xp: number;
-}[];
+export type MonthlyLeaderBoardData = MonthlyLeaderboardEntry[];
 
 export default function Leaderboard({
   monthlyLeaderBoardData,
@@ -26,10 +18,10 @@ export default function Leaderboard({
   user,
 }: {
   monthlyLeaderBoardData: MonthlyLeaderBoardData;
-  totalXpLeaderBoardData: User[];
+  totalXpLeaderBoardData: LeaderboardUser[];
   foundIndexOfUserTotal: number | undefined;
   foundIndexOfUserMonthly: number | undefined;
-  user: User | null;
+  user: AppUser | null;
 }) {
   const today = new Date();
   const month = today.getMonth() + 1;

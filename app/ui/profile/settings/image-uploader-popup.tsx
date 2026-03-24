@@ -3,12 +3,12 @@
 import { motion } from "framer-motion";
 import { useNotification } from "@/app/contexts/NotificationContext";
 import { useRouter } from "next/navigation";
-import { User } from "@/generated/prisma/browser";
+import type { AppUser } from "@/lib/appUser";
 import { useRef, useState } from "react";
 
 type ImageUploaderPopUpData = {
   onCancel: () => void;
-  user: User;
+  user: AppUser;
 };
 export default function ImageUploaderPopUp({ onCancel, user }: ImageUploaderPopUpData) {
   const { showNotification } = useNotification();

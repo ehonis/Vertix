@@ -208,14 +208,6 @@ export default defineSchema({
     .index("by_area", ["gymAreaId"])
     .index("by_area_and_key", ["gymAreaId", "key"]),
 
-  routeTags: defineTable({
-    name: v.string(),
-    slug: v.optional(v.string()),
-    color: v.optional(v.string()),
-  })
-    .index("by_name", ["name"])
-    .index("by_slug", ["slug"]),
-
   routes: defineTable({
     gymId: v.id("gyms"),
     gymAreaId: v.id("gymAreas"),
@@ -234,7 +226,6 @@ export default defineSchema({
     sortOrder: v.optional(v.number()),
     createdByUserId: v.optional(v.id("users")),
     createdByLegacyUserId: v.optional(v.string()),
-    tagIds: v.array(v.id("routeTags")),
     legacyPrismaId: v.optional(v.string()),
     legacyLocationKey: v.optional(v.string()),
   })
@@ -263,7 +254,8 @@ export default defineSchema({
   })
     .index("by_user", ["userId"])
     .index("by_route", ["routeId"])
-    .index("by_user_route", ["userId", "routeId"]),
+    .index("by_user_route", ["userId", "routeId"])
+    .index("by_legacy_prisma_id", ["legacyPrismaId"]),
 
   routeCompletions: defineTable({
     userId: v.id("users"),
@@ -277,19 +269,8 @@ export default defineSchema({
     .index("by_user", ["userId"])
     .index("by_route", ["routeId"])
     .index("by_user_route", ["userId", "routeId"])
-    .index("by_user_completion_date", ["userId", "completionDate"]),
-
-  routeStars: defineTable({
-    userId: v.id("users"),
-    routeId: v.id("routes"),
-    stars: v.number(),
-    comment: v.optional(v.string()),
-    starDate: v.number(),
-    legacyPrismaId: v.optional(v.string()),
-  })
-    .index("by_user", ["userId"])
-    .index("by_route", ["routeId"])
-    .index("by_user_route", ["userId", "routeId"]),
+    .index("by_user_completion_date", ["userId", "completionDate"])
+    .index("by_legacy_prisma_id", ["legacyPrismaId"]),
 
   communityGrades: defineTable({
     userId: v.id("users"),
@@ -301,7 +282,8 @@ export default defineSchema({
   })
     .index("by_user", ["userId"])
     .index("by_route", ["routeId"])
-    .index("by_user_route", ["userId", "routeId"]),
+    .index("by_user_route", ["userId", "routeId"])
+    .index("by_legacy_prisma_id", ["legacyPrismaId"]),
 
   monthlyXp: defineTable({
     userId: v.id("users"),
@@ -312,7 +294,8 @@ export default defineSchema({
   })
     .index("by_user", ["userId"])
     .index("by_year_month", ["year", "month"])
-    .index("by_user_year_month", ["userId", "year", "month"]),
+    .index("by_user_year_month", ["userId", "year", "month"])
+    .index("by_legacy_prisma_id", ["legacyPrismaId"]),
 
   tvSlides: defineTable({
     type: tvSlideType,

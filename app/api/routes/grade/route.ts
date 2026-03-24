@@ -1,17 +1,27 @@
 import { NextRequest, NextResponse } from "next/server";
-import prisma from "@/prisma";
+import { getCurrentAppSession as auth } from "@/lib/getCurrentAppUser";
+import { api } from "@/convex/_generated/api";
+import { createConvexServerClient } from "@/lib/convexServer";
 
 export async function POST(request: NextRequest) {
-  const { userId, routeId, selectedGrade } = await request.json();
+  const session = await auth();
+
+  if (!session) {
+    return NextResponse.json({ message: "Not Authenicated" }, { status: 403 });
+  }
+
+  const { routeId, selectedGrade } = await request.json();
+
   try {
-    const communityGrade = await prisma.communityGrade.upsert({
-      where: { userId_routeId: { userId: userId, routeId: routeId } },
-      update: { grade: selectedGrade },
-      create: { userId: userId, routeId: routeId, grade: selectedGrade },
+    const convex = createConvexServerClient();
+    await convex.mutation(api.routes.upsertCommunityGrade, {
+      userId: session.user.id as any,
+      routeId,
+      selectedGrade,
     });
 
     return NextResponse.json({ status: 200 });
-  } catch (error) {
-    return NextResponse.json({ status: 500 });
+  } catch {
+    return NextResponse.json({ status: 500 }, { status: 500 });
   }
 }

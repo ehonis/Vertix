@@ -10,6 +10,8 @@
 
 import type * as auth from "../auth.js";
 import type * as map from "../map.js";
+import type * as routeMigrations from "../routeMigrations.js";
+import type * as routes from "../routes.js";
 import type * as seeds from "../seeds.js";
 import type * as users from "../users.js";
 
@@ -22,6 +24,8 @@ import type {
 declare const fullApi: ApiFromModules<{
   auth: typeof auth;
   map: typeof map;
+  routeMigrations: typeof routeMigrations;
+  routes: typeof routes;
   seeds: typeof seeds;
   users: typeof users;
 }>;

@@ -1,6 +1,8 @@
-import prisma from "@/prisma";
 import { NextResponse, NextRequest } from "next/server";
 import { getCurrentAppSession as auth } from "@/lib/getCurrentAppUser";
+import { api } from "@/convex/_generated/api";
+import { createConvexServerClient } from "@/lib/convexServer";
+
 export async function POST(req: NextRequest) {
   const session = await auth();
 
@@ -9,22 +11,12 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const { userId, routeId } = await req.json();
+    const { routeId } = await req.json();
+    const convex = createConvexServerClient();
 
-    await prisma.routeAttempt.upsert({
-      where: {
-        userId_routeId: {
-          userId: userId,
-          routeId: routeId,
-        },
-      },
-      update: {
-        attempts: { increment: 1 },
-      },
-      create: {
-        userId: userId,
-        routeId: routeId,
-      },
+    await convex.mutation(api.routes.incrementAttempt, {
+      userId: session.user.id as any,
+      routeId,
     });
 
     return NextResponse.json({
@@ -33,11 +25,6 @@ export async function POST(req: NextRequest) {
     });
   } catch (error) {
     console.error(error);
-    return NextResponse.json(
-      { message: "error attempting route in api" },
-      {
-        status: 500,
-      }
-    );
+    return NextResponse.json({ message: "error attempting route in api" }, { status: 500 });
   }
 }

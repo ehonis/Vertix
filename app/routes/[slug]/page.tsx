@@ -13,18 +13,15 @@ import clsx from "clsx";
 
 import { getCurrentAppSession as auth } from "@/lib/getCurrentAppUser";
 import Link from "next/link";
-import prisma from "@/prisma";
 import StarRating from "@/app/ui/general/star-rating";
 import FunctionButton from "@/app/ui/routes/individualRoutePage/function-button";
-import { Route, RouteType, User } from "@/generated/prisma/client";
+import type { AppRouteDetail } from "@/lib/appTypes";
+import type { AppUser } from "@/lib/appUser";
 
 export const revalidate = 120;
 
 export async function generateStaticParams() {
-  const ids = await prisma.route
-    .findMany()
-    .then(routes => routes.map(route => ({ slug: route.id })));
-  return ids;
+  return [];
 }
 
 function Header({
@@ -35,8 +32,8 @@ function Header({
   proposedGrade,
   rating,
 }: {
-  route: Route;
-  user: User | null;
+  route: AppRouteDetail;
+  user: AppUser | null;
   isComplete: boolean;
   isGraded: boolean;
   proposedGrade: string | null;
@@ -93,8 +90,8 @@ function RouteInfo({
   proposedGrade,
   communityGrade,
 }: {
-  user: User | null;
-  route: Route;
+  user: AppUser | null;
+  route: AppRouteDetail;
   date: string;
   daysOld: number;
   totalSends: number | undefined;
@@ -109,7 +106,7 @@ function RouteInfo({
   communityGrade: string | null | undefined;
 }) {
   let type = "";
-  if (route.type === RouteType.BOULDER) {
+  if (route.type === "BOULDER") {
     type = "Boulder";
   } else {
     type = "Rope";
@@ -268,16 +265,16 @@ export default async function IndividualRoute({ params }: { params: Promise<{ sl
     );
   }
 
-  const date = formatDateMMDDYY(route.setDate);
+  const date = formatDateMMDDYY(new Date(route.setDate));
 
-  const daysOld = findDaysOld(route.setDate);
+  const daysOld = findDaysOld(new Date(route.setDate));
   console.log(daysOld);
 
   return (
     <div className="w-screen flex items-center justify-center flex-col mt-10">
       <Header
         route={route}
-        user={user as User}
+        user={user}
         isComplete={isComplete}
         isGraded={isGraded}
         rating={rating}
@@ -285,7 +282,7 @@ export default async function IndividualRoute({ params }: { params: Promise<{ sl
       />
       <RouteInfo
         route={route}
-        user={user as User}
+        user={user}
         date={date}
         daysOld={daysOld}
         totalSends={totalSends}

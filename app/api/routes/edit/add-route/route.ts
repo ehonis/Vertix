@@ -1,9 +1,10 @@
 import { NextResponse } from "next/server";
-import prisma from "@/prisma";
 import { RouteType, UserRole } from "@/generated/prisma/client";
 import { getCurrentAppSession as auth } from "@/lib/getCurrentAppUser";
 import { getRouteXp } from "@/lib/route";
-import { addRouteToFeaturedSlide } from "@/lib/tvSlideHelpers";
+import { api } from "@/convex/_generated/api";
+import { createConvexServerClient } from "@/lib/convexServer";
+import { toWallPartKey } from "@/lib/wallLocations";
 
 export async function POST(req: Request) {
   const session = await auth();
@@ -16,31 +17,38 @@ export async function POST(req: Request) {
   const { newRoute } = await req.json();
 
   const routeXp = getRouteXp(newRoute.grade);
-  const isFeaturedGrade = newRoute.grade.toLowerCase() === "vfeature" || newRoute.grade.toLowerCase() === "5.feature" || newRoute.grade.toLowerCase() === "competition";
+  const isFeaturedGrade =
+    newRoute.grade.toLowerCase() === "vfeature" ||
+    newRoute.grade.toLowerCase() === "5.feature" ||
+    newRoute.grade.toLowerCase() === "competition";
 
   if (!newRoute) {
     return NextResponse.json({ message: "No new route" }, { status: 400 });
   }
 
-  const createdRoute = await prisma.route.create({
-    data: {
-      title: newRoute.title,
-      grade: newRoute.grade,
-      setDate: new Date(newRoute.date),
-      order: newRoute.order,
-      location: newRoute.location,
-      type: newRoute.type as RouteType,
-      color: newRoute.color,
-      xp: routeXp,
-      createdByUserID: session.user.id,
-      isArchive: false,
-      bonusXp: isFeaturedGrade ? 200 : 0, // Set bonus XP for featured routes
-    },
+  const convex = createConvexServerClient();
+  const wallPart = toWallPartKey(newRoute.location);
+
+  if (!wallPart) {
+    return NextResponse.json({ message: "Invalid route location" }, { status: 400 });
+  }
+
+  await convex.mutation(api.routes.createRoute, {
+    title: newRoute.title,
+    grade: newRoute.grade,
+    setDate: new Date(newRoute.date).getTime(),
+    sortOrder: newRoute.order ?? undefined,
+    wallPart,
+    type: newRoute.type as RouteType,
+    color: newRoute.color,
+    xp: routeXp,
+    createdByUserId: session.user.id as any,
+    bonusXp: isFeaturedGrade ? 200 : 0,
   });
 
   // Add to featured route slide if it's a featured grade route
   if (isFeaturedGrade) {
-    await addRouteToFeaturedSlide(createdRoute.id, createdRoute.grade);
+    // TV stays Prisma-backed for now, so featured-slide wiring remains deferred for Convex-created routes.
   }
 
   return NextResponse.json({ message: "Route added successfully" });

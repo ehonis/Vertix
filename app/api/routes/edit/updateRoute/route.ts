@@ -1,10 +1,10 @@
 import { NextResponse, NextRequest } from "next/server";
-import prisma from "@/prisma";
-import { Prisma } from "@/generated/prisma/client";
 import { addRouteToFeaturedSlide, removeRouteFromAllSlides } from "@/lib/tvSlideHelpers";
 import jwt from "jsonwebtoken";
 import { UserRole } from "@/generated/prisma/client";
 import { getCurrentAppUser } from "@/lib/getCurrentAppUser";
+import { api } from "@/convex/_generated/api";
+import { createConvexServerClient } from "@/lib/convexServer";
 
 async function getUserIdAndRole(
   request: NextRequest
@@ -20,11 +20,9 @@ async function getUserIdAndRole(
       process.env.JWT_SECRET || process.env.AUTH_SECRET || "your-secret-key-change-in-production";
     try {
       const decoded = jwt.verify(token, jwtSecret) as { userId: string };
-      const user = await prisma.user.findUnique({
-        where: { id: decoded.userId },
-        select: { id: true, role: true },
-      });
-      if (user) return { userId: user.id, role: user.role };
+      const currentUser = await createConvexServerClient().query(api.users.getCurrent, {});
+      const user = currentUser && currentUser._id === decoded.userId ? currentUser : null;
+      if (user) return { userId: user._id, role: user.role };
     } catch {
       // invalid JWT
     }
@@ -46,39 +44,34 @@ export async function PATCH(request: NextRequest) {
     await request.json();
 
   try {
-    const currentRoute = await prisma.route.findUnique({
-      where: { id: routeId },
-      select: { grade: true },
-    });
+    const convex = createConvexServerClient();
+    const currentRoute = await convex.query(api.routes.getRouteByLegacyOrConvexId, { routeId });
 
     if (!currentRoute) {
       return NextResponse.json({ error: "Route not found" }, { status: 404 });
     }
 
-    const updateData: Prisma.RouteUpdateInput = {};
-    if (newTitle !== undefined) updateData.title = newTitle;
-    if (newType !== undefined) updateData.type = newType;
-    if (newGrade !== undefined) updateData.grade = newGrade;
-    if (newDate !== undefined && newDate != null) updateData.setDate = new Date(newDate);
-    if (newLocation !== undefined) updateData.location = newLocation;
-    if (typeof newX === "number") updateData.x = newX;
-    if (typeof newY === "number") updateData.y = newY;
-
-    if (newGrade !== undefined) {
-      const oldGrade = currentRoute.grade.toLowerCase();
-      const newGradeLower = newGrade?.toLowerCase() || oldGrade;
-      const wasFeatured = oldGrade === "vfeature" || oldGrade === "5.feature";
-      const isNowFeatured = newGradeLower === "vfeature" || newGradeLower === "5.feature";
-      updateData.bonusXp = isNowFeatured ? 200 : 0;
-    }
-
-    if (Object.keys(updateData).length === 0) {
+    if (
+      newTitle === undefined &&
+      newType === undefined &&
+      newGrade === undefined &&
+      newDate === undefined &&
+      newLocation === undefined &&
+      newX === undefined &&
+      newY === undefined
+    ) {
       return NextResponse.json({ message: "Nothing to update" }, { status: 200 });
     }
 
-    await prisma.route.update({
-      where: { id: routeId },
-      data: updateData,
+    await convex.mutation(api.routes.updateRoute, {
+      routeId,
+      newTitle,
+      newType,
+      newGrade,
+      newDate: newDate ? new Date(newDate).getTime() : undefined,
+      newLocation,
+      newX,
+      newY,
     });
 
     if (newGrade !== undefined) {

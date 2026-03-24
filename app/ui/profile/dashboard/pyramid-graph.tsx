@@ -1,6 +1,6 @@
 "use client";
 
-import { RouteCompletion, RouteType } from "@/generated/prisma/browser";
+import type { AppRouteCompletion } from "@/lib/appTypes";
 import { useState, useEffect } from "react";
 import { splitRoutesByType, getRouteGradeCounts } from "@/lib/dashboard-shared";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from "recharts";
@@ -40,11 +40,7 @@ function CustomTooltip({ active, payload }: CustomTooltipProps) {
   return null;
 }
 
-export default function PyramidGraph({
-  completionData,
-}: {
-  completionData: (RouteCompletion & { route: { type: RouteType; grade: string } })[];
-}) {
+export default function PyramidGraph({ completionData }: { completionData: AppRouteCompletion[] }) {
   // State to store the currently displayed grade counts
   const [displayedGradeCounts, setDisplayedGradeCounts] = useState<
     { grade: string; count: number }[]

@@ -7,7 +7,7 @@ import { redirect } from "next/navigation";
 
 export default async function Home() {
   const session = await auth();
-  const user = normalizeAppUser(session?.user ?? null);
+  const user = session?.user ?? null;
 
   if (user) {
     redirect("/routes");

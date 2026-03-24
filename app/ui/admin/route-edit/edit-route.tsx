@@ -48,6 +48,8 @@ export default function EditRoute({
   const [location, setLocation] = useState<EditableLocation>(
     toWallPartKey(route.location) ?? "boulderSouth"
   );
+  const [x, setX] = useState(route.x?.toString() ?? "");
+  const [y, setY] = useState(route.y?.toString() ?? "");
 
   const [isSubmit, setIsSubmit] = useState(false);
   useEffect(() => {
@@ -113,7 +115,26 @@ export default function EditRoute({
     setLocation(newLocation as EditableLocation);
     setIsSubmit(true);
   };
+  const handleXChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setX(event.target.value);
+    setIsSubmit(true);
+  };
+  const handleYChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setY(event.target.value);
+    setIsSubmit(true);
+  };
   const handleSubmit = async () => {
+    const parsedX = x.trim() === "" ? null : Number(x);
+    const parsedY = y.trim() === "" ? null : Number(y);
+
+    if ((x.trim() !== "" && Number.isNaN(parsedX)) || (y.trim() !== "" && Number.isNaN(parsedY))) {
+      showNotification({
+        message: "X and Y must be valid numbers",
+        color: "red",
+      });
+      return;
+    }
+
     const data = {
       routeId: route.id,
       newTitle: title,
@@ -121,6 +142,8 @@ export default function EditRoute({
       newGrade: finalGrade,
       newDate: finalDate,
       newLocation: legacyLocationsForWallPart(location)[0],
+      newX: parsedX,
+      newY: parsedY,
     };
     try {
       const response = await fetch("/api/routes/edit/updateRoute", {
@@ -353,6 +376,32 @@ export default function EditRoute({
                     </option>
                   ))}
                 </select>
+              </div>
+              <div className="flex gap-2 items-center">
+                <label htmlFor="route-x" className="text-white font-barlow font-bold">
+                  X:
+                </label>
+                <input
+                  id="route-x"
+                  type="number"
+                  step="any"
+                  value={x}
+                  onChange={handleXChange}
+                  className="font-barlow font-bold rounded-sm w-24 focus:outline-hidden text-white bg-gray-700 p-1 text-sm"
+                />
+              </div>
+              <div className="flex gap-2 items-center">
+                <label htmlFor="route-y" className="text-white font-barlow font-bold">
+                  Y:
+                </label>
+                <input
+                  id="route-y"
+                  type="number"
+                  step="any"
+                  value={y}
+                  onChange={handleYChange}
+                  className="font-barlow font-bold rounded-sm w-24 focus:outline-hidden text-white bg-gray-700 p-1 text-sm"
+                />
               </div>
 
               <div className="text-white font-barlow font-bold text-sm">Id: {route.id}</div>

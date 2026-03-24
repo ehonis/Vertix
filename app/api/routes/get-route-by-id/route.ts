@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import prisma from "@/prisma";
-import { RouteWithExtraData } from "@/app/api/routes/get-wall-routes-non-archive/route";
+import { api } from "@/convex/_generated/api";
+import { createConvexServerClient } from "@/lib/convexServer";
 
 export async function GET(req: NextRequest) {
   try {
@@ -12,51 +12,11 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: "Route ID is required" }, { status: 400 });
     }
 
-    let route: RouteWithExtraData | null = null;
-
-    if (userId) {
-      // If user is signed in, include completions filtered by user
-      const fetchedRoute = (await prisma.route.findUnique({
-        where: {
-          id: routeId,
-        },
-        include: {
-          completions: {
-            where: {
-              userId: userId,
-            },
-          },
-          attempts: {
-            where: {
-              userId: userId,
-            },
-          },
-          tags: true,
-          communityGrades: true,
-        },
-      })) as RouteWithExtraData | null;
-
-      route = fetchedRoute;
-    } else {
-      // If user is not signed in, fetch route without completion filtering
-      const fetchedRoute = await prisma.route.findUnique({
-        where: {
-          id: routeId,
-        },
-        include: {
-          tags: true,
-          communityGrades: true,
-        },
-      });
-
-      if (fetchedRoute) {
-        route = {
-          ...fetchedRoute,
-          completions: [],
-          attempts: [],
-        } as RouteWithExtraData;
-      }
-    }
+    const convex = createConvexServerClient();
+    const route = await convex.query(api.routes.getRouteByLegacyOrConvexId, {
+      routeId,
+      viewerUserId: userId ?? undefined,
+    } as any);
 
     if (!route) {
       return NextResponse.json({ error: "Route not found" }, { status: 404 });
