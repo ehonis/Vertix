@@ -9,11 +9,13 @@ export default function RouteChromeSync() {
   useEffect(() => {
     const body = document.body;
     const isAuthPage = pathname.startsWith("/signin") || pathname.startsWith("/signup");
+    const isTvPage = pathname.startsWith("/tv");
+    const hideChrome = isAuthPage || isTvPage;
 
-    body.classList.toggle("auth-route", isAuthPage);
+    body.classList.toggle("chrome-hidden-route", hideChrome);
 
     return () => {
-      body.classList.remove("auth-route");
+      body.classList.remove("chrome-hidden-route");
     };
   }, [pathname]);
 

@@ -317,7 +317,7 @@
   animation: scale-in 0.45s ease-out 0.15s both;
 }
 
-body.auth-route nav,
-body.auth-route footer {
+body.chrome-hidden-route nav,
+body.chrome-hidden-route footer {
   display: none;
 }
