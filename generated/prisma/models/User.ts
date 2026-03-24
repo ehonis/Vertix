@@ -321,7 +321,6 @@ export type UserWhereInput = {
   tag?: Prisma.StringNullableFilter<"User"> | string | null
   totalXp?: Prisma.IntFilter<"User"> | number
   completions?: Prisma.RouteCompletionListRelationFilter
-  climbingSessions?: Prisma.ClimbingSessionListRelationFilter
   attempts?: Prisma.RouteAttemptListRelationFilter
   communityGrades?: Prisma.CommunityGradeListRelationFilter
   stars?: Prisma.RouteStarListRelationFilter
@@ -329,10 +328,7 @@ export type UserWhereInput = {
   Account?: Prisma.AccountListRelationFilter
   Session?: Prisma.SessionListRelationFilter
   createdRoutes?: Prisma.RouteListRelationFilter
-  mixerClimber?: Prisma.MixerClimberListRelationFilter
-  blClimber?: Prisma.BLClimberListRelationFilter
   monthlyXp?: Prisma.MonthlyXpListRelationFilter
-  seenAnnouncements?: Prisma.UserAnnouncementListRelationFilter
   claimedBounties?: Prisma.BountyListRelationFilter
 }
 
@@ -356,7 +352,6 @@ export type UserOrderByWithRelationInput = {
   tag?: Prisma.SortOrderInput | Prisma.SortOrder
   totalXp?: Prisma.SortOrder
   completions?: Prisma.RouteCompletionOrderByRelationAggregateInput
-  climbingSessions?: Prisma.ClimbingSessionOrderByRelationAggregateInput
   attempts?: Prisma.RouteAttemptOrderByRelationAggregateInput
   communityGrades?: Prisma.CommunityGradeOrderByRelationAggregateInput
   stars?: Prisma.RouteStarOrderByRelationAggregateInput
@@ -364,10 +359,7 @@ export type UserOrderByWithRelationInput = {
   Account?: Prisma.AccountOrderByRelationAggregateInput
   Session?: Prisma.SessionOrderByRelationAggregateInput
   createdRoutes?: Prisma.RouteOrderByRelationAggregateInput
-  mixerClimber?: Prisma.MixerClimberOrderByRelationAggregateInput
-  blClimber?: Prisma.BLClimberOrderByRelationAggregateInput
   monthlyXp?: Prisma.MonthlyXpOrderByRelationAggregateInput
-  seenAnnouncements?: Prisma.UserAnnouncementOrderByRelationAggregateInput
   claimedBounties?: Prisma.BountyOrderByRelationAggregateInput
 }
 
@@ -394,7 +386,6 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   tag?: Prisma.StringNullableFilter<"User"> | string | null
   totalXp?: Prisma.IntFilter<"User"> | number
   completions?: Prisma.RouteCompletionListRelationFilter
-  climbingSessions?: Prisma.ClimbingSessionListRelationFilter
   attempts?: Prisma.RouteAttemptListRelationFilter
   communityGrades?: Prisma.CommunityGradeListRelationFilter
   stars?: Prisma.RouteStarListRelationFilter
@@ -402,10 +393,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   Account?: Prisma.AccountListRelationFilter
   Session?: Prisma.SessionListRelationFilter
   createdRoutes?: Prisma.RouteListRelationFilter
-  mixerClimber?: Prisma.MixerClimberListRelationFilter
-  blClimber?: Prisma.BLClimberListRelationFilter
   monthlyXp?: Prisma.MonthlyXpListRelationFilter
-  seenAnnouncements?: Prisma.UserAnnouncementListRelationFilter
   claimedBounties?: Prisma.BountyListRelationFilter
 }, "id" | "clerkId" | "username" | "phoneNumber" | "email">
 
@@ -479,7 +467,6 @@ export type UserCreateInput = {
   tag?: string | null
   totalXp?: number
   completions?: Prisma.RouteCompletionCreateNestedManyWithoutUserInput
-  climbingSessions?: Prisma.ClimbingSessionCreateNestedManyWithoutUserInput
   attempts?: Prisma.RouteAttemptCreateNestedManyWithoutUserInput
   communityGrades?: Prisma.CommunityGradeCreateNestedManyWithoutUserInput
   stars?: Prisma.RouteStarCreateNestedManyWithoutUserInput
@@ -487,10 +474,7 @@ export type UserCreateInput = {
   Account?: Prisma.AccountCreateNestedManyWithoutUserInput
   Session?: Prisma.SessionCreateNestedManyWithoutUserInput
   createdRoutes?: Prisma.RouteCreateNestedManyWithoutCreatedByUserInput
-  mixerClimber?: Prisma.MixerClimberCreateNestedManyWithoutUserInput
-  blClimber?: Prisma.BLClimberCreateNestedManyWithoutUserInput
   monthlyXp?: Prisma.MonthlyXpCreateNestedManyWithoutUserInput
-  seenAnnouncements?: Prisma.UserAnnouncementCreateNestedManyWithoutUserInput
   claimedBounties?: Prisma.BountyCreateNestedManyWithoutClaimedByUserInput
 }
 
@@ -514,7 +498,6 @@ export type UserUncheckedCreateInput = {
   tag?: string | null
   totalXp?: number
   completions?: Prisma.RouteCompletionUncheckedCreateNestedManyWithoutUserInput
-  climbingSessions?: Prisma.ClimbingSessionUncheckedCreateNestedManyWithoutUserInput
   attempts?: Prisma.RouteAttemptUncheckedCreateNestedManyWithoutUserInput
   communityGrades?: Prisma.CommunityGradeUncheckedCreateNestedManyWithoutUserInput
   stars?: Prisma.RouteStarUncheckedCreateNestedManyWithoutUserInput
@@ -522,10 +505,7 @@ export type UserUncheckedCreateInput = {
   Account?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   Session?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   createdRoutes?: Prisma.RouteUncheckedCreateNestedManyWithoutCreatedByUserInput
-  mixerClimber?: Prisma.MixerClimberUncheckedCreateNestedManyWithoutUserInput
-  blClimber?: Prisma.BLClimberUncheckedCreateNestedManyWithoutUserInput
   monthlyXp?: Prisma.MonthlyXpUncheckedCreateNestedManyWithoutUserInput
-  seenAnnouncements?: Prisma.UserAnnouncementUncheckedCreateNestedManyWithoutUserInput
   claimedBounties?: Prisma.BountyUncheckedCreateNestedManyWithoutClaimedByUserInput
 }
 
@@ -549,7 +529,6 @@ export type UserUpdateInput = {
   tag?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totalXp?: Prisma.IntFieldUpdateOperationsInput | number
   completions?: Prisma.RouteCompletionUpdateManyWithoutUserNestedInput
-  climbingSessions?: Prisma.ClimbingSessionUpdateManyWithoutUserNestedInput
   attempts?: Prisma.RouteAttemptUpdateManyWithoutUserNestedInput
   communityGrades?: Prisma.CommunityGradeUpdateManyWithoutUserNestedInput
   stars?: Prisma.RouteStarUpdateManyWithoutUserNestedInput
@@ -557,10 +536,7 @@ export type UserUpdateInput = {
   Account?: Prisma.AccountUpdateManyWithoutUserNestedInput
   Session?: Prisma.SessionUpdateManyWithoutUserNestedInput
   createdRoutes?: Prisma.RouteUpdateManyWithoutCreatedByUserNestedInput
-  mixerClimber?: Prisma.MixerClimberUpdateManyWithoutUserNestedInput
-  blClimber?: Prisma.BLClimberUpdateManyWithoutUserNestedInput
   monthlyXp?: Prisma.MonthlyXpUpdateManyWithoutUserNestedInput
-  seenAnnouncements?: Prisma.UserAnnouncementUpdateManyWithoutUserNestedInput
   claimedBounties?: Prisma.BountyUpdateManyWithoutClaimedByUserNestedInput
 }
 
@@ -584,7 +560,6 @@ export type UserUncheckedUpdateInput = {
   tag?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totalXp?: Prisma.IntFieldUpdateOperationsInput | number
   completions?: Prisma.RouteCompletionUncheckedUpdateManyWithoutUserNestedInput
-  climbingSessions?: Prisma.ClimbingSessionUncheckedUpdateManyWithoutUserNestedInput
   attempts?: Prisma.RouteAttemptUncheckedUpdateManyWithoutUserNestedInput
   communityGrades?: Prisma.CommunityGradeUncheckedUpdateManyWithoutUserNestedInput
   stars?: Prisma.RouteStarUncheckedUpdateManyWithoutUserNestedInput
@@ -592,10 +567,7 @@ export type UserUncheckedUpdateInput = {
   Account?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   Session?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   createdRoutes?: Prisma.RouteUncheckedUpdateManyWithoutCreatedByUserNestedInput
-  mixerClimber?: Prisma.MixerClimberUncheckedUpdateManyWithoutUserNestedInput
-  blClimber?: Prisma.BLClimberUncheckedUpdateManyWithoutUserNestedInput
   monthlyXp?: Prisma.MonthlyXpUncheckedUpdateManyWithoutUserNestedInput
-  seenAnnouncements?: Prisma.UserAnnouncementUncheckedUpdateManyWithoutUserNestedInput
   claimedBounties?: Prisma.BountyUncheckedUpdateManyWithoutClaimedByUserNestedInput
 }
 
@@ -769,20 +741,6 @@ export type UserUpdateOneWithoutCreatedRoutesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutCreatedRoutesInput, Prisma.UserUpdateWithoutCreatedRoutesInput>, Prisma.UserUncheckedUpdateWithoutCreatedRoutesInput>
 }
 
-export type UserCreateNestedOneWithoutClimbingSessionsInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutClimbingSessionsInput, Prisma.UserUncheckedCreateWithoutClimbingSessionsInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutClimbingSessionsInput
-  connect?: Prisma.UserWhereUniqueInput
-}
-
-export type UserUpdateOneRequiredWithoutClimbingSessionsNestedInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutClimbingSessionsInput, Prisma.UserUncheckedCreateWithoutClimbingSessionsInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutClimbingSessionsInput
-  upsert?: Prisma.UserUpsertWithoutClimbingSessionsInput
-  connect?: Prisma.UserWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutClimbingSessionsInput, Prisma.UserUpdateWithoutClimbingSessionsInput>, Prisma.UserUncheckedUpdateWithoutClimbingSessionsInput>
-}
-
 export type UserCreateNestedOneWithoutCompletionsInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutCompletionsInput, Prisma.UserUncheckedCreateWithoutCompletionsInput>
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutCompletionsInput
@@ -873,20 +831,6 @@ export type EnumUserRoleFieldUpdateOperationsInput = {
   set?: $Enums.UserRole
 }
 
-export type UserCreateNestedOneWithoutSeenAnnouncementsInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutSeenAnnouncementsInput, Prisma.UserUncheckedCreateWithoutSeenAnnouncementsInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutSeenAnnouncementsInput
-  connect?: Prisma.UserWhereUniqueInput
-}
-
-export type UserUpdateOneRequiredWithoutSeenAnnouncementsNestedInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutSeenAnnouncementsInput, Prisma.UserUncheckedCreateWithoutSeenAnnouncementsInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutSeenAnnouncementsInput
-  upsert?: Prisma.UserUpsertWithoutSeenAnnouncementsInput
-  connect?: Prisma.UserWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutSeenAnnouncementsInput, Prisma.UserUpdateWithoutSeenAnnouncementsInput>, Prisma.UserUncheckedUpdateWithoutSeenAnnouncementsInput>
-}
-
 export type UserCreateNestedManyWithoutBadgesInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutBadgesInput, Prisma.UserUncheckedCreateWithoutBadgesInput> | Prisma.UserCreateWithoutBadgesInput[] | Prisma.UserUncheckedCreateWithoutBadgesInput[]
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutBadgesInput | Prisma.UserCreateOrConnectWithoutBadgesInput[]
@@ -953,38 +897,6 @@ export type UserUpdateOneRequiredWithoutSessionNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutSessionInput, Prisma.UserUpdateWithoutSessionInput>, Prisma.UserUncheckedUpdateWithoutSessionInput>
 }
 
-export type UserCreateNestedOneWithoutMixerClimberInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutMixerClimberInput, Prisma.UserUncheckedCreateWithoutMixerClimberInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutMixerClimberInput
-  connect?: Prisma.UserWhereUniqueInput
-}
-
-export type UserUpdateOneWithoutMixerClimberNestedInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutMixerClimberInput, Prisma.UserUncheckedCreateWithoutMixerClimberInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutMixerClimberInput
-  upsert?: Prisma.UserUpsertWithoutMixerClimberInput
-  disconnect?: Prisma.UserWhereInput | boolean
-  delete?: Prisma.UserWhereInput | boolean
-  connect?: Prisma.UserWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutMixerClimberInput, Prisma.UserUpdateWithoutMixerClimberInput>, Prisma.UserUncheckedUpdateWithoutMixerClimberInput>
-}
-
-export type UserCreateNestedOneWithoutBlClimberInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutBlClimberInput, Prisma.UserUncheckedCreateWithoutBlClimberInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutBlClimberInput
-  connect?: Prisma.UserWhereUniqueInput
-}
-
-export type UserUpdateOneWithoutBlClimberNestedInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutBlClimberInput, Prisma.UserUncheckedCreateWithoutBlClimberInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutBlClimberInput
-  upsert?: Prisma.UserUpsertWithoutBlClimberInput
-  disconnect?: Prisma.UserWhereInput | boolean
-  delete?: Prisma.UserWhereInput | boolean
-  connect?: Prisma.UserWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutBlClimberInput, Prisma.UserUpdateWithoutBlClimberInput>, Prisma.UserUncheckedUpdateWithoutBlClimberInput>
-}
-
 export type UserCreateWithoutCreatedRoutesInput = {
   id?: string
   clerkId?: string | null
@@ -1005,17 +917,13 @@ export type UserCreateWithoutCreatedRoutesInput = {
   tag?: string | null
   totalXp?: number
   completions?: Prisma.RouteCompletionCreateNestedManyWithoutUserInput
-  climbingSessions?: Prisma.ClimbingSessionCreateNestedManyWithoutUserInput
   attempts?: Prisma.RouteAttemptCreateNestedManyWithoutUserInput
   communityGrades?: Prisma.CommunityGradeCreateNestedManyWithoutUserInput
   stars?: Prisma.RouteStarCreateNestedManyWithoutUserInput
   badges?: Prisma.BadgeCreateNestedManyWithoutUsersInput
   Account?: Prisma.AccountCreateNestedManyWithoutUserInput
   Session?: Prisma.SessionCreateNestedManyWithoutUserInput
-  mixerClimber?: Prisma.MixerClimberCreateNestedManyWithoutUserInput
-  blClimber?: Prisma.BLClimberCreateNestedManyWithoutUserInput
   monthlyXp?: Prisma.MonthlyXpCreateNestedManyWithoutUserInput
-  seenAnnouncements?: Prisma.UserAnnouncementCreateNestedManyWithoutUserInput
   claimedBounties?: Prisma.BountyCreateNestedManyWithoutClaimedByUserInput
 }
 
@@ -1039,17 +947,13 @@ export type UserUncheckedCreateWithoutCreatedRoutesInput = {
   tag?: string | null
   totalXp?: number
   completions?: Prisma.RouteCompletionUncheckedCreateNestedManyWithoutUserInput
-  climbingSessions?: Prisma.ClimbingSessionUncheckedCreateNestedManyWithoutUserInput
   attempts?: Prisma.RouteAttemptUncheckedCreateNestedManyWithoutUserInput
   communityGrades?: Prisma.CommunityGradeUncheckedCreateNestedManyWithoutUserInput
   stars?: Prisma.RouteStarUncheckedCreateNestedManyWithoutUserInput
   badges?: Prisma.BadgeUncheckedCreateNestedManyWithoutUsersInput
   Account?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   Session?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
-  mixerClimber?: Prisma.MixerClimberUncheckedCreateNestedManyWithoutUserInput
-  blClimber?: Prisma.BLClimberUncheckedCreateNestedManyWithoutUserInput
   monthlyXp?: Prisma.MonthlyXpUncheckedCreateNestedManyWithoutUserInput
-  seenAnnouncements?: Prisma.UserAnnouncementUncheckedCreateNestedManyWithoutUserInput
   claimedBounties?: Prisma.BountyUncheckedCreateNestedManyWithoutClaimedByUserInput
 }
 
@@ -1089,17 +993,13 @@ export type UserUpdateWithoutCreatedRoutesInput = {
   tag?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totalXp?: Prisma.IntFieldUpdateOperationsInput | number
   completions?: Prisma.RouteCompletionUpdateManyWithoutUserNestedInput
-  climbingSessions?: Prisma.ClimbingSessionUpdateManyWithoutUserNestedInput
   attempts?: Prisma.RouteAttemptUpdateManyWithoutUserNestedInput
   communityGrades?: Prisma.CommunityGradeUpdateManyWithoutUserNestedInput
   stars?: Prisma.RouteStarUpdateManyWithoutUserNestedInput
   badges?: Prisma.BadgeUpdateManyWithoutUsersNestedInput
   Account?: Prisma.AccountUpdateManyWithoutUserNestedInput
   Session?: Prisma.SessionUpdateManyWithoutUserNestedInput
-  mixerClimber?: Prisma.MixerClimberUpdateManyWithoutUserNestedInput
-  blClimber?: Prisma.BLClimberUpdateManyWithoutUserNestedInput
   monthlyXp?: Prisma.MonthlyXpUpdateManyWithoutUserNestedInput
-  seenAnnouncements?: Prisma.UserAnnouncementUpdateManyWithoutUserNestedInput
   claimedBounties?: Prisma.BountyUpdateManyWithoutClaimedByUserNestedInput
 }
 
@@ -1123,169 +1023,13 @@ export type UserUncheckedUpdateWithoutCreatedRoutesInput = {
   tag?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totalXp?: Prisma.IntFieldUpdateOperationsInput | number
   completions?: Prisma.RouteCompletionUncheckedUpdateManyWithoutUserNestedInput
-  climbingSessions?: Prisma.ClimbingSessionUncheckedUpdateManyWithoutUserNestedInput
   attempts?: Prisma.RouteAttemptUncheckedUpdateManyWithoutUserNestedInput
   communityGrades?: Prisma.CommunityGradeUncheckedUpdateManyWithoutUserNestedInput
   stars?: Prisma.RouteStarUncheckedUpdateManyWithoutUserNestedInput
   badges?: Prisma.BadgeUncheckedUpdateManyWithoutUsersNestedInput
   Account?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   Session?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
-  mixerClimber?: Prisma.MixerClimberUncheckedUpdateManyWithoutUserNestedInput
-  blClimber?: Prisma.BLClimberUncheckedUpdateManyWithoutUserNestedInput
   monthlyXp?: Prisma.MonthlyXpUncheckedUpdateManyWithoutUserNestedInput
-  seenAnnouncements?: Prisma.UserAnnouncementUncheckedUpdateManyWithoutUserNestedInput
-  claimedBounties?: Prisma.BountyUncheckedUpdateManyWithoutClaimedByUserNestedInput
-}
-
-export type UserCreateWithoutClimbingSessionsInput = {
-  id?: string
-  clerkId?: string | null
-  username?: string | null
-  name?: string | null
-  phoneNumber?: string | null
-  email: string
-  emailVerified?: Date | string | null
-  image?: string | null
-  password?: string | null
-  highestRopeGrade?: string | null
-  highestBoulderGrade?: string | null
-  role?: $Enums.UserRole
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  private?: boolean
-  isOnboarded?: boolean
-  tag?: string | null
-  totalXp?: number
-  completions?: Prisma.RouteCompletionCreateNestedManyWithoutUserInput
-  attempts?: Prisma.RouteAttemptCreateNestedManyWithoutUserInput
-  communityGrades?: Prisma.CommunityGradeCreateNestedManyWithoutUserInput
-  stars?: Prisma.RouteStarCreateNestedManyWithoutUserInput
-  badges?: Prisma.BadgeCreateNestedManyWithoutUsersInput
-  Account?: Prisma.AccountCreateNestedManyWithoutUserInput
-  Session?: Prisma.SessionCreateNestedManyWithoutUserInput
-  createdRoutes?: Prisma.RouteCreateNestedManyWithoutCreatedByUserInput
-  mixerClimber?: Prisma.MixerClimberCreateNestedManyWithoutUserInput
-  blClimber?: Prisma.BLClimberCreateNestedManyWithoutUserInput
-  monthlyXp?: Prisma.MonthlyXpCreateNestedManyWithoutUserInput
-  seenAnnouncements?: Prisma.UserAnnouncementCreateNestedManyWithoutUserInput
-  claimedBounties?: Prisma.BountyCreateNestedManyWithoutClaimedByUserInput
-}
-
-export type UserUncheckedCreateWithoutClimbingSessionsInput = {
-  id?: string
-  clerkId?: string | null
-  username?: string | null
-  name?: string | null
-  phoneNumber?: string | null
-  email: string
-  emailVerified?: Date | string | null
-  image?: string | null
-  password?: string | null
-  highestRopeGrade?: string | null
-  highestBoulderGrade?: string | null
-  role?: $Enums.UserRole
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  private?: boolean
-  isOnboarded?: boolean
-  tag?: string | null
-  totalXp?: number
-  completions?: Prisma.RouteCompletionUncheckedCreateNestedManyWithoutUserInput
-  attempts?: Prisma.RouteAttemptUncheckedCreateNestedManyWithoutUserInput
-  communityGrades?: Prisma.CommunityGradeUncheckedCreateNestedManyWithoutUserInput
-  stars?: Prisma.RouteStarUncheckedCreateNestedManyWithoutUserInput
-  badges?: Prisma.BadgeUncheckedCreateNestedManyWithoutUsersInput
-  Account?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
-  Session?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
-  createdRoutes?: Prisma.RouteUncheckedCreateNestedManyWithoutCreatedByUserInput
-  mixerClimber?: Prisma.MixerClimberUncheckedCreateNestedManyWithoutUserInput
-  blClimber?: Prisma.BLClimberUncheckedCreateNestedManyWithoutUserInput
-  monthlyXp?: Prisma.MonthlyXpUncheckedCreateNestedManyWithoutUserInput
-  seenAnnouncements?: Prisma.UserAnnouncementUncheckedCreateNestedManyWithoutUserInput
-  claimedBounties?: Prisma.BountyUncheckedCreateNestedManyWithoutClaimedByUserInput
-}
-
-export type UserCreateOrConnectWithoutClimbingSessionsInput = {
-  where: Prisma.UserWhereUniqueInput
-  create: Prisma.XOR<Prisma.UserCreateWithoutClimbingSessionsInput, Prisma.UserUncheckedCreateWithoutClimbingSessionsInput>
-}
-
-export type UserUpsertWithoutClimbingSessionsInput = {
-  update: Prisma.XOR<Prisma.UserUpdateWithoutClimbingSessionsInput, Prisma.UserUncheckedUpdateWithoutClimbingSessionsInput>
-  create: Prisma.XOR<Prisma.UserCreateWithoutClimbingSessionsInput, Prisma.UserUncheckedCreateWithoutClimbingSessionsInput>
-  where?: Prisma.UserWhereInput
-}
-
-export type UserUpdateToOneWithWhereWithoutClimbingSessionsInput = {
-  where?: Prisma.UserWhereInput
-  data: Prisma.XOR<Prisma.UserUpdateWithoutClimbingSessionsInput, Prisma.UserUncheckedUpdateWithoutClimbingSessionsInput>
-}
-
-export type UserUpdateWithoutClimbingSessionsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  clerkId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email?: Prisma.StringFieldUpdateOperationsInput | string
-  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  highestRopeGrade?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  highestBoulderGrade?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  private?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isOnboarded?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  tag?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  totalXp?: Prisma.IntFieldUpdateOperationsInput | number
-  completions?: Prisma.RouteCompletionUpdateManyWithoutUserNestedInput
-  attempts?: Prisma.RouteAttemptUpdateManyWithoutUserNestedInput
-  communityGrades?: Prisma.CommunityGradeUpdateManyWithoutUserNestedInput
-  stars?: Prisma.RouteStarUpdateManyWithoutUserNestedInput
-  badges?: Prisma.BadgeUpdateManyWithoutUsersNestedInput
-  Account?: Prisma.AccountUpdateManyWithoutUserNestedInput
-  Session?: Prisma.SessionUpdateManyWithoutUserNestedInput
-  createdRoutes?: Prisma.RouteUpdateManyWithoutCreatedByUserNestedInput
-  mixerClimber?: Prisma.MixerClimberUpdateManyWithoutUserNestedInput
-  blClimber?: Prisma.BLClimberUpdateManyWithoutUserNestedInput
-  monthlyXp?: Prisma.MonthlyXpUpdateManyWithoutUserNestedInput
-  seenAnnouncements?: Prisma.UserAnnouncementUpdateManyWithoutUserNestedInput
-  claimedBounties?: Prisma.BountyUpdateManyWithoutClaimedByUserNestedInput
-}
-
-export type UserUncheckedUpdateWithoutClimbingSessionsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  clerkId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email?: Prisma.StringFieldUpdateOperationsInput | string
-  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  highestRopeGrade?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  highestBoulderGrade?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  private?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isOnboarded?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  tag?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  totalXp?: Prisma.IntFieldUpdateOperationsInput | number
-  completions?: Prisma.RouteCompletionUncheckedUpdateManyWithoutUserNestedInput
-  attempts?: Prisma.RouteAttemptUncheckedUpdateManyWithoutUserNestedInput
-  communityGrades?: Prisma.CommunityGradeUncheckedUpdateManyWithoutUserNestedInput
-  stars?: Prisma.RouteStarUncheckedUpdateManyWithoutUserNestedInput
-  badges?: Prisma.BadgeUncheckedUpdateManyWithoutUsersNestedInput
-  Account?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
-  Session?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
-  createdRoutes?: Prisma.RouteUncheckedUpdateManyWithoutCreatedByUserNestedInput
-  mixerClimber?: Prisma.MixerClimberUncheckedUpdateManyWithoutUserNestedInput
-  blClimber?: Prisma.BLClimberUncheckedUpdateManyWithoutUserNestedInput
-  monthlyXp?: Prisma.MonthlyXpUncheckedUpdateManyWithoutUserNestedInput
-  seenAnnouncements?: Prisma.UserAnnouncementUncheckedUpdateManyWithoutUserNestedInput
   claimedBounties?: Prisma.BountyUncheckedUpdateManyWithoutClaimedByUserNestedInput
 }
 
@@ -1308,7 +1052,6 @@ export type UserCreateWithoutCompletionsInput = {
   isOnboarded?: boolean
   tag?: string | null
   totalXp?: number
-  climbingSessions?: Prisma.ClimbingSessionCreateNestedManyWithoutUserInput
   attempts?: Prisma.RouteAttemptCreateNestedManyWithoutUserInput
   communityGrades?: Prisma.CommunityGradeCreateNestedManyWithoutUserInput
   stars?: Prisma.RouteStarCreateNestedManyWithoutUserInput
@@ -1316,10 +1059,7 @@ export type UserCreateWithoutCompletionsInput = {
   Account?: Prisma.AccountCreateNestedManyWithoutUserInput
   Session?: Prisma.SessionCreateNestedManyWithoutUserInput
   createdRoutes?: Prisma.RouteCreateNestedManyWithoutCreatedByUserInput
-  mixerClimber?: Prisma.MixerClimberCreateNestedManyWithoutUserInput
-  blClimber?: Prisma.BLClimberCreateNestedManyWithoutUserInput
   monthlyXp?: Prisma.MonthlyXpCreateNestedManyWithoutUserInput
-  seenAnnouncements?: Prisma.UserAnnouncementCreateNestedManyWithoutUserInput
   claimedBounties?: Prisma.BountyCreateNestedManyWithoutClaimedByUserInput
 }
 
@@ -1342,7 +1082,6 @@ export type UserUncheckedCreateWithoutCompletionsInput = {
   isOnboarded?: boolean
   tag?: string | null
   totalXp?: number
-  climbingSessions?: Prisma.ClimbingSessionUncheckedCreateNestedManyWithoutUserInput
   attempts?: Prisma.RouteAttemptUncheckedCreateNestedManyWithoutUserInput
   communityGrades?: Prisma.CommunityGradeUncheckedCreateNestedManyWithoutUserInput
   stars?: Prisma.RouteStarUncheckedCreateNestedManyWithoutUserInput
@@ -1350,10 +1089,7 @@ export type UserUncheckedCreateWithoutCompletionsInput = {
   Account?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   Session?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   createdRoutes?: Prisma.RouteUncheckedCreateNestedManyWithoutCreatedByUserInput
-  mixerClimber?: Prisma.MixerClimberUncheckedCreateNestedManyWithoutUserInput
-  blClimber?: Prisma.BLClimberUncheckedCreateNestedManyWithoutUserInput
   monthlyXp?: Prisma.MonthlyXpUncheckedCreateNestedManyWithoutUserInput
-  seenAnnouncements?: Prisma.UserAnnouncementUncheckedCreateNestedManyWithoutUserInput
   claimedBounties?: Prisma.BountyUncheckedCreateNestedManyWithoutClaimedByUserInput
 }
 
@@ -1392,7 +1128,6 @@ export type UserUpdateWithoutCompletionsInput = {
   isOnboarded?: Prisma.BoolFieldUpdateOperationsInput | boolean
   tag?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totalXp?: Prisma.IntFieldUpdateOperationsInput | number
-  climbingSessions?: Prisma.ClimbingSessionUpdateManyWithoutUserNestedInput
   attempts?: Prisma.RouteAttemptUpdateManyWithoutUserNestedInput
   communityGrades?: Prisma.CommunityGradeUpdateManyWithoutUserNestedInput
   stars?: Prisma.RouteStarUpdateManyWithoutUserNestedInput
@@ -1400,10 +1135,7 @@ export type UserUpdateWithoutCompletionsInput = {
   Account?: Prisma.AccountUpdateManyWithoutUserNestedInput
   Session?: Prisma.SessionUpdateManyWithoutUserNestedInput
   createdRoutes?: Prisma.RouteUpdateManyWithoutCreatedByUserNestedInput
-  mixerClimber?: Prisma.MixerClimberUpdateManyWithoutUserNestedInput
-  blClimber?: Prisma.BLClimberUpdateManyWithoutUserNestedInput
   monthlyXp?: Prisma.MonthlyXpUpdateManyWithoutUserNestedInput
-  seenAnnouncements?: Prisma.UserAnnouncementUpdateManyWithoutUserNestedInput
   claimedBounties?: Prisma.BountyUpdateManyWithoutClaimedByUserNestedInput
 }
 
@@ -1426,7 +1158,6 @@ export type UserUncheckedUpdateWithoutCompletionsInput = {
   isOnboarded?: Prisma.BoolFieldUpdateOperationsInput | boolean
   tag?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totalXp?: Prisma.IntFieldUpdateOperationsInput | number
-  climbingSessions?: Prisma.ClimbingSessionUncheckedUpdateManyWithoutUserNestedInput
   attempts?: Prisma.RouteAttemptUncheckedUpdateManyWithoutUserNestedInput
   communityGrades?: Prisma.CommunityGradeUncheckedUpdateManyWithoutUserNestedInput
   stars?: Prisma.RouteStarUncheckedUpdateManyWithoutUserNestedInput
@@ -1434,10 +1165,7 @@ export type UserUncheckedUpdateWithoutCompletionsInput = {
   Account?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   Session?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   createdRoutes?: Prisma.RouteUncheckedUpdateManyWithoutCreatedByUserNestedInput
-  mixerClimber?: Prisma.MixerClimberUncheckedUpdateManyWithoutUserNestedInput
-  blClimber?: Prisma.BLClimberUncheckedUpdateManyWithoutUserNestedInput
   monthlyXp?: Prisma.MonthlyXpUncheckedUpdateManyWithoutUserNestedInput
-  seenAnnouncements?: Prisma.UserAnnouncementUncheckedUpdateManyWithoutUserNestedInput
   claimedBounties?: Prisma.BountyUncheckedUpdateManyWithoutClaimedByUserNestedInput
 }
 
@@ -1461,7 +1189,6 @@ export type UserCreateWithoutClaimedBountiesInput = {
   tag?: string | null
   totalXp?: number
   completions?: Prisma.RouteCompletionCreateNestedManyWithoutUserInput
-  climbingSessions?: Prisma.ClimbingSessionCreateNestedManyWithoutUserInput
   attempts?: Prisma.RouteAttemptCreateNestedManyWithoutUserInput
   communityGrades?: Prisma.CommunityGradeCreateNestedManyWithoutUserInput
   stars?: Prisma.RouteStarCreateNestedManyWithoutUserInput
@@ -1469,10 +1196,7 @@ export type UserCreateWithoutClaimedBountiesInput = {
   Account?: Prisma.AccountCreateNestedManyWithoutUserInput
   Session?: Prisma.SessionCreateNestedManyWithoutUserInput
   createdRoutes?: Prisma.RouteCreateNestedManyWithoutCreatedByUserInput
-  mixerClimber?: Prisma.MixerClimberCreateNestedManyWithoutUserInput
-  blClimber?: Prisma.BLClimberCreateNestedManyWithoutUserInput
   monthlyXp?: Prisma.MonthlyXpCreateNestedManyWithoutUserInput
-  seenAnnouncements?: Prisma.UserAnnouncementCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutClaimedBountiesInput = {
@@ -1495,7 +1219,6 @@ export type UserUncheckedCreateWithoutClaimedBountiesInput = {
   tag?: string | null
   totalXp?: number
   completions?: Prisma.RouteCompletionUncheckedCreateNestedManyWithoutUserInput
-  climbingSessions?: Prisma.ClimbingSessionUncheckedCreateNestedManyWithoutUserInput
   attempts?: Prisma.RouteAttemptUncheckedCreateNestedManyWithoutUserInput
   communityGrades?: Prisma.CommunityGradeUncheckedCreateNestedManyWithoutUserInput
   stars?: Prisma.RouteStarUncheckedCreateNestedManyWithoutUserInput
@@ -1503,10 +1226,7 @@ export type UserUncheckedCreateWithoutClaimedBountiesInput = {
   Account?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   Session?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   createdRoutes?: Prisma.RouteUncheckedCreateNestedManyWithoutCreatedByUserInput
-  mixerClimber?: Prisma.MixerClimberUncheckedCreateNestedManyWithoutUserInput
-  blClimber?: Prisma.BLClimberUncheckedCreateNestedManyWithoutUserInput
   monthlyXp?: Prisma.MonthlyXpUncheckedCreateNestedManyWithoutUserInput
-  seenAnnouncements?: Prisma.UserAnnouncementUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutClaimedBountiesInput = {
@@ -1545,7 +1265,6 @@ export type UserUpdateWithoutClaimedBountiesInput = {
   tag?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totalXp?: Prisma.IntFieldUpdateOperationsInput | number
   completions?: Prisma.RouteCompletionUpdateManyWithoutUserNestedInput
-  climbingSessions?: Prisma.ClimbingSessionUpdateManyWithoutUserNestedInput
   attempts?: Prisma.RouteAttemptUpdateManyWithoutUserNestedInput
   communityGrades?: Prisma.CommunityGradeUpdateManyWithoutUserNestedInput
   stars?: Prisma.RouteStarUpdateManyWithoutUserNestedInput
@@ -1553,10 +1272,7 @@ export type UserUpdateWithoutClaimedBountiesInput = {
   Account?: Prisma.AccountUpdateManyWithoutUserNestedInput
   Session?: Prisma.SessionUpdateManyWithoutUserNestedInput
   createdRoutes?: Prisma.RouteUpdateManyWithoutCreatedByUserNestedInput
-  mixerClimber?: Prisma.MixerClimberUpdateManyWithoutUserNestedInput
-  blClimber?: Prisma.BLClimberUpdateManyWithoutUserNestedInput
   monthlyXp?: Prisma.MonthlyXpUpdateManyWithoutUserNestedInput
-  seenAnnouncements?: Prisma.UserAnnouncementUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutClaimedBountiesInput = {
@@ -1579,7 +1295,6 @@ export type UserUncheckedUpdateWithoutClaimedBountiesInput = {
   tag?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totalXp?: Prisma.IntFieldUpdateOperationsInput | number
   completions?: Prisma.RouteCompletionUncheckedUpdateManyWithoutUserNestedInput
-  climbingSessions?: Prisma.ClimbingSessionUncheckedUpdateManyWithoutUserNestedInput
   attempts?: Prisma.RouteAttemptUncheckedUpdateManyWithoutUserNestedInput
   communityGrades?: Prisma.CommunityGradeUncheckedUpdateManyWithoutUserNestedInput
   stars?: Prisma.RouteStarUncheckedUpdateManyWithoutUserNestedInput
@@ -1587,10 +1302,7 @@ export type UserUncheckedUpdateWithoutClaimedBountiesInput = {
   Account?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   Session?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   createdRoutes?: Prisma.RouteUncheckedUpdateManyWithoutCreatedByUserNestedInput
-  mixerClimber?: Prisma.MixerClimberUncheckedUpdateManyWithoutUserNestedInput
-  blClimber?: Prisma.BLClimberUncheckedUpdateManyWithoutUserNestedInput
   monthlyXp?: Prisma.MonthlyXpUncheckedUpdateManyWithoutUserNestedInput
-  seenAnnouncements?: Prisma.UserAnnouncementUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutStarsInput = {
@@ -1613,17 +1325,13 @@ export type UserCreateWithoutStarsInput = {
   tag?: string | null
   totalXp?: number
   completions?: Prisma.RouteCompletionCreateNestedManyWithoutUserInput
-  climbingSessions?: Prisma.ClimbingSessionCreateNestedManyWithoutUserInput
   attempts?: Prisma.RouteAttemptCreateNestedManyWithoutUserInput
   communityGrades?: Prisma.CommunityGradeCreateNestedManyWithoutUserInput
   badges?: Prisma.BadgeCreateNestedManyWithoutUsersInput
   Account?: Prisma.AccountCreateNestedManyWithoutUserInput
   Session?: Prisma.SessionCreateNestedManyWithoutUserInput
   createdRoutes?: Prisma.RouteCreateNestedManyWithoutCreatedByUserInput
-  mixerClimber?: Prisma.MixerClimberCreateNestedManyWithoutUserInput
-  blClimber?: Prisma.BLClimberCreateNestedManyWithoutUserInput
   monthlyXp?: Prisma.MonthlyXpCreateNestedManyWithoutUserInput
-  seenAnnouncements?: Prisma.UserAnnouncementCreateNestedManyWithoutUserInput
   claimedBounties?: Prisma.BountyCreateNestedManyWithoutClaimedByUserInput
 }
 
@@ -1647,17 +1355,13 @@ export type UserUncheckedCreateWithoutStarsInput = {
   tag?: string | null
   totalXp?: number
   completions?: Prisma.RouteCompletionUncheckedCreateNestedManyWithoutUserInput
-  climbingSessions?: Prisma.ClimbingSessionUncheckedCreateNestedManyWithoutUserInput
   attempts?: Prisma.RouteAttemptUncheckedCreateNestedManyWithoutUserInput
   communityGrades?: Prisma.CommunityGradeUncheckedCreateNestedManyWithoutUserInput
   badges?: Prisma.BadgeUncheckedCreateNestedManyWithoutUsersInput
   Account?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   Session?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   createdRoutes?: Prisma.RouteUncheckedCreateNestedManyWithoutCreatedByUserInput
-  mixerClimber?: Prisma.MixerClimberUncheckedCreateNestedManyWithoutUserInput
-  blClimber?: Prisma.BLClimberUncheckedCreateNestedManyWithoutUserInput
   monthlyXp?: Prisma.MonthlyXpUncheckedCreateNestedManyWithoutUserInput
-  seenAnnouncements?: Prisma.UserAnnouncementUncheckedCreateNestedManyWithoutUserInput
   claimedBounties?: Prisma.BountyUncheckedCreateNestedManyWithoutClaimedByUserInput
 }
 
@@ -1697,17 +1401,13 @@ export type UserUpdateWithoutStarsInput = {
   tag?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totalXp?: Prisma.IntFieldUpdateOperationsInput | number
   completions?: Prisma.RouteCompletionUpdateManyWithoutUserNestedInput
-  climbingSessions?: Prisma.ClimbingSessionUpdateManyWithoutUserNestedInput
   attempts?: Prisma.RouteAttemptUpdateManyWithoutUserNestedInput
   communityGrades?: Prisma.CommunityGradeUpdateManyWithoutUserNestedInput
   badges?: Prisma.BadgeUpdateManyWithoutUsersNestedInput
   Account?: Prisma.AccountUpdateManyWithoutUserNestedInput
   Session?: Prisma.SessionUpdateManyWithoutUserNestedInput
   createdRoutes?: Prisma.RouteUpdateManyWithoutCreatedByUserNestedInput
-  mixerClimber?: Prisma.MixerClimberUpdateManyWithoutUserNestedInput
-  blClimber?: Prisma.BLClimberUpdateManyWithoutUserNestedInput
   monthlyXp?: Prisma.MonthlyXpUpdateManyWithoutUserNestedInput
-  seenAnnouncements?: Prisma.UserAnnouncementUpdateManyWithoutUserNestedInput
   claimedBounties?: Prisma.BountyUpdateManyWithoutClaimedByUserNestedInput
 }
 
@@ -1731,17 +1431,13 @@ export type UserUncheckedUpdateWithoutStarsInput = {
   tag?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totalXp?: Prisma.IntFieldUpdateOperationsInput | number
   completions?: Prisma.RouteCompletionUncheckedUpdateManyWithoutUserNestedInput
-  climbingSessions?: Prisma.ClimbingSessionUncheckedUpdateManyWithoutUserNestedInput
   attempts?: Prisma.RouteAttemptUncheckedUpdateManyWithoutUserNestedInput
   communityGrades?: Prisma.CommunityGradeUncheckedUpdateManyWithoutUserNestedInput
   badges?: Prisma.BadgeUncheckedUpdateManyWithoutUsersNestedInput
   Account?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   Session?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   createdRoutes?: Prisma.RouteUncheckedUpdateManyWithoutCreatedByUserNestedInput
-  mixerClimber?: Prisma.MixerClimberUncheckedUpdateManyWithoutUserNestedInput
-  blClimber?: Prisma.BLClimberUncheckedUpdateManyWithoutUserNestedInput
   monthlyXp?: Prisma.MonthlyXpUncheckedUpdateManyWithoutUserNestedInput
-  seenAnnouncements?: Prisma.UserAnnouncementUncheckedUpdateManyWithoutUserNestedInput
   claimedBounties?: Prisma.BountyUncheckedUpdateManyWithoutClaimedByUserNestedInput
 }
 
@@ -1765,17 +1461,13 @@ export type UserCreateWithoutAttemptsInput = {
   tag?: string | null
   totalXp?: number
   completions?: Prisma.RouteCompletionCreateNestedManyWithoutUserInput
-  climbingSessions?: Prisma.ClimbingSessionCreateNestedManyWithoutUserInput
   communityGrades?: Prisma.CommunityGradeCreateNestedManyWithoutUserInput
   stars?: Prisma.RouteStarCreateNestedManyWithoutUserInput
   badges?: Prisma.BadgeCreateNestedManyWithoutUsersInput
   Account?: Prisma.AccountCreateNestedManyWithoutUserInput
   Session?: Prisma.SessionCreateNestedManyWithoutUserInput
   createdRoutes?: Prisma.RouteCreateNestedManyWithoutCreatedByUserInput
-  mixerClimber?: Prisma.MixerClimberCreateNestedManyWithoutUserInput
-  blClimber?: Prisma.BLClimberCreateNestedManyWithoutUserInput
   monthlyXp?: Prisma.MonthlyXpCreateNestedManyWithoutUserInput
-  seenAnnouncements?: Prisma.UserAnnouncementCreateNestedManyWithoutUserInput
   claimedBounties?: Prisma.BountyCreateNestedManyWithoutClaimedByUserInput
 }
 
@@ -1799,17 +1491,13 @@ export type UserUncheckedCreateWithoutAttemptsInput = {
   tag?: string | null
   totalXp?: number
   completions?: Prisma.RouteCompletionUncheckedCreateNestedManyWithoutUserInput
-  climbingSessions?: Prisma.ClimbingSessionUncheckedCreateNestedManyWithoutUserInput
   communityGrades?: Prisma.CommunityGradeUncheckedCreateNestedManyWithoutUserInput
   stars?: Prisma.RouteStarUncheckedCreateNestedManyWithoutUserInput
   badges?: Prisma.BadgeUncheckedCreateNestedManyWithoutUsersInput
   Account?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   Session?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   createdRoutes?: Prisma.RouteUncheckedCreateNestedManyWithoutCreatedByUserInput
-  mixerClimber?: Prisma.MixerClimberUncheckedCreateNestedManyWithoutUserInput
-  blClimber?: Prisma.BLClimberUncheckedCreateNestedManyWithoutUserInput
   monthlyXp?: Prisma.MonthlyXpUncheckedCreateNestedManyWithoutUserInput
-  seenAnnouncements?: Prisma.UserAnnouncementUncheckedCreateNestedManyWithoutUserInput
   claimedBounties?: Prisma.BountyUncheckedCreateNestedManyWithoutClaimedByUserInput
 }
 
@@ -1849,17 +1537,13 @@ export type UserUpdateWithoutAttemptsInput = {
   tag?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totalXp?: Prisma.IntFieldUpdateOperationsInput | number
   completions?: Prisma.RouteCompletionUpdateManyWithoutUserNestedInput
-  climbingSessions?: Prisma.ClimbingSessionUpdateManyWithoutUserNestedInput
   communityGrades?: Prisma.CommunityGradeUpdateManyWithoutUserNestedInput
   stars?: Prisma.RouteStarUpdateManyWithoutUserNestedInput
   badges?: Prisma.BadgeUpdateManyWithoutUsersNestedInput
   Account?: Prisma.AccountUpdateManyWithoutUserNestedInput
   Session?: Prisma.SessionUpdateManyWithoutUserNestedInput
   createdRoutes?: Prisma.RouteUpdateManyWithoutCreatedByUserNestedInput
-  mixerClimber?: Prisma.MixerClimberUpdateManyWithoutUserNestedInput
-  blClimber?: Prisma.BLClimberUpdateManyWithoutUserNestedInput
   monthlyXp?: Prisma.MonthlyXpUpdateManyWithoutUserNestedInput
-  seenAnnouncements?: Prisma.UserAnnouncementUpdateManyWithoutUserNestedInput
   claimedBounties?: Prisma.BountyUpdateManyWithoutClaimedByUserNestedInput
 }
 
@@ -1883,17 +1567,13 @@ export type UserUncheckedUpdateWithoutAttemptsInput = {
   tag?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totalXp?: Prisma.IntFieldUpdateOperationsInput | number
   completions?: Prisma.RouteCompletionUncheckedUpdateManyWithoutUserNestedInput
-  climbingSessions?: Prisma.ClimbingSessionUncheckedUpdateManyWithoutUserNestedInput
   communityGrades?: Prisma.CommunityGradeUncheckedUpdateManyWithoutUserNestedInput
   stars?: Prisma.RouteStarUncheckedUpdateManyWithoutUserNestedInput
   badges?: Prisma.BadgeUncheckedUpdateManyWithoutUsersNestedInput
   Account?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   Session?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   createdRoutes?: Prisma.RouteUncheckedUpdateManyWithoutCreatedByUserNestedInput
-  mixerClimber?: Prisma.MixerClimberUncheckedUpdateManyWithoutUserNestedInput
-  blClimber?: Prisma.BLClimberUncheckedUpdateManyWithoutUserNestedInput
   monthlyXp?: Prisma.MonthlyXpUncheckedUpdateManyWithoutUserNestedInput
-  seenAnnouncements?: Prisma.UserAnnouncementUncheckedUpdateManyWithoutUserNestedInput
   claimedBounties?: Prisma.BountyUncheckedUpdateManyWithoutClaimedByUserNestedInput
 }
 
@@ -1917,17 +1597,13 @@ export type UserCreateWithoutCommunityGradesInput = {
   tag?: string | null
   totalXp?: number
   completions?: Prisma.RouteCompletionCreateNestedManyWithoutUserInput
-  climbingSessions?: Prisma.ClimbingSessionCreateNestedManyWithoutUserInput
   attempts?: Prisma.RouteAttemptCreateNestedManyWithoutUserInput
   stars?: Prisma.RouteStarCreateNestedManyWithoutUserInput
   badges?: Prisma.BadgeCreateNestedManyWithoutUsersInput
   Account?: Prisma.AccountCreateNestedManyWithoutUserInput
   Session?: Prisma.SessionCreateNestedManyWithoutUserInput
   createdRoutes?: Prisma.RouteCreateNestedManyWithoutCreatedByUserInput
-  mixerClimber?: Prisma.MixerClimberCreateNestedManyWithoutUserInput
-  blClimber?: Prisma.BLClimberCreateNestedManyWithoutUserInput
   monthlyXp?: Prisma.MonthlyXpCreateNestedManyWithoutUserInput
-  seenAnnouncements?: Prisma.UserAnnouncementCreateNestedManyWithoutUserInput
   claimedBounties?: Prisma.BountyCreateNestedManyWithoutClaimedByUserInput
 }
 
@@ -1951,17 +1627,13 @@ export type UserUncheckedCreateWithoutCommunityGradesInput = {
   tag?: string | null
   totalXp?: number
   completions?: Prisma.RouteCompletionUncheckedCreateNestedManyWithoutUserInput
-  climbingSessions?: Prisma.ClimbingSessionUncheckedCreateNestedManyWithoutUserInput
   attempts?: Prisma.RouteAttemptUncheckedCreateNestedManyWithoutUserInput
   stars?: Prisma.RouteStarUncheckedCreateNestedManyWithoutUserInput
   badges?: Prisma.BadgeUncheckedCreateNestedManyWithoutUsersInput
   Account?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   Session?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   createdRoutes?: Prisma.RouteUncheckedCreateNestedManyWithoutCreatedByUserInput
-  mixerClimber?: Prisma.MixerClimberUncheckedCreateNestedManyWithoutUserInput
-  blClimber?: Prisma.BLClimberUncheckedCreateNestedManyWithoutUserInput
   monthlyXp?: Prisma.MonthlyXpUncheckedCreateNestedManyWithoutUserInput
-  seenAnnouncements?: Prisma.UserAnnouncementUncheckedCreateNestedManyWithoutUserInput
   claimedBounties?: Prisma.BountyUncheckedCreateNestedManyWithoutClaimedByUserInput
 }
 
@@ -2001,17 +1673,13 @@ export type UserUpdateWithoutCommunityGradesInput = {
   tag?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totalXp?: Prisma.IntFieldUpdateOperationsInput | number
   completions?: Prisma.RouteCompletionUpdateManyWithoutUserNestedInput
-  climbingSessions?: Prisma.ClimbingSessionUpdateManyWithoutUserNestedInput
   attempts?: Prisma.RouteAttemptUpdateManyWithoutUserNestedInput
   stars?: Prisma.RouteStarUpdateManyWithoutUserNestedInput
   badges?: Prisma.BadgeUpdateManyWithoutUsersNestedInput
   Account?: Prisma.AccountUpdateManyWithoutUserNestedInput
   Session?: Prisma.SessionUpdateManyWithoutUserNestedInput
   createdRoutes?: Prisma.RouteUpdateManyWithoutCreatedByUserNestedInput
-  mixerClimber?: Prisma.MixerClimberUpdateManyWithoutUserNestedInput
-  blClimber?: Prisma.BLClimberUpdateManyWithoutUserNestedInput
   monthlyXp?: Prisma.MonthlyXpUpdateManyWithoutUserNestedInput
-  seenAnnouncements?: Prisma.UserAnnouncementUpdateManyWithoutUserNestedInput
   claimedBounties?: Prisma.BountyUpdateManyWithoutClaimedByUserNestedInput
 }
 
@@ -2035,17 +1703,13 @@ export type UserUncheckedUpdateWithoutCommunityGradesInput = {
   tag?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totalXp?: Prisma.IntFieldUpdateOperationsInput | number
   completions?: Prisma.RouteCompletionUncheckedUpdateManyWithoutUserNestedInput
-  climbingSessions?: Prisma.ClimbingSessionUncheckedUpdateManyWithoutUserNestedInput
   attempts?: Prisma.RouteAttemptUncheckedUpdateManyWithoutUserNestedInput
   stars?: Prisma.RouteStarUncheckedUpdateManyWithoutUserNestedInput
   badges?: Prisma.BadgeUncheckedUpdateManyWithoutUsersNestedInput
   Account?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   Session?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   createdRoutes?: Prisma.RouteUncheckedUpdateManyWithoutCreatedByUserNestedInput
-  mixerClimber?: Prisma.MixerClimberUncheckedUpdateManyWithoutUserNestedInput
-  blClimber?: Prisma.BLClimberUncheckedUpdateManyWithoutUserNestedInput
   monthlyXp?: Prisma.MonthlyXpUncheckedUpdateManyWithoutUserNestedInput
-  seenAnnouncements?: Prisma.UserAnnouncementUncheckedUpdateManyWithoutUserNestedInput
   claimedBounties?: Prisma.BountyUncheckedUpdateManyWithoutClaimedByUserNestedInput
 }
 
@@ -2069,7 +1733,6 @@ export type UserCreateWithoutMonthlyXpInput = {
   tag?: string | null
   totalXp?: number
   completions?: Prisma.RouteCompletionCreateNestedManyWithoutUserInput
-  climbingSessions?: Prisma.ClimbingSessionCreateNestedManyWithoutUserInput
   attempts?: Prisma.RouteAttemptCreateNestedManyWithoutUserInput
   communityGrades?: Prisma.CommunityGradeCreateNestedManyWithoutUserInput
   stars?: Prisma.RouteStarCreateNestedManyWithoutUserInput
@@ -2077,9 +1740,6 @@ export type UserCreateWithoutMonthlyXpInput = {
   Account?: Prisma.AccountCreateNestedManyWithoutUserInput
   Session?: Prisma.SessionCreateNestedManyWithoutUserInput
   createdRoutes?: Prisma.RouteCreateNestedManyWithoutCreatedByUserInput
-  mixerClimber?: Prisma.MixerClimberCreateNestedManyWithoutUserInput
-  blClimber?: Prisma.BLClimberCreateNestedManyWithoutUserInput
-  seenAnnouncements?: Prisma.UserAnnouncementCreateNestedManyWithoutUserInput
   claimedBounties?: Prisma.BountyCreateNestedManyWithoutClaimedByUserInput
 }
 
@@ -2103,7 +1763,6 @@ export type UserUncheckedCreateWithoutMonthlyXpInput = {
   tag?: string | null
   totalXp?: number
   completions?: Prisma.RouteCompletionUncheckedCreateNestedManyWithoutUserInput
-  climbingSessions?: Prisma.ClimbingSessionUncheckedCreateNestedManyWithoutUserInput
   attempts?: Prisma.RouteAttemptUncheckedCreateNestedManyWithoutUserInput
   communityGrades?: Prisma.CommunityGradeUncheckedCreateNestedManyWithoutUserInput
   stars?: Prisma.RouteStarUncheckedCreateNestedManyWithoutUserInput
@@ -2111,9 +1770,6 @@ export type UserUncheckedCreateWithoutMonthlyXpInput = {
   Account?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   Session?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   createdRoutes?: Prisma.RouteUncheckedCreateNestedManyWithoutCreatedByUserInput
-  mixerClimber?: Prisma.MixerClimberUncheckedCreateNestedManyWithoutUserInput
-  blClimber?: Prisma.BLClimberUncheckedCreateNestedManyWithoutUserInput
-  seenAnnouncements?: Prisma.UserAnnouncementUncheckedCreateNestedManyWithoutUserInput
   claimedBounties?: Prisma.BountyUncheckedCreateNestedManyWithoutClaimedByUserInput
 }
 
@@ -2153,7 +1809,6 @@ export type UserUpdateWithoutMonthlyXpInput = {
   tag?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totalXp?: Prisma.IntFieldUpdateOperationsInput | number
   completions?: Prisma.RouteCompletionUpdateManyWithoutUserNestedInput
-  climbingSessions?: Prisma.ClimbingSessionUpdateManyWithoutUserNestedInput
   attempts?: Prisma.RouteAttemptUpdateManyWithoutUserNestedInput
   communityGrades?: Prisma.CommunityGradeUpdateManyWithoutUserNestedInput
   stars?: Prisma.RouteStarUpdateManyWithoutUserNestedInput
@@ -2161,9 +1816,6 @@ export type UserUpdateWithoutMonthlyXpInput = {
   Account?: Prisma.AccountUpdateManyWithoutUserNestedInput
   Session?: Prisma.SessionUpdateManyWithoutUserNestedInput
   createdRoutes?: Prisma.RouteUpdateManyWithoutCreatedByUserNestedInput
-  mixerClimber?: Prisma.MixerClimberUpdateManyWithoutUserNestedInput
-  blClimber?: Prisma.BLClimberUpdateManyWithoutUserNestedInput
-  seenAnnouncements?: Prisma.UserAnnouncementUpdateManyWithoutUserNestedInput
   claimedBounties?: Prisma.BountyUpdateManyWithoutClaimedByUserNestedInput
 }
 
@@ -2187,7 +1839,6 @@ export type UserUncheckedUpdateWithoutMonthlyXpInput = {
   tag?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totalXp?: Prisma.IntFieldUpdateOperationsInput | number
   completions?: Prisma.RouteCompletionUncheckedUpdateManyWithoutUserNestedInput
-  climbingSessions?: Prisma.ClimbingSessionUncheckedUpdateManyWithoutUserNestedInput
   attempts?: Prisma.RouteAttemptUncheckedUpdateManyWithoutUserNestedInput
   communityGrades?: Prisma.CommunityGradeUncheckedUpdateManyWithoutUserNestedInput
   stars?: Prisma.RouteStarUncheckedUpdateManyWithoutUserNestedInput
@@ -2195,161 +1846,6 @@ export type UserUncheckedUpdateWithoutMonthlyXpInput = {
   Account?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   Session?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   createdRoutes?: Prisma.RouteUncheckedUpdateManyWithoutCreatedByUserNestedInput
-  mixerClimber?: Prisma.MixerClimberUncheckedUpdateManyWithoutUserNestedInput
-  blClimber?: Prisma.BLClimberUncheckedUpdateManyWithoutUserNestedInput
-  seenAnnouncements?: Prisma.UserAnnouncementUncheckedUpdateManyWithoutUserNestedInput
-  claimedBounties?: Prisma.BountyUncheckedUpdateManyWithoutClaimedByUserNestedInput
-}
-
-export type UserCreateWithoutSeenAnnouncementsInput = {
-  id?: string
-  clerkId?: string | null
-  username?: string | null
-  name?: string | null
-  phoneNumber?: string | null
-  email: string
-  emailVerified?: Date | string | null
-  image?: string | null
-  password?: string | null
-  highestRopeGrade?: string | null
-  highestBoulderGrade?: string | null
-  role?: $Enums.UserRole
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  private?: boolean
-  isOnboarded?: boolean
-  tag?: string | null
-  totalXp?: number
-  completions?: Prisma.RouteCompletionCreateNestedManyWithoutUserInput
-  climbingSessions?: Prisma.ClimbingSessionCreateNestedManyWithoutUserInput
-  attempts?: Prisma.RouteAttemptCreateNestedManyWithoutUserInput
-  communityGrades?: Prisma.CommunityGradeCreateNestedManyWithoutUserInput
-  stars?: Prisma.RouteStarCreateNestedManyWithoutUserInput
-  badges?: Prisma.BadgeCreateNestedManyWithoutUsersInput
-  Account?: Prisma.AccountCreateNestedManyWithoutUserInput
-  Session?: Prisma.SessionCreateNestedManyWithoutUserInput
-  createdRoutes?: Prisma.RouteCreateNestedManyWithoutCreatedByUserInput
-  mixerClimber?: Prisma.MixerClimberCreateNestedManyWithoutUserInput
-  blClimber?: Prisma.BLClimberCreateNestedManyWithoutUserInput
-  monthlyXp?: Prisma.MonthlyXpCreateNestedManyWithoutUserInput
-  claimedBounties?: Prisma.BountyCreateNestedManyWithoutClaimedByUserInput
-}
-
-export type UserUncheckedCreateWithoutSeenAnnouncementsInput = {
-  id?: string
-  clerkId?: string | null
-  username?: string | null
-  name?: string | null
-  phoneNumber?: string | null
-  email: string
-  emailVerified?: Date | string | null
-  image?: string | null
-  password?: string | null
-  highestRopeGrade?: string | null
-  highestBoulderGrade?: string | null
-  role?: $Enums.UserRole
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  private?: boolean
-  isOnboarded?: boolean
-  tag?: string | null
-  totalXp?: number
-  completions?: Prisma.RouteCompletionUncheckedCreateNestedManyWithoutUserInput
-  climbingSessions?: Prisma.ClimbingSessionUncheckedCreateNestedManyWithoutUserInput
-  attempts?: Prisma.RouteAttemptUncheckedCreateNestedManyWithoutUserInput
-  communityGrades?: Prisma.CommunityGradeUncheckedCreateNestedManyWithoutUserInput
-  stars?: Prisma.RouteStarUncheckedCreateNestedManyWithoutUserInput
-  badges?: Prisma.BadgeUncheckedCreateNestedManyWithoutUsersInput
-  Account?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
-  Session?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
-  createdRoutes?: Prisma.RouteUncheckedCreateNestedManyWithoutCreatedByUserInput
-  mixerClimber?: Prisma.MixerClimberUncheckedCreateNestedManyWithoutUserInput
-  blClimber?: Prisma.BLClimberUncheckedCreateNestedManyWithoutUserInput
-  monthlyXp?: Prisma.MonthlyXpUncheckedCreateNestedManyWithoutUserInput
-  claimedBounties?: Prisma.BountyUncheckedCreateNestedManyWithoutClaimedByUserInput
-}
-
-export type UserCreateOrConnectWithoutSeenAnnouncementsInput = {
-  where: Prisma.UserWhereUniqueInput
-  create: Prisma.XOR<Prisma.UserCreateWithoutSeenAnnouncementsInput, Prisma.UserUncheckedCreateWithoutSeenAnnouncementsInput>
-}
-
-export type UserUpsertWithoutSeenAnnouncementsInput = {
-  update: Prisma.XOR<Prisma.UserUpdateWithoutSeenAnnouncementsInput, Prisma.UserUncheckedUpdateWithoutSeenAnnouncementsInput>
-  create: Prisma.XOR<Prisma.UserCreateWithoutSeenAnnouncementsInput, Prisma.UserUncheckedCreateWithoutSeenAnnouncementsInput>
-  where?: Prisma.UserWhereInput
-}
-
-export type UserUpdateToOneWithWhereWithoutSeenAnnouncementsInput = {
-  where?: Prisma.UserWhereInput
-  data: Prisma.XOR<Prisma.UserUpdateWithoutSeenAnnouncementsInput, Prisma.UserUncheckedUpdateWithoutSeenAnnouncementsInput>
-}
-
-export type UserUpdateWithoutSeenAnnouncementsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  clerkId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email?: Prisma.StringFieldUpdateOperationsInput | string
-  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  highestRopeGrade?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  highestBoulderGrade?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  private?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isOnboarded?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  tag?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  totalXp?: Prisma.IntFieldUpdateOperationsInput | number
-  completions?: Prisma.RouteCompletionUpdateManyWithoutUserNestedInput
-  climbingSessions?: Prisma.ClimbingSessionUpdateManyWithoutUserNestedInput
-  attempts?: Prisma.RouteAttemptUpdateManyWithoutUserNestedInput
-  communityGrades?: Prisma.CommunityGradeUpdateManyWithoutUserNestedInput
-  stars?: Prisma.RouteStarUpdateManyWithoutUserNestedInput
-  badges?: Prisma.BadgeUpdateManyWithoutUsersNestedInput
-  Account?: Prisma.AccountUpdateManyWithoutUserNestedInput
-  Session?: Prisma.SessionUpdateManyWithoutUserNestedInput
-  createdRoutes?: Prisma.RouteUpdateManyWithoutCreatedByUserNestedInput
-  mixerClimber?: Prisma.MixerClimberUpdateManyWithoutUserNestedInput
-  blClimber?: Prisma.BLClimberUpdateManyWithoutUserNestedInput
-  monthlyXp?: Prisma.MonthlyXpUpdateManyWithoutUserNestedInput
-  claimedBounties?: Prisma.BountyUpdateManyWithoutClaimedByUserNestedInput
-}
-
-export type UserUncheckedUpdateWithoutSeenAnnouncementsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  clerkId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email?: Prisma.StringFieldUpdateOperationsInput | string
-  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  highestRopeGrade?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  highestBoulderGrade?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  private?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isOnboarded?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  tag?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  totalXp?: Prisma.IntFieldUpdateOperationsInput | number
-  completions?: Prisma.RouteCompletionUncheckedUpdateManyWithoutUserNestedInput
-  climbingSessions?: Prisma.ClimbingSessionUncheckedUpdateManyWithoutUserNestedInput
-  attempts?: Prisma.RouteAttemptUncheckedUpdateManyWithoutUserNestedInput
-  communityGrades?: Prisma.CommunityGradeUncheckedUpdateManyWithoutUserNestedInput
-  stars?: Prisma.RouteStarUncheckedUpdateManyWithoutUserNestedInput
-  badges?: Prisma.BadgeUncheckedUpdateManyWithoutUsersNestedInput
-  Account?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
-  Session?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
-  createdRoutes?: Prisma.RouteUncheckedUpdateManyWithoutCreatedByUserNestedInput
-  mixerClimber?: Prisma.MixerClimberUncheckedUpdateManyWithoutUserNestedInput
-  blClimber?: Prisma.BLClimberUncheckedUpdateManyWithoutUserNestedInput
-  monthlyXp?: Prisma.MonthlyXpUncheckedUpdateManyWithoutUserNestedInput
   claimedBounties?: Prisma.BountyUncheckedUpdateManyWithoutClaimedByUserNestedInput
 }
 
@@ -2373,17 +1869,13 @@ export type UserCreateWithoutBadgesInput = {
   tag?: string | null
   totalXp?: number
   completions?: Prisma.RouteCompletionCreateNestedManyWithoutUserInput
-  climbingSessions?: Prisma.ClimbingSessionCreateNestedManyWithoutUserInput
   attempts?: Prisma.RouteAttemptCreateNestedManyWithoutUserInput
   communityGrades?: Prisma.CommunityGradeCreateNestedManyWithoutUserInput
   stars?: Prisma.RouteStarCreateNestedManyWithoutUserInput
   Account?: Prisma.AccountCreateNestedManyWithoutUserInput
   Session?: Prisma.SessionCreateNestedManyWithoutUserInput
   createdRoutes?: Prisma.RouteCreateNestedManyWithoutCreatedByUserInput
-  mixerClimber?: Prisma.MixerClimberCreateNestedManyWithoutUserInput
-  blClimber?: Prisma.BLClimberCreateNestedManyWithoutUserInput
   monthlyXp?: Prisma.MonthlyXpCreateNestedManyWithoutUserInput
-  seenAnnouncements?: Prisma.UserAnnouncementCreateNestedManyWithoutUserInput
   claimedBounties?: Prisma.BountyCreateNestedManyWithoutClaimedByUserInput
 }
 
@@ -2407,17 +1899,13 @@ export type UserUncheckedCreateWithoutBadgesInput = {
   tag?: string | null
   totalXp?: number
   completions?: Prisma.RouteCompletionUncheckedCreateNestedManyWithoutUserInput
-  climbingSessions?: Prisma.ClimbingSessionUncheckedCreateNestedManyWithoutUserInput
   attempts?: Prisma.RouteAttemptUncheckedCreateNestedManyWithoutUserInput
   communityGrades?: Prisma.CommunityGradeUncheckedCreateNestedManyWithoutUserInput
   stars?: Prisma.RouteStarUncheckedCreateNestedManyWithoutUserInput
   Account?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   Session?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   createdRoutes?: Prisma.RouteUncheckedCreateNestedManyWithoutCreatedByUserInput
-  mixerClimber?: Prisma.MixerClimberUncheckedCreateNestedManyWithoutUserInput
-  blClimber?: Prisma.BLClimberUncheckedCreateNestedManyWithoutUserInput
   monthlyXp?: Prisma.MonthlyXpUncheckedCreateNestedManyWithoutUserInput
-  seenAnnouncements?: Prisma.UserAnnouncementUncheckedCreateNestedManyWithoutUserInput
   claimedBounties?: Prisma.BountyUncheckedCreateNestedManyWithoutClaimedByUserInput
 }
 
@@ -2486,17 +1974,13 @@ export type UserCreateWithoutAccountInput = {
   tag?: string | null
   totalXp?: number
   completions?: Prisma.RouteCompletionCreateNestedManyWithoutUserInput
-  climbingSessions?: Prisma.ClimbingSessionCreateNestedManyWithoutUserInput
   attempts?: Prisma.RouteAttemptCreateNestedManyWithoutUserInput
   communityGrades?: Prisma.CommunityGradeCreateNestedManyWithoutUserInput
   stars?: Prisma.RouteStarCreateNestedManyWithoutUserInput
   badges?: Prisma.BadgeCreateNestedManyWithoutUsersInput
   Session?: Prisma.SessionCreateNestedManyWithoutUserInput
   createdRoutes?: Prisma.RouteCreateNestedManyWithoutCreatedByUserInput
-  mixerClimber?: Prisma.MixerClimberCreateNestedManyWithoutUserInput
-  blClimber?: Prisma.BLClimberCreateNestedManyWithoutUserInput
   monthlyXp?: Prisma.MonthlyXpCreateNestedManyWithoutUserInput
-  seenAnnouncements?: Prisma.UserAnnouncementCreateNestedManyWithoutUserInput
   claimedBounties?: Prisma.BountyCreateNestedManyWithoutClaimedByUserInput
 }
 
@@ -2520,17 +2004,13 @@ export type UserUncheckedCreateWithoutAccountInput = {
   tag?: string | null
   totalXp?: number
   completions?: Prisma.RouteCompletionUncheckedCreateNestedManyWithoutUserInput
-  climbingSessions?: Prisma.ClimbingSessionUncheckedCreateNestedManyWithoutUserInput
   attempts?: Prisma.RouteAttemptUncheckedCreateNestedManyWithoutUserInput
   communityGrades?: Prisma.CommunityGradeUncheckedCreateNestedManyWithoutUserInput
   stars?: Prisma.RouteStarUncheckedCreateNestedManyWithoutUserInput
   badges?: Prisma.BadgeUncheckedCreateNestedManyWithoutUsersInput
   Session?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   createdRoutes?: Prisma.RouteUncheckedCreateNestedManyWithoutCreatedByUserInput
-  mixerClimber?: Prisma.MixerClimberUncheckedCreateNestedManyWithoutUserInput
-  blClimber?: Prisma.BLClimberUncheckedCreateNestedManyWithoutUserInput
   monthlyXp?: Prisma.MonthlyXpUncheckedCreateNestedManyWithoutUserInput
-  seenAnnouncements?: Prisma.UserAnnouncementUncheckedCreateNestedManyWithoutUserInput
   claimedBounties?: Prisma.BountyUncheckedCreateNestedManyWithoutClaimedByUserInput
 }
 
@@ -2570,17 +2050,13 @@ export type UserUpdateWithoutAccountInput = {
   tag?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totalXp?: Prisma.IntFieldUpdateOperationsInput | number
   completions?: Prisma.RouteCompletionUpdateManyWithoutUserNestedInput
-  climbingSessions?: Prisma.ClimbingSessionUpdateManyWithoutUserNestedInput
   attempts?: Prisma.RouteAttemptUpdateManyWithoutUserNestedInput
   communityGrades?: Prisma.CommunityGradeUpdateManyWithoutUserNestedInput
   stars?: Prisma.RouteStarUpdateManyWithoutUserNestedInput
   badges?: Prisma.BadgeUpdateManyWithoutUsersNestedInput
   Session?: Prisma.SessionUpdateManyWithoutUserNestedInput
   createdRoutes?: Prisma.RouteUpdateManyWithoutCreatedByUserNestedInput
-  mixerClimber?: Prisma.MixerClimberUpdateManyWithoutUserNestedInput
-  blClimber?: Prisma.BLClimberUpdateManyWithoutUserNestedInput
   monthlyXp?: Prisma.MonthlyXpUpdateManyWithoutUserNestedInput
-  seenAnnouncements?: Prisma.UserAnnouncementUpdateManyWithoutUserNestedInput
   claimedBounties?: Prisma.BountyUpdateManyWithoutClaimedByUserNestedInput
 }
 
@@ -2604,17 +2080,13 @@ export type UserUncheckedUpdateWithoutAccountInput = {
   tag?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totalXp?: Prisma.IntFieldUpdateOperationsInput | number
   completions?: Prisma.RouteCompletionUncheckedUpdateManyWithoutUserNestedInput
-  climbingSessions?: Prisma.ClimbingSessionUncheckedUpdateManyWithoutUserNestedInput
   attempts?: Prisma.RouteAttemptUncheckedUpdateManyWithoutUserNestedInput
   communityGrades?: Prisma.CommunityGradeUncheckedUpdateManyWithoutUserNestedInput
   stars?: Prisma.RouteStarUncheckedUpdateManyWithoutUserNestedInput
   badges?: Prisma.BadgeUncheckedUpdateManyWithoutUsersNestedInput
   Session?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   createdRoutes?: Prisma.RouteUncheckedUpdateManyWithoutCreatedByUserNestedInput
-  mixerClimber?: Prisma.MixerClimberUncheckedUpdateManyWithoutUserNestedInput
-  blClimber?: Prisma.BLClimberUncheckedUpdateManyWithoutUserNestedInput
   monthlyXp?: Prisma.MonthlyXpUncheckedUpdateManyWithoutUserNestedInput
-  seenAnnouncements?: Prisma.UserAnnouncementUncheckedUpdateManyWithoutUserNestedInput
   claimedBounties?: Prisma.BountyUncheckedUpdateManyWithoutClaimedByUserNestedInput
 }
 
@@ -2638,17 +2110,13 @@ export type UserCreateWithoutSessionInput = {
   tag?: string | null
   totalXp?: number
   completions?: Prisma.RouteCompletionCreateNestedManyWithoutUserInput
-  climbingSessions?: Prisma.ClimbingSessionCreateNestedManyWithoutUserInput
   attempts?: Prisma.RouteAttemptCreateNestedManyWithoutUserInput
   communityGrades?: Prisma.CommunityGradeCreateNestedManyWithoutUserInput
   stars?: Prisma.RouteStarCreateNestedManyWithoutUserInput
   badges?: Prisma.BadgeCreateNestedManyWithoutUsersInput
   Account?: Prisma.AccountCreateNestedManyWithoutUserInput
   createdRoutes?: Prisma.RouteCreateNestedManyWithoutCreatedByUserInput
-  mixerClimber?: Prisma.MixerClimberCreateNestedManyWithoutUserInput
-  blClimber?: Prisma.BLClimberCreateNestedManyWithoutUserInput
   monthlyXp?: Prisma.MonthlyXpCreateNestedManyWithoutUserInput
-  seenAnnouncements?: Prisma.UserAnnouncementCreateNestedManyWithoutUserInput
   claimedBounties?: Prisma.BountyCreateNestedManyWithoutClaimedByUserInput
 }
 
@@ -2672,17 +2140,13 @@ export type UserUncheckedCreateWithoutSessionInput = {
   tag?: string | null
   totalXp?: number
   completions?: Prisma.RouteCompletionUncheckedCreateNestedManyWithoutUserInput
-  climbingSessions?: Prisma.ClimbingSessionUncheckedCreateNestedManyWithoutUserInput
   attempts?: Prisma.RouteAttemptUncheckedCreateNestedManyWithoutUserInput
   communityGrades?: Prisma.CommunityGradeUncheckedCreateNestedManyWithoutUserInput
   stars?: Prisma.RouteStarUncheckedCreateNestedManyWithoutUserInput
   badges?: Prisma.BadgeUncheckedCreateNestedManyWithoutUsersInput
   Account?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   createdRoutes?: Prisma.RouteUncheckedCreateNestedManyWithoutCreatedByUserInput
-  mixerClimber?: Prisma.MixerClimberUncheckedCreateNestedManyWithoutUserInput
-  blClimber?: Prisma.BLClimberUncheckedCreateNestedManyWithoutUserInput
   monthlyXp?: Prisma.MonthlyXpUncheckedCreateNestedManyWithoutUserInput
-  seenAnnouncements?: Prisma.UserAnnouncementUncheckedCreateNestedManyWithoutUserInput
   claimedBounties?: Prisma.BountyUncheckedCreateNestedManyWithoutClaimedByUserInput
 }
 
@@ -2722,17 +2186,13 @@ export type UserUpdateWithoutSessionInput = {
   tag?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totalXp?: Prisma.IntFieldUpdateOperationsInput | number
   completions?: Prisma.RouteCompletionUpdateManyWithoutUserNestedInput
-  climbingSessions?: Prisma.ClimbingSessionUpdateManyWithoutUserNestedInput
   attempts?: Prisma.RouteAttemptUpdateManyWithoutUserNestedInput
   communityGrades?: Prisma.CommunityGradeUpdateManyWithoutUserNestedInput
   stars?: Prisma.RouteStarUpdateManyWithoutUserNestedInput
   badges?: Prisma.BadgeUpdateManyWithoutUsersNestedInput
   Account?: Prisma.AccountUpdateManyWithoutUserNestedInput
   createdRoutes?: Prisma.RouteUpdateManyWithoutCreatedByUserNestedInput
-  mixerClimber?: Prisma.MixerClimberUpdateManyWithoutUserNestedInput
-  blClimber?: Prisma.BLClimberUpdateManyWithoutUserNestedInput
   monthlyXp?: Prisma.MonthlyXpUpdateManyWithoutUserNestedInput
-  seenAnnouncements?: Prisma.UserAnnouncementUpdateManyWithoutUserNestedInput
   claimedBounties?: Prisma.BountyUpdateManyWithoutClaimedByUserNestedInput
 }
 
@@ -2756,321 +2216,13 @@ export type UserUncheckedUpdateWithoutSessionInput = {
   tag?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totalXp?: Prisma.IntFieldUpdateOperationsInput | number
   completions?: Prisma.RouteCompletionUncheckedUpdateManyWithoutUserNestedInput
-  climbingSessions?: Prisma.ClimbingSessionUncheckedUpdateManyWithoutUserNestedInput
   attempts?: Prisma.RouteAttemptUncheckedUpdateManyWithoutUserNestedInput
   communityGrades?: Prisma.CommunityGradeUncheckedUpdateManyWithoutUserNestedInput
   stars?: Prisma.RouteStarUncheckedUpdateManyWithoutUserNestedInput
   badges?: Prisma.BadgeUncheckedUpdateManyWithoutUsersNestedInput
   Account?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   createdRoutes?: Prisma.RouteUncheckedUpdateManyWithoutCreatedByUserNestedInput
-  mixerClimber?: Prisma.MixerClimberUncheckedUpdateManyWithoutUserNestedInput
-  blClimber?: Prisma.BLClimberUncheckedUpdateManyWithoutUserNestedInput
   monthlyXp?: Prisma.MonthlyXpUncheckedUpdateManyWithoutUserNestedInput
-  seenAnnouncements?: Prisma.UserAnnouncementUncheckedUpdateManyWithoutUserNestedInput
-  claimedBounties?: Prisma.BountyUncheckedUpdateManyWithoutClaimedByUserNestedInput
-}
-
-export type UserCreateWithoutMixerClimberInput = {
-  id?: string
-  clerkId?: string | null
-  username?: string | null
-  name?: string | null
-  phoneNumber?: string | null
-  email: string
-  emailVerified?: Date | string | null
-  image?: string | null
-  password?: string | null
-  highestRopeGrade?: string | null
-  highestBoulderGrade?: string | null
-  role?: $Enums.UserRole
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  private?: boolean
-  isOnboarded?: boolean
-  tag?: string | null
-  totalXp?: number
-  completions?: Prisma.RouteCompletionCreateNestedManyWithoutUserInput
-  climbingSessions?: Prisma.ClimbingSessionCreateNestedManyWithoutUserInput
-  attempts?: Prisma.RouteAttemptCreateNestedManyWithoutUserInput
-  communityGrades?: Prisma.CommunityGradeCreateNestedManyWithoutUserInput
-  stars?: Prisma.RouteStarCreateNestedManyWithoutUserInput
-  badges?: Prisma.BadgeCreateNestedManyWithoutUsersInput
-  Account?: Prisma.AccountCreateNestedManyWithoutUserInput
-  Session?: Prisma.SessionCreateNestedManyWithoutUserInput
-  createdRoutes?: Prisma.RouteCreateNestedManyWithoutCreatedByUserInput
-  blClimber?: Prisma.BLClimberCreateNestedManyWithoutUserInput
-  monthlyXp?: Prisma.MonthlyXpCreateNestedManyWithoutUserInput
-  seenAnnouncements?: Prisma.UserAnnouncementCreateNestedManyWithoutUserInput
-  claimedBounties?: Prisma.BountyCreateNestedManyWithoutClaimedByUserInput
-}
-
-export type UserUncheckedCreateWithoutMixerClimberInput = {
-  id?: string
-  clerkId?: string | null
-  username?: string | null
-  name?: string | null
-  phoneNumber?: string | null
-  email: string
-  emailVerified?: Date | string | null
-  image?: string | null
-  password?: string | null
-  highestRopeGrade?: string | null
-  highestBoulderGrade?: string | null
-  role?: $Enums.UserRole
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  private?: boolean
-  isOnboarded?: boolean
-  tag?: string | null
-  totalXp?: number
-  completions?: Prisma.RouteCompletionUncheckedCreateNestedManyWithoutUserInput
-  climbingSessions?: Prisma.ClimbingSessionUncheckedCreateNestedManyWithoutUserInput
-  attempts?: Prisma.RouteAttemptUncheckedCreateNestedManyWithoutUserInput
-  communityGrades?: Prisma.CommunityGradeUncheckedCreateNestedManyWithoutUserInput
-  stars?: Prisma.RouteStarUncheckedCreateNestedManyWithoutUserInput
-  badges?: Prisma.BadgeUncheckedCreateNestedManyWithoutUsersInput
-  Account?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
-  Session?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
-  createdRoutes?: Prisma.RouteUncheckedCreateNestedManyWithoutCreatedByUserInput
-  blClimber?: Prisma.BLClimberUncheckedCreateNestedManyWithoutUserInput
-  monthlyXp?: Prisma.MonthlyXpUncheckedCreateNestedManyWithoutUserInput
-  seenAnnouncements?: Prisma.UserAnnouncementUncheckedCreateNestedManyWithoutUserInput
-  claimedBounties?: Prisma.BountyUncheckedCreateNestedManyWithoutClaimedByUserInput
-}
-
-export type UserCreateOrConnectWithoutMixerClimberInput = {
-  where: Prisma.UserWhereUniqueInput
-  create: Prisma.XOR<Prisma.UserCreateWithoutMixerClimberInput, Prisma.UserUncheckedCreateWithoutMixerClimberInput>
-}
-
-export type UserUpsertWithoutMixerClimberInput = {
-  update: Prisma.XOR<Prisma.UserUpdateWithoutMixerClimberInput, Prisma.UserUncheckedUpdateWithoutMixerClimberInput>
-  create: Prisma.XOR<Prisma.UserCreateWithoutMixerClimberInput, Prisma.UserUncheckedCreateWithoutMixerClimberInput>
-  where?: Prisma.UserWhereInput
-}
-
-export type UserUpdateToOneWithWhereWithoutMixerClimberInput = {
-  where?: Prisma.UserWhereInput
-  data: Prisma.XOR<Prisma.UserUpdateWithoutMixerClimberInput, Prisma.UserUncheckedUpdateWithoutMixerClimberInput>
-}
-
-export type UserUpdateWithoutMixerClimberInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  clerkId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email?: Prisma.StringFieldUpdateOperationsInput | string
-  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  highestRopeGrade?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  highestBoulderGrade?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  private?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isOnboarded?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  tag?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  totalXp?: Prisma.IntFieldUpdateOperationsInput | number
-  completions?: Prisma.RouteCompletionUpdateManyWithoutUserNestedInput
-  climbingSessions?: Prisma.ClimbingSessionUpdateManyWithoutUserNestedInput
-  attempts?: Prisma.RouteAttemptUpdateManyWithoutUserNestedInput
-  communityGrades?: Prisma.CommunityGradeUpdateManyWithoutUserNestedInput
-  stars?: Prisma.RouteStarUpdateManyWithoutUserNestedInput
-  badges?: Prisma.BadgeUpdateManyWithoutUsersNestedInput
-  Account?: Prisma.AccountUpdateManyWithoutUserNestedInput
-  Session?: Prisma.SessionUpdateManyWithoutUserNestedInput
-  createdRoutes?: Prisma.RouteUpdateManyWithoutCreatedByUserNestedInput
-  blClimber?: Prisma.BLClimberUpdateManyWithoutUserNestedInput
-  monthlyXp?: Prisma.MonthlyXpUpdateManyWithoutUserNestedInput
-  seenAnnouncements?: Prisma.UserAnnouncementUpdateManyWithoutUserNestedInput
-  claimedBounties?: Prisma.BountyUpdateManyWithoutClaimedByUserNestedInput
-}
-
-export type UserUncheckedUpdateWithoutMixerClimberInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  clerkId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email?: Prisma.StringFieldUpdateOperationsInput | string
-  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  highestRopeGrade?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  highestBoulderGrade?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  private?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isOnboarded?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  tag?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  totalXp?: Prisma.IntFieldUpdateOperationsInput | number
-  completions?: Prisma.RouteCompletionUncheckedUpdateManyWithoutUserNestedInput
-  climbingSessions?: Prisma.ClimbingSessionUncheckedUpdateManyWithoutUserNestedInput
-  attempts?: Prisma.RouteAttemptUncheckedUpdateManyWithoutUserNestedInput
-  communityGrades?: Prisma.CommunityGradeUncheckedUpdateManyWithoutUserNestedInput
-  stars?: Prisma.RouteStarUncheckedUpdateManyWithoutUserNestedInput
-  badges?: Prisma.BadgeUncheckedUpdateManyWithoutUsersNestedInput
-  Account?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
-  Session?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
-  createdRoutes?: Prisma.RouteUncheckedUpdateManyWithoutCreatedByUserNestedInput
-  blClimber?: Prisma.BLClimberUncheckedUpdateManyWithoutUserNestedInput
-  monthlyXp?: Prisma.MonthlyXpUncheckedUpdateManyWithoutUserNestedInput
-  seenAnnouncements?: Prisma.UserAnnouncementUncheckedUpdateManyWithoutUserNestedInput
-  claimedBounties?: Prisma.BountyUncheckedUpdateManyWithoutClaimedByUserNestedInput
-}
-
-export type UserCreateWithoutBlClimberInput = {
-  id?: string
-  clerkId?: string | null
-  username?: string | null
-  name?: string | null
-  phoneNumber?: string | null
-  email: string
-  emailVerified?: Date | string | null
-  image?: string | null
-  password?: string | null
-  highestRopeGrade?: string | null
-  highestBoulderGrade?: string | null
-  role?: $Enums.UserRole
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  private?: boolean
-  isOnboarded?: boolean
-  tag?: string | null
-  totalXp?: number
-  completions?: Prisma.RouteCompletionCreateNestedManyWithoutUserInput
-  climbingSessions?: Prisma.ClimbingSessionCreateNestedManyWithoutUserInput
-  attempts?: Prisma.RouteAttemptCreateNestedManyWithoutUserInput
-  communityGrades?: Prisma.CommunityGradeCreateNestedManyWithoutUserInput
-  stars?: Prisma.RouteStarCreateNestedManyWithoutUserInput
-  badges?: Prisma.BadgeCreateNestedManyWithoutUsersInput
-  Account?: Prisma.AccountCreateNestedManyWithoutUserInput
-  Session?: Prisma.SessionCreateNestedManyWithoutUserInput
-  createdRoutes?: Prisma.RouteCreateNestedManyWithoutCreatedByUserInput
-  mixerClimber?: Prisma.MixerClimberCreateNestedManyWithoutUserInput
-  monthlyXp?: Prisma.MonthlyXpCreateNestedManyWithoutUserInput
-  seenAnnouncements?: Prisma.UserAnnouncementCreateNestedManyWithoutUserInput
-  claimedBounties?: Prisma.BountyCreateNestedManyWithoutClaimedByUserInput
-}
-
-export type UserUncheckedCreateWithoutBlClimberInput = {
-  id?: string
-  clerkId?: string | null
-  username?: string | null
-  name?: string | null
-  phoneNumber?: string | null
-  email: string
-  emailVerified?: Date | string | null
-  image?: string | null
-  password?: string | null
-  highestRopeGrade?: string | null
-  highestBoulderGrade?: string | null
-  role?: $Enums.UserRole
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  private?: boolean
-  isOnboarded?: boolean
-  tag?: string | null
-  totalXp?: number
-  completions?: Prisma.RouteCompletionUncheckedCreateNestedManyWithoutUserInput
-  climbingSessions?: Prisma.ClimbingSessionUncheckedCreateNestedManyWithoutUserInput
-  attempts?: Prisma.RouteAttemptUncheckedCreateNestedManyWithoutUserInput
-  communityGrades?: Prisma.CommunityGradeUncheckedCreateNestedManyWithoutUserInput
-  stars?: Prisma.RouteStarUncheckedCreateNestedManyWithoutUserInput
-  badges?: Prisma.BadgeUncheckedCreateNestedManyWithoutUsersInput
-  Account?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
-  Session?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
-  createdRoutes?: Prisma.RouteUncheckedCreateNestedManyWithoutCreatedByUserInput
-  mixerClimber?: Prisma.MixerClimberUncheckedCreateNestedManyWithoutUserInput
-  monthlyXp?: Prisma.MonthlyXpUncheckedCreateNestedManyWithoutUserInput
-  seenAnnouncements?: Prisma.UserAnnouncementUncheckedCreateNestedManyWithoutUserInput
-  claimedBounties?: Prisma.BountyUncheckedCreateNestedManyWithoutClaimedByUserInput
-}
-
-export type UserCreateOrConnectWithoutBlClimberInput = {
-  where: Prisma.UserWhereUniqueInput
-  create: Prisma.XOR<Prisma.UserCreateWithoutBlClimberInput, Prisma.UserUncheckedCreateWithoutBlClimberInput>
-}
-
-export type UserUpsertWithoutBlClimberInput = {
-  update: Prisma.XOR<Prisma.UserUpdateWithoutBlClimberInput, Prisma.UserUncheckedUpdateWithoutBlClimberInput>
-  create: Prisma.XOR<Prisma.UserCreateWithoutBlClimberInput, Prisma.UserUncheckedCreateWithoutBlClimberInput>
-  where?: Prisma.UserWhereInput
-}
-
-export type UserUpdateToOneWithWhereWithoutBlClimberInput = {
-  where?: Prisma.UserWhereInput
-  data: Prisma.XOR<Prisma.UserUpdateWithoutBlClimberInput, Prisma.UserUncheckedUpdateWithoutBlClimberInput>
-}
-
-export type UserUpdateWithoutBlClimberInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  clerkId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email?: Prisma.StringFieldUpdateOperationsInput | string
-  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  highestRopeGrade?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  highestBoulderGrade?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  private?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isOnboarded?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  tag?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  totalXp?: Prisma.IntFieldUpdateOperationsInput | number
-  completions?: Prisma.RouteCompletionUpdateManyWithoutUserNestedInput
-  climbingSessions?: Prisma.ClimbingSessionUpdateManyWithoutUserNestedInput
-  attempts?: Prisma.RouteAttemptUpdateManyWithoutUserNestedInput
-  communityGrades?: Prisma.CommunityGradeUpdateManyWithoutUserNestedInput
-  stars?: Prisma.RouteStarUpdateManyWithoutUserNestedInput
-  badges?: Prisma.BadgeUpdateManyWithoutUsersNestedInput
-  Account?: Prisma.AccountUpdateManyWithoutUserNestedInput
-  Session?: Prisma.SessionUpdateManyWithoutUserNestedInput
-  createdRoutes?: Prisma.RouteUpdateManyWithoutCreatedByUserNestedInput
-  mixerClimber?: Prisma.MixerClimberUpdateManyWithoutUserNestedInput
-  monthlyXp?: Prisma.MonthlyXpUpdateManyWithoutUserNestedInput
-  seenAnnouncements?: Prisma.UserAnnouncementUpdateManyWithoutUserNestedInput
-  claimedBounties?: Prisma.BountyUpdateManyWithoutClaimedByUserNestedInput
-}
-
-export type UserUncheckedUpdateWithoutBlClimberInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  clerkId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email?: Prisma.StringFieldUpdateOperationsInput | string
-  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  highestRopeGrade?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  highestBoulderGrade?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  private?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isOnboarded?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  tag?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  totalXp?: Prisma.IntFieldUpdateOperationsInput | number
-  completions?: Prisma.RouteCompletionUncheckedUpdateManyWithoutUserNestedInput
-  climbingSessions?: Prisma.ClimbingSessionUncheckedUpdateManyWithoutUserNestedInput
-  attempts?: Prisma.RouteAttemptUncheckedUpdateManyWithoutUserNestedInput
-  communityGrades?: Prisma.CommunityGradeUncheckedUpdateManyWithoutUserNestedInput
-  stars?: Prisma.RouteStarUncheckedUpdateManyWithoutUserNestedInput
-  badges?: Prisma.BadgeUncheckedUpdateManyWithoutUsersNestedInput
-  Account?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
-  Session?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
-  createdRoutes?: Prisma.RouteUncheckedUpdateManyWithoutCreatedByUserNestedInput
-  mixerClimber?: Prisma.MixerClimberUncheckedUpdateManyWithoutUserNestedInput
-  monthlyXp?: Prisma.MonthlyXpUncheckedUpdateManyWithoutUserNestedInput
-  seenAnnouncements?: Prisma.UserAnnouncementUncheckedUpdateManyWithoutUserNestedInput
   claimedBounties?: Prisma.BountyUncheckedUpdateManyWithoutClaimedByUserNestedInput
 }
 
@@ -3094,17 +2246,13 @@ export type UserUpdateWithoutBadgesInput = {
   tag?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totalXp?: Prisma.IntFieldUpdateOperationsInput | number
   completions?: Prisma.RouteCompletionUpdateManyWithoutUserNestedInput
-  climbingSessions?: Prisma.ClimbingSessionUpdateManyWithoutUserNestedInput
   attempts?: Prisma.RouteAttemptUpdateManyWithoutUserNestedInput
   communityGrades?: Prisma.CommunityGradeUpdateManyWithoutUserNestedInput
   stars?: Prisma.RouteStarUpdateManyWithoutUserNestedInput
   Account?: Prisma.AccountUpdateManyWithoutUserNestedInput
   Session?: Prisma.SessionUpdateManyWithoutUserNestedInput
   createdRoutes?: Prisma.RouteUpdateManyWithoutCreatedByUserNestedInput
-  mixerClimber?: Prisma.MixerClimberUpdateManyWithoutUserNestedInput
-  blClimber?: Prisma.BLClimberUpdateManyWithoutUserNestedInput
   monthlyXp?: Prisma.MonthlyXpUpdateManyWithoutUserNestedInput
-  seenAnnouncements?: Prisma.UserAnnouncementUpdateManyWithoutUserNestedInput
   claimedBounties?: Prisma.BountyUpdateManyWithoutClaimedByUserNestedInput
 }
 
@@ -3128,17 +2276,13 @@ export type UserUncheckedUpdateWithoutBadgesInput = {
   tag?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totalXp?: Prisma.IntFieldUpdateOperationsInput | number
   completions?: Prisma.RouteCompletionUncheckedUpdateManyWithoutUserNestedInput
-  climbingSessions?: Prisma.ClimbingSessionUncheckedUpdateManyWithoutUserNestedInput
   attempts?: Prisma.RouteAttemptUncheckedUpdateManyWithoutUserNestedInput
   communityGrades?: Prisma.CommunityGradeUncheckedUpdateManyWithoutUserNestedInput
   stars?: Prisma.RouteStarUncheckedUpdateManyWithoutUserNestedInput
   Account?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   Session?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   createdRoutes?: Prisma.RouteUncheckedUpdateManyWithoutCreatedByUserNestedInput
-  mixerClimber?: Prisma.MixerClimberUncheckedUpdateManyWithoutUserNestedInput
-  blClimber?: Prisma.BLClimberUncheckedUpdateManyWithoutUserNestedInput
   monthlyXp?: Prisma.MonthlyXpUncheckedUpdateManyWithoutUserNestedInput
-  seenAnnouncements?: Prisma.UserAnnouncementUncheckedUpdateManyWithoutUserNestedInput
   claimedBounties?: Prisma.BountyUncheckedUpdateManyWithoutClaimedByUserNestedInput
 }
 
@@ -3170,7 +2314,6 @@ export type UserUncheckedUpdateManyWithoutBadgesInput = {
 
 export type UserCountOutputType = {
   completions: number
-  climbingSessions: number
   attempts: number
   communityGrades: number
   stars: number
@@ -3178,16 +2321,12 @@ export type UserCountOutputType = {
   Account: number
   Session: number
   createdRoutes: number
-  mixerClimber: number
-  blClimber: number
   monthlyXp: number
-  seenAnnouncements: number
   claimedBounties: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   completions?: boolean | UserCountOutputTypeCountCompletionsArgs
-  climbingSessions?: boolean | UserCountOutputTypeCountClimbingSessionsArgs
   attempts?: boolean | UserCountOutputTypeCountAttemptsArgs
   communityGrades?: boolean | UserCountOutputTypeCountCommunityGradesArgs
   stars?: boolean | UserCountOutputTypeCountStarsArgs
@@ -3195,10 +2334,7 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   Account?: boolean | UserCountOutputTypeCountAccountArgs
   Session?: boolean | UserCountOutputTypeCountSessionArgs
   createdRoutes?: boolean | UserCountOutputTypeCountCreatedRoutesArgs
-  mixerClimber?: boolean | UserCountOutputTypeCountMixerClimberArgs
-  blClimber?: boolean | UserCountOutputTypeCountBlClimberArgs
   monthlyXp?: boolean | UserCountOutputTypeCountMonthlyXpArgs
-  seenAnnouncements?: boolean | UserCountOutputTypeCountSeenAnnouncementsArgs
   claimedBounties?: boolean | UserCountOutputTypeCountClaimedBountiesArgs
 }
 
@@ -3217,13 +2353,6 @@ export type UserCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensi
  */
 export type UserCountOutputTypeCountCompletionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.RouteCompletionWhereInput
-}
-
-/**
- * UserCountOutputType without action
- */
-export type UserCountOutputTypeCountClimbingSessionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.ClimbingSessionWhereInput
 }
 
 /**
@@ -3278,29 +2407,8 @@ export type UserCountOutputTypeCountCreatedRoutesArgs<ExtArgs extends runtime.Ty
 /**
  * UserCountOutputType without action
  */
-export type UserCountOutputTypeCountMixerClimberArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.MixerClimberWhereInput
-}
-
-/**
- * UserCountOutputType without action
- */
-export type UserCountOutputTypeCountBlClimberArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.BLClimberWhereInput
-}
-
-/**
- * UserCountOutputType without action
- */
 export type UserCountOutputTypeCountMonthlyXpArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.MonthlyXpWhereInput
-}
-
-/**
- * UserCountOutputType without action
- */
-export type UserCountOutputTypeCountSeenAnnouncementsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.UserAnnouncementWhereInput
 }
 
 /**
@@ -3331,7 +2439,6 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   tag?: boolean
   totalXp?: boolean
   completions?: boolean | Prisma.User$completionsArgs<ExtArgs>
-  climbingSessions?: boolean | Prisma.User$climbingSessionsArgs<ExtArgs>
   attempts?: boolean | Prisma.User$attemptsArgs<ExtArgs>
   communityGrades?: boolean | Prisma.User$communityGradesArgs<ExtArgs>
   stars?: boolean | Prisma.User$starsArgs<ExtArgs>
@@ -3339,10 +2446,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   Account?: boolean | Prisma.User$AccountArgs<ExtArgs>
   Session?: boolean | Prisma.User$SessionArgs<ExtArgs>
   createdRoutes?: boolean | Prisma.User$createdRoutesArgs<ExtArgs>
-  mixerClimber?: boolean | Prisma.User$mixerClimberArgs<ExtArgs>
-  blClimber?: boolean | Prisma.User$blClimberArgs<ExtArgs>
   monthlyXp?: boolean | Prisma.User$monthlyXpArgs<ExtArgs>
-  seenAnnouncements?: boolean | Prisma.User$seenAnnouncementsArgs<ExtArgs>
   claimedBounties?: boolean | Prisma.User$claimedBountiesArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
@@ -3413,7 +2517,6 @@ export type UserSelectScalar = {
 export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "clerkId" | "username" | "name" | "phoneNumber" | "email" | "emailVerified" | "image" | "password" | "highestRopeGrade" | "highestBoulderGrade" | "role" | "createdAt" | "updatedAt" | "private" | "isOnboarded" | "tag" | "totalXp", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   completions?: boolean | Prisma.User$completionsArgs<ExtArgs>
-  climbingSessions?: boolean | Prisma.User$climbingSessionsArgs<ExtArgs>
   attempts?: boolean | Prisma.User$attemptsArgs<ExtArgs>
   communityGrades?: boolean | Prisma.User$communityGradesArgs<ExtArgs>
   stars?: boolean | Prisma.User$starsArgs<ExtArgs>
@@ -3421,10 +2524,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   Account?: boolean | Prisma.User$AccountArgs<ExtArgs>
   Session?: boolean | Prisma.User$SessionArgs<ExtArgs>
   createdRoutes?: boolean | Prisma.User$createdRoutesArgs<ExtArgs>
-  mixerClimber?: boolean | Prisma.User$mixerClimberArgs<ExtArgs>
-  blClimber?: boolean | Prisma.User$blClimberArgs<ExtArgs>
   monthlyXp?: boolean | Prisma.User$monthlyXpArgs<ExtArgs>
-  seenAnnouncements?: boolean | Prisma.User$seenAnnouncementsArgs<ExtArgs>
   claimedBounties?: boolean | Prisma.User$claimedBountiesArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
@@ -3435,7 +2535,6 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   name: "User"
   objects: {
     completions: Prisma.$RouteCompletionPayload<ExtArgs>[]
-    climbingSessions: Prisma.$ClimbingSessionPayload<ExtArgs>[]
     attempts: Prisma.$RouteAttemptPayload<ExtArgs>[]
     communityGrades: Prisma.$CommunityGradePayload<ExtArgs>[]
     stars: Prisma.$RouteStarPayload<ExtArgs>[]
@@ -3443,10 +2542,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     Account: Prisma.$AccountPayload<ExtArgs>[]
     Session: Prisma.$SessionPayload<ExtArgs>[]
     createdRoutes: Prisma.$RoutePayload<ExtArgs>[]
-    mixerClimber: Prisma.$MixerClimberPayload<ExtArgs>[]
-    blClimber: Prisma.$BLClimberPayload<ExtArgs>[]
     monthlyXp: Prisma.$MonthlyXpPayload<ExtArgs>[]
-    seenAnnouncements: Prisma.$UserAnnouncementPayload<ExtArgs>[]
     claimedBounties: Prisma.$BountyPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
@@ -3863,7 +2959,6 @@ readonly fields: UserFieldRefs;
 export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   completions<T extends Prisma.User$completionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$completionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RouteCompletionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  climbingSessions<T extends Prisma.User$climbingSessionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$climbingSessionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ClimbingSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   attempts<T extends Prisma.User$attemptsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$attemptsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RouteAttemptPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   communityGrades<T extends Prisma.User$communityGradesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$communityGradesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CommunityGradePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   stars<T extends Prisma.User$starsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$starsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RouteStarPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -3871,10 +2966,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   Account<T extends Prisma.User$AccountArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$AccountArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AccountPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   Session<T extends Prisma.User$SessionArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$SessionArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   createdRoutes<T extends Prisma.User$createdRoutesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$createdRoutesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RoutePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  mixerClimber<T extends Prisma.User$mixerClimberArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$mixerClimberArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MixerClimberPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  blClimber<T extends Prisma.User$blClimberArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$blClimberArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BLClimberPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   monthlyXp<T extends Prisma.User$monthlyXpArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$monthlyXpArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MonthlyXpPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  seenAnnouncements<T extends Prisma.User$seenAnnouncementsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$seenAnnouncementsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserAnnouncementPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   claimedBounties<T extends Prisma.User$claimedBountiesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$claimedBountiesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BountyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -4335,30 +3427,6 @@ export type User$completionsArgs<ExtArgs extends runtime.Types.Extensions.Intern
 }
 
 /**
- * User.climbingSessions
- */
-export type User$climbingSessionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the ClimbingSession
-   */
-  select?: Prisma.ClimbingSessionSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the ClimbingSession
-   */
-  omit?: Prisma.ClimbingSessionOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.ClimbingSessionInclude<ExtArgs> | null
-  where?: Prisma.ClimbingSessionWhereInput
-  orderBy?: Prisma.ClimbingSessionOrderByWithRelationInput | Prisma.ClimbingSessionOrderByWithRelationInput[]
-  cursor?: Prisma.ClimbingSessionWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.ClimbingSessionScalarFieldEnum | Prisma.ClimbingSessionScalarFieldEnum[]
-}
-
-/**
  * User.attempts
  */
 export type User$attemptsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -4527,54 +3595,6 @@ export type User$createdRoutesArgs<ExtArgs extends runtime.Types.Extensions.Inte
 }
 
 /**
- * User.mixerClimber
- */
-export type User$mixerClimberArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the MixerClimber
-   */
-  select?: Prisma.MixerClimberSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the MixerClimber
-   */
-  omit?: Prisma.MixerClimberOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.MixerClimberInclude<ExtArgs> | null
-  where?: Prisma.MixerClimberWhereInput
-  orderBy?: Prisma.MixerClimberOrderByWithRelationInput | Prisma.MixerClimberOrderByWithRelationInput[]
-  cursor?: Prisma.MixerClimberWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.MixerClimberScalarFieldEnum | Prisma.MixerClimberScalarFieldEnum[]
-}
-
-/**
- * User.blClimber
- */
-export type User$blClimberArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the BLClimber
-   */
-  select?: Prisma.BLClimberSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the BLClimber
-   */
-  omit?: Prisma.BLClimberOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.BLClimberInclude<ExtArgs> | null
-  where?: Prisma.BLClimberWhereInput
-  orderBy?: Prisma.BLClimberOrderByWithRelationInput | Prisma.BLClimberOrderByWithRelationInput[]
-  cursor?: Prisma.BLClimberWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.BLClimberScalarFieldEnum | Prisma.BLClimberScalarFieldEnum[]
-}
-
-/**
  * User.monthlyXp
  */
 export type User$monthlyXpArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -4596,30 +3616,6 @@ export type User$monthlyXpArgs<ExtArgs extends runtime.Types.Extensions.Internal
   take?: number
   skip?: number
   distinct?: Prisma.MonthlyXpScalarFieldEnum | Prisma.MonthlyXpScalarFieldEnum[]
-}
-
-/**
- * User.seenAnnouncements
- */
-export type User$seenAnnouncementsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the UserAnnouncement
-   */
-  select?: Prisma.UserAnnouncementSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the UserAnnouncement
-   */
-  omit?: Prisma.UserAnnouncementOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.UserAnnouncementInclude<ExtArgs> | null
-  where?: Prisma.UserAnnouncementWhereInput
-  orderBy?: Prisma.UserAnnouncementOrderByWithRelationInput | Prisma.UserAnnouncementOrderByWithRelationInput[]
-  cursor?: Prisma.UserAnnouncementWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.UserAnnouncementScalarFieldEnum | Prisma.UserAnnouncementScalarFieldEnum[]
 }
 
 /**

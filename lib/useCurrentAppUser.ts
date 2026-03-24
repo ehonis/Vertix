@@ -1,88 +1,27 @@
 "use client";
 
-import { useAuth, useUser } from "@clerk/nextjs";
-import { useEffect, useState } from "react";
-
-type AppUser = {
-  id: string;
-  clerkId: string | null;
-  email: string;
-  name: string | null;
-  username: string | null;
-  image: string | null;
-  phoneNumber: string | null;
-  role: string;
-  highestRopeGrade: string | null;
-  highestBoulderGrade: string | null;
-  totalXp: number;
-  isOnboarded: boolean;
-  private: boolean;
-  createdAt: string;
-  updatedAt: string;
-};
+import { useAuth } from "@clerk/nextjs";
+import { useEffect } from "react";
+import { useMutation, useQuery } from "convex/react";
+import { api } from "@/convex/_generated/api";
 
 export function useCurrentAppUser() {
   const { isLoaded, isSignedIn } = useAuth();
-  const { user: clerkUser } = useUser();
-  const [user, setUser] = useState<AppUser | null>(null);
-  const [isFetching, setIsFetching] = useState(false);
+  const upsertCurrent = useMutation(api.users.upsertCurrent);
+  const user = useQuery(api.users.getCurrent, isSignedIn ? {} : "skip");
 
   useEffect(() => {
-    if (!isLoaded) {
+    if (!isLoaded || !isSignedIn) {
       return;
     }
 
-    if (!isSignedIn) {
-      setUser(null);
-      setIsFetching(false);
-      return;
-    }
-
-    let isCancelled = false;
-
-    async function loadUser() {
-      setIsFetching(true);
-
-      try {
-        const response = await fetch("/api/me", {
-          method: "GET",
-          credentials: "same-origin",
-        });
-
-        if (!response.ok) {
-          if (!isCancelled) {
-            setUser(null);
-          }
-          return;
-        }
-
-        const data = (await response.json()) as { user: AppUser | null };
-
-        if (!isCancelled) {
-          setUser(data.user);
-        }
-      } catch {
-        if (!isCancelled) {
-          setUser(null);
-        }
-      } finally {
-        if (!isCancelled) {
-          setIsFetching(false);
-        }
-      }
-    }
-
-    loadUser();
-
-    return () => {
-      isCancelled = true;
-    };
-  }, [isLoaded, isSignedIn, clerkUser?.id]);
+    void upsertCurrent({});
+  }, [isLoaded, isSignedIn, upsertCurrent]);
 
   return {
-    user,
+    user: user ?? null,
     isLoaded,
     isSignedIn,
-    isLoading: !isLoaded || (isSignedIn && isFetching),
+    isLoading: !isLoaded || (isSignedIn && user === undefined),
   };
 }

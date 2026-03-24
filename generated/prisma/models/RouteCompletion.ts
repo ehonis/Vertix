@@ -40,7 +40,6 @@ export type RouteCompletionMinAggregateOutputType = {
   id: number | null
   userId: string | null
   routeId: string | null
-  sessionId: string | null
   flash: boolean | null
   completionDate: Date | null
   xpEarned: number | null
@@ -53,7 +52,6 @@ export type RouteCompletionMaxAggregateOutputType = {
   id: number | null
   userId: string | null
   routeId: string | null
-  sessionId: string | null
   flash: boolean | null
   completionDate: Date | null
   xpEarned: number | null
@@ -66,7 +64,6 @@ export type RouteCompletionCountAggregateOutputType = {
   id: number
   userId: number
   routeId: number
-  sessionId: number
   flash: number
   completionDate: number
   xpEarned: number
@@ -91,7 +88,6 @@ export type RouteCompletionMinAggregateInputType = {
   id?: true
   userId?: true
   routeId?: true
-  sessionId?: true
   flash?: true
   completionDate?: true
   xpEarned?: true
@@ -104,7 +100,6 @@ export type RouteCompletionMaxAggregateInputType = {
   id?: true
   userId?: true
   routeId?: true
-  sessionId?: true
   flash?: true
   completionDate?: true
   xpEarned?: true
@@ -117,7 +112,6 @@ export type RouteCompletionCountAggregateInputType = {
   id?: true
   userId?: true
   routeId?: true
-  sessionId?: true
   flash?: true
   completionDate?: true
   xpEarned?: true
@@ -217,7 +211,6 @@ export type RouteCompletionGroupByOutputType = {
   id: number
   userId: string
   routeId: string
-  sessionId: string | null
   flash: boolean
   completionDate: Date
   xpEarned: number
@@ -253,7 +246,6 @@ export type RouteCompletionWhereInput = {
   id?: Prisma.IntFilter<"RouteCompletion"> | number
   userId?: Prisma.StringFilter<"RouteCompletion"> | string
   routeId?: Prisma.StringFilter<"RouteCompletion"> | string
-  sessionId?: Prisma.StringNullableFilter<"RouteCompletion"> | string | null
   flash?: Prisma.BoolFilter<"RouteCompletion"> | boolean
   completionDate?: Prisma.DateTimeFilter<"RouteCompletion"> | Date | string
   xpEarned?: Prisma.IntFilter<"RouteCompletion"> | number
@@ -262,7 +254,6 @@ export type RouteCompletionWhereInput = {
   competitionId?: Prisma.StringNullableFilter<"RouteCompletion"> | string | null
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   route?: Prisma.XOR<Prisma.RouteScalarRelationFilter, Prisma.RouteWhereInput>
-  session?: Prisma.XOR<Prisma.ClimbingSessionNullableScalarRelationFilter, Prisma.ClimbingSessionWhereInput> | null
   claimedBounty?: Prisma.XOR<Prisma.BountyNullableScalarRelationFilter, Prisma.BountyWhereInput> | null
 }
 
@@ -270,7 +261,6 @@ export type RouteCompletionOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   routeId?: Prisma.SortOrder
-  sessionId?: Prisma.SortOrderInput | Prisma.SortOrder
   flash?: Prisma.SortOrder
   completionDate?: Prisma.SortOrder
   xpEarned?: Prisma.SortOrder
@@ -279,7 +269,6 @@ export type RouteCompletionOrderByWithRelationInput = {
   competitionId?: Prisma.SortOrderInput | Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
   route?: Prisma.RouteOrderByWithRelationInput
-  session?: Prisma.ClimbingSessionOrderByWithRelationInput
   claimedBounty?: Prisma.BountyOrderByWithRelationInput
 }
 
@@ -290,7 +279,6 @@ export type RouteCompletionWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.RouteCompletionWhereInput | Prisma.RouteCompletionWhereInput[]
   userId?: Prisma.StringFilter<"RouteCompletion"> | string
   routeId?: Prisma.StringFilter<"RouteCompletion"> | string
-  sessionId?: Prisma.StringNullableFilter<"RouteCompletion"> | string | null
   flash?: Prisma.BoolFilter<"RouteCompletion"> | boolean
   completionDate?: Prisma.DateTimeFilter<"RouteCompletion"> | Date | string
   xpEarned?: Prisma.IntFilter<"RouteCompletion"> | number
@@ -299,7 +287,6 @@ export type RouteCompletionWhereUniqueInput = Prisma.AtLeast<{
   competitionId?: Prisma.StringNullableFilter<"RouteCompletion"> | string | null
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   route?: Prisma.XOR<Prisma.RouteScalarRelationFilter, Prisma.RouteWhereInput>
-  session?: Prisma.XOR<Prisma.ClimbingSessionNullableScalarRelationFilter, Prisma.ClimbingSessionWhereInput> | null
   claimedBounty?: Prisma.XOR<Prisma.BountyNullableScalarRelationFilter, Prisma.BountyWhereInput> | null
 }, "id">
 
@@ -307,7 +294,6 @@ export type RouteCompletionOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   routeId?: Prisma.SortOrder
-  sessionId?: Prisma.SortOrderInput | Prisma.SortOrder
   flash?: Prisma.SortOrder
   completionDate?: Prisma.SortOrder
   xpEarned?: Prisma.SortOrder
@@ -328,7 +314,6 @@ export type RouteCompletionScalarWhereWithAggregatesInput = {
   id?: Prisma.IntWithAggregatesFilter<"RouteCompletion"> | number
   userId?: Prisma.StringWithAggregatesFilter<"RouteCompletion"> | string
   routeId?: Prisma.StringWithAggregatesFilter<"RouteCompletion"> | string
-  sessionId?: Prisma.StringNullableWithAggregatesFilter<"RouteCompletion"> | string | null
   flash?: Prisma.BoolWithAggregatesFilter<"RouteCompletion"> | boolean
   completionDate?: Prisma.DateTimeWithAggregatesFilter<"RouteCompletion"> | Date | string
   xpEarned?: Prisma.IntWithAggregatesFilter<"RouteCompletion"> | number
@@ -346,7 +331,6 @@ export type RouteCompletionCreateInput = {
   competitionId?: string | null
   user: Prisma.UserCreateNestedOneWithoutCompletionsInput
   route: Prisma.RouteCreateNestedOneWithoutCompletionsInput
-  session?: Prisma.ClimbingSessionCreateNestedOneWithoutCompletionsInput
   claimedBounty?: Prisma.BountyCreateNestedOneWithoutClaimedOnCompletionInput
 }
 
@@ -354,7 +338,6 @@ export type RouteCompletionUncheckedCreateInput = {
   id?: number
   userId: string
   routeId: string
-  sessionId?: string | null
   flash?: boolean
   completionDate?: Date | string
   xpEarned?: number
@@ -373,7 +356,6 @@ export type RouteCompletionUpdateInput = {
   competitionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   user?: Prisma.UserUpdateOneRequiredWithoutCompletionsNestedInput
   route?: Prisma.RouteUpdateOneRequiredWithoutCompletionsNestedInput
-  session?: Prisma.ClimbingSessionUpdateOneWithoutCompletionsNestedInput
   claimedBounty?: Prisma.BountyUpdateOneWithoutClaimedOnCompletionNestedInput
 }
 
@@ -381,7 +363,6 @@ export type RouteCompletionUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   routeId?: Prisma.StringFieldUpdateOperationsInput | string
-  sessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   flash?: Prisma.BoolFieldUpdateOperationsInput | boolean
   completionDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   xpEarned?: Prisma.IntFieldUpdateOperationsInput | number
@@ -395,7 +376,6 @@ export type RouteCompletionCreateManyInput = {
   id?: number
   userId: string
   routeId: string
-  sessionId?: string | null
   flash?: boolean
   completionDate?: Date | string
   xpEarned?: number
@@ -417,7 +397,6 @@ export type RouteCompletionUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   routeId?: Prisma.StringFieldUpdateOperationsInput | string
-  sessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   flash?: Prisma.BoolFieldUpdateOperationsInput | boolean
   completionDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   xpEarned?: Prisma.IntFieldUpdateOperationsInput | number
@@ -440,7 +419,6 @@ export type RouteCompletionCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   routeId?: Prisma.SortOrder
-  sessionId?: Prisma.SortOrder
   flash?: Prisma.SortOrder
   completionDate?: Prisma.SortOrder
   xpEarned?: Prisma.SortOrder
@@ -458,7 +436,6 @@ export type RouteCompletionMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   routeId?: Prisma.SortOrder
-  sessionId?: Prisma.SortOrder
   flash?: Prisma.SortOrder
   completionDate?: Prisma.SortOrder
   xpEarned?: Prisma.SortOrder
@@ -471,7 +448,6 @@ export type RouteCompletionMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   routeId?: Prisma.SortOrder
-  sessionId?: Prisma.SortOrder
   flash?: Prisma.SortOrder
   completionDate?: Prisma.SortOrder
   xpEarned?: Prisma.SortOrder
@@ -532,46 +508,8 @@ export type RouteCompletionUncheckedUpdateManyWithoutRouteNestedInput = {
   deleteMany?: Prisma.RouteCompletionScalarWhereInput | Prisma.RouteCompletionScalarWhereInput[]
 }
 
-export type RouteCompletionCreateNestedManyWithoutSessionInput = {
-  create?: Prisma.XOR<Prisma.RouteCompletionCreateWithoutSessionInput, Prisma.RouteCompletionUncheckedCreateWithoutSessionInput> | Prisma.RouteCompletionCreateWithoutSessionInput[] | Prisma.RouteCompletionUncheckedCreateWithoutSessionInput[]
-  connectOrCreate?: Prisma.RouteCompletionCreateOrConnectWithoutSessionInput | Prisma.RouteCompletionCreateOrConnectWithoutSessionInput[]
-  createMany?: Prisma.RouteCompletionCreateManySessionInputEnvelope
-  connect?: Prisma.RouteCompletionWhereUniqueInput | Prisma.RouteCompletionWhereUniqueInput[]
-}
-
-export type RouteCompletionUncheckedCreateNestedManyWithoutSessionInput = {
-  create?: Prisma.XOR<Prisma.RouteCompletionCreateWithoutSessionInput, Prisma.RouteCompletionUncheckedCreateWithoutSessionInput> | Prisma.RouteCompletionCreateWithoutSessionInput[] | Prisma.RouteCompletionUncheckedCreateWithoutSessionInput[]
-  connectOrCreate?: Prisma.RouteCompletionCreateOrConnectWithoutSessionInput | Prisma.RouteCompletionCreateOrConnectWithoutSessionInput[]
-  createMany?: Prisma.RouteCompletionCreateManySessionInputEnvelope
-  connect?: Prisma.RouteCompletionWhereUniqueInput | Prisma.RouteCompletionWhereUniqueInput[]
-}
-
-export type RouteCompletionUpdateManyWithoutSessionNestedInput = {
-  create?: Prisma.XOR<Prisma.RouteCompletionCreateWithoutSessionInput, Prisma.RouteCompletionUncheckedCreateWithoutSessionInput> | Prisma.RouteCompletionCreateWithoutSessionInput[] | Prisma.RouteCompletionUncheckedCreateWithoutSessionInput[]
-  connectOrCreate?: Prisma.RouteCompletionCreateOrConnectWithoutSessionInput | Prisma.RouteCompletionCreateOrConnectWithoutSessionInput[]
-  upsert?: Prisma.RouteCompletionUpsertWithWhereUniqueWithoutSessionInput | Prisma.RouteCompletionUpsertWithWhereUniqueWithoutSessionInput[]
-  createMany?: Prisma.RouteCompletionCreateManySessionInputEnvelope
-  set?: Prisma.RouteCompletionWhereUniqueInput | Prisma.RouteCompletionWhereUniqueInput[]
-  disconnect?: Prisma.RouteCompletionWhereUniqueInput | Prisma.RouteCompletionWhereUniqueInput[]
-  delete?: Prisma.RouteCompletionWhereUniqueInput | Prisma.RouteCompletionWhereUniqueInput[]
-  connect?: Prisma.RouteCompletionWhereUniqueInput | Prisma.RouteCompletionWhereUniqueInput[]
-  update?: Prisma.RouteCompletionUpdateWithWhereUniqueWithoutSessionInput | Prisma.RouteCompletionUpdateWithWhereUniqueWithoutSessionInput[]
-  updateMany?: Prisma.RouteCompletionUpdateManyWithWhereWithoutSessionInput | Prisma.RouteCompletionUpdateManyWithWhereWithoutSessionInput[]
-  deleteMany?: Prisma.RouteCompletionScalarWhereInput | Prisma.RouteCompletionScalarWhereInput[]
-}
-
-export type RouteCompletionUncheckedUpdateManyWithoutSessionNestedInput = {
-  create?: Prisma.XOR<Prisma.RouteCompletionCreateWithoutSessionInput, Prisma.RouteCompletionUncheckedCreateWithoutSessionInput> | Prisma.RouteCompletionCreateWithoutSessionInput[] | Prisma.RouteCompletionUncheckedCreateWithoutSessionInput[]
-  connectOrCreate?: Prisma.RouteCompletionCreateOrConnectWithoutSessionInput | Prisma.RouteCompletionCreateOrConnectWithoutSessionInput[]
-  upsert?: Prisma.RouteCompletionUpsertWithWhereUniqueWithoutSessionInput | Prisma.RouteCompletionUpsertWithWhereUniqueWithoutSessionInput[]
-  createMany?: Prisma.RouteCompletionCreateManySessionInputEnvelope
-  set?: Prisma.RouteCompletionWhereUniqueInput | Prisma.RouteCompletionWhereUniqueInput[]
-  disconnect?: Prisma.RouteCompletionWhereUniqueInput | Prisma.RouteCompletionWhereUniqueInput[]
-  delete?: Prisma.RouteCompletionWhereUniqueInput | Prisma.RouteCompletionWhereUniqueInput[]
-  connect?: Prisma.RouteCompletionWhereUniqueInput | Prisma.RouteCompletionWhereUniqueInput[]
-  update?: Prisma.RouteCompletionUpdateWithWhereUniqueWithoutSessionInput | Prisma.RouteCompletionUpdateWithWhereUniqueWithoutSessionInput[]
-  updateMany?: Prisma.RouteCompletionUpdateManyWithWhereWithoutSessionInput | Prisma.RouteCompletionUpdateManyWithWhereWithoutSessionInput[]
-  deleteMany?: Prisma.RouteCompletionScalarWhereInput | Prisma.RouteCompletionScalarWhereInput[]
+export type NullableEnumCompetitionTypeFieldUpdateOperationsInput = {
+  set?: $Enums.CompetitionType | null
 }
 
 export type RouteCompletionCreateNestedOneWithoutClaimedBountyInput = {
@@ -640,14 +578,12 @@ export type RouteCompletionCreateWithoutRouteInput = {
   competitionType?: $Enums.CompetitionType | null
   competitionId?: string | null
   user: Prisma.UserCreateNestedOneWithoutCompletionsInput
-  session?: Prisma.ClimbingSessionCreateNestedOneWithoutCompletionsInput
   claimedBounty?: Prisma.BountyCreateNestedOneWithoutClaimedOnCompletionInput
 }
 
 export type RouteCompletionUncheckedCreateWithoutRouteInput = {
   id?: number
   userId: string
-  sessionId?: string | null
   flash?: boolean
   completionDate?: Date | string
   xpEarned?: number
@@ -690,64 +626,12 @@ export type RouteCompletionScalarWhereInput = {
   id?: Prisma.IntFilter<"RouteCompletion"> | number
   userId?: Prisma.StringFilter<"RouteCompletion"> | string
   routeId?: Prisma.StringFilter<"RouteCompletion"> | string
-  sessionId?: Prisma.StringNullableFilter<"RouteCompletion"> | string | null
   flash?: Prisma.BoolFilter<"RouteCompletion"> | boolean
   completionDate?: Prisma.DateTimeFilter<"RouteCompletion"> | Date | string
   xpEarned?: Prisma.IntFilter<"RouteCompletion"> | number
   isCompetition?: Prisma.BoolFilter<"RouteCompletion"> | boolean
   competitionType?: Prisma.EnumCompetitionTypeNullableFilter<"RouteCompletion"> | $Enums.CompetitionType | null
   competitionId?: Prisma.StringNullableFilter<"RouteCompletion"> | string | null
-}
-
-export type RouteCompletionCreateWithoutSessionInput = {
-  flash?: boolean
-  completionDate?: Date | string
-  xpEarned?: number
-  isCompetition?: boolean
-  competitionType?: $Enums.CompetitionType | null
-  competitionId?: string | null
-  user: Prisma.UserCreateNestedOneWithoutCompletionsInput
-  route: Prisma.RouteCreateNestedOneWithoutCompletionsInput
-  claimedBounty?: Prisma.BountyCreateNestedOneWithoutClaimedOnCompletionInput
-}
-
-export type RouteCompletionUncheckedCreateWithoutSessionInput = {
-  id?: number
-  userId: string
-  routeId: string
-  flash?: boolean
-  completionDate?: Date | string
-  xpEarned?: number
-  isCompetition?: boolean
-  competitionType?: $Enums.CompetitionType | null
-  competitionId?: string | null
-  claimedBounty?: Prisma.BountyUncheckedCreateNestedOneWithoutClaimedOnCompletionInput
-}
-
-export type RouteCompletionCreateOrConnectWithoutSessionInput = {
-  where: Prisma.RouteCompletionWhereUniqueInput
-  create: Prisma.XOR<Prisma.RouteCompletionCreateWithoutSessionInput, Prisma.RouteCompletionUncheckedCreateWithoutSessionInput>
-}
-
-export type RouteCompletionCreateManySessionInputEnvelope = {
-  data: Prisma.RouteCompletionCreateManySessionInput | Prisma.RouteCompletionCreateManySessionInput[]
-  skipDuplicates?: boolean
-}
-
-export type RouteCompletionUpsertWithWhereUniqueWithoutSessionInput = {
-  where: Prisma.RouteCompletionWhereUniqueInput
-  update: Prisma.XOR<Prisma.RouteCompletionUpdateWithoutSessionInput, Prisma.RouteCompletionUncheckedUpdateWithoutSessionInput>
-  create: Prisma.XOR<Prisma.RouteCompletionCreateWithoutSessionInput, Prisma.RouteCompletionUncheckedCreateWithoutSessionInput>
-}
-
-export type RouteCompletionUpdateWithWhereUniqueWithoutSessionInput = {
-  where: Prisma.RouteCompletionWhereUniqueInput
-  data: Prisma.XOR<Prisma.RouteCompletionUpdateWithoutSessionInput, Prisma.RouteCompletionUncheckedUpdateWithoutSessionInput>
-}
-
-export type RouteCompletionUpdateManyWithWhereWithoutSessionInput = {
-  where: Prisma.RouteCompletionScalarWhereInput
-  data: Prisma.XOR<Prisma.RouteCompletionUpdateManyMutationInput, Prisma.RouteCompletionUncheckedUpdateManyWithoutSessionInput>
 }
 
 export type RouteCompletionCreateWithoutClaimedBountyInput = {
@@ -759,14 +643,12 @@ export type RouteCompletionCreateWithoutClaimedBountyInput = {
   competitionId?: string | null
   user: Prisma.UserCreateNestedOneWithoutCompletionsInput
   route: Prisma.RouteCreateNestedOneWithoutCompletionsInput
-  session?: Prisma.ClimbingSessionCreateNestedOneWithoutCompletionsInput
 }
 
 export type RouteCompletionUncheckedCreateWithoutClaimedBountyInput = {
   id?: number
   userId: string
   routeId: string
-  sessionId?: string | null
   flash?: boolean
   completionDate?: Date | string
   xpEarned?: number
@@ -800,14 +682,12 @@ export type RouteCompletionUpdateWithoutClaimedBountyInput = {
   competitionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   user?: Prisma.UserUpdateOneRequiredWithoutCompletionsNestedInput
   route?: Prisma.RouteUpdateOneRequiredWithoutCompletionsNestedInput
-  session?: Prisma.ClimbingSessionUpdateOneWithoutCompletionsNestedInput
 }
 
 export type RouteCompletionUncheckedUpdateWithoutClaimedBountyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   routeId?: Prisma.StringFieldUpdateOperationsInput | string
-  sessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   flash?: Prisma.BoolFieldUpdateOperationsInput | boolean
   completionDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   xpEarned?: Prisma.IntFieldUpdateOperationsInput | number
@@ -824,14 +704,12 @@ export type RouteCompletionCreateWithoutUserInput = {
   competitionType?: $Enums.CompetitionType | null
   competitionId?: string | null
   route: Prisma.RouteCreateNestedOneWithoutCompletionsInput
-  session?: Prisma.ClimbingSessionCreateNestedOneWithoutCompletionsInput
   claimedBounty?: Prisma.BountyCreateNestedOneWithoutClaimedOnCompletionInput
 }
 
 export type RouteCompletionUncheckedCreateWithoutUserInput = {
   id?: number
   routeId: string
-  sessionId?: string | null
   flash?: boolean
   completionDate?: Date | string
   xpEarned?: number
@@ -870,7 +748,6 @@ export type RouteCompletionUpdateManyWithWhereWithoutUserInput = {
 export type RouteCompletionCreateManyRouteInput = {
   id?: number
   userId: string
-  sessionId?: string | null
   flash?: boolean
   completionDate?: Date | string
   xpEarned?: number
@@ -887,14 +764,12 @@ export type RouteCompletionUpdateWithoutRouteInput = {
   competitionType?: Prisma.NullableEnumCompetitionTypeFieldUpdateOperationsInput | $Enums.CompetitionType | null
   competitionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   user?: Prisma.UserUpdateOneRequiredWithoutCompletionsNestedInput
-  session?: Prisma.ClimbingSessionUpdateOneWithoutCompletionsNestedInput
   claimedBounty?: Prisma.BountyUpdateOneWithoutClaimedOnCompletionNestedInput
 }
 
 export type RouteCompletionUncheckedUpdateWithoutRouteInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   userId?: Prisma.StringFieldUpdateOperationsInput | string
-  sessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   flash?: Prisma.BoolFieldUpdateOperationsInput | boolean
   completionDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   xpEarned?: Prisma.IntFieldUpdateOperationsInput | number
@@ -907,56 +782,6 @@ export type RouteCompletionUncheckedUpdateWithoutRouteInput = {
 export type RouteCompletionUncheckedUpdateManyWithoutRouteInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   userId?: Prisma.StringFieldUpdateOperationsInput | string
-  sessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  flash?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  completionDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  xpEarned?: Prisma.IntFieldUpdateOperationsInput | number
-  isCompetition?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  competitionType?: Prisma.NullableEnumCompetitionTypeFieldUpdateOperationsInput | $Enums.CompetitionType | null
-  competitionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-}
-
-export type RouteCompletionCreateManySessionInput = {
-  id?: number
-  userId: string
-  routeId: string
-  flash?: boolean
-  completionDate?: Date | string
-  xpEarned?: number
-  isCompetition?: boolean
-  competitionType?: $Enums.CompetitionType | null
-  competitionId?: string | null
-}
-
-export type RouteCompletionUpdateWithoutSessionInput = {
-  flash?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  completionDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  xpEarned?: Prisma.IntFieldUpdateOperationsInput | number
-  isCompetition?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  competitionType?: Prisma.NullableEnumCompetitionTypeFieldUpdateOperationsInput | $Enums.CompetitionType | null
-  competitionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  user?: Prisma.UserUpdateOneRequiredWithoutCompletionsNestedInput
-  route?: Prisma.RouteUpdateOneRequiredWithoutCompletionsNestedInput
-  claimedBounty?: Prisma.BountyUpdateOneWithoutClaimedOnCompletionNestedInput
-}
-
-export type RouteCompletionUncheckedUpdateWithoutSessionInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  userId?: Prisma.StringFieldUpdateOperationsInput | string
-  routeId?: Prisma.StringFieldUpdateOperationsInput | string
-  flash?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  completionDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  xpEarned?: Prisma.IntFieldUpdateOperationsInput | number
-  isCompetition?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  competitionType?: Prisma.NullableEnumCompetitionTypeFieldUpdateOperationsInput | $Enums.CompetitionType | null
-  competitionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  claimedBounty?: Prisma.BountyUncheckedUpdateOneWithoutClaimedOnCompletionNestedInput
-}
-
-export type RouteCompletionUncheckedUpdateManyWithoutSessionInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  userId?: Prisma.StringFieldUpdateOperationsInput | string
-  routeId?: Prisma.StringFieldUpdateOperationsInput | string
   flash?: Prisma.BoolFieldUpdateOperationsInput | boolean
   completionDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   xpEarned?: Prisma.IntFieldUpdateOperationsInput | number
@@ -968,7 +793,6 @@ export type RouteCompletionUncheckedUpdateManyWithoutSessionInput = {
 export type RouteCompletionCreateManyUserInput = {
   id?: number
   routeId: string
-  sessionId?: string | null
   flash?: boolean
   completionDate?: Date | string
   xpEarned?: number
@@ -985,14 +809,12 @@ export type RouteCompletionUpdateWithoutUserInput = {
   competitionType?: Prisma.NullableEnumCompetitionTypeFieldUpdateOperationsInput | $Enums.CompetitionType | null
   competitionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   route?: Prisma.RouteUpdateOneRequiredWithoutCompletionsNestedInput
-  session?: Prisma.ClimbingSessionUpdateOneWithoutCompletionsNestedInput
   claimedBounty?: Prisma.BountyUpdateOneWithoutClaimedOnCompletionNestedInput
 }
 
 export type RouteCompletionUncheckedUpdateWithoutUserInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   routeId?: Prisma.StringFieldUpdateOperationsInput | string
-  sessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   flash?: Prisma.BoolFieldUpdateOperationsInput | boolean
   completionDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   xpEarned?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1005,7 +827,6 @@ export type RouteCompletionUncheckedUpdateWithoutUserInput = {
 export type RouteCompletionUncheckedUpdateManyWithoutUserInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   routeId?: Prisma.StringFieldUpdateOperationsInput | string
-  sessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   flash?: Prisma.BoolFieldUpdateOperationsInput | boolean
   completionDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   xpEarned?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1020,7 +841,6 @@ export type RouteCompletionSelect<ExtArgs extends runtime.Types.Extensions.Inter
   id?: boolean
   userId?: boolean
   routeId?: boolean
-  sessionId?: boolean
   flash?: boolean
   completionDate?: boolean
   xpEarned?: boolean
@@ -1029,7 +849,6 @@ export type RouteCompletionSelect<ExtArgs extends runtime.Types.Extensions.Inter
   competitionId?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   route?: boolean | Prisma.RouteDefaultArgs<ExtArgs>
-  session?: boolean | Prisma.RouteCompletion$sessionArgs<ExtArgs>
   claimedBounty?: boolean | Prisma.RouteCompletion$claimedBountyArgs<ExtArgs>
 }, ExtArgs["result"]["routeCompletion"]>
 
@@ -1037,7 +856,6 @@ export type RouteCompletionSelectCreateManyAndReturn<ExtArgs extends runtime.Typ
   id?: boolean
   userId?: boolean
   routeId?: boolean
-  sessionId?: boolean
   flash?: boolean
   completionDate?: boolean
   xpEarned?: boolean
@@ -1046,14 +864,12 @@ export type RouteCompletionSelectCreateManyAndReturn<ExtArgs extends runtime.Typ
   competitionId?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   route?: boolean | Prisma.RouteDefaultArgs<ExtArgs>
-  session?: boolean | Prisma.RouteCompletion$sessionArgs<ExtArgs>
 }, ExtArgs["result"]["routeCompletion"]>
 
 export type RouteCompletionSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   userId?: boolean
   routeId?: boolean
-  sessionId?: boolean
   flash?: boolean
   completionDate?: boolean
   xpEarned?: boolean
@@ -1062,14 +878,12 @@ export type RouteCompletionSelectUpdateManyAndReturn<ExtArgs extends runtime.Typ
   competitionId?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   route?: boolean | Prisma.RouteDefaultArgs<ExtArgs>
-  session?: boolean | Prisma.RouteCompletion$sessionArgs<ExtArgs>
 }, ExtArgs["result"]["routeCompletion"]>
 
 export type RouteCompletionSelectScalar = {
   id?: boolean
   userId?: boolean
   routeId?: boolean
-  sessionId?: boolean
   flash?: boolean
   completionDate?: boolean
   xpEarned?: boolean
@@ -1078,22 +892,19 @@ export type RouteCompletionSelectScalar = {
   competitionId?: boolean
 }
 
-export type RouteCompletionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "routeId" | "sessionId" | "flash" | "completionDate" | "xpEarned" | "isCompetition" | "competitionType" | "competitionId", ExtArgs["result"]["routeCompletion"]>
+export type RouteCompletionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "routeId" | "flash" | "completionDate" | "xpEarned" | "isCompetition" | "competitionType" | "competitionId", ExtArgs["result"]["routeCompletion"]>
 export type RouteCompletionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   route?: boolean | Prisma.RouteDefaultArgs<ExtArgs>
-  session?: boolean | Prisma.RouteCompletion$sessionArgs<ExtArgs>
   claimedBounty?: boolean | Prisma.RouteCompletion$claimedBountyArgs<ExtArgs>
 }
 export type RouteCompletionIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   route?: boolean | Prisma.RouteDefaultArgs<ExtArgs>
-  session?: boolean | Prisma.RouteCompletion$sessionArgs<ExtArgs>
 }
 export type RouteCompletionIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   route?: boolean | Prisma.RouteDefaultArgs<ExtArgs>
-  session?: boolean | Prisma.RouteCompletion$sessionArgs<ExtArgs>
 }
 
 export type $RouteCompletionPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1101,14 +912,12 @@ export type $RouteCompletionPayload<ExtArgs extends runtime.Types.Extensions.Int
   objects: {
     user: Prisma.$UserPayload<ExtArgs>
     route: Prisma.$RoutePayload<ExtArgs>
-    session: Prisma.$ClimbingSessionPayload<ExtArgs> | null
     claimedBounty: Prisma.$BountyPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
     userId: string
     routeId: string
-    sessionId: string | null
     flash: boolean
     completionDate: Date
     xpEarned: number
@@ -1511,7 +1320,6 @@ export interface Prisma__RouteCompletionClient<T, Null = never, ExtArgs extends 
   readonly [Symbol.toStringTag]: "PrismaPromise"
   user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   route<T extends Prisma.RouteDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.RouteDefaultArgs<ExtArgs>>): Prisma.Prisma__RouteClient<runtime.Types.Result.GetResult<Prisma.$RoutePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  session<T extends Prisma.RouteCompletion$sessionArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.RouteCompletion$sessionArgs<ExtArgs>>): Prisma.Prisma__ClimbingSessionClient<runtime.Types.Result.GetResult<Prisma.$ClimbingSessionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   claimedBounty<T extends Prisma.RouteCompletion$claimedBountyArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.RouteCompletion$claimedBountyArgs<ExtArgs>>): Prisma.Prisma__BountyClient<runtime.Types.Result.GetResult<Prisma.$BountyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -1545,7 +1353,6 @@ export interface RouteCompletionFieldRefs {
   readonly id: Prisma.FieldRef<"RouteCompletion", 'Int'>
   readonly userId: Prisma.FieldRef<"RouteCompletion", 'String'>
   readonly routeId: Prisma.FieldRef<"RouteCompletion", 'String'>
-  readonly sessionId: Prisma.FieldRef<"RouteCompletion", 'String'>
   readonly flash: Prisma.FieldRef<"RouteCompletion", 'Boolean'>
   readonly completionDate: Prisma.FieldRef<"RouteCompletion", 'DateTime'>
   readonly xpEarned: Prisma.FieldRef<"RouteCompletion", 'Int'>
@@ -1945,25 +1752,6 @@ export type RouteCompletionDeleteManyArgs<ExtArgs extends runtime.Types.Extensio
    * Limit how many RouteCompletions to delete.
    */
   limit?: number
-}
-
-/**
- * RouteCompletion.session
- */
-export type RouteCompletion$sessionArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the ClimbingSession
-   */
-  select?: Prisma.ClimbingSessionSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the ClimbingSession
-   */
-  omit?: Prisma.ClimbingSessionOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.ClimbingSessionInclude<ExtArgs> | null
-  where?: Prisma.ClimbingSessionWhereInput
 }
 
 /**

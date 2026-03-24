@@ -1,121 +1,23 @@
-import { auth, currentUser } from "@clerk/nextjs/server";
-import prisma from "@/prisma";
+import { auth } from "@clerk/nextjs/server";
+import { api } from "@/convex/_generated/api";
+import { createConvexServerClient } from "@/lib/convexServer";
+import { normalizeAppUser, type AppUser } from "@/lib/appUser";
 
-const appUserSelect = {
-  id: true,
-  clerkId: true,
-  email: true,
-  name: true,
-  username: true,
-  image: true,
-  phoneNumber: true,
-  role: true,
-  highestRopeGrade: true,
-  highestBoulderGrade: true,
-  totalXp: true,
-  isOnboarded: true,
-  private: true,
-  createdAt: true,
-  updatedAt: true,
-} as const;
+export type CurrentAppUser = AppUser | null;
 
-export type CurrentAppUser = Awaited<ReturnType<typeof getCurrentAppUser>>;
-
-function getClerkPrimaryEmail(clerkUser: Awaited<ReturnType<typeof currentUser>>) {
-  if (!clerkUser) {
-    return null;
-  }
-
-  const primaryEmail = clerkUser.emailAddresses.find(
-    emailAddress => emailAddress.id === clerkUser.primaryEmailAddressId
-  );
-
-  return primaryEmail?.emailAddress ?? clerkUser.emailAddresses[0]?.emailAddress ?? null;
-}
-
-function getClerkImageUrl(clerkUser: Awaited<ReturnType<typeof currentUser>>) {
-  return clerkUser?.imageUrl ?? null;
-}
-
-function getClerkName(clerkUser: Awaited<ReturnType<typeof currentUser>>) {
-  if (!clerkUser) {
-    return null;
-  }
-
-  const fullName = [clerkUser.firstName, clerkUser.lastName].filter(Boolean).join(" ").trim();
-  return fullName || clerkUser.username || null;
-}
-
-export async function getCurrentAppUser() {
-  const { userId } = await auth();
+export async function getCurrentAppUser(): Promise<CurrentAppUser> {
+  const { userId, getToken } = await auth();
 
   if (!userId) {
     return null;
   }
 
-  const clerkUser = await currentUser();
-  const email = getClerkPrimaryEmail(clerkUser);
+  const token = await getToken({ template: "convex" });
+  const convex = createConvexServerClient(token);
 
-  if (!email) {
-    return null;
-  }
-
-  const name = getClerkName(clerkUser);
-  const image = getClerkImageUrl(clerkUser);
-
-  const existingByClerkId = await prisma.user.findUnique({
-    where: { clerkId: userId },
-    select: appUserSelect,
-  });
-
-  if (existingByClerkId) {
-    const shouldSyncProfile =
-      existingByClerkId.email !== email ||
-      existingByClerkId.name !== name ||
-      existingByClerkId.image !== image;
-
-    if (!shouldSyncProfile) {
-      return existingByClerkId;
-    }
-
-    return prisma.user.update({
-      where: { id: existingByClerkId.id },
-      data: {
-        email,
-        name,
-        image,
-      },
-      select: appUserSelect,
-    });
-  }
-
-  const existingByEmail = await prisma.user.findUnique({
-    where: { email },
-    select: appUserSelect,
-  });
-
-  if (existingByEmail) {
-    return prisma.user.update({
-      where: { id: existingByEmail.id },
-      data: {
-        clerkId: userId,
-        name: existingByEmail.name ?? name,
-        image: existingByEmail.image ?? image,
-      },
-      select: appUserSelect,
-    });
-  }
-
-  return prisma.user.create({
-    data: {
-      clerkId: userId,
-      email,
-      name,
-      image,
-      isOnboarded: false,
-    },
-    select: appUserSelect,
-  });
+  await convex.mutation(api.users.upsertCurrent, {});
+  const user = await convex.query(api.users.getCurrent, {});
+  return normalizeAppUser(user);
 }
 
 export async function getCurrentAppSession() {

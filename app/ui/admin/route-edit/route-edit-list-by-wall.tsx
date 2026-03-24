@@ -1,7 +1,5 @@
 "use client";
 
-import { Locations } from "@/generated/prisma/browser";
-import TopDown from "../../routes/topdown";
 import { useState, useMemo, useCallback, useEffect } from "react";
 import { Route } from "@/generated/prisma/browser";
 import { motion } from "framer-motion";
@@ -11,6 +9,8 @@ import { useNotification } from "@/app/contexts/NotificationContext";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import ConfirmationPopUp from "../../general/confirmation-pop-up";
+import RoutesMapShell from "../../routes/routes-map-shell";
+import { legacyLocationsForWallPart, toWallPartKey, type WallPartKey } from "@/lib/wallLocations";
 
 export default function RouteEditListByWall({ routes }: { routes: Route[] }) {
   const { showNotification } = useNotification();
@@ -24,18 +24,20 @@ export default function RouteEditListByWall({ routes }: { routes: Route[] }) {
    *
    * @returns The initially selected wall location or null if none is stored
    */
-  const getInitialWallSelection = (): Locations | null => {
+  const getInitialWallSelection = (): WallPartKey | null => {
     // First try to get from URL search params - this allows direct linking to specific walls
     const wallParam = searchParams.get("wall");
-    if (wallParam && Object.values(Locations).includes(wallParam as Locations)) {
-      return wallParam as Locations;
+    const mappedWall = toWallPartKey(wallParam);
+    if (mappedWall) {
+      return mappedWall;
     }
 
     // Fallback to localStorage if no URL param - this persists selection across page refreshes
     if (typeof window !== "undefined") {
       const storedWall = localStorage.getItem("selectedWall");
-      if (storedWall && Object.values(Locations).includes(storedWall as Locations)) {
-        return storedWall as Locations;
+      const mappedWall = toWallPartKey(storedWall);
+      if (mappedWall) {
+        return mappedWall;
       }
     }
 
@@ -43,7 +45,7 @@ export default function RouteEditListByWall({ routes }: { routes: Route[] }) {
   };
 
   // Initialize selectedWall with the value from URL params or localStorage
-  const [selectedWall, setSelectedWall] = useState<Locations | null>(getInitialWallSelection);
+  const [selectedWall, setSelectedWall] = useState<WallPartKey | null>(getInitialWallSelection);
   const [isRouteEdit, setIsRouteEdit] = useState(false);
   const [isOrder, setIsOrder] = useState(false);
   const [isArchiveConfirmationRope, setIsArchiveConfirmationRope] = useState(false);
@@ -97,14 +99,15 @@ export default function RouteEditListByWall({ routes }: { routes: Route[] }) {
    * The function updates both the selectedWall state and filters the current routes
    */
   const handleSelectedWall = useCallback(
-    (data: Locations | null) => {
+    (data: WallPartKey | null) => {
       setSelectedWall(data);
       if (data === null) {
         setCurrentRoutes([]);
       } else {
+        const legacyLocations = legacyLocationsForWallPart(data);
         setCurrentRoutes(
           routes
-            .filter(route => route.location === data)
+            .filter(route => legacyLocations.includes(route.location))
             .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
         );
       }
@@ -119,9 +122,10 @@ export default function RouteEditListByWall({ routes }: { routes: Route[] }) {
    */
   useEffect(() => {
     if (selectedWall) {
+      const legacyLocations = legacyLocationsForWallPart(selectedWall);
       setCurrentRoutes(
         routes
-          .filter(route => route.location === selectedWall)
+          .filter(route => legacyLocations.includes(route.location))
           .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
       );
     }
@@ -243,8 +247,9 @@ export default function RouteEditListByWall({ routes }: { routes: Route[] }) {
   const reorderRemainingRoutes = async () => {
     try {
       // Get all non-archived routes for the current wall
+      const legacyLocations = selectedWall ? legacyLocationsForWallPart(selectedWall) : [];
       const remainingRoutes = routes
-        .filter(route => route.location === selectedWall && !route.isArchive)
+        .filter(route => legacyLocations.includes(route.location) && !route.isArchive)
         .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
 
       // Normalize order values to be sequential
@@ -350,7 +355,7 @@ export default function RouteEditListByWall({ routes }: { routes: Route[] }) {
       <div>
         <p className="text-white font-barlow text-sm text-center">Select a wall</p>
         <div className="p-4 rounded-md bg-slate-900">
-          <TopDown onData={handleSelectedWall} initialSelection={selectedWall} />
+          <RoutesMapShell onData={handleSelectedWall} initialSelection={selectedWall} />
         </div>
       </div>
 

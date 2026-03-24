@@ -1,28 +1,21 @@
 import prisma from "@/prisma";
 import { NextResponse, NextRequest } from "next/server";
 import { parseDateString } from "@/lib/dates";
-import { Locations, RouteType, CompetitionStatus } from "@/generated/prisma/client";
+import { Locations, RouteType } from "@/generated/prisma/client";
 import { addRouteToFeaturedSlide } from "@/lib/tvSlideHelpers";
+import type { LegacyLocationKey } from "@/lib/wallLocations";
 
-type compData = {
-  id: string;
-  title: string;
-  compType: string;
-  status: CompetitionStatus;
-  selectedDate: string;
-  type: string;
-};
 type routeData = {
   id: string;
   title: string;
   setDate: string;
   grade: string;
   color: string;
-  wall: Locations;
+  wall: LegacyLocationKey;
   type: string;
 };
 
-function isRouteData(item: compData | routeData): item is routeData {
+function isRouteData(item: unknown): item is routeData {
   return (
     typeof item === "object" &&
     item !== null &&
@@ -33,22 +26,11 @@ function isRouteData(item: compData | routeData): item is routeData {
   );
 }
 
-// Type guard for compData
-function isCompData(item: compData | routeData): item is compData {
-  return (
-    typeof item === "object" &&
-    item !== null &&
-    "compType" in item &&
-    "status" in item &&
-    "selectedDate" in item
-  );
-}
-
 export async function POST(request: NextRequest) {
   try {
     const res = await request.json();
 
-    const data: (routeData | compData)[] = res;
+    const data: unknown[] = res;
 
     if (!data || data.length === 0) {
       return NextResponse.json({ message: "No data to commit", status: 500 });
@@ -68,7 +50,9 @@ export async function POST(request: NextRequest) {
           }
 
           const dateObject = parseDateString(element.setDate);
-          const isFeaturedGrade = element.grade.toLowerCase() === "vfeature" || element.grade.toLowerCase() === "5.feature";
+          const isFeaturedGrade =
+            element.grade.toLowerCase() === "vfeature" ||
+            element.grade.toLowerCase() === "5.feature";
 
           // Create a route in the database
           const createdRoute = await prisma.route.create({
@@ -78,7 +62,7 @@ export async function POST(request: NextRequest) {
               type: routeType,
               color: element.color,
               setDate: dateObject,
-              location: element.wall,
+              location: element.wall as Locations,
               bonusXp: isFeaturedGrade ? 200 : 0, // Set bonus XP for featured routes
             },
           });
@@ -89,19 +73,6 @@ export async function POST(request: NextRequest) {
           }
 
           return createdRoute;
-        } else if (isCompData(element)) {
-          if (element.compType === "Mixer") {
-            const dateObject = parseDateString(element.selectedDate);
-            const year = dateObject.getFullYear();
-
-            return prisma.mixerCompetition.create({
-              data: {
-                name: element.title,
-                year: year,
-                status: CompetitionStatus.INACTIVE,
-              },
-            });
-          }
         }
       })
     );

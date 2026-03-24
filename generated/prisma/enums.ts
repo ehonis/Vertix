@@ -34,30 +34,6 @@ export const RouteType = {
 export type RouteType = (typeof RouteType)[keyof typeof RouteType]
 
 
-export const SessionType = {
-  AUTO: 'AUTO',
-  POWER: 'POWER',
-  POWER_ENDURANCE: 'POWER_ENDURANCE',
-  TENSION_BOARD: 'TENSION_BOARD',
-  COMPETITION: 'COMPETITION',
-  ENDURANCE: 'ENDURANCE',
-  WORKOUT: 'WORKOUT',
-  CUSTOM: 'CUSTOM',
-  FUN: 'FUN'
-} as const
-
-export type SessionType = (typeof SessionType)[keyof typeof SessionType]
-
-
-export const SessionStatus = {
-  ACTIVE: 'ACTIVE',
-  COMPLETED: 'COMPLETED',
-  CANCELLED: 'CANCELLED'
-} as const
-
-export type SessionStatus = (typeof SessionStatus)[keyof typeof SessionStatus]
-
-
 export const CompetitionType = {
   ONE_DAY_COMP: 'ONE_DAY_COMP',
   THREE_WEEK_COMP: 'THREE_WEEK_COMP'
@@ -85,48 +61,3 @@ export const TVSlideType = {
 } as const
 
 export type TVSlideType = (typeof TVSlideType)[keyof typeof TVSlideType]
-
-
-export const EntryMethod = {
-  APP: 'APP',
-  MANUAL: 'MANUAL'
-} as const
-
-export type EntryMethod = (typeof EntryMethod)[keyof typeof EntryMethod]
-
-
-export const ClimberStatus = {
-  NOT_STARTED: 'NOT_STARTED',
-  IN_PROGRESS: 'IN_PROGRESS',
-  COMPLETED: 'COMPLETED'
-} as const
-
-export type ClimberStatus = (typeof ClimberStatus)[keyof typeof ClimberStatus]
-
-
-export const CompetitionStatus = {
-  INACTIVE: 'INACTIVE',
-  UPCOMING: 'UPCOMING',
-  IN_PROGRESS: 'IN_PROGRESS',
-  COMPLETED: 'COMPLETED',
-  DEMO: 'DEMO',
-  ARCHIVED: 'ARCHIVED'
-} as const
-
-export type CompetitionStatus = (typeof CompetitionStatus)[keyof typeof CompetitionStatus]
-
-
-export const StandingsType = {
-  averageDownwardMovement: 'averageDownwardMovement',
-  downMovementByTop: 'downMovementByTop'
-} as const
-
-export type StandingsType = (typeof StandingsType)[keyof typeof StandingsType]
-
-
-export const CompletionType = {
-  BOULDER: 'BOULDER',
-  ROPE: 'ROPE'
-} as const
-
-export type CompletionType = (typeof CompletionType)[keyof typeof CompletionType]

@@ -7,7 +7,15 @@ import { splitGradeModifier } from "@/lib/routes-shared";
 import { useState, useEffect } from "react";
 import { useNotification } from "@/app/contexts/NotificationContext";
 import { useRouter } from "next/navigation";
-import { Route, RouteImage, Locations, RouteType } from "@/generated/prisma/browser";
+import { Route, RouteImage, RouteType } from "@/generated/prisma/browser";
+import {
+  WALL_PART_KEYS,
+  legacyLocationsForWallPart,
+  toWallPartKey,
+  wallPartLabel,
+} from "@/lib/wallLocations";
+
+type EditableLocation = (typeof WALL_PART_KEYS)[number];
 
 export default function EditRoute({
   route,
@@ -37,7 +45,9 @@ export default function EditRoute({
   const [date, setDate] = useState(formatDateToYYYYMMDD(route.setDate));
   const [finalDate, setFinalDate] = useState(route.setDate);
 
-  const [location, setLocation] = useState<Locations>(route.location);
+  const [location, setLocation] = useState<EditableLocation>(
+    toWallPartKey(route.location) ?? "boulderSouth"
+  );
 
   const [isSubmit, setIsSubmit] = useState(false);
   useEffect(() => {
@@ -100,7 +110,7 @@ export default function EditRoute({
   };
   const handleLocationChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const newLocation = event.target.value;
-    setLocation(newLocation as Locations);
+    setLocation(newLocation as EditableLocation);
     setIsSubmit(true);
   };
   const handleSubmit = async () => {
@@ -110,7 +120,7 @@ export default function EditRoute({
       newType: type,
       newGrade: finalGrade,
       newDate: finalDate,
-      newLocation: location,
+      newLocation: legacyLocationsForWallPart(location)[0],
     };
     try {
       const response = await fetch("/api/routes/edit/updateRoute", {
@@ -337,13 +347,11 @@ export default function EditRoute({
                   value={location}
                   onChange={handleLocationChange}
                 >
-                  <option value={Locations.ABWall}>AB Wall</option>
-                  <option value={Locations.ropeNorthWest}>ropeNorthWest</option>
-                  <option value={Locations.ropeNorthEast}>ropeNorthEast</option>
-                  <option value={Locations.ropeSouth}>ropeSouth</option>
-                  <option value={Locations.boulderNorth}>boulderNorth</option>
-                  <option value={Locations.boulderMiddle}>boulderMiddle</option>
-                  <option value={Locations.boulderSouth}>boulderSouth</option>
+                  {WALL_PART_KEYS.map(wallPart => (
+                    <option key={wallPart} value={wallPart}>
+                      {wallPartLabel(wallPart)}
+                    </option>
+                  ))}
                 </select>
               </div>
 

@@ -1,6 +1,5 @@
 import { getCurrentAppSession as auth } from "@/lib/getCurrentAppUser";
 import RoutesPage from "../ui/routes/routes-page";
-import { User } from "@/generated/prisma/client";
 
 export default async function RoutePage() {
   const session = await auth();
@@ -9,7 +8,7 @@ export default async function RoutePage() {
   return (
     <>
       {/* {user?.role !== "ADMIN" && <ConstructionBlur />} */}
-      <RoutesPage user={user as User | null | undefined} />
+      <RoutesPage user={user} />
     </>
   );
 }

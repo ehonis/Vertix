@@ -1,14 +1,13 @@
 "use client";
 
 import { CommunityGrade, RouteAttempt, RouteCompletion, User } from "@/generated/prisma/browser";
-import TopDown from "./topdown";
 import { useState, useEffect, useCallback, useRef } from "react";
 import WallRoutes from "./wall-routes";
 import SearchRoutes from "./search-routes";
-import { Locations } from "@/generated/prisma/browser";
 import { motion } from "framer-motion";
 import { AnimatePresence } from "framer-motion";
 import RoutePopUp from "./route-pop-up";
+import RoutesMapShell from "./routes-map-shell";
 
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
@@ -19,10 +18,13 @@ import {
   isGradeHigher,
 } from "@/lib/route-shared";
 import { RouteWithExtraData } from "@/app/api/routes/get-wall-routes-non-archive/route";
+import { isWallPartKey, toWallPartKey, type WallPartKey } from "@/lib/wallLocations";
+import type { AppUser } from "@/lib/appUser";
 
-export default function RoutesPage({ user }: { user: User | null | undefined }) {
+export default function RoutesPage({ user }: { user: AppUser | null | undefined }) {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const prismaLikeUser = user ? ({ ...user, id: user.id } as unknown as User) : null;
 
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const isClosingRef = useRef(false);
@@ -34,25 +36,26 @@ export default function RoutesPage({ user }: { user: User | null | undefined }) 
    *
    * @returns The initially selected wall location or null if none is stored
    */
-  const getInitialWallSelection = (): Locations | null => {
+  const getInitialWallSelection = (): WallPartKey | null => {
     // First try to get from URL search params - this allows direct linking to specific walls
     const wallParam = searchParams.get("wall");
-    if (wallParam && Object.values(Locations).includes(wallParam as Locations)) {
-      return wallParam as Locations;
+    if (isWallPartKey(wallParam)) {
+      return wallParam;
     }
 
     // Fallback to localStorage if no URL param - this persists selection across page refreshes
     if (typeof window !== "undefined") {
       const storedWall = localStorage.getItem("selectedWall");
-      if (storedWall && Object.values(Locations).includes(storedWall as Locations)) {
-        return storedWall as Locations;
+      const mappedWall = toWallPartKey(storedWall);
+      if (mappedWall) {
+        return mappedWall;
       }
     }
 
     return null;
   };
 
-  const [wall, setWall] = useState<Locations | null>(getInitialWallSelection);
+  const [wall, setWall] = useState<WallPartKey | null>(getInitialWallSelection);
   const [isTopDownActive, setIsTopDownActive] = useState(false);
   const [isSearch, setIsSearch] = useState(false);
   const [searchText, setSearchText] = useState<string>("");
@@ -108,7 +111,7 @@ export default function RoutesPage({ user }: { user: User | null | undefined }) 
    * Memoized callback to handle wall selection changes from the TopDown component
    * This prevents infinite re-renders by only recreating the function when needed
    */
-  const handleTopDownChange = useCallback((data: Locations | null) => {
+  const handleTopDownChange = useCallback((data: WallPartKey | null) => {
     if (data === null) {
       setIsTopDownActive(false);
       setWall(data);
@@ -177,7 +180,7 @@ export default function RoutesPage({ user }: { user: User | null | undefined }) 
             xp = calculateCompletionXpForRoute({
               grade: route.grade,
               previousCompletions: route.completions.length,
-              newHighestGrade: isGradeHigher(user as User, route.grade, routeType),
+              newHighestGrade: isGradeHigher(prismaLikeUser as User, route.grade, routeType),
               bonusXp: route.bonusXp || 0,
             });
           }
@@ -329,7 +332,7 @@ export default function RoutesPage({ user }: { user: User | null | undefined }) 
               id={routePopUpId}
               name={routePopUpName}
               grade={routePopUpGrade}
-              user={user}
+              user={prismaLikeUser}
               color={routePopUpColor}
               completions={routePopUpCompletions}
               attempts={routePopUpAttempts}
@@ -403,7 +406,7 @@ export default function RoutesPage({ user }: { user: User | null | undefined }) 
               <SearchRoutes
                 searchText={searchText}
                 onData={handleRoutePopUp}
-                user={user as User}
+                user={prismaLikeUser as User}
                 refreshTrigger={refreshTrigger}
               />
             </div>
@@ -417,7 +420,7 @@ export default function RoutesPage({ user }: { user: User | null | undefined }) 
                 className="flex flex-col w-full  "
               >
                 <div className="bg-slate-900 rounded p-5 pl-4 py-3 flex flex-col justify-center items-center outline outline-blue-600">
-                  <TopDown onData={handleTopDownChange} initialSelection={wall} />
+                  <RoutesMapShell onData={handleTopDownChange} initialSelection={wall} />
                 </div>
                 <p className="font-normal text-xs mt-1">
                   Tap a wall on the map to see the routes there
@@ -434,7 +437,7 @@ export default function RoutesPage({ user }: { user: User | null | undefined }) 
                 </h2>
                 <WallRoutes
                   wall={wall}
-                  user={user as User}
+                  user={prismaLikeUser as User}
                   onData={handleRoutePopUp}
                   refreshTrigger={refreshTrigger}
                 />

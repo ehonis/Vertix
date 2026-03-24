@@ -3,15 +3,14 @@ import "./globals.css";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { NotificationProvider } from "./contexts/NotificationContext";
 import { XpProvider } from "./contexts/XpContext";
-import { AnnouncementProvider } from "./contexts/AnnouncementContext";
 import Notification from "./ui/general/notification";
-import Announcement from "./ui/general/announcement";
 import { Tomorrow, Barlow, Jost } from "next/font/google";
 import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
 import { extractRouterConfig } from "uploadthing/server";
 import { ourFileRouter } from "./api/uploadthing/core";
 import { PostHogProvider } from "../components/PostHogProvider";
 import { ClerkProvider } from "@clerk/nextjs";
+import ConvexClientProvider from "./ConvexClientProvider";
 import Footer from "./ui/general/footer";
 import NavBar from "./ui/navbar/navbar";
 import XpLevelBarWrapper from "./components/XpLevelBarWrapper";
@@ -44,7 +43,7 @@ const geistMono = localFont({
 
 export const metadata = {
   title: "Vertix",
-  description: "The OTR Climbing tracker for ropes, boulders, and competitions",
+  description: "The OTR Climbing tracker for ropes and boulders",
 };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
@@ -54,24 +53,23 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         className={`${geistMono.variable} ${tomorrow.variable} ${barlow.variable} ${jost.variable} antialiased bg-black min-h-screen flex flex-col`}
       >
         <ClerkProvider>
-          <PostHogProvider>
-            <NotificationProvider>
-              <XpProvider initialXp={0}>
-                <AnnouncementProvider>
+          <ConvexClientProvider>
+            <PostHogProvider>
+              <NotificationProvider>
+                <XpProvider initialXp={0}>
                   <NextSSRPlugin routerConfig={extractRouterConfig(ourFileRouter)} />
                   <RouteChromeSync />
                   <Notification />
-                  <Announcement />
                   <NavBar />
                   <SpeedInsights />
 
                   <main className="flex-1">{children}</main>
                   <Footer />
                   <XpLevelBarWrapper />
-                </AnnouncementProvider>
-              </XpProvider>
-            </NotificationProvider>
-          </PostHogProvider>
+                </XpProvider>
+              </NotificationProvider>
+            </PostHogProvider>
+          </ConvexClientProvider>
         </ClerkProvider>
       </body>
     </html>

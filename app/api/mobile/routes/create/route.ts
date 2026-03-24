@@ -4,6 +4,7 @@ import { RouteType, UserRole, Locations } from "@/generated/prisma/client";
 import jwt from "jsonwebtoken";
 import { getRouteXp } from "@/lib/route";
 import { addRouteToFeaturedSlide } from "@/lib/tvSlideHelpers";
+import { toWallPartKey, legacyLocationsForWallPart } from "@/lib/wallLocations";
 
 const LOCATIONS: string[] = Object.values(Locations);
 
@@ -11,35 +12,24 @@ export async function POST(req: NextRequest) {
   try {
     const authHeader = req.headers.get("authorization");
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      return NextResponse.json(
-        { error: "No authorization token provided" },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: "No authorization token provided" }, { status: 401 });
     }
 
     const token = authHeader.substring(7);
     const jwtSecret =
-      process.env.JWT_SECRET ||
-      process.env.AUTH_SECRET ||
-      "your-secret-key-change-in-production";
+      process.env.JWT_SECRET || process.env.AUTH_SECRET || "your-secret-key-change-in-production";
     let decoded: { userId: string };
     try {
       decoded = jwt.verify(token, jwtSecret) as { userId: string };
     } catch {
-      return NextResponse.json(
-        { error: "Invalid or expired token" },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: "Invalid or expired token" }, { status: 401 });
     }
 
     const user = await prisma.user.findUnique({
       where: { id: decoded.userId },
       select: { role: true },
     });
-    if (
-      !user ||
-      (user.role !== UserRole.ADMIN && user.role !== UserRole.ROUTE_SETTER)
-    ) {
+    if (!user || (user.role !== UserRole.ADMIN && user.role !== UserRole.ROUTE_SETTER)) {
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
 
@@ -52,13 +42,16 @@ export async function POST(req: NextRequest) {
     const x = body.x;
     const y = body.y;
 
+    const wallPart = typeof location === "string" ? toWallPartKey(location) : null;
+    const legacyLocation = wallPart ? legacyLocationsForWallPart(wallPart)[0] : null;
+
     if (
       typeof grade !== "string" ||
       !grade.trim() ||
       typeof color !== "string" ||
       !color.trim() ||
       typeof location !== "string" ||
-      !LOCATIONS.includes(location) ||
+      (!LOCATIONS.includes(location) && !legacyLocation) ||
       (type !== "BOULDER" && type !== "ROPE") ||
       typeof x !== "number" ||
       typeof y !== "number"
@@ -72,12 +65,10 @@ export async function POST(req: NextRequest) {
     const routeXp = getRouteXp(grade);
     const gradeLower = grade.toLowerCase();
     const isFeaturedGrade =
-      gradeLower === "vfeature" ||
-      gradeLower === "5.feature" ||
-      gradeLower === "competition";
+      gradeLower === "vfeature" || gradeLower === "5.feature" || gradeLower === "competition";
 
     const maxOrder = await prisma.route.aggregate({
-      where: { location: location as Locations },
+      where: { location: (legacyLocation ?? location) as Locations },
       _max: { order: true },
     });
     const order = (maxOrder._max.order ?? -1) + 1;
@@ -88,7 +79,7 @@ export async function POST(req: NextRequest) {
         grade: grade.trim(),
         setDate: new Date(),
         order,
-        location: location as Locations,
+        location: (legacyLocation ?? location) as Locations,
         type: type as RouteType,
         color: color.trim(),
         xp: routeXp,
@@ -118,9 +109,6 @@ export async function POST(req: NextRequest) {
     });
   } catch (error) {
     console.error("Create route error:", error);
-    return NextResponse.json(
-      { error: "Failed to create route" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Failed to create route" }, { status: 500 });
   }
 }

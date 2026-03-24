@@ -1,6 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/prisma";
-import { Locations, Route, RouteCompletion, RouteAttempt, CommunityGrade } from "@/generated/prisma/client";
+import {
+  Route,
+  RouteCompletion,
+  RouteAttempt,
+  CommunityGrade,
+  type Locations,
+} from "@/generated/prisma/client";
+import { legacyLocationsForWallPart, toWallPartKey } from "@/lib/wallLocations";
 
 export type RouteWithExtraData = Route & {
   completions: RouteCompletion[];
@@ -15,6 +22,13 @@ export async function GET(req: NextRequest) {
     // Access individual query parameters
     const wall = searchParams.get("wall");
     const userId = searchParams.get("userId");
+    const partKey = toWallPartKey(wall);
+
+    if (!partKey) {
+      return NextResponse.json({ data: [] });
+    }
+
+    const legacyLocations = [...legacyLocationsForWallPart(partKey)] as Locations[];
 
     let routesWithCompletion: RouteWithExtraData[];
 
@@ -22,7 +36,9 @@ export async function GET(req: NextRequest) {
       // If user is signed in, include completions filtered by user
       const routes = (await prisma.route.findMany({
         where: {
-          location: wall as Locations,
+          location: {
+            in: legacyLocations,
+          },
           isArchive: false,
         },
         include: {
@@ -50,7 +66,9 @@ export async function GET(req: NextRequest) {
       // then add an empty completions array to match our type.
       const routes = await prisma.route.findMany({
         where: {
-          location: wall as Locations,
+          location: {
+            in: legacyLocations,
+          },
           isArchive: false,
         },
         orderBy: {

@@ -1,39 +1,30 @@
 "use client";
 import { useState } from "react";
 import NewRoute from "@/app/ui/admin/new/new-route";
-import NewComp from "./new-comp";
 import { v4 as uuidv4 } from "uuid";
 import ErrorPopUp from "./error-pop-up";
 import { useNotification } from "@/app/contexts/NotificationContext";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Locations, RouteTag } from "@/generated/prisma/browser";
-import { CompetitionStatus } from "@/generated/prisma/browser";
+import type { RouteTag } from "@/generated/prisma/browser";
+import type { LegacyLocationKey } from "@/lib/wallLocations";
 import React from "react";
 
-type compData = {
-  id: string;
-  title: string;
-  compType: string;
-  status: CompetitionStatus;
-  selectedDate: string;
-  type: string;
-};
 type routeData = {
   id: string;
   title: string;
   setDate: string;
   grade: string;
   color: string;
-  wall: Locations;
+  wall: LegacyLocationKey;
   type: string;
 };
 export default function NewWrapper({ tags }: { tags: RouteTag[] }) {
   const { showNotification } = useNotification();
   const router = useRouter();
-  const options = ["Route", "Comp"];
+  const options = ["Route"];
   const [table, setTable] = useState<React.ReactNode[]>([]);
-  const [data, setData] = useState<(routeData | compData)[]>([]);
+  const [data, setData] = useState<routeData[]>([]);
 
   const [isError, setIsError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -53,22 +44,9 @@ export default function NewWrapper({ tags }: { tags: RouteTag[] }) {
         />,
       ]);
     }
-    if (optionText === "Comp") {
-      const newId = uuidv4();
-      setTable(prevTable => [
-        ...prevTable,
-        <NewComp
-          id={newId}
-          key={newId}
-          onCommit={handleCommit}
-          onUncommit={handleUncommit}
-          onDelete={handleDelete}
-        />,
-      ]);
-    }
   };
 
-  const handleCommit = (data: routeData | compData) => {
+  const handleCommit = (data: routeData) => {
     setData(prevData => [...prevData, data]);
   };
 

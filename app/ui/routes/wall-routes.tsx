@@ -4,9 +4,10 @@ import { useNotification } from "@/app/contexts/NotificationContext";
 import RouteTile from "./route-tile";
 import ElementLoadingAnimation from "../general/element-loading-animation";
 import { RouteWithExtraData } from "@/app/api/routes/get-wall-routes-non-archive/route";
+import type { WallPartKey } from "@/lib/wallLocations";
 
 interface WallRoutesProps {
-  wall: string | null;
+  wall: WallPartKey | null;
   user: User;
   onData: (
     routeId: string,

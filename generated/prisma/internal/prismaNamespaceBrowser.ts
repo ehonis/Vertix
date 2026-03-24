@@ -52,7 +52,6 @@ export const AnyNull = runtime.AnyNull
 
 export const ModelName = {
   Route: 'Route',
-  ClimbingSession: 'ClimbingSession',
   RouteImage: 'RouteImage',
   RouteCompletion: 'RouteCompletion',
   Bounty: 'Bounty',
@@ -62,29 +61,13 @@ export const ModelName = {
   CommunityGrade: 'CommunityGrade',
   MonthlyXp: 'MonthlyXp',
   User: 'User',
-  Announcement: 'Announcement',
-  UserAnnouncement: 'UserAnnouncement',
   TVSlide: 'TVSlide',
   Badge: 'Badge',
   Account: 'Account',
   VerificationCode: 'VerificationCode',
   EmailVerificationCode: 'EmailVerificationCode',
   Session: 'Session',
-  VerificationToken: 'VerificationToken',
-  MixerCompetition: 'MixerCompetition',
-  MixerRoute: 'MixerRoute',
-  MixerBoulder: 'MixerBoulder',
-  MixerClimber: 'MixerClimber',
-  MixerDivision: 'MixerDivision',
-  MixerBoulderScore: 'MixerBoulderScore',
-  MixerRopeScore: 'MixerRopeScore',
-  MixerCompletion: 'MixerCompletion',
-  BLCompetition: 'BLCompetition',
-  BLBoulder: 'BLBoulder',
-  BLClimber: 'BLClimber',
-  BLBoulderScore: 'BLBoulderScore',
-  BLDivision: 'BLDivision',
-  BLCompletion: 'BLCompletion'
+  VerificationToken: 'VerificationToken'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -123,28 +106,6 @@ export const RouteScalarFieldEnum = {
 export type RouteScalarFieldEnum = (typeof RouteScalarFieldEnum)[keyof typeof RouteScalarFieldEnum]
 
 
-export const ClimbingSessionScalarFieldEnum = {
-  id: 'id',
-  userId: 'userId',
-  type: 'type',
-  name: 'name',
-  status: 'status',
-  startedAt: 'startedAt',
-  endedAt: 'endedAt',
-  lastActivityAt: 'lastActivityAt',
-  sessionDate: 'sessionDate',
-  timeSlot: 'timeSlot',
-  isRetroactive: 'isRetroactive',
-  isCompetition: 'isCompetition',
-  competitionType: 'competitionType',
-  competitionId: 'competitionId',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-} as const
-
-export type ClimbingSessionScalarFieldEnum = (typeof ClimbingSessionScalarFieldEnum)[keyof typeof ClimbingSessionScalarFieldEnum]
-
-
 export const RouteImageScalarFieldEnum = {
   id: 'id',
   url: 'url',
@@ -159,7 +120,6 @@ export const RouteCompletionScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
   routeId: 'routeId',
-  sessionId: 'sessionId',
   flash: 'flash',
   completionDate: 'completionDate',
   xpEarned: 'xpEarned',
@@ -268,28 +228,6 @@ export const UserScalarFieldEnum = {
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
 
 
-export const AnnouncementScalarFieldEnum = {
-  id: 'id',
-  title: 'title',
-  body: 'body',
-  isActive: 'isActive',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-} as const
-
-export type AnnouncementScalarFieldEnum = (typeof AnnouncementScalarFieldEnum)[keyof typeof AnnouncementScalarFieldEnum]
-
-
-export const UserAnnouncementScalarFieldEnum = {
-  id: 'id',
-  userId: 'userId',
-  announcementId: 'announcementId',
-  seenAt: 'seenAt'
-} as const
-
-export type UserAnnouncementScalarFieldEnum = (typeof UserAnnouncementScalarFieldEnum)[keyof typeof UserAnnouncementScalarFieldEnum]
-
-
 export const TVSlideScalarFieldEnum = {
   id: 'id',
   imageUrl: 'imageUrl',
@@ -373,217 +311,12 @@ export const VerificationTokenScalarFieldEnum = {
 export type VerificationTokenScalarFieldEnum = (typeof VerificationTokenScalarFieldEnum)[keyof typeof VerificationTokenScalarFieldEnum]
 
 
-export const MixerCompetitionScalarFieldEnum = {
-  id: 'id',
-  name: 'name',
-  year: 'year',
-  status: 'status',
-  imageUrl: 'imageUrl',
-  time: 'time',
-  compDay: 'compDay',
-  passcode: 'passcode',
-  startedAt: 'startedAt',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  areScoresAvailable: 'areScoresAvailable',
-  isTestCompetition: 'isTestCompetition',
-  hasScoresBeenCalculated: 'hasScoresBeenCalculated',
-  standingsType: 'standingsType',
-  isBouldersReleased: 'isBouldersReleased',
-  isRoutesReleased: 'isRoutesReleased'
-} as const
-
-export type MixerCompetitionScalarFieldEnum = (typeof MixerCompetitionScalarFieldEnum)[keyof typeof MixerCompetitionScalarFieldEnum]
-
-
-export const MixerRouteScalarFieldEnum = {
-  id: 'id',
-  imageUrl: 'imageUrl',
-  name: 'name',
-  color: 'color',
-  holds: 'holds',
-  competitionId: 'competitionId',
-  grade: 'grade'
-} as const
-
-export type MixerRouteScalarFieldEnum = (typeof MixerRouteScalarFieldEnum)[keyof typeof MixerRouteScalarFieldEnum]
-
-
-export const MixerBoulderScalarFieldEnum = {
-  id: 'id',
-  points: 'points',
-  color: 'color',
-  competitionId: 'competitionId',
-  grade: 'grade'
-} as const
-
-export type MixerBoulderScalarFieldEnum = (typeof MixerBoulderScalarFieldEnum)[keyof typeof MixerBoulderScalarFieldEnum]
-
-
-export const MixerClimberScalarFieldEnum = {
-  id: 'id',
-  name: 'name',
-  divisionId: 'divisionId',
-  competitionId: 'competitionId',
-  registeredAt: 'registeredAt',
-  entryMethod: 'entryMethod',
-  climberStatus: 'climberStatus',
-  userId: 'userId',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-} as const
-
-export type MixerClimberScalarFieldEnum = (typeof MixerClimberScalarFieldEnum)[keyof typeof MixerClimberScalarFieldEnum]
-
-
-export const MixerDivisionScalarFieldEnum = {
-  id: 'id',
-  name: 'name',
-  competitionId: 'competitionId',
-  level: 'level'
-} as const
-
-export type MixerDivisionScalarFieldEnum = (typeof MixerDivisionScalarFieldEnum)[keyof typeof MixerDivisionScalarFieldEnum]
-
-
-export const MixerBoulderScoreScalarFieldEnum = {
-  id: 'id',
-  climberId: 'climberId',
-  score: 'score',
-  attempts: 'attempts',
-  competitionId: 'competitionId'
-} as const
-
-export type MixerBoulderScoreScalarFieldEnum = (typeof MixerBoulderScoreScalarFieldEnum)[keyof typeof MixerBoulderScoreScalarFieldEnum]
-
-
-export const MixerRopeScoreScalarFieldEnum = {
-  id: 'id',
-  climberId: 'climberId',
-  score: 'score',
-  attempts: 'attempts',
-  competitionId: 'competitionId'
-} as const
-
-export type MixerRopeScoreScalarFieldEnum = (typeof MixerRopeScoreScalarFieldEnum)[keyof typeof MixerRopeScoreScalarFieldEnum]
-
-
-export const MixerCompletionScalarFieldEnum = {
-  id: 'id',
-  climberId: 'climberId',
-  competitionId: 'competitionId',
-  type: 'type',
-  mixerRouteId: 'mixerRouteId',
-  mixerBoulderId: 'mixerBoulderId',
-  attempts: 'attempts',
-  points: 'points',
-  holdNumber: 'holdNumber',
-  completionDate: 'completionDate',
-  isComplete: 'isComplete'
-} as const
-
-export type MixerCompletionScalarFieldEnum = (typeof MixerCompletionScalarFieldEnum)[keyof typeof MixerCompletionScalarFieldEnum]
-
-
-export const BLCompetitionScalarFieldEnum = {
-  id: 'id',
-  name: 'name',
-  year: 'year',
-  status: 'status',
-  activeWeek: 'activeWeek',
-  imageUrl: 'imageUrl',
-  endDate: 'endDate',
-  weekOneStartDate: 'weekOneStartDate',
-  weekTwoStartDate: 'weekTwoStartDate',
-  weekThreeStartDate: 'weekThreeStartDate',
-  passcode: 'passcode',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  areScoresAvailable: 'areScoresAvailable',
-  isTestCompetition: 'isTestCompetition',
-  hasScoresBeenCalculated: 'hasScoresBeenCalculated',
-  standingsType: 'standingsType',
-  isBouldersReleased: 'isBouldersReleased'
-} as const
-
-export type BLCompetitionScalarFieldEnum = (typeof BLCompetitionScalarFieldEnum)[keyof typeof BLCompetitionScalarFieldEnum]
-
-
-export const BLBoulderScalarFieldEnum = {
-  id: 'id',
-  points: 'points',
-  week: 'week',
-  color: 'color',
-  competitionId: 'competitionId',
-  grade: 'grade'
-} as const
-
-export type BLBoulderScalarFieldEnum = (typeof BLBoulderScalarFieldEnum)[keyof typeof BLBoulderScalarFieldEnum]
-
-
-export const BLClimberScalarFieldEnum = {
-  id: 'id',
-  name: 'name',
-  divisionId: 'divisionId',
-  competitionId: 'competitionId',
-  entryMethod: 'entryMethod',
-  climberStatus: 'climberStatus',
-  userId: 'userId',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-} as const
-
-export type BLClimberScalarFieldEnum = (typeof BLClimberScalarFieldEnum)[keyof typeof BLClimberScalarFieldEnum]
-
-
-export const BLBoulderScoreScalarFieldEnum = {
-  id: 'id',
-  climberId: 'climberId',
-  score: 'score',
-  attempts: 'attempts',
-  competitionId: 'competitionId'
-} as const
-
-export type BLBoulderScoreScalarFieldEnum = (typeof BLBoulderScoreScalarFieldEnum)[keyof typeof BLBoulderScoreScalarFieldEnum]
-
-
-export const BLDivisionScalarFieldEnum = {
-  id: 'id',
-  name: 'name',
-  competitionId: 'competitionId',
-  level: 'level'
-} as const
-
-export type BLDivisionScalarFieldEnum = (typeof BLDivisionScalarFieldEnum)[keyof typeof BLDivisionScalarFieldEnum]
-
-
-export const BLCompletionScalarFieldEnum = {
-  id: 'id',
-  climberId: 'climberId',
-  competitionId: 'competitionId',
-  boulderId: 'boulderId',
-  attempts: 'attempts',
-  points: 'points',
-  completionDate: 'completionDate',
-  isComplete: 'isComplete'
-} as const
-
-export type BLCompletionScalarFieldEnum = (typeof BLCompletionScalarFieldEnum)[keyof typeof BLCompletionScalarFieldEnum]
-
-
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
 } as const
 
 export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
-
-
-export const JsonNullValueInput = {
-  JsonNull: JsonNull
-} as const
-
-export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
 
 
 export const QueryMode = {
@@ -600,13 +333,4 @@ export const NullsOrder = {
 } as const
 
 export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
-
-
-export const JsonNullValueFilter = {
-  DbNull: DbNull,
-  JsonNull: JsonNull,
-  AnyNull: AnyNull
-} as const
-
-export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
 

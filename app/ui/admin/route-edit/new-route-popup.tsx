@@ -6,8 +6,13 @@ import clsx from "clsx";
 import { useRouter } from "next/navigation";
 import { useNotification } from "@/app/contexts/NotificationContext";
 
-import TopDown from "../../routes/topdown";
-import { Locations, Route, RouteTag, RouteType } from "@/generated/prisma/browser";
+import { Route, RouteTag, RouteType } from "@/generated/prisma/browser";
+import RoutesMapShell from "../../routes/routes-map-shell";
+import {
+  legacyLocationsForWallPart,
+  type LegacyLocationKey,
+  type WallPartKey,
+} from "@/lib/wallLocations";
 
 import RopeGradeSelect from "../new_route/rope-grade-select";
 import BoulderGradeSelect from "../new_route/boulder-grade-select";
@@ -39,14 +44,14 @@ export default function NewRoutePopup({
   const [selectedDate, setSelectedDate] = useState("");
   const [isToday, setIsToday] = useState(false);
   const [id, setId] = useState("");
-  const [location, setLocation] = useState<Locations>();
+  const [location, setLocation] = useState<LegacyLocationKey>();
   const [color, setColor] = useState("black");
   const [grade, setGrade] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   const [routes, setRoutes] = useState<Route[]>([]);
 
-  const findRoutesFromLocation = async (location: Locations) => {
+  const findRoutesFromLocation = async (location: LegacyLocationKey) => {
     try {
       const response = await fetch(`/api/routes/get-wall-routes-non-archive?wall=${location}`);
       const data = await response.json();
@@ -64,12 +69,12 @@ export default function NewRoutePopup({
     }
   }, [location]);
 
-  const handleLocationSelect = (data: Locations | null) => {
+  const handleLocationSelect = (data: WallPartKey | null) => {
     if (!data) return;
     const routeType =
       data.startsWith("rope") || data.startsWith("AB") ? RouteType.ROPE : RouteType.BOULDER;
     setType(routeType);
-    setLocation(data);
+    setLocation(legacyLocationsForWallPart(data)[0]);
     setIsFirstStep(false);
     setIsThirdStep(false);
     setIsSecondStep(true);
@@ -312,7 +317,7 @@ export default function NewRoutePopup({
             <div className="">
               <p className="text-white">Select a Wall</p>
               <div className="pl-2">
-                <TopDown onData={handleLocationSelect} />
+                <RoutesMapShell onData={handleLocationSelect} />
               </div>
             </div>
           )}

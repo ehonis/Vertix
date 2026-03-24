@@ -35,12 +35,6 @@ export default function NavBar() {
             Routes
           </Link>
           <Link
-            href={"/competitions"}
-            className="hover:text-white transition-all duration-100 hover:scale-105 ease-in-out"
-          >
-            Comps
-          </Link>
-          <Link
             href={"/leaderboard"}
             className="hover:text-white transition-all duration-100 hover:scale-105 ease-in-out"
           >

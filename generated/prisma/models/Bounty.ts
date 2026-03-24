@@ -588,6 +588,10 @@ export type BountyUncheckedUpdateOneWithoutClaimedOnCompletionNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.BountyUpdateToOneWithWhereWithoutClaimedOnCompletionInput, Prisma.BountyUpdateWithoutClaimedOnCompletionInput>, Prisma.BountyUncheckedUpdateWithoutClaimedOnCompletionInput>
 }
 
+export type NullableDateTimeFieldUpdateOperationsInput = {
+  set?: Date | string | null
+}
+
 export type BountyCreateNestedManyWithoutClaimedByUserInput = {
   create?: Prisma.XOR<Prisma.BountyCreateWithoutClaimedByUserInput, Prisma.BountyUncheckedCreateWithoutClaimedByUserInput> | Prisma.BountyCreateWithoutClaimedByUserInput[] | Prisma.BountyUncheckedCreateWithoutClaimedByUserInput[]
   connectOrCreate?: Prisma.BountyCreateOrConnectWithoutClaimedByUserInput | Prisma.BountyCreateOrConnectWithoutClaimedByUserInput[]

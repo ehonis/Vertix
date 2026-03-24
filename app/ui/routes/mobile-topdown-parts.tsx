@@ -1,18 +1,18 @@
 "use client";
 
-import { Locations } from "@/generated/prisma/browser";
 import { useState, useEffect, useCallback } from "react";
+import type { WallPartKey } from "@/lib/wallLocations";
 
 interface WallProps {
-  selectedPart: string | null; // Or a more specific type if you know the possible values
-  setSelectedPart: React.Dispatch<React.SetStateAction<Locations | null>>; // Correct type for the setter
+  selectedPart: string | null;
+  setSelectedPart: React.Dispatch<React.SetStateAction<WallPartKey | null>>;
 }
 
 function useClickState(
   initialColor: string,
   id: string,
   selectedPart: string | null,
-  setSelectedPart: React.Dispatch<React.SetStateAction<Locations | null>>
+  setSelectedPart: React.Dispatch<React.SetStateAction<WallPartKey | null>>
 ): [string, () => void] {
   const [fillColor, setFillColor] = useState<string>(initialColor);
   const isActive = selectedPart === id;
@@ -24,7 +24,7 @@ function useClickState(
     });
 
     setSelectedPart(prevSelectedPart => {
-      const newSelectedPart = isActive ? null : (id as Locations);
+      const newSelectedPart = isActive ? null : (id as WallPartKey);
       return newSelectedPart;
     });
   }, [initialColor, id, isActive, setSelectedPart]);
@@ -366,12 +366,12 @@ export default function MobileTopdownParts({
   onData,
   initialSelection = null,
 }: {
-  onData: (data: Locations | null) => void;
-  initialSelection?: Locations | null;
+  onData: (data: WallPartKey | null) => void;
+  initialSelection?: WallPartKey | null;
 }) {
   // Initialize selectedPart with the initialSelection prop if provided
   // This allows external components to control which wall is selected on load
-  const [selectedPart, setSelectedPart] = useState<Locations | null>(initialSelection);
+  const [selectedPart, setSelectedPart] = useState<WallPartKey | null>(initialSelection);
 
   // Update selectedPart when initialSelection changes (e.g., from URL params)
   // This ensures the component stays in sync with external state changes

@@ -1,5 +1,5 @@
 import prisma from "@/prisma";
-import { Locations, RouteType } from "@/generated/prisma/client";
+import { RouteType } from "@/generated/prisma/client";
 import ClientGraph from "@/app/ui/admin/gym-statistics/client-graph";
 
 const getCurrentRopesABExcluded = async () => {
@@ -7,7 +7,7 @@ const getCurrentRopesABExcluded = async () => {
     where: {
       isArchive: false,
       location: {
-        not: Locations.ABWall,
+        not: "ABWall",
       },
       type: RouteType.ROPE,
     },
@@ -29,7 +29,7 @@ const getAutoBelayRoutes = async () => {
     where: {
       isArchive: false,
       type: RouteType.ROPE,
-      location: Locations.ABWall,
+      location: "ABWall",
     },
   });
   return autoBelayRoutes;

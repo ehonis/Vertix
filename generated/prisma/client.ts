@@ -47,11 +47,6 @@ export { Prisma }
  */
 export type Route = Prisma.RouteModel
 /**
- * Model ClimbingSession
- * 
- */
-export type ClimbingSession = Prisma.ClimbingSessionModel
-/**
  * Model RouteImage
  * 
  */
@@ -97,16 +92,6 @@ export type MonthlyXp = Prisma.MonthlyXpModel
  */
 export type User = Prisma.UserModel
 /**
- * Model Announcement
- * 
- */
-export type Announcement = Prisma.AnnouncementModel
-/**
- * Model UserAnnouncement
- * 
- */
-export type UserAnnouncement = Prisma.UserAnnouncementModel
-/**
  * Model TVSlide
  * 
  */
@@ -141,73 +126,3 @@ export type Session = Prisma.SessionModel
  * 
  */
 export type VerificationToken = Prisma.VerificationTokenModel
-/**
- * Model MixerCompetition
- * 
- */
-export type MixerCompetition = Prisma.MixerCompetitionModel
-/**
- * Model MixerRoute
- * 
- */
-export type MixerRoute = Prisma.MixerRouteModel
-/**
- * Model MixerBoulder
- * 
- */
-export type MixerBoulder = Prisma.MixerBoulderModel
-/**
- * Model MixerClimber
- * 
- */
-export type MixerClimber = Prisma.MixerClimberModel
-/**
- * Model MixerDivision
- * 
- */
-export type MixerDivision = Prisma.MixerDivisionModel
-/**
- * Model MixerBoulderScore
- * 
- */
-export type MixerBoulderScore = Prisma.MixerBoulderScoreModel
-/**
- * Model MixerRopeScore
- * 
- */
-export type MixerRopeScore = Prisma.MixerRopeScoreModel
-/**
- * Model MixerCompletion
- * 
- */
-export type MixerCompletion = Prisma.MixerCompletionModel
-/**
- * Model BLCompetition
- * 
- */
-export type BLCompetition = Prisma.BLCompetitionModel
-/**
- * Model BLBoulder
- * 
- */
-export type BLBoulder = Prisma.BLBoulderModel
-/**
- * Model BLClimber
- * 
- */
-export type BLClimber = Prisma.BLClimberModel
-/**
- * Model BLBoulderScore
- * 
- */
-export type BLBoulderScore = Prisma.BLBoulderScoreModel
-/**
- * Model BLDivision
- * 
- */
-export type BLDivision = Prisma.BLDivisionModel
-/**
- * Model BLCompletion
- * 
- */
-export type BLCompletion = Prisma.BLCompletionModel

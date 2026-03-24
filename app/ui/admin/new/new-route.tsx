@@ -3,9 +3,14 @@ import clsx from "clsx";
 import GradeSelect from "../new_route/grade-select";
 import TopDown from "../../routes/topdown";
 import ErrorPopUp from "./error-pop-up";
-import { Locations } from "@/generated/prisma/browser";
 import type { RouteTag } from "@/generated/prisma/browser";
 import ConfirmationPopUp from "../../general/confirmation-pop-up";
+import RoutesMapShell from "../../routes/routes-map-shell";
+import {
+  legacyLocationsForWallPart,
+  type LegacyLocationKey,
+  type WallPartKey,
+} from "@/lib/wallLocations";
 
 import { useNotification } from "@/app/contexts/NotificationContext";
 type routeData = {
@@ -14,7 +19,7 @@ type routeData = {
   setDate: string;
   grade: string;
   color: string;
-  wall: Locations;
+  wall: LegacyLocationKey;
   type: string;
   tags: string[];
 };
@@ -42,7 +47,7 @@ export default function NewRoute({
   const [selectedDate, setSelectedDate] = useState("");
   const [grade, setGrade] = useState("");
   const [color, setColor] = useState("");
-  const [wall, setWall] = useState<Locations | null>(null);
+  const [wall, setWall] = useState<LegacyLocationKey | null>(null);
   const [isNewTag, setIsNewTag] = useState(false);
   const [newTag, setNewTag] = useState("");
 
@@ -61,8 +66,13 @@ export default function NewRoute({
   const handleColorChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setColor(event.target.value);
   };
-  const handleWallData = (data: Locations | null) => {
-    setWall(data);
+  const handleWallData = (data: WallPartKey | null) => {
+    if (!data) {
+      setWall(null);
+      return;
+    }
+
+    setWall(legacyLocationsForWallPart(data)[0]);
   };
   const handleGradeData = (data: string) => {
     setGrade(data);
@@ -245,7 +255,7 @@ export default function NewRoute({
             </div>
           </div>
           <div className="bg-gray-700 pl-2 pr-3  rounded-lg flex justify-center py-2">
-            <TopDown onData={handleWallData} />
+            <RoutesMapShell onData={handleWallData} />
           </div>
           {/* tags */}
           <div className="flex flex-col gap-2">
