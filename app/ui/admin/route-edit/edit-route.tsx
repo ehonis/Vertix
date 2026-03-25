@@ -7,15 +7,28 @@ import { splitGradeModifier } from "@/lib/routes-shared";
 import { useState, useEffect } from "react";
 import { useNotification } from "@/app/contexts/NotificationContext";
 import { useRouter } from "next/navigation";
-import { Route, RouteImage, RouteType } from "@/generated/prisma/browser";
 import {
   WALL_PART_KEYS,
   legacyLocationsForWallPart,
   toWallPartKey,
   wallPartLabel,
 } from "@/lib/wallLocations";
+import type { AppRouteType } from "@/lib/appTypes";
 
 type EditableLocation = (typeof WALL_PART_KEYS)[number];
+type RouteImage = { id: string; url: string };
+type EditableRoute = {
+  id: string;
+  title: string;
+  type: AppRouteType;
+  grade: string;
+  setDate: Date;
+  x: number | null;
+  y: number | null;
+  location: string;
+  isArchive: boolean;
+  color: string;
+};
 
 export default function EditRoute({
   route,
@@ -24,7 +37,7 @@ export default function EditRoute({
   totalSends,
   starRating,
 }: {
-  route: Route;
+  route: EditableRoute;
   images: RouteImage[];
   daysOld: number;
   totalSends: number;
@@ -101,7 +114,7 @@ export default function EditRoute({
   };
   const handleTypeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const newType = event.target.value;
-    setType(newType as RouteType);
+    setType(newType as AppRouteType);
     setIsSubmit(true);
   };
   const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {

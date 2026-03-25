@@ -2,18 +2,25 @@
 import Image from "next/image";
 import { useState, useEffect, useCallback } from "react";
 import ConfirmationPopUp from "@/app/ui/general/confirmation-pop-up";
-import { User, UserRole } from "@/generated/prisma/browser";
 import { useNotification } from "@/app/contexts/NotificationContext";
 import { useRouter } from "next/navigation";
 import clsx from "clsx";
+import type { AppUser } from "@/lib/appUser";
 
-export default function IndividualUserEdit({ user }: { user: User }) {
+const UserRole = {
+  USER: "USER",
+  ADMIN: "ADMIN",
+  ROUTE_SETTER: "ROUTE_SETTER",
+} as const;
+type UserRoleValue = (typeof UserRole)[keyof typeof UserRole];
+
+export default function IndividualUserEdit({ user }: { user: AppUser }) {
   const { showNotification } = useNotification();
   const [name, setName] = useState(user.name || "");
   const [username, setUsername] = useState(user.username || "");
   const [image, setImage] = useState(user.image || "");
   const [isPopConfirmationUp, setIsPopConfirmationUp] = useState(false);
-  const [role, setRole] = useState(user.role || UserRole.USER);
+  const [role, setRole] = useState<UserRoleValue>(user.role || UserRole.USER);
   const [isRoleChange, setIsRoleChange] = useState(false);
   const [isUsernameAvailable, setIsUsernameAvailable] = useState(true);
   const [isUsernameValid, setIsUsernameValid] = useState(true);
@@ -116,7 +123,7 @@ export default function IndividualUserEdit({ user }: { user: User }) {
   const handleChangeRole = async (e: React.ChangeEvent<HTMLSelectElement>) => {
     if (e.target.value !== user.role) {
       setIsRoleChange(true);
-      setRole(e.target.value as UserRole);
+      setRole(e.target.value as UserRoleValue);
     } else {
       setIsRoleChange(false);
     }

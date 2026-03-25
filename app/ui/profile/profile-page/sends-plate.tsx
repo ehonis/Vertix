@@ -1,8 +1,6 @@
-import { Badge } from "@/generated/prisma/client";
-
 type SendsPlateBadge = {
   completions: number | undefined;
-  highlightedBadge: Badge | undefined;
+  highlightedBadge: undefined;
 };
 export default function SendsBadgePlate({ completions, highlightedBadge }: SendsPlateBadge) {
   return (

@@ -1,8 +1,8 @@
 "use client";
 
-import { RouteAttempt, RouteCompletion, RouteType } from "@/generated/prisma/browser";
 import { useEffect, useRef, useState } from "react";
 import InformationalPopUp from "../../general/informational-pop-up";
+import type { AppRouteAttempt, AppRouteCompletion } from "@/lib/appTypes";
 
 function getDate365DaysAgo(): Date {
   const today = new Date(); // Current date
@@ -24,15 +24,17 @@ function getColorForActivity(count: number): string {
 // Helper function to get activity count for a specific date
 function getActivityForDate(
   date: Date,
-  completionData: (RouteCompletion & { route: { type: RouteType; grade: string } })[],
-  attemptsData: (RouteAttempt & { route: { type: RouteType; grade: string } })[]
+  completionData: AppRouteCompletion[],
+  attemptsData: AppRouteAttempt[]
 ): number {
   const dateString = date.toISOString().split("T")[0];
   const completions = completionData.filter(completion => {
+    if (!completion.completionDate) return false;
     const completionDate = new Date(completion.completionDate).toISOString().split("T")[0];
     return completionDate === dateString;
   }).length;
   const attempts = attemptsData.filter(attempt => {
+    if (!attempt.attemptDate) return false;
     const attemptDate = new Date(attempt.attemptDate).toISOString().split("T")[0];
     return attemptDate === dateString;
   }).length;
@@ -43,8 +45,8 @@ export default function ActivityGraph({
   completionData,
   attemptsData,
 }: {
-  completionData: (RouteCompletion & { route: { type: RouteType; grade: string } })[];
-  attemptsData: (RouteAttempt & { route: { type: RouteType; grade: string } })[];
+  completionData: AppRouteCompletion[];
+  attemptsData: AppRouteAttempt[];
 }) {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 

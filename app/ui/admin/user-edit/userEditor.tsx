@@ -2,9 +2,9 @@
 import Image from "next/image";
 import { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
-import { User } from "@/generated/prisma/browser";
 import clsx from "clsx";
 import ElementLoadingAnimation from "../../general/element-loading-animation";
+import type { AppUser } from "@/lib/appUser";
 
 // Custom hook for debouncing
 function useDebounce<T>(value: T, delay: number): T {
@@ -28,7 +28,7 @@ function useDebounce<T>(value: T, delay: number): T {
 export default function UserEditor() {
   const [isSearch, setIsSearch] = useState(false);
   const [searchText, setSearchText] = useState("");
-  const [users, setUsers] = useState<User[]>([]);
+  const [users, setUsers] = useState<AppUser[]>([]);
   const [hasMore, setHasMore] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [takeAmount, setTakeAmount] = useState(10);

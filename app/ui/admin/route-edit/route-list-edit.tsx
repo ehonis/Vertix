@@ -3,27 +3,43 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import clsx from "clsx";
-import { Route } from "@/generated/prisma/browser";
 import Link from "next/link";
 import { formatDateMMDD } from "@/lib/date";
 import { useNotification } from "@/app/contexts/NotificationContext";
 import { useRouter } from "next/navigation";
 import ConfirmationPopUp from "../../general/confirmation-pop-up";
 
+type AdminRoute = {
+  id: string;
+  title: string;
+  grade: string;
+  color: string;
+  setDate: Date;
+  type: "BOULDER" | "ROPE";
+  location: string;
+  x: number | null;
+  y: number | null;
+  order: number | null;
+  isArchive: boolean;
+  xp: number;
+  bonusXp: number | null;
+  createdByUserID: string | null;
+};
+
 interface RouteListEditProps {
-  ropes: Route[];
-  boulders: Route[];
+  ropes: AdminRoute[];
+  boulders: AdminRoute[];
 }
 
 export default function RouteListEdit({ ropes, boulders }: RouteListEditProps) {
   const router = useRouter();
   const { showNotification } = useNotification();
-  const [selectedRoutes, setSelectedRoutes] = useState<Route[]>([]);
-  const [selectedBoulders, setSelectedBoulders] = useState<Route[]>([]);
+  const [selectedRoutes, setSelectedRoutes] = useState<AdminRoute[]>([]);
+  const [selectedBoulders, setSelectedBoulders] = useState<AdminRoute[]>([]);
 
-  const [routes, setRoutes] = useState<Route[]>(ropes);
+  const [routes, setRoutes] = useState<AdminRoute[]>(ropes);
 
-  const [filteredBoulders, setFilteredBoulders] = useState<Route[]>(boulders);
+  const [filteredBoulders, setFilteredBoulders] = useState<AdminRoute[]>(boulders);
   const [isRoutesExpanded, setIsRoutesExpanded] = useState(false);
   const [isRouteEdit, setIsRouteEdit] = useState(false);
   const [isBoulderExpanded, setIsBoulderExpanded] = useState(false);
@@ -36,7 +52,7 @@ export default function RouteListEdit({ ropes, boulders }: RouteListEditProps) {
 
   const [selectedRouteId, setSelectedRouteId] = useState<string | null>(null);
 
-  const handleRouteSelect = (route: Route) => {
+  const handleRouteSelect = (route: AdminRoute) => {
     if (selectedRoutes.some(r => r.id === route.id)) {
       setSelectedRoutes(prev => prev.filter(r => r.id !== route.id));
     } else {
@@ -44,7 +60,7 @@ export default function RouteListEdit({ ropes, boulders }: RouteListEditProps) {
     }
   };
 
-  const handleBoulderSelect = (boulder: Route) => {
+  const handleBoulderSelect = (boulder: AdminRoute) => {
     if (selectedBoulders.some(b => b.id === boulder.id)) {
       setSelectedBoulders(prev => prev.filter(b => b.id !== boulder.id));
     } else {
@@ -181,7 +197,7 @@ export default function RouteListEdit({ ropes, boulders }: RouteListEditProps) {
     }
   };
 
-  const handleOrderUpdate = async (routes: Route[]) => {
+  const handleOrderUpdate = async (routes: AdminRoute[]) => {
     try {
       const response = await fetch("/api/routes/edit/update-route-order", {
         method: "PATCH",

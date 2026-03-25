@@ -1,10 +1,10 @@
 import { getRouteById } from "@/lib/route";
 import EditRoute from "./edit-route";
-import { getRouteImagesById } from "@/lib/routes";
 import { findDaysOld } from "@/lib/dates";
-import { findAllTotalSends } from "@/lib/routes";
 import { findStarRating } from "@/lib/route";
 import { toWallPartKey } from "@/lib/wallLocations";
+import { getRouteImagesById } from "@/lib/tv";
+import { findAllTotalSends } from "@/lib/route";
 export default async function IndividualRoutePageLoad({ routeId }: { routeId: string }) {
   const route = await getRouteById(routeId);
   if (!route) {

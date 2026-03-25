@@ -3,12 +3,12 @@ import { useEffect, useState } from "react";
 import ElementLoadingAnimation from "@/app/ui/general/element-loading-animation";
 import { useNotification } from "@/app/contexts/NotificationContext";
 import { useRouter } from "next/navigation";
-import { User } from "@/generated/prisma/browser";
 import { useXpIntegration } from "@/app/hooks/useXpIntegration";
 import { useRouteCompletion } from "@/app/contexts/routeCompletionContext";
 import Link from "next/link";
 import clsx from "clsx";
 import { getGradeRange, isGradeHigher, calculateCompletionXpForRoute } from "@/lib/route-shared";
+import type { AppUser } from "@/lib/appUser";
 
 export default function RoutePopUp({
   id,
@@ -30,7 +30,7 @@ export default function RoutePopUp({
   grade: string;
   name: string;
   onCancel: () => void;
-  user: User | null | undefined;
+  user: AppUser | null | undefined;
   color: string;
   completions: number;
   attempts: number;
@@ -100,7 +100,7 @@ export default function RoutePopUp({
           gainRouteCompletionXp({
             grade: grade,
             previousCompletions: frontendCompletions,
-            newHighestGrade: isGradeHigher(user as User, grade, routeType),
+            newHighestGrade: isGradeHigher(user ?? {}, grade, routeType),
             bonusXp: bonusXp || 0,
           });
         }

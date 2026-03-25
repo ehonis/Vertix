@@ -53,3 +53,14 @@ export async function updateTvSlideRoutes(input: {
 export function findFeaturedRoutes(slides: TVSlide[]): TVRoute[] {
   return slides.find(slide => slide.type === "FEATURED_ROUTE")?.routes ?? [];
 }
+
+export async function getRouteImagesById(routeId: string) {
+  const data = await getTvData();
+  for (const slide of data.slides) {
+    const route = slide.routes.find(currentRoute => currentRoute.id === routeId);
+    if (route) {
+      return route.images;
+    }
+  }
+  return [];
+}

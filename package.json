@@ -10,16 +10,12 @@
     "convex:dev": "convex dev",
     "convex:deploy": "convex deploy",
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,css,scss,md}\"",
-    "migrate:users-to-clerk": "node --import tsx scripts/migrate-users-to-clerk.ts",
-    "migrate:user-images-to-clerk": "node --import tsx scripts/migrate-user-images-to-clerk.ts",
     "migrate:routes-to-convex": "node --import tsx scripts/migrate-routes-to-convex.ts"
   },
   "dependencies": {
     "@clerk/nextjs": "^7.0.6",
     "@heroicons/react": "^2.2.0",
     "@lottiefiles/dotlottie-react": "^0.13.2",
-    "@prisma/adapter-pg": "^7.4.1",
-    "@prisma/client": "^7.4.2",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/swiper": "^5.4.3",
     "@uploadthing/react": "^7.3.0",
@@ -70,7 +66,6 @@
     "eslint-plugin-prettier": "^5.2.3",
     "prettier": "^3.5.3",
     "prettier-plugin-tailwindcss": "^0.6.11",
-    "prisma": "^7.4.2",
     "typescript": "^5.8.2"
   },
   "overrides": {},

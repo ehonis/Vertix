@@ -1,4 +1,9 @@
-import type { CommunityGrade, User } from "@/generated/prisma/browser";
+import type { AppCommunityGrade } from "@/lib/appTypes";
+
+type GradeUser = {
+  highestRopeGrade?: string | null;
+  highestBoulderGrade?: string | null;
+};
 
 function findClosestGrade(value: number, map: Record<string, number>): string {
   let closestGrade = "none";
@@ -46,7 +51,7 @@ export function getBoulderGradeMapping(grade: string) {
   return mappedGrade;
 }
 
-export function findCommunityGradeForRoute(communityGrades: CommunityGrade[]): string {
+export function findCommunityGradeForRoute(communityGrades: AppCommunityGrade[]): string {
   if (!communityGrades.length) return "none";
 
   const ropeGrades = communityGrades.filter(
@@ -128,7 +133,7 @@ export function findCommunityGradeForRoute(communityGrades: CommunityGrade[]): s
   return "none";
 }
 
-export function isGradeHigher(user: User, newGrade: string, type: string) {
+export function isGradeHigher(user: GradeUser, newGrade: string, type: string) {
   const ropeGrades = [
     "5.b",
     "5.7-",

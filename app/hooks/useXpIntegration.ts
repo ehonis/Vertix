@@ -16,30 +16,16 @@ export function useXpIntegration(userId?: string) {
     }
   }, [userId, isXpInitialized, isLoading, initializeXp]);
 
-  // Function to gain XP and update database
+  // Route completion already persists XP in Convex. This hook only drives the client UX.
   const gainXpWithDatabase = async (xpData: {
     totalXp: number;
     baseXp: number;
     xpExtrapolated: { type: string; xp: number }[];
   }) => {
     try {
-      // Update database
-      const response = await fetch("/api/user/xp", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ xpGained: xpData.totalXp }),
-      });
-
-      if (response.ok) {
-        // Show XP popup
-        gainXp(xpData);
-      } else {
-        console.error("Failed to update XP in database");
-      }
+      gainXp(xpData);
     } catch (error) {
-      console.error("Error updating XP:", error);
+      console.error("Error showing XP gain:", error);
     }
   };
 

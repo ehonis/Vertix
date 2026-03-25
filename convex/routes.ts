@@ -487,11 +487,36 @@ export const completeRoute = mutation({
     }
     await ctx.db.patch(user._id, patch);
 
+    const completionDate = args.completedAt ?? Date.now();
+    const completionMonthDate = new Date(completionDate);
+    const completionMonth = completionMonthDate.getMonth() + 1;
+    const completionYear = completionMonthDate.getFullYear();
+
+    const existingMonthlyXp = await ctx.db
+      .query("monthlyXp")
+      .withIndex("by_user_year_month", q =>
+        q.eq("userId", args.userId).eq("year", completionYear).eq("month", completionMonth)
+      )
+      .unique();
+
+    if (existingMonthlyXp) {
+      await ctx.db.patch(existingMonthlyXp._id, {
+        xp: existingMonthlyXp.xp + xpData.xp,
+      });
+    } else {
+      await ctx.db.insert("monthlyXp", {
+        userId: args.userId,
+        month: completionMonth,
+        year: completionYear,
+        xp: xpData.xp,
+      });
+    }
+
     await ctx.db.insert("routeCompletions", {
       userId: args.userId,
       routeId: route._id,
       flash: args.flash,
-      completionDate: args.completedAt ?? Date.now(),
+      completionDate,
       xpEarned: xpData.xp,
       gradeSnapshot: {
         highestRopeGrade: patch.highestRopeGrade ?? user.highestRopeGrade,
@@ -1020,6 +1045,14 @@ function calculateCompletionXp(
 
   if (newHighestGrade) {
     totalXp += 250;
+  }
+
+  if (previousCompletions > 0 && !isFeatureRoute) {
+    const additionalXp = Math.floor(previousCompletions * (baseXp * 0.2));
+    totalXp -= additionalXp;
+    if (totalXp < 0) {
+      totalXp = 0;
+    }
   }
 
   return { xp: totalXp };
