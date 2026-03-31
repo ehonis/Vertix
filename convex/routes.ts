@@ -621,6 +621,24 @@ export const createRoute = mutation({
       throw new Error("Wall not found");
     }
 
+    const existingRoutes = await ctx.db
+      .query("routes")
+      .withIndex("by_wall", q => q.eq("gymWallId", wall._id))
+      .take(200);
+    const activeRoutes = existingRoutes.filter(route => !route.isArchived);
+    const maxSortOrder = Math.max(-1, ...activeRoutes.map(route => route.sortOrder ?? -1));
+    const desiredSortOrder = Math.max(
+      0,
+      Math.min(args.sortOrder ?? maxSortOrder + 1, maxSortOrder + 1)
+    );
+
+    for (const route of activeRoutes) {
+      const routeSortOrder = route.sortOrder ?? maxSortOrder + 1;
+      if (routeSortOrder >= desiredSortOrder) {
+        await ctx.db.patch(route._id, { sortOrder: routeSortOrder + 1 });
+      }
+    }
+
     return await ctx.db.insert("routes", {
       gymId: wall.gymId,
       gymAreaId: wall.gymAreaId,
@@ -634,7 +652,7 @@ export const createRoute = mutation({
       isArchived: false,
       xp: args.xp,
       bonusXp: args.bonusXp,
-      sortOrder: args.sortOrder,
+      sortOrder: desiredSortOrder,
       createdByUserId: args.createdByUserId,
       legacyLocationKey: args.wallPart,
     });

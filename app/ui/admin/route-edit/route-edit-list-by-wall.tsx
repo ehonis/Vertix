@@ -49,6 +49,13 @@ export default function RouteEditListByWall({ routes }: { routes: AdminRoute[] }
         return ay - by;
       }
 
+      const aOrder = typeof a.order === "number" ? a.order : Number.POSITIVE_INFINITY;
+      const bOrder = typeof b.order === "number" ? b.order : Number.POSITIVE_INFINITY;
+
+      if (aOrder !== bOrder) {
+        return aOrder - bOrder;
+      }
+
       return a.title.localeCompare(b.title);
     });
   }, []);
@@ -85,8 +92,8 @@ export default function RouteEditListByWall({ routes }: { routes: AdminRoute[] }
   const [isRouteEdit, setIsRouteEdit] = useState(false);
   const [isArchiveConfirmationRope, setIsArchiveConfirmationRope] = useState(false);
   const [isDeleteConfirmationRope, setIsDeleteConfirmationRope] = useState(false);
-  const [selectedRoutes, setSelectedRoutes] = useState<AdminRoute[]>([]);
   const [currentRoutes, setCurrentRoutes] = useState<AdminRoute[]>([]);
+  const [selectedRouteId, setSelectedRouteId] = useState<string | null>(null);
   const [isArchiveLoading, setIsArchiveLoading] = useState(false);
   const [isDeleteLoading, setIsDeleteLoading] = useState(false);
 
@@ -161,41 +168,108 @@ export default function RouteEditListByWall({ routes }: { routes: AdminRoute[] }
     }
   }, [selectedWall, routes, sortRoutesForWall]);
 
-  /**
-   * Handle route selection for bulk operations (archive/delete)
-   * Toggles the selection state of a route in the selectedRoutes array
-   * This allows users to select multiple routes for batch operations
-   *
-   * @param route - The route to toggle selection for
-   */
-  const handleRouteSelect = (route: AdminRoute) => {
-    if (selectedRoutes.some(r => r.id === route.id)) {
-      setSelectedRoutes(prev => prev.filter(r => r.id !== route.id));
-    } else {
-      setSelectedRoutes(prev => [...prev, route]);
+  const selectedRoute = selectedRouteId
+    ? (currentRoutes.find(route => route.id === selectedRouteId) ?? null)
+    : null;
+
+  const handleOrderUpdate = async (routesToUpdate: AdminRoute[]) => {
+    try {
+      const response = await fetch("/api/routes/edit/update-order", {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(
+          routesToUpdate
+            .filter(
+              (route): route is AdminRoute & { order: number } => typeof route.order === "number"
+            )
+            .map(route => ({ id: route.id, order: route.order }))
+        ),
+      });
+
+      if (!response.ok) {
+        showNotification({ message: "Failed to update route order", color: "red" });
+        return false;
+      }
+
+      return true;
+    } catch (error) {
+      showNotification({ message: "Error updating route order", color: "red" });
+      return false;
     }
   };
+
+  const handleMoveRoute = async (direction: "up" | "down") => {
+    if (!selectedRouteId) {
+      return;
+    }
+
+    const sortedRoutes = sortRoutesForWall(currentRoutes);
+    const currentIndex = sortedRoutes.findIndex(route => route.id === selectedRouteId);
+
+    if (currentIndex === -1) {
+      return;
+    }
+
+    const swapIndex = direction === "up" ? currentIndex - 1 : currentIndex + 1;
+
+    if (swapIndex < 0 || swapIndex >= sortedRoutes.length) {
+      return;
+    }
+
+    const currentRoute = sortedRoutes[currentIndex];
+    const swapRoute = sortedRoutes[swapIndex];
+    const currentOrder = currentRoute.order ?? currentIndex;
+    const swapOrder = swapRoute.order ?? swapIndex;
+
+    const nextRoutes = currentRoutes.map(route => {
+      if (route.id === currentRoute.id) {
+        return { ...route, order: swapOrder };
+      }
+
+      if (route.id === swapRoute.id) {
+        return { ...route, order: currentOrder };
+      }
+
+      return route;
+    });
+
+    setCurrentRoutes(sortRoutesForWall(nextRoutes));
+    const ok = await handleOrderUpdate(nextRoutes);
+
+    if (ok) {
+      showNotification({ message: "Route order updated", color: "green" });
+      router.refresh();
+    }
+  };
+
+  const selectedRouteIndex = selectedRouteId
+    ? sortRoutesForWall(currentRoutes).findIndex(route => route.id === selectedRouteId)
+    : -1;
 
   const handleArchive = async () => {
     setIsArchiveLoading(true);
     try {
+      if (!selectedRoute) {
+        showNotification({ message: "Select a route first", color: "red" });
+        return;
+      }
+
       const response = await fetch("/api/routes/edit/archive-route", {
         method: "PATCH",
-        body: JSON.stringify({ routes: selectedRoutes }),
+        body: JSON.stringify({ routes: [selectedRoute] }),
       });
       if (response.ok) {
-        showNotification({ message: "Routes archived successfully", color: "green" });
+        showNotification({ message: "Route archived successfully", color: "green" });
 
-        // Clear selected routes and refresh the display
-        setSelectedRoutes([]);
-        setCurrentRoutes(prev =>
-          prev.filter(route => !selectedRoutes.some(selected => selected.id === route.id))
-        );
+        setSelectedRouteId(null);
+        setCurrentRoutes(prev => prev.filter(route => route.id !== selectedRoute.id));
       } else {
-        showNotification({ message: "Error archiving routes", color: "red" });
+        showNotification({ message: "Error archiving route", color: "red" });
       }
     } catch (error) {
-      showNotification({ message: "Error archiving routes", color: "red" });
+      showNotification({ message: "Error archiving route", color: "red" });
     } finally {
       setIsArchiveConfirmationRope(false);
       setIsArchiveLoading(false);
@@ -206,23 +280,25 @@ export default function RouteEditListByWall({ routes }: { routes: AdminRoute[] }
   const handleDelete = async () => {
     setIsDeleteLoading(true);
     try {
+      if (!selectedRoute) {
+        showNotification({ message: "Select a route first", color: "red" });
+        return;
+      }
+
       const response = await fetch("/api/routes/edit/archive-route", {
         method: "PATCH",
-        body: JSON.stringify({ routes: selectedRoutes }),
+        body: JSON.stringify({ routes: [selectedRoute] }),
       });
       if (response.ok) {
-        showNotification({ message: "Routes archived successfully", color: "green" });
+        showNotification({ message: "Route archived successfully", color: "green" });
 
-        // Clear selected routes and refresh the display
-        setSelectedRoutes([]);
-        setCurrentRoutes(prev =>
-          prev.filter(route => !selectedRoutes.some(selected => selected.id === route.id))
-        );
+        setSelectedRouteId(null);
+        setCurrentRoutes(prev => prev.filter(route => route.id !== selectedRoute.id));
       } else {
-        showNotification({ message: "Error archiving routes", color: "red" });
+        showNotification({ message: "Error archiving route", color: "red" });
       }
     } catch (error) {
-      showNotification({ message: "Error archiving routes", color: "red" });
+      showNotification({ message: "Error archiving route", color: "red" });
     } finally {
       setIsDeleteConfirmationRope(false);
       setIsRouteEdit(false);
@@ -231,9 +307,6 @@ export default function RouteEditListByWall({ routes }: { routes: AdminRoute[] }
     }
   };
 
-  const handleCancel = () => {
-    setSelectedRoutes([]);
-  };
   return (
     <div className="w-full flex flex-col items-center gap-1 place-self-center">
       {isDeleteConfirmationRope && (
@@ -278,7 +351,7 @@ export default function RouteEditListByWall({ routes }: { routes: AdminRoute[] }
                 <button
                   className="px-1 py-1 bg-red-500 rounded-md flex items-center gap-1 font-barlow font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
                   onClick={() => setIsDeleteConfirmationRope(true)}
-                  disabled={isArchiveLoading || isDeleteLoading}
+                  disabled={isArchiveLoading || isDeleteLoading || !selectedRoute}
                 >
                   {isDeleteLoading ? (
                     <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
@@ -302,9 +375,25 @@ export default function RouteEditListByWall({ routes }: { routes: AdminRoute[] }
                 </button>
                 <div className="flex gap-2">
                   <button
+                    className="px-2 py-1 bg-slate-700 rounded-md flex items-center gap-1 font-barlow font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+                    onClick={() => void handleMoveRoute("up")}
+                    disabled={selectedRouteIndex <= 0}
+                  >
+                    Up
+                  </button>
+                  <button
+                    className="px-2 py-1 bg-slate-700 rounded-md flex items-center gap-1 font-barlow font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+                    onClick={() => void handleMoveRoute("down")}
+                    disabled={
+                      selectedRouteIndex === -1 || selectedRouteIndex >= currentRoutes.length - 1
+                    }
+                  >
+                    Down
+                  </button>
+                  <button
                     className="px-2 py-1 bg-gray-500 rounded-md flex items-center gap-1 font-barlow font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
                     onClick={() => setIsArchiveConfirmationRope(true)}
-                    disabled={isArchiveLoading || isDeleteLoading}
+                    disabled={isArchiveLoading || isDeleteLoading || !selectedRoute}
                   >
                     {isArchiveLoading ? (
                       <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
@@ -346,6 +435,11 @@ export default function RouteEditListByWall({ routes }: { routes: AdminRoute[] }
             )}
           </div>
           <div className="bg-slate-900 rounded-md  p-3 flex flex-col gap-3 w-xs">
+            {isRouteEdit && (
+              <p className="text-xs text-white/60">
+                Select one route to reorder, archive, or delete.
+              </p>
+            )}
             <div className="flex flex-col gap-2 text-white font-barlow">
               {currentRoutes
                 .sort((a, b) => {
@@ -356,6 +450,10 @@ export default function RouteEditListByWall({ routes }: { routes: AdminRoute[] }
                   const ay = typeof a.y === "number" ? a.y : Number.POSITIVE_INFINITY;
                   const by = typeof b.y === "number" ? b.y : Number.POSITIVE_INFINITY;
                   if (ay !== by) return ay - by;
+
+                  const aOrder = typeof a.order === "number" ? a.order : Number.POSITIVE_INFINITY;
+                  const bOrder = typeof b.order === "number" ? b.order : Number.POSITIVE_INFINITY;
+                  if (aOrder !== bOrder) return aOrder - bOrder;
 
                   return a.title.localeCompare(b.title);
                 })
@@ -369,9 +467,10 @@ export default function RouteEditListByWall({ routes }: { routes: AdminRoute[] }
                   >
                     {isRouteEdit && (
                       <input
-                        type="checkbox"
-                        checked={selectedRoutes.some(r => r.id === rope.id)}
-                        onChange={() => handleRouteSelect(rope)}
+                        type="radio"
+                        name="selected-route"
+                        checked={selectedRouteId === rope.id}
+                        onChange={() => setSelectedRouteId(rope.id)}
                         className="size-5"
                       />
                     )}
@@ -419,7 +518,10 @@ export default function RouteEditListByWall({ routes }: { routes: AdminRoute[] }
                           <p className="text-base font-bold truncate w-36">{rope.title}</p>
                           <p className="text-xs">{rope.grade}</p>
                         </div>
-                        <p>{formatDateMMDD(rope.setDate)}</p>
+                        <div className="text-right">
+                          <p>{formatDateMMDD(rope.setDate)}</p>
+                          <p className="text-xs text-white/60">#{rope.order ?? "-"}</p>
+                        </div>
                       </div>
                     )}
                   </motion.div>
