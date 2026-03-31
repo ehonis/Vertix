@@ -443,14 +443,12 @@ export default function RoutesPage({ user }: { user: AppUser | null | undefined 
                 <h2 className="font-barlow text-white font-bold text-2xl text-start place-self-start mb-2">
                   Sorted by wall position
                 </h2>
-                {user ? (
-                  <WallRoutes
-                    wall={wall}
-                    user={user}
-                    onData={handleRoutePopUp}
-                    refreshTrigger={refreshTrigger}
-                  />
-                ) : null}
+                <WallRoutes
+                  wall={wall}
+                  user={user ?? null}
+                  onData={handleRoutePopUp}
+                  refreshTrigger={refreshTrigger}
+                />
               </motion.div>
             )}
           </AnimatePresence>

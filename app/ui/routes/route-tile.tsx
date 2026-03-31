@@ -20,7 +20,7 @@ export default function RouteTile({
   communityGrades,
   bonusXp = 0,
 }: {
-  user: AppUser;
+  user: AppUser | null;
   id: string;
   color: string;
   name: string;

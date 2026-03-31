@@ -11,7 +11,7 @@ import type { WallPartKey } from "@/lib/wallLocations";
 
 interface WallRoutesProps {
   wall: WallPartKey | null;
-  user: AppUser;
+  user: AppUser | null;
   onData: (
     routeId: string,
     name: string,

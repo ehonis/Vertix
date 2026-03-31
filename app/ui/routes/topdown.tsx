@@ -95,7 +95,16 @@ export default function TopDown({ map, onData, initialSelection = null }: TopDow
   const aspectRatio = `${map.displayWidth} / ${map.displayHeight}`;
 
   return (
-    <div className="w-full overflow-hidden rounded-lg" style={{ aspectRatio }}>
+    <div className="relative w-full overflow-hidden rounded-lg" style={{ aspectRatio }}>
+      {selectedPart && (
+        <button
+          type="button"
+          onClick={() => setSelectedPart(null)}
+          className="absolute left-3 top-3 z-10 rounded-full border border-white/20 bg-slate-950/85 px-3 py-1.5 text-xs font-medium text-white shadow-lg backdrop-blur transition hover:bg-slate-900"
+        >
+          Back to full map
+        </button>
+      )}
       <svg
         viewBox={`${viewBox.minX} ${viewBox.minY} ${viewBox.width} ${viewBox.height}`}
         xmlns="http://www.w3.org/2000/svg"
