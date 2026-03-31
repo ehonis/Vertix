@@ -3,6 +3,8 @@ import { createConvexServerClient } from "@/lib/convexServer";
 import ClientGraph from "@/app/ui/admin/gym-statistics/client-graph";
 import type { RouteStatsRoute } from "@/lib/routeStats";
 
+export const dynamic = "force-dynamic";
+
 const getCurrentRopesABExcluded = async () => {
   const routes = await getAllRoutes();
   return routes.filter(
