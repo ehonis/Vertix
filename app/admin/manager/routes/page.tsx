@@ -7,8 +7,6 @@ import RouteEditListByWall from "@/app/ui/admin/route-edit/route-edit-list-by-wa
 import { api } from "@/convex/_generated/api";
 import { createConvexServerClient } from "@/lib/convexServer";
 
-export const dynamic = "force-dynamic";
-
 const getRoutes = async () => {
   const result = await createConvexServerClient().query(api.routes.searchRoutes, {
     text: "",

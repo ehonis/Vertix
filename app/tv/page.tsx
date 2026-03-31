@@ -1,8 +1,6 @@
 import TVSlider from "../ui/tv/tv-slider";
 import { getTvData } from "@/lib/tv";
 
-export const dynamic = "force-dynamic";
-
 export default async function TV() {
   const {
     slides,
