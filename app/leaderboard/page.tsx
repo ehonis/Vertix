@@ -3,6 +3,8 @@ import { api } from "@/convex/_generated/api";
 import { createConvexServerClient } from "@/lib/convexServer";
 import Leaderboard from "../ui/leaderboard/leaderboard";
 
+export const dynamic = "force-dynamic";
+
 export default async function LeaderboardPage() {
   const session = await auth();
   const user = session?.user ?? null;

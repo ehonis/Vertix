@@ -1,5 +1,3 @@
-"use server";
-
 import Link from "next/link";
 
 import { redirect } from "next/navigation";
@@ -8,6 +6,8 @@ import NewRouteButton from "@/app/ui/admin/route-edit/new-route-button";
 import RouteEditListByWall from "@/app/ui/admin/route-edit/route-edit-list-by-wall";
 import { api } from "@/convex/_generated/api";
 import { createConvexServerClient } from "@/lib/convexServer";
+
+export const dynamic = "force-dynamic";
 
 const getRoutes = async () => {
   const result = await createConvexServerClient().query(api.routes.searchRoutes, {

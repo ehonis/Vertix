@@ -7,6 +7,8 @@ import CreatedSlides from "@/app/ui/admin/tv/fetched-created-slides";
 import AddButton from "@/app/ui/admin/tv/add-button";
 import Link from "next/link";
 
+export const dynamic = "force-dynamic";
+
 export default function TVManager() {
   return (
     <div className="w-full flex justify-center font-barlow">
