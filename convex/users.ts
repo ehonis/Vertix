@@ -104,13 +104,13 @@ export const isUsernameAvailable = query({
     const existing = await ctx.db
       .query("users")
       .withIndex("by_username", q => q.eq("username", args.username))
-      .unique();
+      .take(2);
 
-    if (!existing) {
+    if (existing.length === 0) {
       return true;
     }
 
-    if (args.excludeUserId && existing._id === args.excludeUserId) {
+    if (args.excludeUserId && existing.every(user => user._id === args.excludeUserId)) {
       return true;
     }
 
@@ -150,10 +150,12 @@ export const updateUserProfile = mutation({
 export const getUserByUsername = query({
   args: { username: v.string() },
   handler: async (ctx, args) => {
-    return await ctx.db
+    const users = await ctx.db
       .query("users")
       .withIndex("by_username", q => q.eq("username", args.username))
-      .unique();
+      .take(1);
+
+    return users[0] ?? null;
   },
 });
 

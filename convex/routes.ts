@@ -154,10 +154,11 @@ export const getRouteByLegacyOrConvexId = query({
 export const getProfileDashboardData = query({
   args: { username: v.string() },
   handler: async (ctx, args) => {
-    const profileUser = await ctx.db
+    const profileUsers = await ctx.db
       .query("users")
       .withIndex("by_username", q => q.eq("username", args.username))
-      .unique();
+      .take(1);
+    const profileUser = profileUsers[0] ?? null;
 
     if (!profileUser) {
       return null;
