@@ -59,10 +59,18 @@ export const getWallRoutes = query({
 
     const currentUser: Doc<"users"> | null = await ctx.runQuery(api.users.getCurrent, {});
     const hasRouteData = (await ctx.db.query("routes").take(1)).length > 0;
-    const routeDocs = await ctx.db
+    const routeDocsByWall = await ctx.db
       .query("routes")
       .withIndex("by_wall", q => q.eq("gymWallId", wall._id))
       .take(100);
+    const fallbackRouteDocs = (await ctx.db.query("routes").take(10000)).filter(
+      route => route.legacyLocationKey === args.wallPart
+    );
+    const routeDocs = Array.from(
+      new Map(
+        [...routeDocsByWall, ...fallbackRouteDocs].map(route => [route._id, route] as const)
+      ).values()
+    );
 
     const activeRoutes = routeDocs.filter(route => !route.isArchived);
     const location = wall.partKey;
