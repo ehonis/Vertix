@@ -9,6 +9,7 @@
     "lint": "eslint .",
     "convex:dev": "convex dev",
     "convex:deploy": "convex deploy",
+    "convex:sync-mobile": "node --import tsx scripts/sync-convex-mobile-types.ts",
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,css,scss,md}\"",
     "migrate:routes-to-convex": "node --import tsx scripts/migrate-routes-to-convex.ts"
   },

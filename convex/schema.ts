@@ -297,6 +297,43 @@ export default defineSchema({
     .index("by_user_year_month", ["userId", "year", "month"])
     .index("by_legacy_prisma_id", ["legacyPrismaId"]),
 
+  climbingSessions: defineTable({
+    userId: v.id("users"),
+    type: v.union(
+      v.literal("AUTO"),
+      v.literal("POWER"),
+      v.literal("POWER_ENDURANCE"),
+      v.literal("TENSION_BOARD"),
+      v.literal("COMPETITION"),
+      v.literal("ENDURANCE"),
+      v.literal("WORKOUT"),
+      v.literal("FUN"),
+      v.literal("CUSTOM")
+    ),
+    name: v.optional(v.string()),
+    status: v.union(v.literal("ACTIVE"), v.literal("COMPLETED"), v.literal("CANCELLED")),
+    startedAt: v.number(),
+    endedAt: v.optional(v.number()),
+    lastActivityAt: v.number(),
+    sessionDate: v.optional(v.string()),
+    timeSlot: v.optional(v.string()),
+    isRetroactive: v.optional(v.boolean()),
+    isCompetition: v.optional(v.boolean()),
+    competitionType: v.optional(v.union(v.literal("ONE_DAY_COMP"), v.literal("THREE_WEEK_COMP"))),
+    competitionId: v.optional(v.string()),
+  })
+    .index("by_user", ["userId"])
+    .index("by_user_and_status", ["userId", "status"]),
+
+  routeBounties: defineTable({
+    routeId: v.id("routes"),
+    createdByUserId: v.id("users"),
+    isActive: v.boolean(),
+    startedAt: v.number(),
+  })
+    .index("by_route", ["routeId"])
+    .index("by_route_and_active", ["routeId", "isActive"]),
+
   tvSlides: defineTable({
     type: tvSlideType,
     imageUrl: v.optional(v.string()),
