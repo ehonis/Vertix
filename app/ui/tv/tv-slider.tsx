@@ -66,14 +66,18 @@ export default function TVSlider({
     };
   }, []);
 
-  const slides = tvData.slides.filter(
-    slide =>
-      slide.type == "STATS" ||
+  const slides = tvData.slides.filter(slide => {
+    if (slide.type === "FEATURED_ROUTE") {
+      return slide.routes.length > 0;
+    }
+
+    return (
+      slide.type === "STATS" ||
       slide.type === "LOGO" ||
       slide.type === "LEADERBOARD" ||
-      slide.type === "FEATURED_ROUTE" ||
       slide.type === "IMAGE"
-  );
+    );
+  });
 
   if (slides.length === 0) {
     return (
