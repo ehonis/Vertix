@@ -538,29 +538,25 @@ export const completeRoute = mutation({
   },
 });
 
-export const updateRouteSortOrders = mutation({
+export const reorderWallRoutes = mutation({
   args: {
-    routes: v.array(
-      v.object({
-        id: v.string(),
-        order: v.number(),
-      })
-    ),
+    wallPart: v.string(),
+    orderedRouteIds: v.array(v.string()),
   },
   handler: async (ctx, args) => {
-    let updatedCount = 0;
+    // Resolve every id up front so we can fail fast on a bad payload.
+    const routes = await Promise.all(
+      args.orderedRouteIds.map(id => findRouteByLegacyOrConvexId(ctx, id))
+    );
 
-    for (const routeUpdate of args.routes) {
-      const route = await findRouteByLegacyOrConvexId(ctx, routeUpdate.id);
-      if (!route) {
-        continue;
-      }
-
-      await ctx.db.patch(route._id, { sortOrder: routeUpdate.order });
-      updatedCount += 1;
+    for (let i = 0; i < routes.length; i++) {
+      const route = routes[i];
+      if (!route) continue;
+      // Single source of truth: position in the array == sortOrder.
+      await ctx.db.patch(route._id, { sortOrder: i });
     }
 
-    return { updatedCount };
+    return { updatedCount: routes.filter(Boolean).length };
   },
 });
 
@@ -962,27 +958,9 @@ async function getCommunityGrades(ctx: QueryCtx, routeId: Doc<"routes">["_id"]) 
 }
 
 function compareRoutes(a: RouteReadModel, b: RouteReadModel) {
-  const ax = typeof a.x === "number" ? a.x : Number.POSITIVE_INFINITY;
-  const bx = typeof b.x === "number" ? b.x : Number.POSITIVE_INFINITY;
-
-  if (ax !== bx) {
-    return ax - bx;
-  }
-
-  const ay = typeof a.y === "number" ? a.y : Number.POSITIVE_INFINITY;
-  const by = typeof b.y === "number" ? b.y : Number.POSITIVE_INFINITY;
-
-  if (ay !== by) {
-    return ay - by;
-  }
-
-  const aOrder = typeof a.order === "number" ? a.order : Number.POSITIVE_INFINITY;
-  const bOrder = typeof b.order === "number" ? b.order : Number.POSITIVE_INFINITY;
-
-  if (aOrder !== bOrder) {
-    return aOrder - bOrder;
-  }
-
+  const ao = a.order ?? Number.POSITIVE_INFINITY;
+  const bo = b.order ?? Number.POSITIVE_INFINITY;
+  if (ao !== bo) return ao - bo;
   return a.title.localeCompare(b.title);
 }
 

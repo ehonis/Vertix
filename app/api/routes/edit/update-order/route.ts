@@ -11,14 +11,19 @@ export async function PATCH(request: NextRequest) {
   }
 
   try {
-    const routes = await request.json();
-    const convex = createConvexServerClient();
+    const body = (await request.json()) as {
+      wallPart: string;
+      orderedRouteIds: string[];
+    };
 
-    const result = await convex.mutation(api.routes.updateRouteSortOrders, {
-      routes: routes.map((route: { id: string; order: number }) => ({
-        id: route.id,
-        order: route.order,
-      })),
+    if (!body?.wallPart || !Array.isArray(body.orderedRouteIds)) {
+      return NextResponse.json({ error: "Invalid payload" }, { status: 400 });
+    }
+
+    const convex = createConvexServerClient();
+    const result = await convex.mutation(api.routes.reorderWallRoutes, {
+      wallPart: body.wallPart,
+      orderedRouteIds: body.orderedRouteIds,
     });
 
     return NextResponse.json({

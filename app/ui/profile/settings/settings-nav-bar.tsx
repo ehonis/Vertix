@@ -5,6 +5,7 @@ import ProfileSettingsPane from "./profile-settings-pane";
 import clsx from "clsx";
 import Onboarding from "./onboarding";
 import type { AppUser } from "@/lib/appUser";
+
 export default function SettingsNavBar({ user }: { user: AppUser }) {
   const [activeTab, setActiveTab] = useState(
     user.isOnboarded ? "profile-settings" : "finish-onboarding"
@@ -16,35 +17,48 @@ export default function SettingsNavBar({ user }: { user: AppUser }) {
     }
   }, [user.isOnboarded]);
 
-  return (
-    <div className="w-full flex flex-col items-center">
-      <div className="flex gap-2 items-center justify-self-start justify-between w-xs md:w-md md:max-w-md">
-        <div className="flex items-center">
-          {!user.isOnboarded && (
-            <button
-              onClick={() => setActiveTab("finish-onboarding")}
-              className={clsx(
-                "font-barlow font-bold text-white rounded-t-md p-2 text-sm flex gap-2 items-center",
-                activeTab === "finish-onboarding" && "bg-slate-900 p-2 rounded-t-md"
-              )}
-            >
-              <div className="h-2 w-2 bg-green-500 rounded-full" />
-              <p className="md:text-lg">Finish Onboarding</p>
-            </button>
-          )}
-          <button
-            onClick={() => setActiveTab("profile-settings")}
-            className={clsx(
-              "font-barlow font-bold text-white text-sm p-2 rounded-t-md",
-              activeTab === "profile-settings" && "bg-slate-900 p-2 rounded-t-md"
-            )}
-          >
-            <p className="md:text-lg">Profile Settings</p>
-          </button>
-        </div>
-        <div className="flex justify-end"></div>
+  // Fully onboarded users skip the tab bar — no reason to show it.
+  if (user.isOnboarded) {
+    return (
+      <div className="w-full">
+        <ProfileSettingsPane user={user} />
       </div>
-      <div className="flex flex-col gap-2 max-w-xs md:max-w-md">
+    );
+  }
+
+  return (
+    <div className="w-full flex flex-col gap-3">
+      {/* Segmented control */}
+      <div className="flex gap-1 p-1 bg-slate-900/80 rounded-xl font-barlow">
+        <button
+          onClick={() => setActiveTab("finish-onboarding")}
+          className={clsx(
+            "flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-sm font-bold text-white transition-colors",
+            activeTab === "finish-onboarding"
+              ? "bg-bg2 shadow-sm"
+              : "text-white/60 hover:text-white"
+          )}
+        >
+          <span className="relative flex h-2 w-2">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
+            <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500" />
+          </span>
+          Finish Onboarding
+        </button>
+        <button
+          onClick={() => setActiveTab("profile-settings")}
+          className={clsx(
+            "flex-1 px-3 py-2 rounded-lg text-sm font-bold text-white transition-colors",
+            activeTab === "profile-settings"
+              ? "bg-bg2 shadow-sm"
+              : "text-white/60 hover:text-white"
+          )}
+        >
+          Profile Settings
+        </button>
+      </div>
+
+      <div className="w-full">
         {activeTab === "finish-onboarding" && <Onboarding user={user} />}
         {activeTab === "profile-settings" && <ProfileSettingsPane user={user} />}
       </div>

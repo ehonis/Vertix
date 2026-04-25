@@ -17,22 +17,19 @@ export default function UserProfile() {
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
+      if (!(event.target instanceof Node)) return;
+      // Ignore clicks inside the menu itself or on the trigger (image/svg)
       if (
-        event.target instanceof Node &&
-        profileRef.current &&
-        !profileRef.current.contains(event.target) &&
-        // Check imageRef and svgRef as needed
-        ((imageRef.current && imageRef.current.contains(event.target)) ||
-          (svgRef.current && svgRef.current.contains(event.target)))
+        (profileRef.current && profileRef.current.contains(event.target)) ||
+        (imageRef.current && imageRef.current.contains(event.target)) ||
+        (svgRef.current && svgRef.current.contains(event.target))
       ) {
-        // Do nothing if click is inside
         return;
       }
       setIsProfilePopUp(false);
     };
     document.addEventListener("mousedown", handleClickOutside);
 
-    // Cleanup the listener on unmount
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
@@ -110,7 +107,7 @@ export default function UserProfile() {
     );
   } else {
     return (
-      <div>
+      <div className="relative">
         {user.image ? (
           <Image
             src={user.image}
@@ -142,41 +139,55 @@ export default function UserProfile() {
 
         <div
           ref={profileRef}
+          aria-hidden={!isProfilePopUp}
           className={clsx(
-            "z-50 fixed flex flex-col  h-max w-56  bg-black top-[5.2rem] justify-start transition-all p-3 duration-700 transform gap-3 right-0 button-container rounded-sm cursor-default",
-            isProfilePopUp ? "opacity-100 -translate-x-2 " : "opacity-0 translate-x-100 "
+            "z-50 absolute right-0 top-full mt-3 flex flex-col w-64 bg-black/95 backdrop-blur-md border border-white/10 shadow-2xl shadow-black/50 p-2 rounded-lg cursor-default origin-top-right",
+            "transition-all duration-200 ease-out",
+            isProfilePopUp
+              ? "opacity-100 scale-100 translate-y-0 pointer-events-auto"
+              : "opacity-0 scale-95 -translate-y-2 pointer-events-none"
           )}
         >
-          <p className="text-white font-bold">
-            Hello, <span>{user.name}</span>
-          </p>
+          <div className="px-3 py-2 border-b border-white/10 mb-1">
+            <p className="text-[10px] uppercase tracking-wider text-gray-500 font-tomorrow">
+              Signed in as
+            </p>
+            <p className="text-white font-bold font-barlow truncate">{user.name}</p>
+          </div>
 
-          {menuItems.map((item, index) => (
-            <Link
-              key={index}
-              href={item.href}
-              className={clsx(
-                "flex blue-button rounded-sm p-1 gap-2 group hover:bg-white transition-all duration-200",
-                item.text === "Admin Center" && "purple-button"
-              )}
-              onClick={handleClick}
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={1.5}
-                stroke="currentColor"
-                className="size-6 stroke-white group-hover:stroke-black"
-              >
-                {item.icon}
-              </svg>
+          <div className="flex flex-col gap-0.5">
+            {menuItems.map((item, index) => {
+              const isAdmin = item.text === "Admin Center";
+              return (
+                <Link
+                  key={index}
+                  href={item.href}
+                  tabIndex={isProfilePopUp ? 0 : -1}
+                  className={clsx(
+                    "flex items-center gap-3 rounded-md px-3 py-2 group transition-colors duration-150",
+                    isAdmin
+                      ? "text-purple-300 hover:bg-purple-500/15 hover:text-purple-200"
+                      : "text-gray-300 hover:bg-white/10 hover:text-white"
+                  )}
+                  onClick={handleClick}
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={1.75}
+                    stroke="currentColor"
+                    className="size-5 shrink-0"
+                  >
+                    {item.icon}
+                  </svg>
+                  <span className="font-barlow font-medium text-sm">{item.text}</span>
+                </Link>
+              );
+            })}
+          </div>
 
-              <p className="text-white font-bold group-hover:text-black">{item.text}</p>
-            </Link>
-          ))}
-
-          <div className="flex justify-end">
+          <div className="border-t border-white/10 mt-1 pt-2 px-1 pb-1 flex justify-end">
             <SignOut />
           </div>
         </div>

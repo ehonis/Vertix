@@ -33,29 +33,13 @@ export default function RouteEditListByWall({ routes }: { routes: AdminRoute[] }
   const router = useRouter();
   const searchParams = useSearchParams();
 
+  // Single source of truth for ordering: sortOrder (falls back to title so
+  // unordered routes get a stable, deterministic position).
   const sortRoutesForWall = useCallback((wallRoutes: AdminRoute[]) => {
     return [...wallRoutes].sort((a, b) => {
-      const ax = typeof a.x === "number" ? a.x : Number.POSITIVE_INFINITY;
-      const bx = typeof b.x === "number" ? b.x : Number.POSITIVE_INFINITY;
-
-      if (ax !== bx) {
-        return ax - bx;
-      }
-
-      const ay = typeof a.y === "number" ? a.y : Number.POSITIVE_INFINITY;
-      const by = typeof b.y === "number" ? b.y : Number.POSITIVE_INFINITY;
-
-      if (ay !== by) {
-        return ay - by;
-      }
-
-      const aOrder = typeof a.order === "number" ? a.order : Number.POSITIVE_INFINITY;
-      const bOrder = typeof b.order === "number" ? b.order : Number.POSITIVE_INFINITY;
-
-      if (aOrder !== bOrder) {
-        return aOrder - bOrder;
-      }
-
+      const ao = a.order ?? Number.POSITIVE_INFINITY;
+      const bo = b.order ?? Number.POSITIVE_INFINITY;
+      if (ao !== bo) return ao - bo;
       return a.title.localeCompare(b.title);
     });
   }, []);
@@ -172,20 +156,16 @@ export default function RouteEditListByWall({ routes }: { routes: AdminRoute[] }
     ? (currentRoutes.find(route => route.id === selectedRouteId) ?? null)
     : null;
 
-  const handleOrderUpdate = async (routesToUpdate: AdminRoute[]) => {
+  const persistOrder = async (ordered: AdminRoute[]) => {
+    if (!selectedWall) return false;
     try {
       const response = await fetch("/api/routes/edit/update-order", {
         method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(
-          routesToUpdate
-            .filter(
-              (route): route is AdminRoute & { order: number } => typeof route.order === "number"
-            )
-            .map(route => ({ id: route.id, order: route.order }))
-        ),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          wallPart: selectedWall,
+          orderedRouteIds: ordered.map(r => r.id),
+        }),
       });
 
       if (!response.ok) {
@@ -194,50 +174,31 @@ export default function RouteEditListByWall({ routes }: { routes: AdminRoute[] }
       }
 
       return true;
-    } catch (error) {
+    } catch {
       showNotification({ message: "Error updating route order", color: "red" });
       return false;
     }
   };
 
   const handleMoveRoute = async (direction: "up" | "down") => {
-    if (!selectedRouteId) {
-      return;
-    }
+    if (!selectedRouteId) return;
 
-    const sortedRoutes = sortRoutesForWall(currentRoutes);
-    const currentIndex = sortedRoutes.findIndex(route => route.id === selectedRouteId);
+    const ordered = sortRoutesForWall(currentRoutes);
+    const from = ordered.findIndex(r => r.id === selectedRouteId);
+    if (from === -1) return;
 
-    if (currentIndex === -1) {
-      return;
-    }
+    const to = direction === "up" ? from - 1 : from + 1;
+    if (to < 0 || to >= ordered.length) return;
 
-    const swapIndex = direction === "up" ? currentIndex - 1 : currentIndex + 1;
+    // Splice + renumber. Position in the array IS the order.
+    const next = [...ordered];
+    const [moved] = next.splice(from, 1);
+    next.splice(to, 0, moved);
+    const renumbered = next.map((r, i) => ({ ...r, order: i }));
 
-    if (swapIndex < 0 || swapIndex >= sortedRoutes.length) {
-      return;
-    }
+    setCurrentRoutes(renumbered);
 
-    const currentRoute = sortedRoutes[currentIndex];
-    const swapRoute = sortedRoutes[swapIndex];
-    const currentOrder = currentRoute.order ?? currentIndex;
-    const swapOrder = swapRoute.order ?? swapIndex;
-
-    const nextRoutes = currentRoutes.map(route => {
-      if (route.id === currentRoute.id) {
-        return { ...route, order: swapOrder };
-      }
-
-      if (route.id === swapRoute.id) {
-        return { ...route, order: currentOrder };
-      }
-
-      return route;
-    });
-
-    setCurrentRoutes(sortRoutesForWall(nextRoutes));
-    const ok = await handleOrderUpdate(nextRoutes);
-
+    const ok = await persistOrder(renumbered);
     if (ok) {
       showNotification({ message: "Route order updated", color: "green" });
       router.refresh();
@@ -441,23 +402,7 @@ export default function RouteEditListByWall({ routes }: { routes: AdminRoute[] }
               </p>
             )}
             <div className="flex flex-col gap-2 text-white font-barlow">
-              {currentRoutes
-                .sort((a, b) => {
-                  const ax = typeof a.x === "number" ? a.x : Number.POSITIVE_INFINITY;
-                  const bx = typeof b.x === "number" ? b.x : Number.POSITIVE_INFINITY;
-                  if (ax !== bx) return ax - bx;
-
-                  const ay = typeof a.y === "number" ? a.y : Number.POSITIVE_INFINITY;
-                  const by = typeof b.y === "number" ? b.y : Number.POSITIVE_INFINITY;
-                  if (ay !== by) return ay - by;
-
-                  const aOrder = typeof a.order === "number" ? a.order : Number.POSITIVE_INFINITY;
-                  const bOrder = typeof b.order === "number" ? b.order : Number.POSITIVE_INFINITY;
-                  if (aOrder !== bOrder) return aOrder - bOrder;
-
-                  return a.title.localeCompare(b.title);
-                })
-                .map(rope => (
+              {sortRoutesForWall(currentRoutes).map(rope => (
                   <motion.div
                     key={rope.id}
                     className="flex items-center gap-2 w-full"
