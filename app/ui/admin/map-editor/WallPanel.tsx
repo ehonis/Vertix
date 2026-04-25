@@ -65,6 +65,7 @@ export function WallPanel({
                   shapes: [],
                   isInteractive: true,
                   isActive: true,
+                  allowOverflow: false,
                   sortOrder: prev.length,
                 },
               ]);
@@ -157,6 +158,19 @@ export function WallPanel({
                   />
                   <span className="font-mono text-[11px] text-zinc-400">{selectedWall.fillColor}</span>
                 </div>
+                <div className="mt-2 flex items-center gap-2">
+                  {QUICK_PICK_COLORS.map((color) => (
+                    <button
+                      key={color}
+                      type="button"
+                      className={`h-6 w-6 rounded-md border transition ${selectedWall.fillColor === color ? "border-white ring-1 ring-white/50" : "border-white/[0.08] hover:border-white/25"}`}
+                      style={{ backgroundColor: color }}
+                      onClick={() => patchWall(setWalls, selectedIndex, { fillColor: color })}
+                      aria-label={`Use ${color}`}
+                      title={color}
+                    />
+                  ))}
+                </div>
               </div>
               <div>
                 <label className="mb-1 block text-[10px] font-medium uppercase tracking-wider text-zinc-500">Opacity</label>
@@ -210,6 +224,7 @@ export function WallPanel({
             <div className="flex items-center gap-2">
               <CheckField label="Interactive" checked={selectedWall.isInteractive} onChange={(value) => patchWall(setWalls, selectedIndex, { isInteractive: value })} />
               <CheckField label="Active" checked={selectedWall.isActive} onChange={(value) => patchWall(setWalls, selectedIndex, { isActive: value })} />
+              <CheckField label="Allow Overflow" checked={selectedWall.allowOverflow} onChange={(value) => patchWall(setWalls, selectedIndex, { allowOverflow: value })} />
             </div>
           </div>
 
@@ -220,7 +235,6 @@ export function WallPanel({
               {([
                 { mode: "segment" as const, label: "Segment", icon: <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><line x1="5" y1="12" x2="19" y2="12"/></svg> },
                 { mode: "polygon" as const, label: "Polygon", icon: <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2l10 7-4 11H6L2 9z"/></svg> },
-                { mode: "triangle" as const, label: "Triangle", icon: <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 3L22 21H2z"/></svg> },
               ] as const).map(({ mode, label, icon }) => (
                 <button
                   key={mode}
@@ -238,6 +252,20 @@ export function WallPanel({
                   {label}
                 </button>
               ))}
+              <button
+                className={`flex flex-col items-center gap-1 rounded-lg py-2 text-[10px] font-semibold transition ${
+                  drawingMode === "triangle"
+                    ? "bg-blue-500/20 text-blue-400 ring-1 ring-blue-500/30"
+                    : "bg-white/[0.03] text-zinc-400 hover:bg-white/[0.06] hover:text-white"
+                }`}
+                onClick={() => {
+                  setDrawingTarget({ type: "wall", wallIndex: selectedIndex });
+                  setDrawingMode("triangle");
+                }}
+              >
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 3L22 21H2z"/></svg>
+                Triangle
+              </button>
             </div>
           </div>
 
@@ -338,6 +366,101 @@ export function WallPanel({
                           />
                         </div>
                       )}
+                      {shape.type === "segment" && shape.segment && (
+                        <div className="flex items-center gap-1">
+                          <label className="text-[9px] text-zinc-600">L</label>
+                          <input
+                            type="number"
+                            min={2}
+                            step={1}
+                            className="h-5 w-12 rounded border border-white/[0.08] bg-white/[0.04] px-1 text-center text-[10px] tabular-nums text-zinc-300 outline-none transition focus:border-blue-500/50"
+                            title="Length"
+                            value={Math.round(Math.hypot(shape.segment.end.x - shape.segment.start.x, shape.segment.end.y - shape.segment.start.y))}
+                            onClick={(e) => e.stopPropagation()}
+                            onChange={(event) => {
+                              const length = Math.max(2, Number(event.target.value) || 2);
+                              setWalls((prev) =>
+                                prev.map((wall, wallIndex) => {
+                                  if (wallIndex !== selectedIndex) return wall;
+                                  const nextShapes = wall.shapes.map((candidate, index) => {
+                                    if (index !== shapeIndex || candidate.type !== "segment" || !candidate.segment) return candidate;
+                                    const dx = candidate.segment.end.x - candidate.segment.start.x;
+                                    const dy = candidate.segment.end.y - candidate.segment.start.y;
+                                    const currentLength = Math.hypot(dx, dy) || 1;
+                                    const unitX = dx / currentLength;
+                                    const unitY = dy / currentLength;
+                                    const nextSegment = {
+                                      ...candidate.segment,
+                                      end: {
+                                        x: candidate.segment.start.x + unitX * length,
+                                        y: candidate.segment.start.y + unitY * length,
+                                      },
+                                    };
+                                    return { ...candidate, segment: nextSegment, bounds: getWallBounds([{ ...candidate, segment: nextSegment }]) };
+                                  });
+                                  return { ...wall, shapes: nextShapes, bounds: getWallBounds(nextShapes) };
+                                })
+                              );
+                            }}
+                          />
+                        </div>
+                      )}
+                      {shape.type === "polygon" && shape.points && shape.points.length >= 3 && (
+                        <>
+                          <div className="flex items-center gap-1">
+                            <label className="text-[9px] text-zinc-600">W</label>
+                            <input
+                              type="number"
+                              min={1}
+                              step={1}
+                              className="h-5 w-12 rounded border border-white/[0.08] bg-white/[0.04] px-1 text-center text-[10px] tabular-nums text-zinc-300 outline-none transition focus:border-blue-500/50"
+                              title="Width"
+                              value={Math.round(pointsBounds(shape.points).width)}
+                              onClick={(e) => e.stopPropagation()}
+                              onChange={(event) => {
+                                const width = Math.max(1, Number(event.target.value) || 1);
+                                setWalls((prev) =>
+                                  prev.map((wall, wallIndex) => {
+                                    if (wallIndex !== selectedIndex) return wall;
+                                    const nextShapes = wall.shapes.map((candidate, index) =>
+                                      index === shapeIndex && candidate.type === "polygon" && candidate.points
+                                        ? resizeWallPolygon(candidate, { width })
+                                        : candidate
+                                    );
+                                    return { ...wall, shapes: nextShapes, bounds: getWallBounds(nextShapes) };
+                                  })
+                                );
+                              }}
+                            />
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <label className="text-[9px] text-zinc-600">H</label>
+                            <input
+                              type="number"
+                              min={1}
+                              step={1}
+                              className="h-5 w-12 rounded border border-white/[0.08] bg-white/[0.04] px-1 text-center text-[10px] tabular-nums text-zinc-300 outline-none transition focus:border-blue-500/50"
+                              title="Height"
+                              value={Math.round(pointsBounds(shape.points).height)}
+                              onClick={(e) => e.stopPropagation()}
+                              onChange={(event) => {
+                                const height = Math.max(1, Number(event.target.value) || 1);
+                                setWalls((prev) =>
+                                  prev.map((wall, wallIndex) => {
+                                    if (wallIndex !== selectedIndex) return wall;
+                                    const nextShapes = wall.shapes.map((candidate, index) =>
+                                      index === shapeIndex && candidate.type === "polygon" && candidate.points
+                                        ? resizeWallPolygon(candidate, { height })
+                                        : candidate
+                                    );
+                                    return { ...wall, shapes: nextShapes, bounds: getWallBounds(nextShapes) };
+                                  })
+                                );
+                              }}
+                            />
+                          </div>
+                        </>
+                      )}
                       <div className="flex items-center gap-1">
                         <label className="text-[9px] text-zinc-600">
                           <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M23 4v6h-6M1 20v-6h6"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>
@@ -402,6 +525,29 @@ function patchWall(
   setWalls((prev) => prev.map((wall, wallIndex) => (wallIndex === index ? { ...wall, ...patch } : wall)));
 }
 
+const QUICK_PICK_COLORS = ["#8200DB", "#1447E6"] as const;
+
+function resizeWallPolygon(shape: EditableShape, size: { width?: number; height?: number }) {
+  if (shape.type !== "polygon" || !shape.points?.length) return shape;
+
+  const bounds = pointsBounds(shape.points);
+  const nextWidth = size.width ?? bounds.width;
+  const nextHeight = size.height ?? bounds.height;
+  const widthScale = bounds.width === 0 ? 1 : nextWidth / bounds.width;
+  const heightScale = bounds.height === 0 ? 1 : nextHeight / bounds.height;
+
+  const nextPoints = shape.points.map((point) => ({
+    x: bounds.x + (point.x - bounds.x) * widthScale,
+    y: bounds.y + (point.y - bounds.y) * heightScale,
+  }));
+
+  return {
+    ...shape,
+    points: nextPoints,
+    bounds: pointsBounds(nextPoints),
+  };
+}
+
 function TextField({ label, value, onChange }: { label: string; value: string; onChange: (value: string) => void }) {
   return (
     <div>
@@ -454,6 +600,14 @@ function getWallBounds(shapes: EditableWall["shapes"]) {
   const minY = Math.min(...boxes.map((box) => box.y));
   const maxX = Math.max(...boxes.map((box) => box.x + box.width));
   const maxY = Math.max(...boxes.map((box) => box.y + box.height));
+  return { x: minX, y: minY, width: maxX - minX, height: maxY - minY };
+}
+
+function pointsBounds(points: Array<{ x: number; y: number }>) {
+  const minX = Math.min(...points.map((point) => point.x));
+  const minY = Math.min(...points.map((point) => point.y));
+  const maxX = Math.max(...points.map((point) => point.x));
+  const maxY = Math.max(...points.map((point) => point.y));
   return { x: minX, y: minY, width: maxX - minX, height: maxY - minY };
 }
 

@@ -1,17 +1,32 @@
 "use client";
 
 import React from "react";
-import type { EditableLabel } from "./MapEditorShell";
+import type { EditableFeature, EditableLabel, EditableWall } from "./MapEditorShell";
 
 type LabelPanelProps = {
   labels: EditableLabel[];
   setLabels: React.Dispatch<React.SetStateAction<EditableLabel[]>>;
   selectedIndex: number | null;
   setSelectedIndex: (index: number | null) => void;
+  walls: EditableWall[];
+  features: EditableFeature[];
 };
 
-export function LabelPanel({ labels, setLabels, selectedIndex, setSelectedIndex }: LabelPanelProps) {
+export function LabelPanel({ labels, setLabels, selectedIndex, setSelectedIndex, walls, features }: LabelPanelProps) {
   const selected = selectedIndex !== null ? labels[selectedIndex] : null;
+  const backgroundQuickPicks = React.useMemo(() => {
+    const values = [
+      ...walls.map((wall) => wall.fillColor).filter(Boolean),
+      ...features.flatMap((feature) => {
+        if (feature.type === "overhang") {
+          return [feature.patternColor, feature.strokeColor].filter(Boolean);
+        }
+        return [feature.fillColor, feature.strokeColor].filter(Boolean);
+      }),
+    ];
+
+    return Array.from(new Set(values));
+  }, [walls, features]);
 
   return (
     <div className="flex flex-col text-white">
@@ -24,7 +39,20 @@ export function LabelPanel({ labels, setLabels, selectedIndex, setSelectedIndex 
           <button
             className="flex h-6 items-center gap-1 rounded-md border border-dashed border-white/[0.1] px-2 text-[11px] font-medium text-zinc-400 transition hover:border-blue-500/40 hover:bg-blue-500/5 hover:text-blue-400"
             onClick={() => {
-              setLabels((prev) => [...prev, { id: `label-${prev.length + 1}`, x: 40, y: 40, text: `Label ${prev.length + 1}`, fontSize: 12, fill: "#FFFFFF", backgroundColor: "#000000", backgroundOpacity: 0.75 }]);
+              setLabels((prev) => [...prev, {
+                id: `label-${prev.length + 1}`,
+                x: 40,
+                y: 40,
+                text: `Label ${prev.length + 1}`,
+                fontSize: 12,
+                padding: 4,
+                rotation: 0,
+                fill: "#FFFFFF",
+                backgroundColor: "#000000",
+                backgroundOpacity: 0.75,
+                outlineColor: "#FFFFFF",
+                outlineOpacity: 0,
+              }]);
               setSelectedIndex(labels.length);
             }}
           >
@@ -72,6 +100,11 @@ export function LabelPanel({ labels, setLabels, selectedIndex, setSelectedIndex 
               <NumberField label="Y" value={selected.y} onChange={(v) => patch(setLabels, selectedIndex, { y: v })} />
               <NumberField label="Size" value={selected.fontSize} onChange={(v) => patch(setLabels, selectedIndex, { fontSize: v })} />
             </div>
+
+            <div className="grid grid-cols-2 gap-2">
+              <NumberField label="Padding" value={selected.padding} onChange={(v) => patch(setLabels, selectedIndex, { padding: Math.max(0, v) })} />
+              <NumberField label="Rotation" value={selected.rotation} onChange={(v) => patch(setLabels, selectedIndex, { rotation: v })} />
+            </div>
           </div>
 
           <div className="space-y-3 p-3">
@@ -92,6 +125,45 @@ export function LabelPanel({ labels, setLabels, selectedIndex, setSelectedIndex 
                   <span className="font-mono text-[11px] text-zinc-400">{selected.backgroundColor}</span>
                 </div>
               </div>
+              <div>
+                <label className="mb-1 block text-[10px] font-medium uppercase tracking-wider text-zinc-500">Outline</label>
+                <div className="flex items-center gap-2">
+                  <input type="color" className="h-8 w-8 cursor-pointer rounded-lg border border-white/[0.08] bg-transparent" value={selected.outlineColor} onChange={(e) => patch(setLabels, selectedIndex, { outlineColor: e.target.value })} />
+                  <span className="font-mono text-[11px] text-zinc-400">{selected.outlineColor}</span>
+                </div>
+              </div>
+            </div>
+
+            {backgroundQuickPicks.length > 0 && (
+              <div>
+                <label className="mb-1 block text-[10px] font-medium uppercase tracking-wider text-zinc-500">Background Quick Picks</label>
+                <div className="flex flex-wrap items-center gap-2">
+                  {backgroundQuickPicks.map((color) => (
+                    <button
+                      key={color}
+                      type="button"
+                      className={`h-6 w-6 rounded-md border transition ${selected.backgroundColor === color ? "border-white ring-1 ring-white/50" : "border-white/[0.08] hover:border-white/25"}`}
+                      style={{ backgroundColor: color }}
+                      onClick={() => patch(setLabels, selectedIndex, { backgroundColor: color })}
+                      aria-label={`Use ${color}`}
+                      title={color}
+                    />
+                  ))}
+                </div>
+              </div>
+            )}
+
+            <div className="grid grid-cols-2 gap-3">
+              <RangeField
+                label="Background Opacity"
+                value={selected.backgroundOpacity}
+                onChange={(value) => patch(setLabels, selectedIndex, { backgroundOpacity: value })}
+              />
+              <RangeField
+                label="Outline Opacity"
+                value={selected.outlineOpacity}
+                onChange={(value) => patch(setLabels, selectedIndex, { outlineOpacity: value })}
+              />
             </div>
 
             {/* Delete label */}
@@ -129,6 +201,18 @@ function NumberField({ label, value, onChange }: { label: string; value: number;
     <div>
       <label className="mb-1 block text-[10px] font-medium uppercase tracking-wider text-zinc-500">{label}</label>
       <input type="number" className="h-8 w-full rounded-lg border border-white/[0.08] bg-white/[0.04] px-2.5 text-[12px] tabular-nums text-zinc-300 outline-none transition hover:bg-white/[0.06] focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/20" value={value} onChange={(e) => onChange(Number(e.target.value))} />
+    </div>
+  );
+}
+
+function RangeField({ label, value, onChange }: { label: string; value: number; onChange: (v: number) => void }) {
+  return (
+    <div>
+      <label className="mb-1 block text-[10px] font-medium uppercase tracking-wider text-zinc-500">{label}</label>
+      <div className="flex items-center gap-2">
+        <input type="range" min={0} max={1} step={0.05} className="h-8 w-full accent-blue-500" value={value} onChange={(e) => onChange(Number(e.target.value))} />
+        <span className="w-10 text-right text-[10px] tabular-nums text-zinc-500">{Math.round(value * 100)}%</span>
+      </div>
     </div>
   );
 }

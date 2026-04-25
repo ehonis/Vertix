@@ -128,7 +128,7 @@ export default function TopDown({ map, onData, initialSelection = null }: TopDow
             {map.labels.map(label => {
               const fontSize = label.fontSize ?? 12;
               const padding = label.padding ?? 4;
-              const width = label.text.length * fontSize * 0.6 + padding * 2;
+              const width = Math.max(label.text.length * fontSize * 0.62 + padding * 2, 36);
               const height = fontSize + padding * 2;
               return (
                 <g key={label.id} transform={label.transform?.value}>
@@ -140,14 +140,19 @@ export default function TopDown({ map, onData, initialSelection = null }: TopDow
                     rx={2}
                     fill={label.backgroundColor ?? "#000000"}
                     fillOpacity={label.backgroundOpacity ?? 0.7}
+                    stroke={label.outlineColor ?? "#FFFFFF"}
+                    strokeOpacity={label.outlineOpacity ?? 0}
+                    strokeWidth={(label.outlineOpacity ?? 0) > 0 ? 1 : 0}
                   />
                   <text
                     x={label.x}
-                    y={label.y + fontSize / 3}
+                    y={label.y}
                     fill={label.fill ?? "#FFFFFF"}
                     fontSize={fontSize}
                     textAnchor={label.textAnchor ?? "middle"}
                     fontWeight="500"
+                    dominantBaseline="middle"
+                    style={{ fontFamily: 'Inter, "SF Pro Display", "SF Pro Text", "Segoe UI", sans-serif' }}
                   >
                     {label.text}
                   </text>

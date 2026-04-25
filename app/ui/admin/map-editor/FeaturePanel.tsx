@@ -3,6 +3,8 @@
 import React from "react";
 import type { EditableFeature, EditableShape } from "./MapEditorShell";
 
+const QUICK_PICK_COLORS = ["#8200DB", "#1447E6"] as const;
+
 type FeaturePanelProps = {
   features: EditableFeature[];
   setFeatures: React.Dispatch<React.SetStateAction<EditableFeature[]>>;
@@ -47,7 +49,7 @@ export function FeaturePanel({
             onClick={() => {
               setFeatures((prev) => [
                 ...prev,
-                { id: `feature-${prev.length + 1}`, type: "non_climbing_area", name: `Feature ${prev.length + 1}`, fillColor: "#6B7280", fillOpacity: 0.35, shapes: [] },
+                { id: `feature-${prev.length + 1}`, type: "non_climbing_area", name: `Feature ${prev.length + 1}`, allowOverflow: false, fillColor: "#6B7280", fillOpacity: 0.35, shapes: [] },
               ]);
               setSelectedIndex(features.length);
             }}
@@ -137,6 +139,22 @@ export function FeaturePanel({
                   {(selected.type === "overhang" ? selected.patternColor : selected.fillColor) ?? (selected.type === "mat" ? "#3F3F46" : "#6B7280")}
                 </span>
               </div>
+              <div className="mt-2 flex items-center gap-2">
+                {QUICK_PICK_COLORS.map((color) => {
+                  const currentColor = (selected.type === "overhang" ? selected.patternColor : selected.fillColor) ?? (selected.type === "mat" ? "#3F3F46" : "#6B7280");
+                  return (
+                    <button
+                      key={color}
+                      type="button"
+                      className={`h-6 w-6 rounded-md border transition ${currentColor === color ? "border-white ring-1 ring-white/50" : "border-white/[0.08] hover:border-white/25"}`}
+                      style={{ backgroundColor: color }}
+                      onClick={() => patch(setFeatures, selectedIndex, selected.type === "overhang" ? { patternColor: color } : { fillColor: color })}
+                      aria-label={`Use ${color}`}
+                      title={color}
+                    />
+                  );
+                })}
+              </div>
             </div>
 
             {/* Opacity */}
@@ -188,6 +206,14 @@ export function FeaturePanel({
                 )}
               </div>
             </div>
+
+            <div className="flex items-center gap-2">
+              <CheckField
+                label="Allow Overflow"
+                checked={selected.allowOverflow}
+                onChange={(value) => patch(setFeatures, selectedIndex, { allowOverflow: value })}
+              />
+            </div>
           </div>
 
           {/* Drawing tools */}
@@ -197,7 +223,6 @@ export function FeaturePanel({
               {([
                 { mode: "segment" as const, label: "Segment", icon: <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><line x1="5" y1="12" x2="19" y2="12"/></svg> },
                 { mode: "polygon" as const, label: "Polygon", icon: <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2l10 7-4 11H6L2 9z"/></svg> },
-                { mode: "triangle" as const, label: "Triangle", icon: <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 3L22 21H2z"/></svg> },
               ] as const).map(({ mode, label, icon }) => (
                 <button
                   key={mode}
@@ -212,6 +237,20 @@ export function FeaturePanel({
                   {label}
                 </button>
               ))}
+              <button
+                className={`flex flex-col items-center gap-1 rounded-lg py-2 text-[10px] font-semibold transition ${
+                  drawingMode === "triangle"
+                    ? "bg-blue-500/20 text-blue-400 ring-1 ring-blue-500/30"
+                    : "bg-white/[0.03] text-zinc-400 hover:bg-white/[0.06] hover:text-white"
+                }`}
+                onClick={() => {
+                  setDrawingTarget({ type: "feature", featureIndex: selectedIndex });
+                  setDrawingMode("triangle");
+                }}
+              >
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 3L22 21H2z"/></svg>
+                Triangle
+              </button>
             </div>
           </div>
 
@@ -280,6 +319,45 @@ export function FeaturePanel({
                     </div>
                     {/* Inline edit fields */}
                     <div className="mt-1.5 flex items-center gap-1.5">
+                      {selected.type === "overhang" && getOverhangEdgeOptions(shape).length > 0 && (
+                        <div className="flex items-center gap-1">
+                          {getOverhangEdgeOptions(shape).map(({ key, label }) => {
+                            const hiddenEdges = shape.attributes?.hiddenEdges?.split(",").filter(Boolean) ?? [];
+                            const isHidden = hiddenEdges.includes(key);
+                            return (
+                              <button
+                                key={key}
+                                type="button"
+                                className={`rounded px-1.5 py-0.5 text-[9px] font-medium transition ${isHidden ? "bg-white/[0.04] text-zinc-600" : "bg-white/[0.08] text-zinc-300 hover:bg-white/[0.12]"}`}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setFeatures((prev) => prev.map((f, fi) => {
+                                    if (fi !== selectedIndex) return f;
+                                    const nextShapes = f.shapes.map((s, si) => {
+                                      if (si !== shapeIndex) return s;
+                                      const currentHidden = s.attributes?.hiddenEdges?.split(",").filter(Boolean) ?? [];
+                                      const nextHidden = currentHidden.includes(key)
+                                        ? currentHidden.filter((value) => value !== key)
+                                        : [...currentHidden, key];
+                                      return {
+                                        ...s,
+                                        attributes: {
+                                          ...s.attributes,
+                                          hiddenEdges: nextHidden.join(","),
+                                        },
+                                      };
+                                    });
+                                    return { ...f, shapes: nextShapes, bounds: getBounds(nextShapes) };
+                                  }));
+                                }}
+                                title={`${isHidden ? "Show" : "Hide"} ${label.toLowerCase()} side`}
+                              >
+                                {label}
+                              </button>
+                            );
+                          })}
+                        </div>
+                      )}
                       {shape.type === "segment" && shape.segment && (
                         <div className="flex items-center gap-1">
                           <label className="text-[9px] text-zinc-600">W</label>
@@ -348,6 +426,44 @@ export function FeaturePanel({
         </div>
       )}
     </div>
+  );
+}
+
+function getOverhangEdgeOptions(shape: EditableShape) {
+  if (shape.type === "segment" && shape.segment) {
+    return [
+      { key: "top", label: "Top" },
+      { key: "right", label: "Right" },
+      { key: "bottom", label: "Bottom" },
+      { key: "left", label: "Left" },
+    ];
+  }
+
+  if (shape.type === "polygon" && shape.points?.length) {
+    if (shape.points.length === 4) {
+      return [
+        { key: "top", label: "Top" },
+        { key: "right", label: "Right" },
+        { key: "bottom", label: "Bottom" },
+        { key: "left", label: "Left" },
+      ];
+    }
+
+    return shape.points.map((_, index) => ({
+      key: `edge-${index}`,
+      label: `E${index + 1}`,
+    }));
+  }
+
+  return [];
+}
+
+function CheckField({ label, checked, onChange }: { label: string; checked: boolean; onChange: (value: boolean) => void }) {
+  return (
+    <label className="flex cursor-pointer items-center gap-1.5 rounded-md px-2 py-1.5 text-[11px] text-zinc-400 transition hover:bg-white/[0.04] hover:text-zinc-300">
+      <input type="checkbox" className="accent-blue-500" checked={checked} onChange={(event) => onChange(event.target.checked)} />
+      {label}
+    </label>
   );
 }
 

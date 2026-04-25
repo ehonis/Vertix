@@ -16,6 +16,7 @@ type EditorTab = "walls" | "features" | "labels" | "settings";
 export type EditableShape = {
   id: string;
   type: "segment" | "polygon" | "path";
+  fillOpacity?: number;
   bounds?: { x: number; y: number; width: number; height: number };
   transform?: { value: string };
   rotation?: number; // degrees, rotates around shape center
@@ -47,6 +48,7 @@ export type EditableWall = {
   shapes: EditableShape[];
   isInteractive: boolean;
   isActive: boolean;
+  allowOverflow: boolean;
   sortOrder: number;
 };
 
@@ -54,6 +56,7 @@ export type EditableFeature = {
   id: string;
   type: "non_climbing_area" | "overhang" | "mat";
   name: string;
+  allowOverflow: boolean;
   fillColor?: string;
   fillOpacity?: number;
   strokeColor?: string;
@@ -70,9 +73,13 @@ export type EditableLabel = {
   y: number;
   text: string;
   fontSize: number;
+  padding: number;
+  rotation: number;
   fill: string;
   backgroundColor: string;
   backgroundOpacity: number;
+  outlineColor: string;
+  outlineOpacity: number;
 };
 
 export type MapSettings = {
@@ -94,6 +101,15 @@ export type ClipboardItem = {
     strokeWidth?: number;
   };
 } | null;
+
+type EditorSnapshot = {
+  walls: EditableWall[];
+  features: EditableFeature[];
+  labels: EditableLabel[];
+  mapSettings: MapSettings;
+};
+
+const MAX_HISTORY_ENTRIES = 100;
 
 export function MapEditorShell() {
   // Gym / area selection
@@ -118,6 +134,8 @@ export function MapEditorShell() {
   const [selectedFeatureIndex, setSelectedFeatureIndex] = useState<number | null>(null);
   const [selectedLabelIndex, setSelectedLabelIndex] = useState<number | null>(null);
   const [selectedShapeIndex, setSelectedShapeIndex] = useState<number | null>(null);
+  const [selectedWallShapeIndexes, setSelectedWallShapeIndexes] = useState<number[]>([]);
+  const [showWallNudgeOverlay, setShowWallNudgeOverlay] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [saveStatus, setSaveStatus] = useState<string | null>(null);
   const [drawingMode, setDrawingMode] = useState<"none" | "segment" | "polygon" | "triangle">("none");
@@ -129,6 +147,61 @@ export function MapEditorShell() {
 
   // Clipboard for copy/paste (operates on individual shapes)
   const [clipboard, setClipboard] = useState<ClipboardItem>(null);
+  const historyRef = React.useRef<EditorSnapshot[]>([]);
+  const lastSnapshotRef = React.useRef<EditorSnapshot | null>(null);
+  const isRestoringHistoryRef = React.useRef(false);
+  const isHydratingFromDbRef = React.useRef(false);
+  const hasLoadedAreaRef = React.useRef<Id<"gymAreas"> | null>(null);
+
+  const buildSnapshot = useCallback(
+    (): EditorSnapshot => ({
+      walls: structuredClone(walls),
+      features: structuredClone(features),
+      labels: structuredClone(labels),
+      mapSettings: structuredClone(mapSettings),
+    }),
+    [walls, features, labels, mapSettings]
+  );
+
+  const applySnapshot = useCallback((snapshot: EditorSnapshot) => {
+    isRestoringHistoryRef.current = true;
+    setWalls(structuredClone(snapshot.walls));
+    setFeatures(structuredClone(snapshot.features));
+    setLabels(structuredClone(snapshot.labels));
+    setMapSettings(structuredClone(snapshot.mapSettings));
+  }, []);
+
+  useEffect(() => {
+    const nextSnapshot = buildSnapshot();
+
+    if (isHydratingFromDbRef.current) {
+      historyRef.current = [];
+      lastSnapshotRef.current = nextSnapshot;
+      isHydratingFromDbRef.current = false;
+      return;
+    }
+
+    if (isRestoringHistoryRef.current) {
+      lastSnapshotRef.current = nextSnapshot;
+      isRestoringHistoryRef.current = false;
+      return;
+    }
+
+    if (!lastSnapshotRef.current) {
+      lastSnapshotRef.current = nextSnapshot;
+      return;
+    }
+
+    if (JSON.stringify(lastSnapshotRef.current) === JSON.stringify(nextSnapshot)) {
+      return;
+    }
+
+    historyRef.current.push(lastSnapshotRef.current);
+    if (historyRef.current.length > MAX_HISTORY_ENTRIES) {
+      historyRef.current.shift();
+    }
+    lastSnapshotRef.current = nextSnapshot;
+  }, [buildSnapshot]);
 
   // Copy the currently selected shape from its parent wall or feature
   const handleCopy = useCallback(() => {
@@ -142,6 +215,7 @@ export function MapEditorShell() {
         shape: structuredClone(shape),
         style: {
           fillColor: wall.fillColor,
+          fillOpacity: wall.fillOpacity,
           fillOpacity: wall.fillOpacity,
           strokeColor: wall.strokeColor,
           strokeWidth: wall.strokeWidth,
@@ -248,10 +322,18 @@ export function MapEditorShell() {
           handlePaste();
         }
       }
+
+      if (e.key === "z" && !e.shiftKey) {
+        const previousSnapshot = historyRef.current.pop();
+        if (!previousSnapshot) return;
+        e.preventDefault();
+        applySnapshot(previousSnapshot);
+        setSaveStatus("Undid last change");
+      }
     }
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, [handleCopy, handlePaste, clipboard]);
+  }, [applySnapshot, clipboard, handleCopy, handlePaste]);
 
   // Convex queries
   const gyms = useQuery(api.mapEditor.listGyms, {});
@@ -281,6 +363,7 @@ export function MapEditorShell() {
 
   // Load data from DB when area is selected
   const loadFromDb = useCallback(() => {
+    isHydratingFromDbRef.current = true;
     if (existingMap) {
       setMapSettings({
         key: existingMap.key,
@@ -298,9 +381,13 @@ export function MapEditorShell() {
           y: l.y,
           text: l.text,
           fontSize: l.fontSize ?? 12,
+          padding: l.padding ?? 4,
+          rotation: l.transform?.value ? parseLabelRotation(l.transform.value) : 0,
           fill: l.fill ?? "#FFFFFF",
           backgroundColor: l.backgroundColor ?? "#000000",
           backgroundOpacity: l.backgroundOpacity ?? 0.75,
+          outlineColor: l.outlineColor ?? "#FFFFFF",
+          outlineOpacity: l.outlineOpacity ?? 0,
         }))
       );
       setFeatures([
@@ -308,6 +395,7 @@ export function MapEditorShell() {
           id: f.id,
           type: "non_climbing_area" as const,
           name: f.name ?? "",
+          allowOverflow: f.allowOverflow ?? false,
           fillColor: f.fillColor,
           fillOpacity: f.fillOpacity,
           strokeColor: f.strokeColor,
@@ -319,6 +407,7 @@ export function MapEditorShell() {
           id: f.id,
           type: "overhang" as const,
           name: f.name ?? "",
+          allowOverflow: f.allowOverflow ?? false,
           patternColor: f.patternColor,
           patternOpacity: f.patternOpacity,
           strokeColor: f.strokeColor,
@@ -330,6 +419,7 @@ export function MapEditorShell() {
           id: f.id,
           type: "mat" as const,
           name: f.name ?? "",
+          allowOverflow: f.allowOverflow ?? false,
           fillColor: f.fillColor,
           fillOpacity: f.fillOpacity,
           strokeColor: f.strokeColor,
@@ -351,13 +441,14 @@ export function MapEditorShell() {
           name: w.name,
           partKey: w.partKey,
           fillColor: w.fillColor ?? "#1447E6",
-          fillOpacity: 0.9,
+          fillOpacity: w.fillOpacity ?? 0.9,
           strokeColor: w.strokeColor,
           strokeWidth: w.strokeWidth,
           bounds: w.bounds ?? { x: 0, y: 0, width: 50, height: 50 },
           shapes: w.shapes.map(shapeDocToEditable),
           isInteractive: w.isInteractive,
           isActive: w.isActive,
+          allowOverflow: w.allowOverflow ?? false,
           sortOrder: w.sortOrder ?? 0,
         }))
       );
@@ -366,8 +457,15 @@ export function MapEditorShell() {
 
   // Auto-load when data arrives
   React.useEffect(() => {
-    if (selectedAreaId && (existingMap !== undefined || existingWalls !== undefined)) {
+    if (!selectedAreaId) {
+      hasLoadedAreaRef.current = null;
+      return;
+    }
+
+    const hasLoadedCurrentArea = hasLoadedAreaRef.current === selectedAreaId;
+    if (!hasLoadedCurrentArea && (existingMap !== undefined || existingWalls !== undefined)) {
       loadFromDb();
+      hasLoadedAreaRef.current = selectedAreaId;
     }
   }, [selectedAreaId, existingMap, existingWalls, loadFromDb]);
 
@@ -418,18 +516,26 @@ export function MapEditorShell() {
           y: l.y,
           text: l.text,
           fontSize: l.fontSize,
+          padding: l.padding,
+          transform: l.rotation ? { value: `rotate(${l.rotation} ${l.x} ${l.y})` } : undefined,
           fill: l.fill,
           backgroundColor: l.backgroundColor,
           backgroundOpacity: l.backgroundOpacity,
+          outlineColor: l.outlineColor,
+          outlineOpacity: l.outlineOpacity,
         })),
         isActive: mapSettings.isActive,
       });
       setMapId(newMapId);
 
       // Save walls
+      const nextWalls: EditableWall[] = [];
       for (const wall of walls) {
-        if (!wall.gymZoneId) continue;
-        await upsertWall({
+        if (!wall.gymZoneId) {
+          nextWalls.push(wall);
+          continue;
+        }
+        const savedWallId = await upsertWall({
           id: wall._id ?? undefined,
           gymId: selectedGymId,
           gymAreaId: selectedAreaId,
@@ -438,15 +544,29 @@ export function MapEditorShell() {
           name: wall.name,
           partKey: wall.partKey,
           fillColor: wall.fillColor,
+          fillOpacity: wall.fillOpacity,
           strokeColor: wall.strokeColor,
           strokeWidth: wall.strokeWidth,
           bounds: wall.bounds,
           shapes: wall.shapes.map(shapeEditableToDoc),
           isInteractive: wall.isInteractive,
           isActive: wall.isActive,
+          allowOverflow: wall.allowOverflow,
           sortOrder: wall.sortOrder,
         });
+        nextWalls.push({ ...wall, _id: savedWallId });
       }
+
+      setWalls(nextWalls);
+
+      isHydratingFromDbRef.current = true;
+      historyRef.current = [];
+      lastSnapshotRef.current = {
+        walls: structuredClone(nextWalls),
+        features: structuredClone(features),
+        labels: structuredClone(labels),
+        mapSettings: structuredClone(mapSettings),
+      };
 
       setSaveStatus("Saved successfully");
     } catch (err) {
@@ -482,25 +602,34 @@ export function MapEditorShell() {
 
   // Selection from canvas
   const handleCanvasSelect = useCallback(
-    (type: "wall" | "feature" | "label", index: number, shapeIdx?: number) => {
+    (type: "wall" | "feature" | "label", index: number, shapeIdx?: number, options?: { toggle?: boolean }) => {
       if (type === "wall") {
         setActiveTab("walls");
         setSelectedWallIndex(index);
         setSelectedFeatureIndex(null);
         setSelectedLabelIndex(null);
         setSelectedShapeIndex(shapeIdx ?? null);
+        setSelectedWallShapeIndexes((prev) => {
+          if (shapeIdx === undefined) return [];
+          if (!options?.toggle) return [shapeIdx];
+          const exists = prev.includes(shapeIdx);
+          const next = exists ? prev.filter((value) => value !== shapeIdx) : [...prev, shapeIdx].sort((a, b) => a - b);
+          return next;
+        });
       } else if (type === "feature") {
         setActiveTab("features");
         setSelectedFeatureIndex(index);
         setSelectedWallIndex(null);
         setSelectedLabelIndex(null);
         setSelectedShapeIndex(shapeIdx ?? null);
+        setSelectedWallShapeIndexes([]);
       } else {
         setActiveTab("labels");
         setSelectedLabelIndex(index);
         setSelectedWallIndex(null);
         setSelectedFeatureIndex(null);
         setSelectedShapeIndex(null);
+        setSelectedWallShapeIndexes([]);
       }
     },
     []
@@ -559,6 +688,7 @@ export function MapEditorShell() {
             features={features}
             labels={labels}
             selectedWallIndex={selectedWallIndex}
+            selectedWallShapeIndexes={selectedWallShapeIndexes}
             selectedFeatureIndex={selectedFeatureIndex}
             selectedShapeIndex={selectedShapeIndex}
             selectedLabelIndex={selectedLabelIndex}
@@ -569,6 +699,8 @@ export function MapEditorShell() {
             setWalls={setWalls}
             setFeatures={setFeatures}
             setLabels={setLabels}
+            showWallNudgeOverlay={showWallNudgeOverlay}
+            setShowWallNudgeOverlay={setShowWallNudgeOverlay}
           />
         ) : (
           <div className="flex flex-col items-center gap-4">
@@ -635,6 +767,7 @@ export function MapEditorShell() {
                 setSelectedWallIndex(null);
                 setSelectedFeatureIndex(null);
                 setSelectedLabelIndex(null);
+                setSelectedWallShapeIndexes([]);
               }}
               disabled={!selectedGymId}
             >
@@ -753,6 +886,8 @@ export function MapEditorShell() {
                   setLabels={setLabels}
                   selectedIndex={selectedLabelIndex}
                   setSelectedIndex={setSelectedLabelIndex}
+                  walls={walls}
+                  features={features}
                 />
               )}
               {activeTab === "settings" && (
@@ -863,9 +998,10 @@ function shapeEditableToDoc(shape: EditableShape) {
 
   // For segments, persist the actual endpoints as attributes so we can
   // faithfully reconstruct them on reload (bounding box is lossy).
-  let attributes = shape.type === "segment" ? undefined : shape.attributes;
+  let attributes = shape.attributes ? { ...shape.attributes } : undefined;
   if (shape.type === "segment" && shape.segment) {
     attributes = {
+      ...attributes,
       segStartX: String(shape.segment.start.x),
       segStartY: String(shape.segment.start.y),
       segEndX: String(shape.segment.end.x),
@@ -903,6 +1039,7 @@ function featureToDoc(feature: EditableFeature) {
     id: feature.id,
     type: feature.type,
     name: feature.name,
+    allowOverflow: feature.allowOverflow,
     fillColor: feature.fillColor,
     fillOpacity: feature.fillOpacity,
     strokeColor: feature.strokeColor,
@@ -912,6 +1049,12 @@ function featureToDoc(feature: EditableFeature) {
     bounds: feature.bounds,
     shapes: feature.shapes.map(shapeEditableToDoc),
   };
+}
+
+function parseLabelRotation(transformValue?: string) {
+  if (!transformValue) return 0;
+  const match = transformValue.match(/rotate\(([-\d.]+)/);
+  return match ? Number(match[1]) : 0;
 }
 
 function offsetShape(shape: EditableShape, offset: number): EditableShape {

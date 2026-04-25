@@ -1,0 +1,4234 @@
+{
+  "url": "https://perfect-manatee-792.convex.cloud",
+  "functions": [
+    {
+      "args": {
+        "type": "object",
+        "value": {}
+      },
+      "functionType": "Query",
+      "identifier": "users.js:getCurrent",
+      "returns": null,
+      "visibility": {
+        "kind": "public"
+      }
+    },
+    {
+      "args": {
+        "type": "object",
+        "value": {}
+      },
+      "functionType": "Mutation",
+      "identifier": "users.js:upsertCurrent",
+      "returns": null,
+      "visibility": {
+        "kind": "public"
+      }
+    },
+    {
+      "args": {
+        "type": "object",
+        "value": {
+          "excludeUserId": {
+            "fieldType": {
+              "tableName": "users",
+              "type": "id"
+            },
+            "optional": true
+          },
+          "username": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          }
+        }
+      },
+      "functionType": "Query",
+      "identifier": "users.js:isUsernameAvailable",
+      "returns": null,
+      "visibility": {
+        "kind": "public"
+      }
+    },
+    {
+      "args": {
+        "type": "object",
+        "value": {
+          "email": {
+            "fieldType": {
+              "type": "union",
+              "value": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "optional": true
+          },
+          "image": {
+            "fieldType": {
+              "type": "union",
+              "value": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "optional": true
+          },
+          "isOnboarded": {
+            "fieldType": {
+              "type": "boolean"
+            },
+            "optional": true
+          },
+          "name": {
+            "fieldType": {
+              "type": "union",
+              "value": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "optional": true
+          },
+          "phoneNumber": {
+            "fieldType": {
+              "type": "union",
+              "value": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "optional": true
+          },
+          "private": {
+            "fieldType": {
+              "type": "boolean"
+            },
+            "optional": true
+          },
+          "role": {
+            "fieldType": {
+              "type": "union",
+              "value": [
+                {
+                  "type": "literal",
+                  "value": "ADMIN"
+                },
+                {
+                  "type": "literal",
+                  "value": "ROUTE_SETTER"
+                },
+                {
+                  "type": "literal",
+                  "value": "USER"
+                }
+              ]
+            },
+            "optional": true
+          },
+          "userId": {
+            "fieldType": {
+              "tableName": "users",
+              "type": "id"
+            },
+            "optional": false
+          },
+          "username": {
+            "fieldType": {
+              "type": "union",
+              "value": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "optional": true
+          }
+        }
+      },
+      "functionType": "Mutation",
+      "identifier": "users.js:updateUserProfile",
+      "returns": null,
+      "visibility": {
+        "kind": "public"
+      }
+    },
+    {
+      "args": {
+        "type": "object",
+        "value": {
+          "username": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          }
+        }
+      },
+      "functionType": "Query",
+      "identifier": "users.js:getUserByUsername",
+      "returns": null,
+      "visibility": {
+        "kind": "public"
+      }
+    },
+    {
+      "args": {
+        "type": "object",
+        "value": {
+          "userId": {
+            "fieldType": {
+              "tableName": "users",
+              "type": "id"
+            },
+            "optional": false
+          }
+        }
+      },
+      "functionType": "Query",
+      "identifier": "users.js:getUserById",
+      "returns": null,
+      "visibility": {
+        "kind": "public"
+      }
+    },
+    {
+      "args": {
+        "type": "object",
+        "value": {
+          "search": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          },
+          "take": {
+            "fieldType": {
+              "type": "number"
+            },
+            "optional": false
+          }
+        }
+      },
+      "functionType": "Query",
+      "identifier": "users.js:searchUsers",
+      "returns": null,
+      "visibility": {
+        "kind": "public"
+      }
+    },
+    {
+      "args": {
+        "type": "object",
+        "value": {
+          "userId": {
+            "fieldType": {
+              "tableName": "users",
+              "type": "id"
+            },
+            "optional": false
+          }
+        }
+      },
+      "functionType": "Mutation",
+      "identifier": "users.js:deleteUser",
+      "returns": null,
+      "visibility": {
+        "kind": "public"
+      }
+    },
+    {
+      "args": {
+        "type": "object",
+        "value": {
+          "email": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          }
+        }
+      },
+      "functionType": "Query",
+      "identifier": "users.js:getUserByEmail",
+      "returns": null,
+      "visibility": {
+        "kind": "public"
+      }
+    },
+    {
+      "args": {
+        "type": "object",
+        "value": {
+          "phoneNumber": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          }
+        }
+      },
+      "functionType": "Query",
+      "identifier": "users.js:getUserByPhoneNumber",
+      "returns": null,
+      "visibility": {
+        "kind": "public"
+      }
+    },
+    {
+      "args": {
+        "type": "object",
+        "value": {}
+      },
+      "functionType": "Mutation",
+      "identifier": "seeds.js:seedDefaultGymFoundation",
+      "returns": null,
+      "visibility": {
+        "kind": "public"
+      }
+    },
+    {
+      "args": {
+        "type": "object",
+        "value": {}
+      },
+      "functionType": "Mutation",
+      "identifier": "seeds.js:seedDefaultGym",
+      "returns": null,
+      "visibility": {
+        "kind": "public"
+      }
+    },
+    {
+      "args": {
+        "type": "object",
+        "value": {}
+      },
+      "functionType": "Mutation",
+      "identifier": "seeds.js:seedDefaultAreas",
+      "returns": null,
+      "visibility": {
+        "kind": "public"
+      }
+    },
+    {
+      "args": {
+        "type": "object",
+        "value": {}
+      },
+      "functionType": "Mutation",
+      "identifier": "seeds.js:seedDefaultZones",
+      "returns": null,
+      "visibility": {
+        "kind": "public"
+      }
+    },
+    {
+      "args": {
+        "type": "object",
+        "value": {}
+      },
+      "functionType": "Mutation",
+      "identifier": "seeds.js:seedDefaultWalls",
+      "returns": null,
+      "visibility": {
+        "kind": "public"
+      }
+    },
+    {
+      "args": {
+        "type": "object",
+        "value": {}
+      },
+      "functionType": "Mutation",
+      "identifier": "seeds.js:seedDefaultAreaMap",
+      "returns": null,
+      "visibility": {
+        "kind": "public"
+      }
+    },
+    {
+      "args": {
+        "type": "object",
+        "value": {}
+      },
+      "functionType": "Query",
+      "identifier": "map.js:getGymMapByArea",
+      "returns": null,
+      "visibility": {
+        "kind": "public"
+      }
+    },
+    {
+      "args": {
+        "type": "object",
+        "value": {}
+      },
+      "functionType": "Query",
+      "identifier": "map.js:getRoutesMapFoundation",
+      "returns": null,
+      "visibility": {
+        "kind": "public"
+      }
+    },
+    {
+      "args": {
+        "type": "object",
+        "value": {
+          "wallPart": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          }
+        }
+      },
+      "functionType": "Query",
+      "identifier": "routes.js:getWallRoutes",
+      "returns": null,
+      "visibility": {
+        "kind": "public"
+      }
+    },
+    {
+      "args": {
+        "type": "object",
+        "value": {
+          "routeId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          },
+          "viewerUserId": {
+            "fieldType": {
+              "tableName": "users",
+              "type": "id"
+            },
+            "optional": true
+          }
+        }
+      },
+      "functionType": "Query",
+      "identifier": "routes.js:getRouteByLegacyOrConvexId",
+      "returns": null,
+      "visibility": {
+        "kind": "public"
+      }
+    },
+    {
+      "args": {
+        "type": "object",
+        "value": {
+          "username": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          }
+        }
+      },
+      "functionType": "Query",
+      "identifier": "routes.js:getProfileDashboardData",
+      "returns": null,
+      "visibility": {
+        "kind": "public"
+      }
+    },
+    {
+      "args": {
+        "type": "object",
+        "value": {}
+      },
+      "functionType": "Query",
+      "identifier": "routes.js:getLeaderboardData",
+      "returns": null,
+      "visibility": {
+        "kind": "public"
+      }
+    },
+    {
+      "args": {
+        "type": "object",
+        "value": {
+          "tags": {
+            "fieldType": {
+              "type": "array",
+              "value": {
+                "type": "string"
+              }
+            },
+            "optional": false
+          },
+          "viewerUserId": {
+            "fieldType": {
+              "tableName": "users",
+              "type": "id"
+            },
+            "optional": true
+          }
+        }
+      },
+      "functionType": "Query",
+      "identifier": "routes.js:getTaggedRoutes",
+      "returns": null,
+      "visibility": {
+        "kind": "public"
+      }
+    },
+    {
+      "args": {
+        "type": "object",
+        "value": {
+          "skip": {
+            "fieldType": {
+              "type": "number"
+            },
+            "optional": false
+          },
+          "take": {
+            "fieldType": {
+              "type": "number"
+            },
+            "optional": false
+          },
+          "text": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          },
+          "viewerUserId": {
+            "fieldType": {
+              "tableName": "users",
+              "type": "id"
+            },
+            "optional": true
+          }
+        }
+      },
+      "functionType": "Query",
+      "identifier": "routes.js:searchRoutes",
+      "returns": null,
+      "visibility": {
+        "kind": "public"
+      }
+    },
+    {
+      "args": {
+        "type": "object",
+        "value": {
+          "routeId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          },
+          "userId": {
+            "fieldType": {
+              "tableName": "users",
+              "type": "id"
+            },
+            "optional": false
+          }
+        }
+      },
+      "functionType": "Mutation",
+      "identifier": "routes.js:incrementAttempt",
+      "returns": null,
+      "visibility": {
+        "kind": "public"
+      }
+    },
+    {
+      "args": {
+        "type": "object",
+        "value": {
+          "routeId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          },
+          "selectedGrade": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          },
+          "userId": {
+            "fieldType": {
+              "tableName": "users",
+              "type": "id"
+            },
+            "optional": false
+          }
+        }
+      },
+      "functionType": "Mutation",
+      "identifier": "routes.js:upsertCommunityGrade",
+      "returns": null,
+      "visibility": {
+        "kind": "public"
+      }
+    },
+    {
+      "args": {
+        "type": "object",
+        "value": {
+          "completedAt": {
+            "fieldType": {
+              "type": "number"
+            },
+            "optional": true
+          },
+          "flash": {
+            "fieldType": {
+              "type": "boolean"
+            },
+            "optional": false
+          },
+          "routeId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          },
+          "userId": {
+            "fieldType": {
+              "tableName": "users",
+              "type": "id"
+            },
+            "optional": false
+          }
+        }
+      },
+      "functionType": "Mutation",
+      "identifier": "routes.js:completeRoute",
+      "returns": null,
+      "visibility": {
+        "kind": "public"
+      }
+    },
+    {
+      "args": {
+        "type": "object",
+        "value": {
+          "orderedRouteIds": {
+            "fieldType": {
+              "type": "array",
+              "value": {
+                "type": "string"
+              }
+            },
+            "optional": false
+          },
+          "wallPart": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          }
+        }
+      },
+      "functionType": "Mutation",
+      "identifier": "routes.js:reorderWallRoutes",
+      "returns": null,
+      "visibility": {
+        "kind": "public"
+      }
+    },
+    {
+      "args": {
+        "type": "object",
+        "value": {
+          "newDate": {
+            "fieldType": {
+              "type": "number"
+            },
+            "optional": true
+          },
+          "newGrade": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "newLocation": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "newTitle": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "newType": {
+            "fieldType": {
+              "type": "union",
+              "value": [
+                {
+                  "type": "literal",
+                  "value": "BOULDER"
+                },
+                {
+                  "type": "literal",
+                  "value": "ROPE"
+                }
+              ]
+            },
+            "optional": true
+          },
+          "newX": {
+            "fieldType": {
+              "type": "union",
+              "value": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "optional": true
+          },
+          "newY": {
+            "fieldType": {
+              "type": "union",
+              "value": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "optional": true
+          },
+          "routeId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          }
+        }
+      },
+      "functionType": "Mutation",
+      "identifier": "routes.js:updateRoute",
+      "returns": null,
+      "visibility": {
+        "kind": "public"
+      }
+    },
+    {
+      "args": {
+        "type": "object",
+        "value": {
+          "bonusXp": {
+            "fieldType": {
+              "type": "number"
+            },
+            "optional": true
+          },
+          "color": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          },
+          "createdByUserId": {
+            "fieldType": {
+              "tableName": "users",
+              "type": "id"
+            },
+            "optional": true
+          },
+          "grade": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          },
+          "setDate": {
+            "fieldType": {
+              "type": "number"
+            },
+            "optional": false
+          },
+          "sortOrder": {
+            "fieldType": {
+              "type": "number"
+            },
+            "optional": true
+          },
+          "title": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          },
+          "type": {
+            "fieldType": {
+              "type": "union",
+              "value": [
+                {
+                  "type": "literal",
+                  "value": "BOULDER"
+                },
+                {
+                  "type": "literal",
+                  "value": "ROPE"
+                }
+              ]
+            },
+            "optional": false
+          },
+          "wallPart": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          },
+          "xp": {
+            "fieldType": {
+              "type": "number"
+            },
+            "optional": false
+          }
+        }
+      },
+      "functionType": "Mutation",
+      "identifier": "routes.js:createRoute",
+      "returns": null,
+      "visibility": {
+        "kind": "public"
+      }
+    },
+    {
+      "args": {
+        "type": "object",
+        "value": {
+          "isArchived": {
+            "fieldType": {
+              "type": "boolean"
+            },
+            "optional": false
+          },
+          "routeIds": {
+            "fieldType": {
+              "type": "array",
+              "value": {
+                "type": "string"
+              }
+            },
+            "optional": false
+          }
+        }
+      },
+      "functionType": "Mutation",
+      "identifier": "routes.js:setRouteArchived",
+      "returns": null,
+      "visibility": {
+        "kind": "public"
+      }
+    },
+    {
+      "args": {
+        "type": "object",
+        "value": {}
+      },
+      "functionType": "Query",
+      "identifier": "routes.js:getTvData",
+      "returns": null,
+      "visibility": {
+        "kind": "public"
+      }
+    },
+    {
+      "args": {
+        "type": "object",
+        "value": {
+          "slideId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "text": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          }
+        }
+      },
+      "functionType": "Query",
+      "identifier": "routes.js:searchTvRoutes",
+      "returns": null,
+      "visibility": {
+        "kind": "public"
+      }
+    },
+    {
+      "args": {
+        "type": "object",
+        "value": {
+          "isActive": {
+            "fieldType": {
+              "type": "boolean"
+            },
+            "optional": false
+          },
+          "slideId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          }
+        }
+      },
+      "functionType": "Mutation",
+      "identifier": "routes.js:setTvSlideActive",
+      "returns": null,
+      "visibility": {
+        "kind": "public"
+      }
+    },
+    {
+      "args": {
+        "type": "object",
+        "value": {
+          "imageUrl": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "isActive": {
+            "fieldType": {
+              "type": "boolean"
+            },
+            "optional": false
+          },
+          "text": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "type": {
+            "fieldType": {
+              "type": "union",
+              "value": [
+                {
+                  "type": "literal",
+                  "value": "LOGO"
+                },
+                {
+                  "type": "literal",
+                  "value": "STATS"
+                },
+                {
+                  "type": "literal",
+                  "value": "LEADERBOARD"
+                },
+                {
+                  "type": "literal",
+                  "value": "FEATURED_ROUTE"
+                },
+                {
+                  "type": "literal",
+                  "value": "IMAGE"
+                },
+                {
+                  "type": "literal",
+                  "value": "TEXT"
+                }
+              ]
+            },
+            "optional": false
+          }
+        }
+      },
+      "functionType": "Mutation",
+      "identifier": "routes.js:createTvSlide",
+      "returns": null,
+      "visibility": {
+        "kind": "public"
+      }
+    },
+    {
+      "args": {
+        "type": "object",
+        "value": {
+          "functionName": {
+            "fieldType": {
+              "type": "union",
+              "value": [
+                {
+                  "type": "literal",
+                  "value": "addRoute"
+                },
+                {
+                  "type": "literal",
+                  "value": "removeRoute"
+                },
+                {
+                  "type": "literal",
+                  "value": "uploadImage"
+                }
+              ]
+            },
+            "optional": false
+          },
+          "imageUrl": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "routeId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          },
+          "slideId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          }
+        }
+      },
+      "functionType": "Mutation",
+      "identifier": "routes.js:updateTvSlideRoutes",
+      "returns": null,
+      "visibility": {
+        "kind": "public"
+      }
+    },
+    {
+      "args": {
+        "type": "object",
+        "value": {
+          "secret": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          }
+        }
+      },
+      "functionType": "Query",
+      "identifier": "routeMigrations.js:getMigrationLookups",
+      "returns": null,
+      "visibility": {
+        "kind": "public"
+      }
+    },
+    {
+      "args": {
+        "type": "object",
+        "value": {
+          "rows": {
+            "fieldType": {
+              "type": "array",
+              "value": {
+                "type": "object",
+                "value": {
+                  "bonusXp": {
+                    "fieldType": {
+                      "type": "number"
+                    },
+                    "optional": true
+                  },
+                  "color": {
+                    "fieldType": {
+                      "type": "string"
+                    },
+                    "optional": false
+                  },
+                  "createdByLegacyUserId": {
+                    "fieldType": {
+                      "type": "string"
+                    },
+                    "optional": true
+                  },
+                  "createdByUserId": {
+                    "fieldType": {
+                      "tableName": "users",
+                      "type": "id"
+                    },
+                    "optional": true
+                  },
+                  "grade": {
+                    "fieldType": {
+                      "type": "string"
+                    },
+                    "optional": false
+                  },
+                  "gymAreaId": {
+                    "fieldType": {
+                      "tableName": "gymAreas",
+                      "type": "id"
+                    },
+                    "optional": false
+                  },
+                  "gymId": {
+                    "fieldType": {
+                      "tableName": "gyms",
+                      "type": "id"
+                    },
+                    "optional": false
+                  },
+                  "gymWallId": {
+                    "fieldType": {
+                      "tableName": "gymWalls",
+                      "type": "id"
+                    },
+                    "optional": true
+                  },
+                  "gymZoneId": {
+                    "fieldType": {
+                      "tableName": "gymZones",
+                      "type": "id"
+                    },
+                    "optional": false
+                  },
+                  "isArchived": {
+                    "fieldType": {
+                      "type": "boolean"
+                    },
+                    "optional": false
+                  },
+                  "legacyLocationKey": {
+                    "fieldType": {
+                      "type": "string"
+                    },
+                    "optional": true
+                  },
+                  "legacyPrismaId": {
+                    "fieldType": {
+                      "type": "string"
+                    },
+                    "optional": false
+                  },
+                  "setDate": {
+                    "fieldType": {
+                      "type": "number"
+                    },
+                    "optional": false
+                  },
+                  "sortOrder": {
+                    "fieldType": {
+                      "type": "number"
+                    },
+                    "optional": true
+                  },
+                  "title": {
+                    "fieldType": {
+                      "type": "string"
+                    },
+                    "optional": false
+                  },
+                  "type": {
+                    "fieldType": {
+                      "type": "union",
+                      "value": [
+                        {
+                          "type": "literal",
+                          "value": "BOULDER"
+                        },
+                        {
+                          "type": "literal",
+                          "value": "ROPE"
+                        }
+                      ]
+                    },
+                    "optional": false
+                  },
+                  "x": {
+                    "fieldType": {
+                      "type": "number"
+                    },
+                    "optional": true
+                  },
+                  "xp": {
+                    "fieldType": {
+                      "type": "number"
+                    },
+                    "optional": false
+                  },
+                  "y": {
+                    "fieldType": {
+                      "type": "number"
+                    },
+                    "optional": true
+                  }
+                }
+              }
+            },
+            "optional": false
+          },
+          "secret": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          }
+        }
+      },
+      "functionType": "Mutation",
+      "identifier": "routeMigrations.js:upsertRoutes",
+      "returns": null,
+      "visibility": {
+        "kind": "public"
+      }
+    },
+    {
+      "args": {
+        "type": "object",
+        "value": {
+          "rows": {
+            "fieldType": {
+              "type": "array",
+              "value": {
+                "type": "object",
+                "value": {
+                  "clerkId": {
+                    "fieldType": {
+                      "type": "string"
+                    },
+                    "optional": true
+                  },
+                  "email": {
+                    "fieldType": {
+                      "type": "string"
+                    },
+                    "optional": false
+                  },
+                  "highestBoulderGrade": {
+                    "fieldType": {
+                      "type": "string"
+                    },
+                    "optional": true
+                  },
+                  "highestRopeGrade": {
+                    "fieldType": {
+                      "type": "string"
+                    },
+                    "optional": true
+                  },
+                  "image": {
+                    "fieldType": {
+                      "type": "string"
+                    },
+                    "optional": true
+                  },
+                  "isOnboarded": {
+                    "fieldType": {
+                      "type": "boolean"
+                    },
+                    "optional": false
+                  },
+                  "legacyPrismaId": {
+                    "fieldType": {
+                      "type": "string"
+                    },
+                    "optional": false
+                  },
+                  "name": {
+                    "fieldType": {
+                      "type": "string"
+                    },
+                    "optional": true
+                  },
+                  "phoneNumber": {
+                    "fieldType": {
+                      "type": "string"
+                    },
+                    "optional": true
+                  },
+                  "private": {
+                    "fieldType": {
+                      "type": "boolean"
+                    },
+                    "optional": false
+                  },
+                  "role": {
+                    "fieldType": {
+                      "type": "union",
+                      "value": [
+                        {
+                          "type": "literal",
+                          "value": "ADMIN"
+                        },
+                        {
+                          "type": "literal",
+                          "value": "ROUTE_SETTER"
+                        },
+                        {
+                          "type": "literal",
+                          "value": "USER"
+                        }
+                      ]
+                    },
+                    "optional": false
+                  },
+                  "totalXp": {
+                    "fieldType": {
+                      "type": "number"
+                    },
+                    "optional": false
+                  },
+                  "username": {
+                    "fieldType": {
+                      "type": "string"
+                    },
+                    "optional": true
+                  }
+                }
+              }
+            },
+            "optional": false
+          },
+          "secret": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          }
+        }
+      },
+      "functionType": "Mutation",
+      "identifier": "routeMigrations.js:upsertUsers",
+      "returns": null,
+      "visibility": {
+        "kind": "public"
+      }
+    },
+    {
+      "args": {
+        "type": "object",
+        "value": {
+          "rows": {
+            "fieldType": {
+              "type": "array",
+              "value": {
+                "type": "object",
+                "value": {
+                  "legacyPrismaId": {
+                    "fieldType": {
+                      "type": "string"
+                    },
+                    "optional": false
+                  },
+                  "routeId": {
+                    "fieldType": {
+                      "tableName": "routes",
+                      "type": "id"
+                    },
+                    "optional": false
+                  },
+                  "sortOrder": {
+                    "fieldType": {
+                      "type": "number"
+                    },
+                    "optional": true
+                  },
+                  "url": {
+                    "fieldType": {
+                      "type": "string"
+                    },
+                    "optional": false
+                  }
+                }
+              }
+            },
+            "optional": false
+          },
+          "secret": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          }
+        }
+      },
+      "functionType": "Mutation",
+      "identifier": "routeMigrations.js:upsertRouteImages",
+      "returns": null,
+      "visibility": {
+        "kind": "public"
+      }
+    },
+    {
+      "args": {
+        "type": "object",
+        "value": {
+          "rows": {
+            "fieldType": {
+              "type": "array",
+              "value": {
+                "type": "object",
+                "value": {
+                  "attemptDate": {
+                    "fieldType": {
+                      "type": "number"
+                    },
+                    "optional": false
+                  },
+                  "attempts": {
+                    "fieldType": {
+                      "type": "number"
+                    },
+                    "optional": false
+                  },
+                  "legacyPrismaId": {
+                    "fieldType": {
+                      "type": "string"
+                    },
+                    "optional": false
+                  },
+                  "routeId": {
+                    "fieldType": {
+                      "tableName": "routes",
+                      "type": "id"
+                    },
+                    "optional": false
+                  },
+                  "userId": {
+                    "fieldType": {
+                      "tableName": "users",
+                      "type": "id"
+                    },
+                    "optional": false
+                  }
+                }
+              }
+            },
+            "optional": false
+          },
+          "secret": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          }
+        }
+      },
+      "functionType": "Mutation",
+      "identifier": "routeMigrations.js:upsertRouteAttempts",
+      "returns": null,
+      "visibility": {
+        "kind": "public"
+      }
+    },
+    {
+      "args": {
+        "type": "object",
+        "value": {
+          "rows": {
+            "fieldType": {
+              "type": "array",
+              "value": {
+                "type": "object",
+                "value": {
+                  "completionDate": {
+                    "fieldType": {
+                      "type": "number"
+                    },
+                    "optional": false
+                  },
+                  "flash": {
+                    "fieldType": {
+                      "type": "boolean"
+                    },
+                    "optional": false
+                  },
+                  "legacyPrismaId": {
+                    "fieldType": {
+                      "type": "string"
+                    },
+                    "optional": false
+                  },
+                  "routeId": {
+                    "fieldType": {
+                      "tableName": "routes",
+                      "type": "id"
+                    },
+                    "optional": false
+                  },
+                  "userId": {
+                    "fieldType": {
+                      "tableName": "users",
+                      "type": "id"
+                    },
+                    "optional": false
+                  },
+                  "xpEarned": {
+                    "fieldType": {
+                      "type": "number"
+                    },
+                    "optional": false
+                  }
+                }
+              }
+            },
+            "optional": false
+          },
+          "secret": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          }
+        }
+      },
+      "functionType": "Mutation",
+      "identifier": "routeMigrations.js:upsertRouteCompletions",
+      "returns": null,
+      "visibility": {
+        "kind": "public"
+      }
+    },
+    {
+      "args": {
+        "type": "object",
+        "value": {
+          "rows": {
+            "fieldType": {
+              "type": "array",
+              "value": {
+                "type": "object",
+                "value": {
+                  "createdAt": {
+                    "fieldType": {
+                      "type": "number"
+                    },
+                    "optional": false
+                  },
+                  "grade": {
+                    "fieldType": {
+                      "type": "string"
+                    },
+                    "optional": false
+                  },
+                  "legacyPrismaId": {
+                    "fieldType": {
+                      "type": "string"
+                    },
+                    "optional": false
+                  },
+                  "routeId": {
+                    "fieldType": {
+                      "tableName": "routes",
+                      "type": "id"
+                    },
+                    "optional": false
+                  },
+                  "updatedAt": {
+                    "fieldType": {
+                      "type": "number"
+                    },
+                    "optional": false
+                  },
+                  "userId": {
+                    "fieldType": {
+                      "tableName": "users",
+                      "type": "id"
+                    },
+                    "optional": false
+                  }
+                }
+              }
+            },
+            "optional": false
+          },
+          "secret": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          }
+        }
+      },
+      "functionType": "Mutation",
+      "identifier": "routeMigrations.js:upsertCommunityGrades",
+      "returns": null,
+      "visibility": {
+        "kind": "public"
+      }
+    },
+    {
+      "args": {
+        "type": "object",
+        "value": {
+          "rows": {
+            "fieldType": {
+              "type": "array",
+              "value": {
+                "type": "object",
+                "value": {
+                  "legacyPrismaId": {
+                    "fieldType": {
+                      "type": "string"
+                    },
+                    "optional": false
+                  },
+                  "month": {
+                    "fieldType": {
+                      "type": "number"
+                    },
+                    "optional": false
+                  },
+                  "userId": {
+                    "fieldType": {
+                      "tableName": "users",
+                      "type": "id"
+                    },
+                    "optional": false
+                  },
+                  "xp": {
+                    "fieldType": {
+                      "type": "number"
+                    },
+                    "optional": false
+                  },
+                  "year": {
+                    "fieldType": {
+                      "type": "number"
+                    },
+                    "optional": false
+                  }
+                }
+              }
+            },
+            "optional": false
+          },
+          "secret": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          }
+        }
+      },
+      "functionType": "Mutation",
+      "identifier": "routeMigrations.js:upsertMonthlyXp",
+      "returns": null,
+      "visibility": {
+        "kind": "public"
+      }
+    },
+    {
+      "args": {
+        "type": "object",
+        "value": {
+          "rows": {
+            "fieldType": {
+              "type": "array",
+              "value": {
+                "type": "object",
+                "value": {
+                  "imageUrl": {
+                    "fieldType": {
+                      "type": "string"
+                    },
+                    "optional": true
+                  },
+                  "isActive": {
+                    "fieldType": {
+                      "type": "boolean"
+                    },
+                    "optional": false
+                  },
+                  "legacyPrismaId": {
+                    "fieldType": {
+                      "type": "string"
+                    },
+                    "optional": false
+                  },
+                  "routeIds": {
+                    "fieldType": {
+                      "type": "array",
+                      "value": {
+                        "tableName": "routes",
+                        "type": "id"
+                      }
+                    },
+                    "optional": false
+                  },
+                  "sortOrder": {
+                    "fieldType": {
+                      "type": "number"
+                    },
+                    "optional": true
+                  },
+                  "text": {
+                    "fieldType": {
+                      "type": "string"
+                    },
+                    "optional": true
+                  },
+                  "type": {
+                    "fieldType": {
+                      "type": "union",
+                      "value": [
+                        {
+                          "type": "literal",
+                          "value": "LOGO"
+                        },
+                        {
+                          "type": "literal",
+                          "value": "STATS"
+                        },
+                        {
+                          "type": "literal",
+                          "value": "LEADERBOARD"
+                        },
+                        {
+                          "type": "literal",
+                          "value": "FEATURED_ROUTE"
+                        },
+                        {
+                          "type": "literal",
+                          "value": "IMAGE"
+                        },
+                        {
+                          "type": "literal",
+                          "value": "TEXT"
+                        }
+                      ]
+                    },
+                    "optional": false
+                  }
+                }
+              }
+            },
+            "optional": false
+          },
+          "secret": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          }
+        }
+      },
+      "functionType": "Mutation",
+      "identifier": "routeMigrations.js:upsertTvSlides",
+      "returns": null,
+      "visibility": {
+        "kind": "public"
+      }
+    },
+    {
+      "args": {
+        "type": "object",
+        "value": {}
+      },
+      "functionType": "Query",
+      "identifier": "mobile.js:getCurrentXp",
+      "returns": null,
+      "visibility": {
+        "kind": "public"
+      }
+    },
+    {
+      "args": {
+        "type": "object",
+        "value": {}
+      },
+      "functionType": "Query",
+      "identifier": "mobile.js:getAllRoutesNonArchive",
+      "returns": null,
+      "visibility": {
+        "kind": "public"
+      }
+    },
+    {
+      "args": {
+        "type": "object",
+        "value": {
+          "wall": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          }
+        }
+      },
+      "functionType": "Query",
+      "identifier": "mobile.js:getRoutesByWall",
+      "returns": null,
+      "visibility": {
+        "kind": "public"
+      }
+    },
+    {
+      "args": {
+        "type": "object",
+        "value": {
+          "take": {
+            "fieldType": {
+              "type": "number"
+            },
+            "optional": false
+          },
+          "text": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          }
+        }
+      },
+      "functionType": "Query",
+      "identifier": "mobile.js:searchRoutes",
+      "returns": null,
+      "visibility": {
+        "kind": "public"
+      }
+    },
+    {
+      "args": {
+        "type": "object",
+        "value": {
+          "date": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "flash": {
+            "fieldType": {
+              "type": "boolean"
+            },
+            "optional": false
+          },
+          "routeId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          }
+        }
+      },
+      "functionType": "Mutation",
+      "identifier": "mobile.js:completeRoute",
+      "returns": null,
+      "visibility": {
+        "kind": "public"
+      }
+    },
+    {
+      "args": {
+        "type": "object",
+        "value": {
+          "routeId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          }
+        }
+      },
+      "functionType": "Mutation",
+      "identifier": "mobile.js:attemptRoute",
+      "returns": null,
+      "visibility": {
+        "kind": "public"
+      }
+    },
+    {
+      "args": {
+        "type": "object",
+        "value": {
+          "routeId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          },
+          "selectedGrade": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          }
+        }
+      },
+      "functionType": "Mutation",
+      "identifier": "mobile.js:gradeRoute",
+      "returns": null,
+      "visibility": {
+        "kind": "public"
+      }
+    },
+    {
+      "args": {
+        "type": "object",
+        "value": {}
+      },
+      "functionType": "Query",
+      "identifier": "mobile.js:getDashboardCompletions",
+      "returns": null,
+      "visibility": {
+        "kind": "public"
+      }
+    },
+    {
+      "args": {
+        "type": "object",
+        "value": {}
+      },
+      "functionType": "Query",
+      "identifier": "mobile.js:getDashboardAttempts",
+      "returns": null,
+      "visibility": {
+        "kind": "public"
+      }
+    },
+    {
+      "args": {
+        "type": "object",
+        "value": {
+          "completionId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          }
+        }
+      },
+      "functionType": "Mutation",
+      "identifier": "mobile.js:deleteCompletion",
+      "returns": null,
+      "visibility": {
+        "kind": "public"
+      }
+    },
+    {
+      "args": {
+        "type": "object",
+        "value": {
+          "attemptId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          }
+        }
+      },
+      "functionType": "Mutation",
+      "identifier": "mobile.js:deleteAttempt",
+      "returns": null,
+      "visibility": {
+        "kind": "public"
+      }
+    },
+    {
+      "args": {
+        "type": "object",
+        "value": {}
+      },
+      "functionType": "Query",
+      "identifier": "mobile.js:getLeaderboard",
+      "returns": null,
+      "visibility": {
+        "kind": "public"
+      }
+    },
+    {
+      "args": {
+        "type": "object",
+        "value": {
+          "period": {
+            "fieldType": {
+              "type": "union",
+              "value": [
+                {
+                  "type": "literal",
+                  "value": "monthly"
+                },
+                {
+                  "type": "literal",
+                  "value": "yearly"
+                }
+              ]
+            },
+            "optional": false
+          },
+          "type": {
+            "fieldType": {
+              "type": "union",
+              "value": [
+                {
+                  "type": "literal",
+                  "value": "boulder"
+                },
+                {
+                  "type": "literal",
+                  "value": "rope"
+                }
+              ]
+            },
+            "optional": false
+          }
+        }
+      },
+      "functionType": "Query",
+      "identifier": "mobile.js:getLeaderboardGradePoints",
+      "returns": null,
+      "visibility": {
+        "kind": "public"
+      }
+    },
+    {
+      "args": {
+        "type": "object",
+        "value": {
+          "userId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          }
+        }
+      },
+      "functionType": "Query",
+      "identifier": "mobile.js:getPublicUserProfile",
+      "returns": null,
+      "visibility": {
+        "kind": "public"
+      }
+    },
+    {
+      "args": {
+        "type": "object",
+        "value": {}
+      },
+      "functionType": "Query",
+      "identifier": "mobile.js:getActiveSession",
+      "returns": null,
+      "visibility": {
+        "kind": "public"
+      }
+    },
+    {
+      "args": {
+        "type": "object",
+        "value": {
+          "competitionId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "competitionType": {
+            "fieldType": {
+              "type": "union",
+              "value": [
+                {
+                  "type": "literal",
+                  "value": "ONE_DAY_COMP"
+                },
+                {
+                  "type": "literal",
+                  "value": "THREE_WEEK_COMP"
+                }
+              ]
+            },
+            "optional": true
+          },
+          "isCompetition": {
+            "fieldType": {
+              "type": "boolean"
+            },
+            "optional": true
+          },
+          "isRetroactive": {
+            "fieldType": {
+              "type": "boolean"
+            },
+            "optional": true
+          },
+          "name": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "sessionDate": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "startedAt": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "timeSlot": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "timezoneOffsetMinutes": {
+            "fieldType": {
+              "type": "number"
+            },
+            "optional": true
+          },
+          "type": {
+            "fieldType": {
+              "type": "union",
+              "value": [
+                {
+                  "type": "literal",
+                  "value": "AUTO"
+                },
+                {
+                  "type": "literal",
+                  "value": "POWER"
+                },
+                {
+                  "type": "literal",
+                  "value": "POWER_ENDURANCE"
+                },
+                {
+                  "type": "literal",
+                  "value": "TENSION_BOARD"
+                },
+                {
+                  "type": "literal",
+                  "value": "COMPETITION"
+                },
+                {
+                  "type": "literal",
+                  "value": "ENDURANCE"
+                },
+                {
+                  "type": "literal",
+                  "value": "WORKOUT"
+                },
+                {
+                  "type": "literal",
+                  "value": "FUN"
+                },
+                {
+                  "type": "literal",
+                  "value": "CUSTOM"
+                }
+              ]
+            },
+            "optional": false
+          }
+        }
+      },
+      "functionType": "Mutation",
+      "identifier": "mobile.js:startSession",
+      "returns": null,
+      "visibility": {
+        "kind": "public"
+      }
+    },
+    {
+      "args": {
+        "type": "object",
+        "value": {
+          "bumpActivity": {
+            "fieldType": {
+              "type": "boolean"
+            },
+            "optional": true
+          },
+          "competitionId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "competitionType": {
+            "fieldType": {
+              "type": "union",
+              "value": [
+                {
+                  "type": "literal",
+                  "value": "ONE_DAY_COMP"
+                },
+                {
+                  "type": "literal",
+                  "value": "THREE_WEEK_COMP"
+                }
+              ]
+            },
+            "optional": true
+          },
+          "endedAt": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "isCompetition": {
+            "fieldType": {
+              "type": "boolean"
+            },
+            "optional": true
+          },
+          "isRetroactive": {
+            "fieldType": {
+              "type": "boolean"
+            },
+            "optional": true
+          },
+          "name": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "sessionDate": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "sessionId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          },
+          "status": {
+            "fieldType": {
+              "type": "union",
+              "value": [
+                {
+                  "type": "literal",
+                  "value": "ACTIVE"
+                },
+                {
+                  "type": "literal",
+                  "value": "COMPLETED"
+                },
+                {
+                  "type": "literal",
+                  "value": "CANCELLED"
+                }
+              ]
+            },
+            "optional": true
+          },
+          "timeSlot": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "type": {
+            "fieldType": {
+              "type": "union",
+              "value": [
+                {
+                  "type": "literal",
+                  "value": "AUTO"
+                },
+                {
+                  "type": "literal",
+                  "value": "POWER"
+                },
+                {
+                  "type": "literal",
+                  "value": "POWER_ENDURANCE"
+                },
+                {
+                  "type": "literal",
+                  "value": "TENSION_BOARD"
+                },
+                {
+                  "type": "literal",
+                  "value": "COMPETITION"
+                },
+                {
+                  "type": "literal",
+                  "value": "ENDURANCE"
+                },
+                {
+                  "type": "literal",
+                  "value": "WORKOUT"
+                },
+                {
+                  "type": "literal",
+                  "value": "FUN"
+                },
+                {
+                  "type": "literal",
+                  "value": "CUSTOM"
+                }
+              ]
+            },
+            "optional": true
+          }
+        }
+      },
+      "functionType": "Mutation",
+      "identifier": "mobile.js:updateSession",
+      "returns": null,
+      "visibility": {
+        "kind": "public"
+      }
+    },
+    {
+      "args": {
+        "type": "object",
+        "value": {
+          "color": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          },
+          "grade": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          },
+          "location": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          },
+          "title": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "type": {
+            "fieldType": {
+              "type": "union",
+              "value": [
+                {
+                  "type": "literal",
+                  "value": "BOULDER"
+                },
+                {
+                  "type": "literal",
+                  "value": "ROPE"
+                }
+              ]
+            },
+            "optional": false
+          },
+          "x": {
+            "fieldType": {
+              "type": "number"
+            },
+            "optional": false
+          },
+          "y": {
+            "fieldType": {
+              "type": "number"
+            },
+            "optional": false
+          }
+        }
+      },
+      "functionType": "Mutation",
+      "identifier": "mobile.js:createRoute",
+      "returns": null,
+      "visibility": {
+        "kind": "public"
+      }
+    },
+    {
+      "args": {
+        "type": "object",
+        "value": {
+          "newDate": {
+            "fieldType": {
+              "type": "union",
+              "value": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "optional": true
+          },
+          "newGrade": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "newLocation": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "newTitle": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "newType": {
+            "fieldType": {
+              "type": "union",
+              "value": [
+                {
+                  "type": "literal",
+                  "value": "BOULDER"
+                },
+                {
+                  "type": "literal",
+                  "value": "ROPE"
+                }
+              ]
+            },
+            "optional": true
+          },
+          "newX": {
+            "fieldType": {
+              "type": "union",
+              "value": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "optional": true
+          },
+          "newY": {
+            "fieldType": {
+              "type": "union",
+              "value": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "optional": true
+          },
+          "routeId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          }
+        }
+      },
+      "functionType": "Mutation",
+      "identifier": "mobile.js:updateRoute",
+      "returns": null,
+      "visibility": {
+        "kind": "public"
+      }
+    },
+    {
+      "args": {
+        "type": "object",
+        "value": {
+          "routeIds": {
+            "fieldType": {
+              "type": "array",
+              "value": {
+                "type": "string"
+              }
+            },
+            "optional": false
+          }
+        }
+      },
+      "functionType": "Mutation",
+      "identifier": "mobile.js:archiveRoute",
+      "returns": null,
+      "visibility": {
+        "kind": "public"
+      }
+    },
+    {
+      "args": {
+        "type": "object",
+        "value": {
+          "routeIds": {
+            "fieldType": {
+              "type": "array",
+              "value": {
+                "type": "string"
+              }
+            },
+            "optional": false
+          }
+        }
+      },
+      "functionType": "Mutation",
+      "identifier": "mobile.js:deleteRoute",
+      "returns": null,
+      "visibility": {
+        "kind": "public"
+      }
+    },
+    {
+      "args": {
+        "type": "object",
+        "value": {
+          "routeId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          }
+        }
+      },
+      "functionType": "Query",
+      "identifier": "mobile.js:getRouteBountyStatus",
+      "returns": null,
+      "visibility": {
+        "kind": "public"
+      }
+    },
+    {
+      "args": {
+        "type": "object",
+        "value": {
+          "routeId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          }
+        }
+      },
+      "functionType": "Mutation",
+      "identifier": "mobile.js:addManualBounty",
+      "returns": null,
+      "visibility": {
+        "kind": "public"
+      }
+    },
+    {
+      "args": {
+        "type": "object",
+        "value": {}
+      },
+      "functionType": "Mutation",
+      "identifier": "mobile.js:runManualBountyFill",
+      "returns": null,
+      "visibility": {
+        "kind": "public"
+      }
+    },
+    {
+      "args": {
+        "type": "object",
+        "value": {}
+      },
+      "functionType": "Query",
+      "identifier": "mapEditor.js:listGyms",
+      "returns": null,
+      "visibility": {
+        "kind": "public"
+      }
+    },
+    {
+      "args": {
+        "type": "object",
+        "value": {
+          "gymId": {
+            "fieldType": {
+              "tableName": "gyms",
+              "type": "id"
+            },
+            "optional": false
+          }
+        }
+      },
+      "functionType": "Query",
+      "identifier": "mapEditor.js:listAreasForGym",
+      "returns": null,
+      "visibility": {
+        "kind": "public"
+      }
+    },
+    {
+      "args": {
+        "type": "object",
+        "value": {
+          "gymAreaId": {
+            "fieldType": {
+              "tableName": "gymAreas",
+              "type": "id"
+            },
+            "optional": false
+          }
+        }
+      },
+      "functionType": "Query",
+      "identifier": "mapEditor.js:listZonesForArea",
+      "returns": null,
+      "visibility": {
+        "kind": "public"
+      }
+    },
+    {
+      "args": {
+        "type": "object",
+        "value": {
+          "gymAreaId": {
+            "fieldType": {
+              "tableName": "gymAreas",
+              "type": "id"
+            },
+            "optional": false
+          }
+        }
+      },
+      "functionType": "Query",
+      "identifier": "mapEditor.js:getAreaMap",
+      "returns": null,
+      "visibility": {
+        "kind": "public"
+      }
+    },
+    {
+      "args": {
+        "type": "object",
+        "value": {
+          "gymAreaId": {
+            "fieldType": {
+              "tableName": "gymAreas",
+              "type": "id"
+            },
+            "optional": false
+          }
+        }
+      },
+      "functionType": "Query",
+      "identifier": "mapEditor.js:listWallsForArea",
+      "returns": null,
+      "visibility": {
+        "kind": "public"
+      }
+    },
+    {
+      "args": {
+        "type": "object",
+        "value": {
+          "displayHeight": {
+            "fieldType": {
+              "type": "number"
+            },
+            "optional": true
+          },
+          "displayWidth": {
+            "fieldType": {
+              "type": "number"
+            },
+            "optional": true
+          },
+          "gymAreaId": {
+            "fieldType": {
+              "tableName": "gymAreas",
+              "type": "id"
+            },
+            "optional": false
+          },
+          "gymId": {
+            "fieldType": {
+              "tableName": "gyms",
+              "type": "id"
+            },
+            "optional": false
+          },
+          "id": {
+            "fieldType": {
+              "tableName": "gymAreaMaps",
+              "type": "id"
+            },
+            "optional": true
+          },
+          "isActive": {
+            "fieldType": {
+              "type": "boolean"
+            },
+            "optional": false
+          },
+          "key": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          },
+          "labels": {
+            "fieldType": {
+              "type": "array",
+              "value": {
+                "type": "object",
+                "value": {
+                  "backgroundColor": {
+                    "fieldType": {
+                      "type": "string"
+                    },
+                    "optional": true
+                  },
+                  "backgroundOpacity": {
+                    "fieldType": {
+                      "type": "number"
+                    },
+                    "optional": true
+                  },
+                  "fill": {
+                    "fieldType": {
+                      "type": "string"
+                    },
+                    "optional": true
+                  },
+                  "fontSize": {
+                    "fieldType": {
+                      "type": "number"
+                    },
+                    "optional": true
+                  },
+                  "id": {
+                    "fieldType": {
+                      "type": "string"
+                    },
+                    "optional": false
+                  },
+                  "padding": {
+                    "fieldType": {
+                      "type": "number"
+                    },
+                    "optional": true
+                  },
+                  "text": {
+                    "fieldType": {
+                      "type": "string"
+                    },
+                    "optional": false
+                  },
+                  "textAnchor": {
+                    "fieldType": {
+                      "type": "union",
+                      "value": [
+                        {
+                          "type": "literal",
+                          "value": "start"
+                        },
+                        {
+                          "type": "literal",
+                          "value": "middle"
+                        },
+                        {
+                          "type": "literal",
+                          "value": "end"
+                        }
+                      ]
+                    },
+                    "optional": true
+                  },
+                  "transform": {
+                    "fieldType": {
+                      "type": "object",
+                      "value": {
+                        "value": {
+                          "fieldType": {
+                            "type": "string"
+                          },
+                          "optional": false
+                        }
+                      }
+                    },
+                    "optional": true
+                  },
+                  "x": {
+                    "fieldType": {
+                      "type": "number"
+                    },
+                    "optional": false
+                  },
+                  "y": {
+                    "fieldType": {
+                      "type": "number"
+                    },
+                    "optional": false
+                  }
+                }
+              }
+            },
+            "optional": false
+          },
+          "matFeatures": {
+            "fieldType": {
+              "type": "array",
+              "value": {
+                "type": "object",
+                "value": {
+                  "bounds": {
+                    "fieldType": {
+                      "type": "object",
+                      "value": {
+                        "height": {
+                          "fieldType": {
+                            "type": "number"
+                          },
+                          "optional": false
+                        },
+                        "width": {
+                          "fieldType": {
+                            "type": "number"
+                          },
+                          "optional": false
+                        },
+                        "x": {
+                          "fieldType": {
+                            "type": "number"
+                          },
+                          "optional": false
+                        },
+                        "y": {
+                          "fieldType": {
+                            "type": "number"
+                          },
+                          "optional": false
+                        }
+                      }
+                    },
+                    "optional": true
+                  },
+                  "fillColor": {
+                    "fieldType": {
+                      "type": "string"
+                    },
+                    "optional": true
+                  },
+                  "fillOpacity": {
+                    "fieldType": {
+                      "type": "number"
+                    },
+                    "optional": true
+                  },
+                  "id": {
+                    "fieldType": {
+                      "type": "string"
+                    },
+                    "optional": false
+                  },
+                  "name": {
+                    "fieldType": {
+                      "type": "string"
+                    },
+                    "optional": true
+                  },
+                  "patternColor": {
+                    "fieldType": {
+                      "type": "string"
+                    },
+                    "optional": true
+                  },
+                  "patternKey": {
+                    "fieldType": {
+                      "type": "string"
+                    },
+                    "optional": true
+                  },
+                  "patternOpacity": {
+                    "fieldType": {
+                      "type": "number"
+                    },
+                    "optional": true
+                  },
+                  "shapes": {
+                    "fieldType": {
+                      "type": "array",
+                      "value": {
+                        "type": "object",
+                        "value": {
+                          "attributes": {
+                            "fieldType": {
+                              "keys": {
+                                "type": "string"
+                              },
+                              "type": "record",
+                              "values": {
+                                "fieldType": {
+                                  "type": "string"
+                                },
+                                "optional": false
+                              }
+                            },
+                            "optional": true
+                          },
+                          "bounds": {
+                            "fieldType": {
+                              "type": "object",
+                              "value": {
+                                "height": {
+                                  "fieldType": {
+                                    "type": "number"
+                                  },
+                                  "optional": false
+                                },
+                                "width": {
+                                  "fieldType": {
+                                    "type": "number"
+                                  },
+                                  "optional": false
+                                },
+                                "x": {
+                                  "fieldType": {
+                                    "type": "number"
+                                  },
+                                  "optional": false
+                                },
+                                "y": {
+                                  "fieldType": {
+                                    "type": "number"
+                                  },
+                                  "optional": false
+                                }
+                              }
+                            },
+                            "optional": true
+                          },
+                          "children": {
+                            "fieldType": {
+                              "type": "array",
+                              "value": {
+                                "type": "string"
+                              }
+                            },
+                            "optional": true
+                          },
+                          "className": {
+                            "fieldType": {
+                              "type": "string"
+                            },
+                            "optional": true
+                          },
+                          "fillOpacity": {
+                            "fieldType": {
+                              "type": "number"
+                            },
+                            "optional": true
+                          },
+                          "id": {
+                            "fieldType": {
+                              "type": "string"
+                            },
+                            "optional": false
+                          },
+                          "label": {
+                            "fieldType": {
+                              "type": "string"
+                            },
+                            "optional": true
+                          },
+                          "pathData": {
+                            "fieldType": {
+                              "type": "string"
+                            },
+                            "optional": true
+                          },
+                          "points": {
+                            "fieldType": {
+                              "type": "array",
+                              "value": {
+                                "type": "object",
+                                "value": {
+                                  "x": {
+                                    "fieldType": {
+                                      "type": "number"
+                                    },
+                                    "optional": false
+                                  },
+                                  "y": {
+                                    "fieldType": {
+                                      "type": "number"
+                                    },
+                                    "optional": false
+                                  }
+                                }
+                              }
+                            },
+                            "optional": true
+                          },
+                          "style": {
+                            "fieldType": {
+                              "keys": {
+                                "type": "string"
+                              },
+                              "type": "record",
+                              "values": {
+                                "fieldType": {
+                                  "type": "string"
+                                },
+                                "optional": false
+                              }
+                            },
+                            "optional": true
+                          },
+                          "transform": {
+                            "fieldType": {
+                              "type": "object",
+                              "value": {
+                                "value": {
+                                  "fieldType": {
+                                    "type": "string"
+                                  },
+                                  "optional": false
+                                }
+                              }
+                            },
+                            "optional": true
+                          },
+                          "type": {
+                            "fieldType": {
+                              "type": "union",
+                              "value": [
+                                {
+                                  "type": "literal",
+                                  "value": "rect"
+                                },
+                                {
+                                  "type": "literal",
+                                  "value": "polygon"
+                                },
+                                {
+                                  "type": "literal",
+                                  "value": "path"
+                                },
+                                {
+                                  "type": "literal",
+                                  "value": "circle"
+                                },
+                                {
+                                  "type": "literal",
+                                  "value": "ellipse"
+                                },
+                                {
+                                  "type": "literal",
+                                  "value": "line"
+                                },
+                                {
+                                  "type": "literal",
+                                  "value": "polyline"
+                                },
+                                {
+                                  "type": "literal",
+                                  "value": "group"
+                                }
+                              ]
+                            },
+                            "optional": false
+                          }
+                        }
+                      }
+                    },
+                    "optional": false
+                  },
+                  "sortOrder": {
+                    "fieldType": {
+                      "type": "number"
+                    },
+                    "optional": true
+                  },
+                  "strokeColor": {
+                    "fieldType": {
+                      "type": "string"
+                    },
+                    "optional": true
+                  },
+                  "strokeOpacity": {
+                    "fieldType": {
+                      "type": "number"
+                    },
+                    "optional": true
+                  },
+                  "strokeWidth": {
+                    "fieldType": {
+                      "type": "number"
+                    },
+                    "optional": true
+                  },
+                  "type": {
+                    "fieldType": {
+                      "type": "union",
+                      "value": [
+                        {
+                          "type": "literal",
+                          "value": "non_climbing_area"
+                        },
+                        {
+                          "type": "literal",
+                          "value": "overhang"
+                        },
+                        {
+                          "type": "literal",
+                          "value": "mat"
+                        }
+                      ]
+                    },
+                    "optional": false
+                  }
+                }
+              }
+            },
+            "optional": true
+          },
+          "name": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          },
+          "nonClimbingFeatures": {
+            "fieldType": {
+              "type": "array",
+              "value": {
+                "type": "object",
+                "value": {
+                  "bounds": {
+                    "fieldType": {
+                      "type": "object",
+                      "value": {
+                        "height": {
+                          "fieldType": {
+                            "type": "number"
+                          },
+                          "optional": false
+                        },
+                        "width": {
+                          "fieldType": {
+                            "type": "number"
+                          },
+                          "optional": false
+                        },
+                        "x": {
+                          "fieldType": {
+                            "type": "number"
+                          },
+                          "optional": false
+                        },
+                        "y": {
+                          "fieldType": {
+                            "type": "number"
+                          },
+                          "optional": false
+                        }
+                      }
+                    },
+                    "optional": true
+                  },
+                  "fillColor": {
+                    "fieldType": {
+                      "type": "string"
+                    },
+                    "optional": true
+                  },
+                  "fillOpacity": {
+                    "fieldType": {
+                      "type": "number"
+                    },
+                    "optional": true
+                  },
+                  "id": {
+                    "fieldType": {
+                      "type": "string"
+                    },
+                    "optional": false
+                  },
+                  "name": {
+                    "fieldType": {
+                      "type": "string"
+                    },
+                    "optional": true
+                  },
+                  "patternColor": {
+                    "fieldType": {
+                      "type": "string"
+                    },
+                    "optional": true
+                  },
+                  "patternKey": {
+                    "fieldType": {
+                      "type": "string"
+                    },
+                    "optional": true
+                  },
+                  "patternOpacity": {
+                    "fieldType": {
+                      "type": "number"
+                    },
+                    "optional": true
+                  },
+                  "shapes": {
+                    "fieldType": {
+                      "type": "array",
+                      "value": {
+                        "type": "object",
+                        "value": {
+                          "attributes": {
+                            "fieldType": {
+                              "keys": {
+                                "type": "string"
+                              },
+                              "type": "record",
+                              "values": {
+                                "fieldType": {
+                                  "type": "string"
+                                },
+                                "optional": false
+                              }
+                            },
+                            "optional": true
+                          },
+                          "bounds": {
+                            "fieldType": {
+                              "type": "object",
+                              "value": {
+                                "height": {
+                                  "fieldType": {
+                                    "type": "number"
+                                  },
+                                  "optional": false
+                                },
+                                "width": {
+                                  "fieldType": {
+                                    "type": "number"
+                                  },
+                                  "optional": false
+                                },
+                                "x": {
+                                  "fieldType": {
+                                    "type": "number"
+                                  },
+                                  "optional": false
+                                },
+                                "y": {
+                                  "fieldType": {
+                                    "type": "number"
+                                  },
+                                  "optional": false
+                                }
+                              }
+                            },
+                            "optional": true
+                          },
+                          "children": {
+                            "fieldType": {
+                              "type": "array",
+                              "value": {
+                                "type": "string"
+                              }
+                            },
+                            "optional": true
+                          },
+                          "className": {
+                            "fieldType": {
+                              "type": "string"
+                            },
+                            "optional": true
+                          },
+                          "fillOpacity": {
+                            "fieldType": {
+                              "type": "number"
+                            },
+                            "optional": true
+                          },
+                          "id": {
+                            "fieldType": {
+                              "type": "string"
+                            },
+                            "optional": false
+                          },
+                          "label": {
+                            "fieldType": {
+                              "type": "string"
+                            },
+                            "optional": true
+                          },
+                          "pathData": {
+                            "fieldType": {
+                              "type": "string"
+                            },
+                            "optional": true
+                          },
+                          "points": {
+                            "fieldType": {
+                              "type": "array",
+                              "value": {
+                                "type": "object",
+                                "value": {
+                                  "x": {
+                                    "fieldType": {
+                                      "type": "number"
+                                    },
+                                    "optional": false
+                                  },
+                                  "y": {
+                                    "fieldType": {
+                                      "type": "number"
+                                    },
+                                    "optional": false
+                                  }
+                                }
+                              }
+                            },
+                            "optional": true
+                          },
+                          "style": {
+                            "fieldType": {
+                              "keys": {
+                                "type": "string"
+                              },
+                              "type": "record",
+                              "values": {
+                                "fieldType": {
+                                  "type": "string"
+                                },
+                                "optional": false
+                              }
+                            },
+                            "optional": true
+                          },
+                          "transform": {
+                            "fieldType": {
+                              "type": "object",
+                              "value": {
+                                "value": {
+                                  "fieldType": {
+                                    "type": "string"
+                                  },
+                                  "optional": false
+                                }
+                              }
+                            },
+                            "optional": true
+                          },
+                          "type": {
+                            "fieldType": {
+                              "type": "union",
+                              "value": [
+                                {
+                                  "type": "literal",
+                                  "value": "rect"
+                                },
+                                {
+                                  "type": "literal",
+                                  "value": "polygon"
+                                },
+                                {
+                                  "type": "literal",
+                                  "value": "path"
+                                },
+                                {
+                                  "type": "literal",
+                                  "value": "circle"
+                                },
+                                {
+                                  "type": "literal",
+                                  "value": "ellipse"
+                                },
+                                {
+                                  "type": "literal",
+                                  "value": "line"
+                                },
+                                {
+                                  "type": "literal",
+                                  "value": "polyline"
+                                },
+                                {
+                                  "type": "literal",
+                                  "value": "group"
+                                }
+                              ]
+                            },
+                            "optional": false
+                          }
+                        }
+                      }
+                    },
+                    "optional": false
+                  },
+                  "sortOrder": {
+                    "fieldType": {
+                      "type": "number"
+                    },
+                    "optional": true
+                  },
+                  "strokeColor": {
+                    "fieldType": {
+                      "type": "string"
+                    },
+                    "optional": true
+                  },
+                  "strokeOpacity": {
+                    "fieldType": {
+                      "type": "number"
+                    },
+                    "optional": true
+                  },
+                  "strokeWidth": {
+                    "fieldType": {
+                      "type": "number"
+                    },
+                    "optional": true
+                  },
+                  "type": {
+                    "fieldType": {
+                      "type": "union",
+                      "value": [
+                        {
+                          "type": "literal",
+                          "value": "non_climbing_area"
+                        },
+                        {
+                          "type": "literal",
+                          "value": "overhang"
+                        },
+                        {
+                          "type": "literal",
+                          "value": "mat"
+                        }
+                      ]
+                    },
+                    "optional": false
+                  }
+                }
+              }
+            },
+            "optional": false
+          },
+          "overhangFeatures": {
+            "fieldType": {
+              "type": "array",
+              "value": {
+                "type": "object",
+                "value": {
+                  "bounds": {
+                    "fieldType": {
+                      "type": "object",
+                      "value": {
+                        "height": {
+                          "fieldType": {
+                            "type": "number"
+                          },
+                          "optional": false
+                        },
+                        "width": {
+                          "fieldType": {
+                            "type": "number"
+                          },
+                          "optional": false
+                        },
+                        "x": {
+                          "fieldType": {
+                            "type": "number"
+                          },
+                          "optional": false
+                        },
+                        "y": {
+                          "fieldType": {
+                            "type": "number"
+                          },
+                          "optional": false
+                        }
+                      }
+                    },
+                    "optional": true
+                  },
+                  "fillColor": {
+                    "fieldType": {
+                      "type": "string"
+                    },
+                    "optional": true
+                  },
+                  "fillOpacity": {
+                    "fieldType": {
+                      "type": "number"
+                    },
+                    "optional": true
+                  },
+                  "id": {
+                    "fieldType": {
+                      "type": "string"
+                    },
+                    "optional": false
+                  },
+                  "name": {
+                    "fieldType": {
+                      "type": "string"
+                    },
+                    "optional": true
+                  },
+                  "patternColor": {
+                    "fieldType": {
+                      "type": "string"
+                    },
+                    "optional": true
+                  },
+                  "patternKey": {
+                    "fieldType": {
+                      "type": "string"
+                    },
+                    "optional": true
+                  },
+                  "patternOpacity": {
+                    "fieldType": {
+                      "type": "number"
+                    },
+                    "optional": true
+                  },
+                  "shapes": {
+                    "fieldType": {
+                      "type": "array",
+                      "value": {
+                        "type": "object",
+                        "value": {
+                          "attributes": {
+                            "fieldType": {
+                              "keys": {
+                                "type": "string"
+                              },
+                              "type": "record",
+                              "values": {
+                                "fieldType": {
+                                  "type": "string"
+                                },
+                                "optional": false
+                              }
+                            },
+                            "optional": true
+                          },
+                          "bounds": {
+                            "fieldType": {
+                              "type": "object",
+                              "value": {
+                                "height": {
+                                  "fieldType": {
+                                    "type": "number"
+                                  },
+                                  "optional": false
+                                },
+                                "width": {
+                                  "fieldType": {
+                                    "type": "number"
+                                  },
+                                  "optional": false
+                                },
+                                "x": {
+                                  "fieldType": {
+                                    "type": "number"
+                                  },
+                                  "optional": false
+                                },
+                                "y": {
+                                  "fieldType": {
+                                    "type": "number"
+                                  },
+                                  "optional": false
+                                }
+                              }
+                            },
+                            "optional": true
+                          },
+                          "children": {
+                            "fieldType": {
+                              "type": "array",
+                              "value": {
+                                "type": "string"
+                              }
+                            },
+                            "optional": true
+                          },
+                          "className": {
+                            "fieldType": {
+                              "type": "string"
+                            },
+                            "optional": true
+                          },
+                          "fillOpacity": {
+                            "fieldType": {
+                              "type": "number"
+                            },
+                            "optional": true
+                          },
+                          "id": {
+                            "fieldType": {
+                              "type": "string"
+                            },
+                            "optional": false
+                          },
+                          "label": {
+                            "fieldType": {
+                              "type": "string"
+                            },
+                            "optional": true
+                          },
+                          "pathData": {
+                            "fieldType": {
+                              "type": "string"
+                            },
+                            "optional": true
+                          },
+                          "points": {
+                            "fieldType": {
+                              "type": "array",
+                              "value": {
+                                "type": "object",
+                                "value": {
+                                  "x": {
+                                    "fieldType": {
+                                      "type": "number"
+                                    },
+                                    "optional": false
+                                  },
+                                  "y": {
+                                    "fieldType": {
+                                      "type": "number"
+                                    },
+                                    "optional": false
+                                  }
+                                }
+                              }
+                            },
+                            "optional": true
+                          },
+                          "style": {
+                            "fieldType": {
+                              "keys": {
+                                "type": "string"
+                              },
+                              "type": "record",
+                              "values": {
+                                "fieldType": {
+                                  "type": "string"
+                                },
+                                "optional": false
+                              }
+                            },
+                            "optional": true
+                          },
+                          "transform": {
+                            "fieldType": {
+                              "type": "object",
+                              "value": {
+                                "value": {
+                                  "fieldType": {
+                                    "type": "string"
+                                  },
+                                  "optional": false
+                                }
+                              }
+                            },
+                            "optional": true
+                          },
+                          "type": {
+                            "fieldType": {
+                              "type": "union",
+                              "value": [
+                                {
+                                  "type": "literal",
+                                  "value": "rect"
+                                },
+                                {
+                                  "type": "literal",
+                                  "value": "polygon"
+                                },
+                                {
+                                  "type": "literal",
+                                  "value": "path"
+                                },
+                                {
+                                  "type": "literal",
+                                  "value": "circle"
+                                },
+                                {
+                                  "type": "literal",
+                                  "value": "ellipse"
+                                },
+                                {
+                                  "type": "literal",
+                                  "value": "line"
+                                },
+                                {
+                                  "type": "literal",
+                                  "value": "polyline"
+                                },
+                                {
+                                  "type": "literal",
+                                  "value": "group"
+                                }
+                              ]
+                            },
+                            "optional": false
+                          }
+                        }
+                      }
+                    },
+                    "optional": false
+                  },
+                  "sortOrder": {
+                    "fieldType": {
+                      "type": "number"
+                    },
+                    "optional": true
+                  },
+                  "strokeColor": {
+                    "fieldType": {
+                      "type": "string"
+                    },
+                    "optional": true
+                  },
+                  "strokeOpacity": {
+                    "fieldType": {
+                      "type": "number"
+                    },
+                    "optional": true
+                  },
+                  "strokeWidth": {
+                    "fieldType": {
+                      "type": "number"
+                    },
+                    "optional": true
+                  },
+                  "type": {
+                    "fieldType": {
+                      "type": "union",
+                      "value": [
+                        {
+                          "type": "literal",
+                          "value": "non_climbing_area"
+                        },
+                        {
+                          "type": "literal",
+                          "value": "overhang"
+                        },
+                        {
+                          "type": "literal",
+                          "value": "mat"
+                        }
+                      ]
+                    },
+                    "optional": false
+                  }
+                }
+              }
+            },
+            "optional": false
+          },
+          "svgView": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          }
+        }
+      },
+      "functionType": "Mutation",
+      "identifier": "mapEditor.js:upsertAreaMap",
+      "returns": null,
+      "visibility": {
+        "kind": "public"
+      }
+    },
+    {
+      "args": {
+        "type": "object",
+        "value": {
+          "id": {
+            "fieldType": {
+              "tableName": "gymAreaMaps",
+              "type": "id"
+            },
+            "optional": false
+          }
+        }
+      },
+      "functionType": "Mutation",
+      "identifier": "mapEditor.js:deleteAreaMap",
+      "returns": null,
+      "visibility": {
+        "kind": "public"
+      }
+    },
+    {
+      "args": {
+        "type": "object",
+        "value": {
+          "allowOverflow": {
+            "fieldType": {
+              "type": "boolean"
+            },
+            "optional": true
+          },
+          "bounds": {
+            "fieldType": {
+              "type": "object",
+              "value": {
+                "height": {
+                  "fieldType": {
+                    "type": "number"
+                  },
+                  "optional": false
+                },
+                "width": {
+                  "fieldType": {
+                    "type": "number"
+                  },
+                  "optional": false
+                },
+                "x": {
+                  "fieldType": {
+                    "type": "number"
+                  },
+                  "optional": false
+                },
+                "y": {
+                  "fieldType": {
+                    "type": "number"
+                  },
+                  "optional": false
+                }
+              }
+            },
+            "optional": true
+          },
+          "fillColor": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "fillOpacity": {
+            "fieldType": {
+              "type": "number"
+            },
+            "optional": true
+          },
+          "gymAreaId": {
+            "fieldType": {
+              "tableName": "gymAreas",
+              "type": "id"
+            },
+            "optional": false
+          },
+          "gymId": {
+            "fieldType": {
+              "tableName": "gyms",
+              "type": "id"
+            },
+            "optional": false
+          },
+          "gymZoneId": {
+            "fieldType": {
+              "tableName": "gymZones",
+              "type": "id"
+            },
+            "optional": false
+          },
+          "id": {
+            "fieldType": {
+              "tableName": "gymWalls",
+              "type": "id"
+            },
+            "optional": true
+          },
+          "isActive": {
+            "fieldType": {
+              "type": "boolean"
+            },
+            "optional": false
+          },
+          "isInteractive": {
+            "fieldType": {
+              "type": "boolean"
+            },
+            "optional": false
+          },
+          "name": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          },
+          "partKey": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          },
+          "shapes": {
+            "fieldType": {
+              "type": "array",
+              "value": {
+                "type": "object",
+                "value": {
+                  "attributes": {
+                    "fieldType": {
+                      "keys": {
+                        "type": "string"
+                      },
+                      "type": "record",
+                      "values": {
+                        "fieldType": {
+                          "type": "string"
+                        },
+                        "optional": false
+                      }
+                    },
+                    "optional": true
+                  },
+                  "bounds": {
+                    "fieldType": {
+                      "type": "object",
+                      "value": {
+                        "height": {
+                          "fieldType": {
+                            "type": "number"
+                          },
+                          "optional": false
+                        },
+                        "width": {
+                          "fieldType": {
+                            "type": "number"
+                          },
+                          "optional": false
+                        },
+                        "x": {
+                          "fieldType": {
+                            "type": "number"
+                          },
+                          "optional": false
+                        },
+                        "y": {
+                          "fieldType": {
+                            "type": "number"
+                          },
+                          "optional": false
+                        }
+                      }
+                    },
+                    "optional": true
+                  },
+                  "children": {
+                    "fieldType": {
+                      "type": "array",
+                      "value": {
+                        "type": "string"
+                      }
+                    },
+                    "optional": true
+                  },
+                  "className": {
+                    "fieldType": {
+                      "type": "string"
+                    },
+                    "optional": true
+                  },
+                  "fillOpacity": {
+                    "fieldType": {
+                      "type": "number"
+                    },
+                    "optional": true
+                  },
+                  "id": {
+                    "fieldType": {
+                      "type": "string"
+                    },
+                    "optional": false
+                  },
+                  "label": {
+                    "fieldType": {
+                      "type": "string"
+                    },
+                    "optional": true
+                  },
+                  "pathData": {
+                    "fieldType": {
+                      "type": "string"
+                    },
+                    "optional": true
+                  },
+                  "points": {
+                    "fieldType": {
+                      "type": "array",
+                      "value": {
+                        "type": "object",
+                        "value": {
+                          "x": {
+                            "fieldType": {
+                              "type": "number"
+                            },
+                            "optional": false
+                          },
+                          "y": {
+                            "fieldType": {
+                              "type": "number"
+                            },
+                            "optional": false
+                          }
+                        }
+                      }
+                    },
+                    "optional": true
+                  },
+                  "style": {
+                    "fieldType": {
+                      "keys": {
+                        "type": "string"
+                      },
+                      "type": "record",
+                      "values": {
+                        "fieldType": {
+                          "type": "string"
+                        },
+                        "optional": false
+                      }
+                    },
+                    "optional": true
+                  },
+                  "transform": {
+                    "fieldType": {
+                      "type": "object",
+                      "value": {
+                        "value": {
+                          "fieldType": {
+                            "type": "string"
+                          },
+                          "optional": false
+                        }
+                      }
+                    },
+                    "optional": true
+                  },
+                  "type": {
+                    "fieldType": {
+                      "type": "union",
+                      "value": [
+                        {
+                          "type": "literal",
+                          "value": "rect"
+                        },
+                        {
+                          "type": "literal",
+                          "value": "polygon"
+                        },
+                        {
+                          "type": "literal",
+                          "value": "path"
+                        },
+                        {
+                          "type": "literal",
+                          "value": "circle"
+                        },
+                        {
+                          "type": "literal",
+                          "value": "ellipse"
+                        },
+                        {
+                          "type": "literal",
+                          "value": "line"
+                        },
+                        {
+                          "type": "literal",
+                          "value": "polyline"
+                        },
+                        {
+                          "type": "literal",
+                          "value": "group"
+                        }
+                      ]
+                    },
+                    "optional": false
+                  }
+                }
+              }
+            },
+            "optional": false
+          },
+          "slug": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          },
+          "sortOrder": {
+            "fieldType": {
+              "type": "number"
+            },
+            "optional": true
+          },
+          "strokeColor": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "strokeWidth": {
+            "fieldType": {
+              "type": "number"
+            },
+            "optional": true
+          }
+        }
+      },
+      "functionType": "Mutation",
+      "identifier": "mapEditor.js:upsertWall",
+      "returns": null,
+      "visibility": {
+        "kind": "public"
+      }
+    },
+    {
+      "args": {
+        "type": "object",
+        "value": {
+          "id": {
+            "fieldType": {
+              "tableName": "gymWalls",
+              "type": "id"
+            },
+            "optional": false
+          }
+        }
+      },
+      "functionType": "Mutation",
+      "identifier": "mapEditor.js:deleteWall",
+      "returns": null,
+      "visibility": {
+        "kind": "public"
+      }
+    },
+    {
+      "args": {
+        "type": "object",
+        "value": {
+          "gymId": {
+            "fieldType": {
+              "tableName": "gyms",
+              "type": "id"
+            },
+            "optional": false
+          },
+          "isActive": {
+            "fieldType": {
+              "type": "boolean"
+            },
+            "optional": false
+          },
+          "name": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          },
+          "slug": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          }
+        }
+      },
+      "functionType": "Mutation",
+      "identifier": "mapEditor.js:createArea",
+      "returns": null,
+      "visibility": {
+        "kind": "public"
+      }
+    },
+    {
+      "args": {
+        "type": "object",
+        "value": {
+          "gymAreaId": {
+            "fieldType": {
+              "tableName": "gymAreas",
+              "type": "id"
+            },
+            "optional": false
+          },
+          "gymId": {
+            "fieldType": {
+              "tableName": "gyms",
+              "type": "id"
+            },
+            "optional": false
+          },
+          "isActive": {
+            "fieldType": {
+              "type": "boolean"
+            },
+            "optional": false
+          },
+          "name": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          },
+          "slug": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          }
+        }
+      },
+      "functionType": "Mutation",
+      "identifier": "mapEditor.js:createZone",
+      "returns": null,
+      "visibility": {
+        "kind": "public"
+      }
+    }
+  ]
+}
