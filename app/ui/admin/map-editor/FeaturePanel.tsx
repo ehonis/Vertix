@@ -49,7 +49,7 @@ export function FeaturePanel({
             onClick={() => {
               setFeatures((prev) => [
                 ...prev,
-                { id: `feature-${prev.length + 1}`, type: "non_climbing_area", name: `Feature ${prev.length + 1}`, allowOverflow: false, fillColor: "#6B7280", fillOpacity: 0.35, shapes: [] },
+                { id: `feature-${prev.length + 1}`, type: "non_climbing_area", name: `Feature ${prev.length + 1}`, allowOverflow: false, fillColor: "#6B7280", fillOpacity: 1, strokeColor: "#6B7280", strokeWidth: 0, shapes: [] },
               ]);
               setSelectedIndex(features.length);
             }}

@@ -111,11 +111,6 @@ export default function TopDown({ map, onData, initialSelection = null }: TopDow
         className="h-full w-full"
         preserveAspectRatio="xMidYMid meet"
       >
-        <defs>
-          <pattern id="topdown-overhang-pattern" patternUnits="userSpaceOnUse" width="8" height="8">
-            <line x1="0" y1="0" x2="8" y2="8" stroke="#4B5563" strokeWidth="2" opacity="0.6" />
-          </pattern>
-        </defs>
 
         <g opacity={selectedPart ? 0.5 : 1}>
           {map.nonClimbingFeatures.map(feature => renderFeature(feature, false))}
@@ -190,27 +185,78 @@ export default function TopDown({ map, onData, initialSelection = null }: TopDow
 }
 
 function renderFeature(feature: TopdownMapData["nonClimbingFeatures"][number], patterned: boolean) {
+  const hatchId = `topdown-overhang-${feature.id}`;
+  const patternColor = feature.patternColor ?? feature.strokeColor ?? "#4B5563";
+  const strokeColor = feature.strokeColor ?? feature.patternColor ?? "#4B5563";
+  const solidColor = feature.strokeColor ?? feature.fillColor ?? "#6B7280";
+  const fill = patterned ? `url(#${hatchId})` : solidColor;
+  const fillOpacity = patterned ? (feature.patternOpacity ?? 0.45) : 1;
+  const strokeWidth = patterned ? (feature.strokeWidth ?? 1.5) : 0;
+
   return (
-    <g
-      key={feature.id}
-      fill={patterned ? "url(#topdown-overhang-pattern)" : (feature.fillColor ?? "#6B7280")}
-      fillOpacity={patterned ? (feature.fillOpacity ?? 0.8) : (feature.fillOpacity ?? 1)}
-      stroke={patterned ? (feature.patternColor ?? "#4B5563") : feature.strokeColor}
-      strokeOpacity={feature.strokeOpacity}
-      strokeWidth={patterned ? (feature.strokeWidth ?? 1) : feature.strokeWidth}
-    >
-      {feature.shapes.map(shape => renderShape(shape))}
+    <g key={feature.id}>
+      {patterned && (
+        <defs>
+          <pattern id={hatchId} patternUnits="userSpaceOnUse" width="5" height="5" patternTransform="rotate(35)">
+            <line x1="0" y1="0" x2="0" y2="5" stroke={patternColor} strokeWidth="2.25" strokeDasharray="2 1.5" />
+          </pattern>
+        </defs>
+      )}
+      {feature.shapes.map(shape => {
+        const hiddenEdges = shape.attributes?.hiddenEdges?.split(",").filter(Boolean) ?? [];
+        const useHiddenOutline = patterned && hiddenEdges.length > 0;
+        return (
+          <g key={shape.id}>
+            {renderShape(shape, {
+              fill,
+              fillOpacity,
+              stroke: useHiddenOutline ? "transparent" : (patterned ? strokeColor : "transparent"),
+              strokeWidth: useHiddenOutline ? 0 : strokeWidth,
+            })}
+            {useHiddenOutline && renderHiddenEdgeOutline(shape, hiddenEdges, strokeColor, strokeWidth)}
+          </g>
+        );
+      })}
     </g>
   );
 }
 
-function renderShape(shape: TopdownMapData["walls"][number]["shapes"][number]) {
+type ShapeStyle = {
+  fill?: string;
+  fillOpacity?: number;
+  stroke?: string;
+  strokeWidth?: number;
+};
+
+function renderShape(shape: TopdownMapData["walls"][number]["shapes"][number], style: ShapeStyle = {}) {
+  const common = {
+    fill: style.fill,
+    fillOpacity: style.fillOpacity,
+    stroke: style.stroke,
+    strokeWidth: style.strokeWidth,
+  };
+  const transform = getShapeTransform(shape);
+
+  // Rect with baked-in segment attributes from the editor: render as oriented polygon
+  // Segments bake rotation into geometry, so skip any visual rotation transform.
+  const segPoly = shapeToSegmentPolygon(shape);
+  if (segPoly) {
+    return (
+      <polygon
+        key={shape.id}
+        points={segPoly.map(p => `${p.x},${p.y}`).join(" ")}
+        {...common}
+      />
+    );
+  }
+
   if (shape.type === "polygon" && shape.points) {
     return (
       <polygon
         key={shape.id}
         points={shape.points.map(point => `${point.x},${point.y}`).join(" ")}
-        transform={shape.transform?.value}
+        transform={transform}
+        {...common}
       />
     );
   }
@@ -223,9 +269,14 @@ function renderShape(shape: TopdownMapData["walls"][number]["shapes"][number]) {
         y={shape.bounds.y}
         width={shape.bounds.width}
         height={shape.bounds.height}
-        transform={shape.transform?.value}
+        transform={transform}
+        {...common}
       />
     );
+  }
+
+  if (shape.type === "path" && shape.pathData) {
+    return <path key={shape.id} d={shape.pathData} transform={transform} {...common} />;
   }
 
   if (shape.points) {
@@ -233,12 +284,123 @@ function renderShape(shape: TopdownMapData["walls"][number]["shapes"][number]) {
       <polygon
         key={shape.id}
         points={shape.points.map(point => `${point.x},${point.y}`).join(" ")}
-        transform={shape.transform?.value}
+        transform={transform}
+        {...common}
       />
     );
   }
 
   return null;
+}
+
+/**
+ * Matches the editor's rendering semantics: rotation is applied around the
+ * shape center returned by `getShapeCenter` (polygon centroid, segment midpoint,
+ * or bounds center) rather than the bounds center baked into the saved transform.
+ */
+function getShapeTransform(shape: TopdownMapData["walls"][number]["shapes"][number]) {
+  const rotation = parseRotationAngle(shape.transform?.value);
+  if (rotation === 0) return undefined;
+  const center = getShapeCenter(shape);
+  if (!center) return shape.transform?.value;
+  return `rotate(${rotation} ${center.x} ${center.y})`;
+}
+
+function parseRotationAngle(transformValue?: string) {
+  if (!transformValue) return 0;
+  const match = transformValue.match(/rotate\(\s*([-\d.]+)/);
+  return match ? Number(match[1]) : 0;
+}
+
+function getShapeCenter(
+  shape: TopdownMapData["walls"][number]["shapes"][number]
+): { x: number; y: number } | null {
+  if (shape.type === "polygon" && shape.points?.length) {
+    const sumX = shape.points.reduce((s, p) => s + p.x, 0);
+    const sumY = shape.points.reduce((s, p) => s + p.y, 0);
+    return { x: sumX / shape.points.length, y: sumY / shape.points.length };
+  }
+  if (shape.points?.length) {
+    const sumX = shape.points.reduce((s, p) => s + p.x, 0);
+    const sumY = shape.points.reduce((s, p) => s + p.y, 0);
+    return { x: sumX / shape.points.length, y: sumY / shape.points.length };
+  }
+  if (shape.bounds) {
+    return {
+      x: shape.bounds.x + shape.bounds.width / 2,
+      y: shape.bounds.y + shape.bounds.height / 2,
+    };
+  }
+  return null;
+}
+
+function shapeToSegmentPolygon(shape: TopdownMapData["walls"][number]["shapes"][number]) {
+  if (shape.type !== "rect") return null;
+  const attrs = shape.attributes;
+  if (!attrs?.segStartX || !attrs?.segStartY || !attrs?.segEndX || !attrs?.segEndY || !attrs?.segThickness) {
+    return null;
+  }
+  const start = { x: Number(attrs.segStartX), y: Number(attrs.segStartY) };
+  const end = { x: Number(attrs.segEndX), y: Number(attrs.segEndY) };
+  const thickness = Number(attrs.segThickness);
+  const dx = end.x - start.x;
+  const dy = end.y - start.y;
+  const length = Math.hypot(dx, dy) || 1;
+  const ox = (-dy / length) * (thickness / 2);
+  const oy = (dx / length) * (thickness / 2);
+  return [
+    { x: start.x + ox, y: start.y + oy },
+    { x: end.x + ox, y: end.y + oy },
+    { x: end.x - ox, y: end.y - oy },
+    { x: start.x - ox, y: start.y - oy },
+  ];
+}
+
+function renderHiddenEdgeOutline(
+  shape: TopdownMapData["walls"][number]["shapes"][number],
+  hiddenEdges: string[],
+  stroke: string,
+  strokeWidth: number
+) {
+  const segPoly = shapeToSegmentPolygon(shape);
+  const points = segPoly ?? (shape.type === "polygon" ? shape.points : null);
+  const transform = segPoly ? undefined : getShapeTransform(shape);
+  if (points && points.length) {
+    return (
+      <g transform={transform}>
+        {points.map((p, i) => {
+          const next = points[(i + 1) % points.length];
+          const key = polygonEdgeKey(i, points.length);
+          if (hiddenEdges.includes(key)) return null;
+          return <line key={key} x1={p.x} y1={p.y} x2={next.x} y2={next.y} stroke={stroke} strokeWidth={strokeWidth} />;
+        })}
+      </g>
+    );
+  }
+
+  if (shape.bounds) {
+    const b = shape.bounds;
+    const top = !hiddenEdges.includes("top");
+    const right = !hiddenEdges.includes("right");
+    const bottom = !hiddenEdges.includes("bottom");
+    const left = !hiddenEdges.includes("left");
+    return (
+      <g transform={getShapeTransform(shape)}>
+        {top && <line x1={b.x} y1={b.y} x2={b.x + b.width} y2={b.y} stroke={stroke} strokeWidth={strokeWidth} />}
+        {right && <line x1={b.x + b.width} y1={b.y} x2={b.x + b.width} y2={b.y + b.height} stroke={stroke} strokeWidth={strokeWidth} />}
+        {bottom && <line x1={b.x} y1={b.y + b.height} x2={b.x + b.width} y2={b.y + b.height} stroke={stroke} strokeWidth={strokeWidth} />}
+        {left && <line x1={b.x} y1={b.y} x2={b.x} y2={b.y + b.height} stroke={stroke} strokeWidth={strokeWidth} />}
+      </g>
+    );
+  }
+  return null;
+}
+
+function polygonEdgeKey(index: number, pointCount: number) {
+  if (pointCount === 4) {
+    return ["top", "right", "bottom", "left"][index] ?? `edge-${index}`;
+  }
+  return `edge-${index}`;
 }
 
 function parseViewBox(svgView: string) {

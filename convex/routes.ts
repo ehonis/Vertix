@@ -115,6 +115,25 @@ export const getWallRoutes = query({
   },
 });
 
+export const getRouteManagerRoutes = query({
+  args: {},
+  handler: async ctx => {
+    const routes = await ctx.db.query("routes").take(10000);
+    return routes
+      .filter(route => !route.isArchived)
+      .map(route => ({
+        _id: route._id,
+        title: route.title,
+        color: route.color,
+        grade: route.grade,
+        type: route.type,
+        x: route.x ?? null,
+        y: route.y ?? null,
+        wallPart: route.legacyLocationKey ?? null,
+      }));
+  },
+});
+
 export const getRouteByLegacyOrConvexId = query({
   args: {
     routeId: v.string(),
@@ -568,6 +587,7 @@ export const updateRoute = mutation({
     newGrade: v.optional(v.string()),
     newDate: v.optional(v.number()),
     newLocation: v.optional(v.string()),
+    newColor: v.optional(v.string()),
     newX: v.optional(v.union(v.number(), v.null())),
     newY: v.optional(v.union(v.number(), v.null())),
   },
@@ -585,7 +605,15 @@ export const updateRoute = mutation({
       patch.bonusXp = isFeaturedGrade(args.newGrade) ? 200 : 0;
     }
     if (args.newDate !== undefined) patch.setDate = args.newDate;
-    if (args.newLocation !== undefined) patch.legacyLocationKey = args.newLocation;
+    if (args.newLocation !== undefined) {
+      patch.legacyLocationKey = args.newLocation;
+      const wall = await ctx.db
+        .query("gymWalls")
+        .withIndex("by_part_key", q => q.eq("partKey", args.newLocation!))
+        .unique();
+      if (wall) patch.gymWallId = wall._id;
+    }
+    if (args.newColor !== undefined) patch.color = args.newColor;
     if (args.newX !== undefined) patch.x = args.newX ?? undefined;
     if (args.newY !== undefined) patch.y = args.newY ?? undefined;
 
@@ -606,6 +634,8 @@ export const createRoute = mutation({
     xp: v.number(),
     createdByUserId: v.optional(v.id("users")),
     bonusXp: v.optional(v.number()),
+    x: v.optional(v.number()),
+    y: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
     const wall = await ctx.db
@@ -651,6 +681,8 @@ export const createRoute = mutation({
       sortOrder: desiredSortOrder,
       createdByUserId: args.createdByUserId,
       legacyLocationKey: args.wallPart,
+      x: args.x,
+      y: args.y,
     });
   },
 });

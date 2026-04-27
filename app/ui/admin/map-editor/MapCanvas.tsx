@@ -180,7 +180,7 @@ export function MapCanvas({
         ? new ResizeObserver(handleViewportChange)
         : null;
 
-    resizeObserver?.observe(svg);
+    if (svg) resizeObserver?.observe(svg);
 
     return () => {
       window.removeEventListener("resize", handleViewportChange);
@@ -836,10 +836,10 @@ export function MapCanvas({
               <ShapeLayer
                 key={shape.id}
                 shape={shape}
-                fill={feature.type === "overhang" ? (feature.patternColor ?? feature.strokeColor ?? "#4B5563") : feature.type === "mat" ? (feature.fillColor ?? "#3F3F46") : (feature.fillColor ?? "#6B7280")}
-                fillOpacity={feature.type === "overhang" ? (feature.patternOpacity ?? 0.45) : shape.fillOpacity ?? feature.fillOpacity ?? 0.35}
-                stroke={feature.type === "overhang" ? (feature.strokeColor ?? feature.patternColor ?? "#4B5563") : feature.type === "mat" ? (feature.strokeColor ?? "transparent") : (feature.strokeColor ?? feature.fillColor ?? "#6B7280")}
-                strokeWidth={feature.type === "overhang" ? (feature.strokeWidth ?? 1.5) : feature.type === "mat" ? (feature.strokeWidth ?? 0) : (feature.strokeWidth ?? 1)}
+                fill={feature.type === "overhang" ? (feature.patternColor ?? feature.strokeColor ?? "#4B5563") : feature.type === "mat" ? (feature.fillColor ?? "#3F3F46") : (feature.strokeColor ?? feature.fillColor ?? "#6B7280")}
+                fillOpacity={feature.type === "overhang" ? (feature.patternOpacity ?? 0.45) : feature.type === "mat" ? (shape.fillOpacity ?? feature.fillOpacity ?? 0.35) : 1}
+                stroke={feature.type === "overhang" ? (feature.strokeColor ?? feature.patternColor ?? "#4B5563") : feature.type === "mat" ? (feature.strokeColor ?? "transparent") : "transparent"}
+                strokeWidth={feature.type === "overhang" ? (feature.strokeWidth ?? 1.5) : 0}
                 selected={featureIndex === selectedFeatureIndex && shapeIndex === selectedShapeIndex}
                 handleMode={featureIndex === selectedFeatureIndex && shapeIndex === selectedShapeIndex ? "full" : "none"}
                 suppressSelectionOutline={false}

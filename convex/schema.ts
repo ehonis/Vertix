@@ -41,7 +41,7 @@ const svgPoint = v.object({
   y: v.number(),
 });
 
-const mapFeatureType = v.union(v.literal("non_climbing_area"), v.literal("overhang"));
+const mapFeatureType = v.union(v.literal("non_climbing_area"), v.literal("overhang"), v.literal("mat"));
 
 const textAnchor = v.union(v.literal("start"), v.literal("middle"), v.literal("end"));
 
@@ -207,6 +207,7 @@ export default defineSchema({
     displayHeight: v.optional(v.number()),
     nonClimbingFeatures: v.array(mapFeature),
     overhangFeatures: v.array(mapFeature),
+    matFeatures: v.optional(v.array(mapFeature)),
     labels: v.array(mapLabel),
     isActive: v.boolean(),
   })

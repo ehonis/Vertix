@@ -11,7 +11,8 @@ export default function RouteChromeSync() {
     const isAuthPage = pathname.startsWith("/signin") || pathname.startsWith("/signup");
     const isTvPage = pathname.startsWith("/tv");
     const isMapEditorPage = pathname.startsWith("/admin/map-editor");
-    const hideChrome = isAuthPage || isTvPage || isMapEditorPage;
+    const isRouteManagerPage = pathname.startsWith("/admin/manager/routes");
+    const hideChrome = isAuthPage || isTvPage || isMapEditorPage || isRouteManagerPage;
 
     body.classList.toggle("chrome-hidden-route", hideChrome);
 
