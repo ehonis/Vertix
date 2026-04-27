@@ -2,10 +2,13 @@
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type {
+  DrawingMode,
+  DrawingTarget,
   EditableFeature,
   EditableLabel,
   EditableShape,
   EditableWall,
+  WallSortPathMap,
 } from "./MapEditorShell";
 
 type ViewBox = {
@@ -14,11 +17,6 @@ type ViewBox = {
   width: number;
   height: number;
 };
-
-type DrawingTarget =
-  | { type: "wall"; wallIndex: number }
-  | { type: "feature"; featureIndex: number }
-  | null;
 
 type DragState =
   | { type: "label"; index: number; offsetX: number; offsetY: number }
@@ -96,14 +94,17 @@ type MapCanvasProps = {
   selectedShapeIndex: number | null;
   selectedLabelIndex: number | null;
   onSelect: (type: "wall" | "feature" | "label", index: number, shapeIndex?: number, options?: { toggle?: boolean }) => void;
-  drawingMode: "none" | "segment" | "polygon" | "triangle";
+  drawingMode: DrawingMode;
   drawingTarget: DrawingTarget;
-  setDrawingMode: (mode: "none" | "segment" | "polygon" | "triangle") => void;
+  setDrawingMode: (mode: DrawingMode) => void;
   setWalls: React.Dispatch<React.SetStateAction<EditableWall[]>>;
   setFeatures: React.Dispatch<React.SetStateAction<EditableFeature[]>>;
   setLabels: React.Dispatch<React.SetStateAction<EditableLabel[]>>;
   showWallNudgeOverlay: boolean;
   setShowWallNudgeOverlay: React.Dispatch<React.SetStateAction<boolean>>;
+  wallSortPaths: WallSortPathMap;
+  setWallSortPaths: React.Dispatch<React.SetStateAction<WallSortPathMap>>;
+  showSortPaths: boolean;
 };
 
 type HandleMode = "full" | "rotateOnly" | "none";
@@ -129,12 +130,16 @@ export function MapCanvas({
   setLabels,
   showWallNudgeOverlay,
   setShowWallNudgeOverlay,
+  wallSortPaths,
+  setWallSortPaths,
+  showSortPaths,
 }: MapCanvasProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const svgRef = useRef<SVGSVGElement | null>(null);
   const [segmentStart, setSegmentStart] = useState<{ x: number; y: number } | null>(null);
   const [draftSegmentEnd, setDraftSegmentEnd] = useState<{ x: number; y: number } | null>(null);
   const [draftPolygon, setDraftPolygon] = useState<Array<{ x: number; y: number }>>([]);
+  const [draftSortPath, setDraftSortPath] = useState<Array<{ x: number; y: number }>>([]);
   const [dragState, setDragState] = useState<DragState>(null);
   const [nudgeOverlayVersion, setNudgeOverlayVersion] = useState(0);
   const [zoom, setZoom] = useState(1);
@@ -609,9 +614,20 @@ export function MapCanvas({
       event.stopPropagation();
       finishPolygon();
     }
+    if (drawingMode === "sortPath" && draftSortPath.length >= 2) {
+      event.preventDefault();
+      event.stopPropagation();
+      finishSortPath();
+    }
   }
 
   function handleCanvasClick(event: React.MouseEvent<SVGSVGElement>) {
+    if (drawingMode === "sortPath") {
+      const point = getSvgPoint(event);
+      setDraftSortPath((prev) => [...prev, point]);
+      return;
+    }
+
     if (drawingMode !== "polygon" && drawingMode !== "triangle") return;
     const point = getSvgPoint(
       event,
@@ -650,6 +666,23 @@ export function MapCanvas({
     setDrawingMode("none");
   }
 
+  function finishSortPath() {
+    if (!drawingTarget || drawingTarget.type !== "wall" || draftSortPath.length < 2) return;
+    const wall = walls[drawingTarget.wallIndex];
+    if (!wall?._id) {
+      // Can't save sort path for unsaved walls — commit points anyway for local preview
+      setDraftSortPath([]);
+      setDrawingMode("none");
+      return;
+    }
+    setWallSortPaths((prev) => ({
+      ...prev,
+      [wall._id!]: draftSortPath,
+    }));
+    setDraftSortPath([]);
+    setDrawingMode("none");
+  }
+
   // Keyboard shortcuts: Enter to finish polygon, Escape to cancel drawing
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
     const tag = (e.target as HTMLElement | null)?.tagName;
@@ -658,9 +691,13 @@ export function MapCanvas({
     if (e.key === "Enter" && drawingMode === "polygon" && draftPolygon.length >= 3) {
       finishPolygon();
     }
+    if (e.key === "Enter" && drawingMode === "sortPath" && draftSortPath.length >= 2) {
+      finishSortPath();
+    }
     if (e.key === "Escape" && drawingMode !== "none") {
       setDrawingMode("none");
       setDraftPolygon([]);
+      setDraftSortPath([]);
       setSegmentStart(null);
       setDraftSegmentEnd(null);
     }
@@ -691,7 +728,9 @@ export function MapCanvas({
     canUseMultiWallNudge,
     drawingMode,
     draftPolygon,
+    draftSortPath,
     finishPolygon,
+    finishSortPath,
     selectedShapeIndex,
     selectedWallIndex,
     setShowWallNudgeOverlay,
@@ -740,7 +779,11 @@ export function MapCanvas({
                   ? draftPolygon.length < 3
                     ? `Polygon: ${draftPolygon.length} pts - click to add`
                     : `Polygon: ${draftPolygon.length} pts`
-                  : "Select & drag to edit"}
+                  : drawingMode === "sortPath"
+                    ? draftSortPath.length < 2
+                      ? `Sort Path: ${draftSortPath.length} pts - click to add`
+                      : `Sort Path: ${draftSortPath.length} pts`
+                    : "Select & drag to edit"}
           </span>
         </div>
         {selectedWallIndex !== null && (selectedShapeIndex !== null || canUseMultiWallNudge) && drawingMode === "none" && (
@@ -793,10 +836,19 @@ export function MapCanvas({
             Finish
           </button>
         )}
+        {drawingMode === "sortPath" && draftSortPath.length >= 2 && (
+          <button
+            className="pointer-events-auto flex items-center gap-1.5 rounded-lg bg-amber-600 px-3 py-1.5 text-[11px] font-bold text-white shadow-lg shadow-amber-600/20 transition hover:bg-amber-500"
+            onClick={finishSortPath}
+          >
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            Finish Path
+          </button>
+        )}
         {drawingMode !== "none" && (
           <button
             className="pointer-events-auto rounded-lg bg-white/[0.06] px-2.5 py-1.5 text-[11px] font-medium text-zinc-400 transition hover:bg-white/[0.1] hover:text-white"
-            onClick={() => { setDrawingMode("none"); setDraftPolygon([]); setSegmentStart(null); setDraftSegmentEnd(null); }}
+            onClick={() => { setDrawingMode("none"); setDraftPolygon([]); setDraftSortPath([]); setSegmentStart(null); setDraftSegmentEnd(null); }}
           >
             Cancel
           </button>
@@ -822,13 +874,39 @@ export function MapCanvas({
       >
         <rect x={viewBox.minX} y={viewBox.minY} width={viewBox.width} height={viewBox.height} fill="#0B0B0F" />
 
+        {/* Sort path arrowhead marker */}
+        <defs>
+          <marker
+            id="sort-path-arrow"
+            viewBox="0 0 10 10"
+            refX="9"
+            refY="5"
+            markerWidth={5 * uiScale}
+            markerHeight={5 * uiScale}
+            orient="auto-start-reverse"
+          >
+            <path d="M 0 0 L 10 5 L 0 10 Z" fill="#F59E0B" />
+          </marker>
+          <marker
+            id="sort-path-arrow-draft"
+            viewBox="0 0 10 10"
+            refX="9"
+            refY="5"
+            markerWidth={5 * uiScale}
+            markerHeight={5 * uiScale}
+            orient="auto-start-reverse"
+          >
+            <path d="M 0 0 L 10 5 L 0 10 Z" fill="#F59E0B" fillOpacity="0.6" />
+          </marker>
+        </defs>
+
         {/* Grid */}
         {gridLines.map((line, i) => (
           <line key={i} x1={line.x1} y1={line.y1} x2={line.x2} y2={line.y2} stroke="white" strokeOpacity={0.03} strokeWidth={0.5} />
         ))}
 
         {features.map((feature, featureIndex) => (
-          <g key={feature.id}>
+          <g key={feature.id} style={drawingMode !== "none" ? { pointerEvents: "none" } : undefined}>
             {orderShapesForRendering(
               feature.shapes,
               (_shape, shapeIndex) => featureIndex === selectedFeatureIndex && shapeIndex === selectedShapeIndex
@@ -926,7 +1004,7 @@ export function MapCanvas({
         ))}
 
         {walls.map((wall, wallIndex) => (
-          <g key={wall._id ?? wall.partKey ?? wallIndex}>
+          <g key={wall._id ?? wall.partKey ?? wallIndex} style={drawingMode !== "none" ? { pointerEvents: "none" } : undefined}>
             {orderShapesForRendering(
               wall.shapes,
               (_shape, shapeIndex) => wallIndex === selectedWallIndex && (selectedWallShapeIndexes.includes(shapeIndex) || shapeIndex === selectedShapeIndex)
@@ -1050,6 +1128,7 @@ export function MapCanvas({
             <g
               key={label.id}
               transform={rotation ? `rotate(${rotation} ${label.x} ${label.y})` : undefined}
+              style={drawingMode !== "none" ? { pointerEvents: "none" } : undefined}
               onMouseDown={(event) => {
                 event.stopPropagation();
                 const point = getSvgPoint(event);
@@ -1164,6 +1243,91 @@ export function MapCanvas({
               <circle key={index} cx={point.x} cy={point.y} r={1.5} fill="#C084FC" />
             ))}
           </>
+        )}
+
+        {/* Persisted sort paths — rendered for all walls that have one */}
+        {showSortPaths && walls.map((wall) => {
+          if (!wall._id) return null;
+          const pathPoints = wallSortPaths[wall._id];
+          if (!pathPoints || pathPoints.length < 2) return null;
+          return (
+            <g key={`sort-path-${wall._id}`} style={{ pointerEvents: "none" }}>
+              <polyline
+                points={pathPoints.map((p) => `${p.x},${p.y}`).join(" ")}
+                fill="none"
+                stroke="#F59E0B"
+                strokeWidth={1.5 * uiScale}
+                strokeDasharray={`${4 * uiScale} ${3 * uiScale}`}
+                strokeLinecap="round"
+                markerEnd="url(#sort-path-arrow)"
+                opacity={0.85}
+              />
+              {pathPoints.map((p, i) => (
+                <circle
+                  key={i}
+                  cx={p.x}
+                  cy={p.y}
+                  r={2 * uiScale}
+                  fill={i === 0 ? "#F59E0B" : i === pathPoints.length - 1 ? "#F59E0B" : "#FCD34D"}
+                  stroke="#FFFFFF"
+                  strokeWidth={0.5}
+                  opacity={0.9}
+                />
+              ))}
+              {/* Start label */}
+              <text
+                x={pathPoints[0].x}
+                y={pathPoints[0].y - 4 * uiScale}
+                fill="#F59E0B"
+                fontSize={3.5 * uiScale}
+                textAnchor="middle"
+                style={{ pointerEvents: "none", userSelect: "none", fontWeight: 600 }}
+              >
+                1st
+              </text>
+            </g>
+          );
+        })}
+
+        {/* Draft sort path being drawn */}
+        {draftSortPath.length > 0 && (
+          <g style={{ pointerEvents: "none" }}>
+            <polyline
+              points={draftSortPath.map((p) => `${p.x},${p.y}`).join(" ")}
+              fill="none"
+              stroke="#F59E0B"
+              strokeWidth={1.5 * uiScale}
+              strokeDasharray={`${4 * uiScale} ${3 * uiScale}`}
+              strokeLinecap="round"
+              markerEnd={draftSortPath.length >= 2 ? "url(#sort-path-arrow-draft)" : undefined}
+              opacity={0.6}
+            />
+            {draftSortPath.map((p, i) => (
+              <circle
+                key={i}
+                cx={p.x}
+                cy={p.y}
+                r={2 * uiScale}
+                fill={i === 0 ? "#F59E0B" : "#FCD34D"}
+                stroke="#FFFFFF"
+                strokeWidth={0.5}
+                opacity={0.7}
+              />
+            ))}
+            {draftSortPath.length > 0 && (
+              <text
+                x={draftSortPath[0].x}
+                y={draftSortPath[0].y - 4 * uiScale}
+                fill="#F59E0B"
+                fontSize={3.5 * uiScale}
+                textAnchor="middle"
+                opacity={0.6}
+                style={{ pointerEvents: "none", userSelect: "none", fontWeight: 600 }}
+              >
+                1st
+              </text>
+            )}
+          </g>
         )}
       </svg>
 

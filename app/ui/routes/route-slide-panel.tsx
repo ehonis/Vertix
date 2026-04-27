@@ -37,9 +37,11 @@ type Props = {
   user: AppUser | null | undefined;
   onClose: () => void;
   onCompleted: () => void;
+  onPrev?: () => void;
+  onNext?: () => void;
 };
 
-export default function RouteSlidePanel({ route, user, onClose, onCompleted }: Props) {
+export default function RouteSlidePanel({ route, user, onClose, onCompleted, onPrev, onNext }: Props) {
   const { showNotification } = useNotification();
   const { isToday, toggleIsToday, isFlash, toggleIsFlash, date, setDate, getEffectiveDate } =
     useRouteCompletion();
@@ -69,6 +71,24 @@ export default function RouteSlidePanel({ route, user, onClose, onCompleted }: P
       bonusXp: route.bonusXp || 0,
     });
   });
+
+  // Keyboard left/right arrow navigation between neighbors
+  useEffect(() => {
+    function onKeyDown(e: KeyboardEvent) {
+      const tag = (e.target as HTMLElement)?.tagName;
+      if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT") return;
+      if (e.key === "ArrowLeft" && onPrev) {
+        e.preventDefault();
+        onPrev();
+      }
+      if (e.key === "ArrowRight" && onNext) {
+        e.preventDefault();
+        onNext();
+      }
+    }
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [onPrev, onNext]);
 
   useEffect(() => {
     setFrontendCompletions(route.completionCount);
@@ -224,6 +244,24 @@ export default function RouteSlidePanel({ route, user, onClose, onCompleted }: P
 
           {/* Header */}
           <div className="flex items-start gap-3 px-5 pb-3 pt-1">
+            {/* Prev arrow */}
+            <button
+              type="button"
+              onClick={onPrev}
+              disabled={!onPrev}
+              className={clsx(
+                "flex h-7 w-7 shrink-0 items-center justify-center rounded-full transition mt-1",
+                onPrev
+                  ? "bg-white/[0.06] text-zinc-400 hover:bg-white/[0.1] hover:text-zinc-200"
+                  : "text-zinc-700 cursor-default"
+              )}
+              aria-label="Previous route"
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M15 18l-6-6 6-6" />
+              </svg>
+            </button>
+
             {/* Color dot + completed badge */}
             <div className="flex flex-col items-center gap-1 pt-1">
               <span
@@ -274,6 +312,24 @@ export default function RouteSlidePanel({ route, user, onClose, onCompleted }: P
                 </div>
               )}
             </div>
+
+            {/* Next arrow */}
+            <button
+              type="button"
+              onClick={onNext}
+              disabled={!onNext}
+              className={clsx(
+                "flex h-7 w-7 shrink-0 items-center justify-center rounded-full transition mt-1",
+                onNext
+                  ? "bg-white/[0.06] text-zinc-400 hover:bg-white/[0.1] hover:text-zinc-200"
+                  : "text-zinc-700 cursor-default"
+              )}
+              aria-label="Next route"
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M9 18l6-6-6-6" />
+              </svg>
+            </button>
 
             {/* Close button */}
             <button

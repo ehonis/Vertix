@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import type { EditableFeature, EditableShape } from "./MapEditorShell";
+import type { DrawingMode, DrawingTarget, EditableFeature, EditableShape } from "./MapEditorShell";
 
 const QUICK_PICK_COLORS = ["#8200DB", "#1447E6"] as const;
 
@@ -12,9 +12,9 @@ type FeaturePanelProps = {
   setSelectedIndex: (index: number | null) => void;
   selectedShapeIndex: number | null;
   setSelectedShapeIndex: (index: number | null) => void;
-  drawingMode: "none" | "segment" | "polygon" | "triangle";
-  setDrawingMode: (mode: "none" | "segment" | "polygon" | "triangle") => void;
-  setDrawingTarget: (target: { type: "feature"; featureIndex: number } | null) => void;
+  drawingMode: DrawingMode;
+  setDrawingMode: (mode: DrawingMode) => void;
+  setDrawingTarget: (target: DrawingTarget) => void;
   onCopyShape: (owner: "wall" | "feature", ownerIndex: number, shapeIndex: number) => void;
   onPasteShape: () => void;
   hasClipboard: boolean;

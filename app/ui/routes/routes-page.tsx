@@ -11,6 +11,7 @@ import SearchRoutes from "./search-routes";
 import type { AppUser } from "@/lib/appUser";
 import type { AppRouteAttempt, AppRouteCompletion } from "@/lib/appTypes";
 import RoutePopUp from "./route-pop-up";
+import { projectOntoPolyline } from "@/lib/sortByPath";
 
 export default function RoutesPage({ user }: { user: AppUser | null | undefined }) {
   const [selectedDotId, setSelectedDotId] = useState<string | null>(null);
@@ -29,6 +30,17 @@ export default function RoutesPage({ user }: { user: AppUser | null | undefined 
 
   // Fetch route dots for panel data lookup
   const routeDots = useQuery(api.routes.getRoutesPageDots, {});
+
+  // Fetch wall sort paths for neighbor ordering
+  const sortPathsRaw = useQuery(api.wallSortPaths.listAllWithPartKey, {});
+  const sortPathsByPartKey = useMemo(() => {
+    if (!sortPathsRaw) return new Map<string, Array<{ x: number; y: number }>>();
+    const map = new Map<string, Array<{ x: number; y: number }>>();
+    for (const sp of sortPathsRaw) {
+      map.set(sp.partKey, sp.points);
+    }
+    return map;
+  }, [sortPathsRaw]);
 
   // Build panel data for the selected route
   const selectedRoute: RoutePanelData | null = useMemo(() => {
@@ -50,6 +62,49 @@ export default function RoutesPage({ user }: { user: AppUser | null | undefined 
       isArchived: dot.isArchived,
     };
   }, [selectedDotId, routeDots]);
+
+  // Compute prev/next neighbors on the same wall, sorted by sort path or x/y
+  const { prevDotId, nextDotId } = useMemo(() => {
+    if (!selectedDotId || !routeDots) return { prevDotId: null, nextDotId: null };
+    const selected = routeDots.find(r => r.id === selectedDotId);
+    if (!selected || !selected.wallPart) return { prevDotId: null, nextDotId: null };
+
+    // Get all routes on the same wall
+    const wallRoutes = routeDots.filter(r => r.wallPart === selected.wallPart);
+    if (wallRoutes.length <= 1) return { prevDotId: null, nextDotId: null };
+
+    // Sort by sort path projection if available, otherwise by x -> y
+    const pathPoints = sortPathsByPartKey.get(selected.wallPart);
+    let sorted: typeof wallRoutes;
+    if (pathPoints && pathPoints.length >= 2) {
+      sorted = [...wallRoutes].sort((a, b) => {
+        const projA = projectOntoPolyline({ x: a.x, y: a.y }, pathPoints);
+        const projB = projectOntoPolyline({ x: b.x, y: b.y }, pathPoints);
+        if (projA.t !== projB.t) return projA.t - projB.t;
+        return a.title.localeCompare(b.title);
+      });
+    } else {
+      sorted = [...wallRoutes].sort((a, b) => {
+        if (a.x !== b.x) return a.x - b.x;
+        if (a.y !== b.y) return a.y - b.y;
+        return a.title.localeCompare(b.title);
+      });
+    }
+
+    const idx = sorted.findIndex(r => r.id === selectedDotId);
+    return {
+      prevDotId: idx > 0 ? sorted[idx - 1].id : null,
+      nextDotId: idx < sorted.length - 1 ? sorted[idx + 1].id : null,
+    };
+  }, [selectedDotId, routeDots, sortPathsByPartKey]);
+
+  const handlePrevRoute = useCallback(() => {
+    if (prevDotId) setSelectedDotId(prevDotId);
+  }, [prevDotId]);
+
+  const handleNextRoute = useCallback(() => {
+    if (nextDotId) setSelectedDotId(nextDotId);
+  }, [nextDotId]);
 
   const handleSelectDot = useCallback((id: string | null) => {
     setSelectedDotId(id);
@@ -199,6 +254,8 @@ export default function RoutesPage({ user }: { user: AppUser | null | undefined 
                 user={user}
                 onClose={handleClosePanel}
                 onCompleted={handleCompleted}
+                onPrev={prevDotId ? handlePrevRoute : undefined}
+                onNext={nextDotId ? handleNextRoute : undefined}
               />
             )}
           </AnimatePresence>

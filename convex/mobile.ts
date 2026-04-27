@@ -3,6 +3,7 @@ import { v } from "convex/values";
 import { Doc, Id } from "./_generated/dataModel";
 import { mutation, query, QueryCtx, MutationCtx } from "./_generated/server";
 import { getAuthIdentity, requireAuthIdentity } from "./auth";
+import { projectOntoPolyline } from "../lib/sortByPath";
 
 const sessionTypeValidator = v.union(
   v.literal("AUTO"),
@@ -181,6 +182,16 @@ export const getRoutesByWall = query({
     const routeDocs = routeDocsByWall.filter(route => !route.isArchived);
     const data = await Promise.all(routeDocs.map(route => buildMobileRoute(ctx, route, currentUser?._id ?? null)));
 
+    // Look up sort path for this wall
+    const sortPathDoc = await ctx.db
+      .query("wallSortPaths")
+      .withIndex("by_wall", q => q.eq("gymWallId", wallDoc._id))
+      .take(1);
+    const sortPath = sortPathDoc[0]?.points;
+
+    if (sortPath && sortPath.length >= 2) {
+      return { data: sortRoutesByPathProjection(data, sortPath) };
+    }
     return { data: sortRoutes(data) };
   },
 });
@@ -1325,6 +1336,38 @@ function sortRoutes(routes: RouteReadModel[]) {
 
     return a.title.localeCompare(b.title);
   });
+}
+
+function sortRoutesByPathProjection(
+  routes: RouteReadModel[],
+  pathPoints: Array<{ x: number; y: number }>
+) {
+  return [...routes].sort((a, b) => {
+    const hasA = typeof a.x === "number" && typeof a.y === "number";
+    const hasB = typeof b.x === "number" && typeof b.y === "number";
+
+    if (!hasA && !hasB) {
+      return fallbackRouteCompare(a, b);
+    }
+    if (!hasA) return 1;
+    if (!hasB) return -1;
+
+    const projA = projectOntoPolyline({ x: a.x!, y: a.y! }, pathPoints);
+    const projB = projectOntoPolyline({ x: b.x!, y: b.y! }, pathPoints);
+
+    if (projA.t !== projB.t) {
+      return projA.t - projB.t;
+    }
+
+    return fallbackRouteCompare(a, b);
+  });
+}
+
+function fallbackRouteCompare(a: RouteReadModel, b: RouteReadModel) {
+  const aOrder = typeof a.order === "number" ? a.order : Number.POSITIVE_INFINITY;
+  const bOrder = typeof b.order === "number" ? b.order : Number.POSITIVE_INFINITY;
+  if (aOrder !== bOrder) return aOrder - bOrder;
+  return a.title.localeCompare(b.title);
 }
 
 function requireRouteEditor(user: Doc<"users">) {

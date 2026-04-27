@@ -16,6 +16,7 @@ import type * as routeMigrations from "../routeMigrations.js";
 import type * as routes from "../routes.js";
 import type * as seeds from "../seeds.js";
 import type * as users from "../users.js";
+import type * as wallSortPaths from "../wallSortPaths.js";
 
 import type {
   ApiFromModules,
@@ -32,6 +33,7 @@ declare const fullApi: ApiFromModules<{
   routes: typeof routes;
   seeds: typeof seeds;
   users: typeof users;
+  wallSortPaths: typeof wallSortPaths;
 }>;
 
 /**

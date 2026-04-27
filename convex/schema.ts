@@ -243,6 +243,14 @@ export default defineSchema({
     .index("by_gym_archived", ["gymId", "isArchived"])
     .index("by_legacy_prisma_id", ["legacyPrismaId"]),
 
+  wallSortPaths: defineTable({
+    gymId: v.id("gyms"),
+    gymWallId: v.id("gymWalls"),
+    points: v.array(svgPoint),
+  })
+    .index("by_wall", ["gymWallId"])
+    .index("by_gym", ["gymId"]),
+
   routeImages: defineTable({
     routeId: v.id("routes"),
     url: v.string(),

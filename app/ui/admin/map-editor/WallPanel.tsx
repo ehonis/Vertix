@@ -2,7 +2,7 @@
 
 import React from "react";
 import type { Doc, Id } from "@/convex/_generated/dataModel";
-import type { EditableWall, EditableShape } from "./MapEditorShell";
+import type { DrawingMode, DrawingTarget, EditableWall, EditableShape, WallSortPathMap } from "./MapEditorShell";
 
 type WallPanelProps = {
   walls: EditableWall[];
@@ -13,12 +13,16 @@ type WallPanelProps = {
   setSelectedShapeIndex: (index: number | null) => void;
   zones: Doc<"gymZones">[];
   onDelete: (index: number) => void;
-  drawingMode: "none" | "segment" | "polygon" | "triangle";
-  setDrawingMode: (mode: "none" | "segment" | "polygon" | "triangle") => void;
-  setDrawingTarget: (target: { type: "wall"; wallIndex: number } | null) => void;
+  drawingMode: DrawingMode;
+  setDrawingMode: (mode: DrawingMode) => void;
+  setDrawingTarget: (target: DrawingTarget) => void;
   onCopyShape: (owner: "wall" | "feature", ownerIndex: number, shapeIndex: number) => void;
   onPasteShape: () => void;
   hasClipboard: boolean;
+  wallSortPaths: WallSortPathMap;
+  setWallSortPaths: React.Dispatch<React.SetStateAction<WallSortPathMap>>;
+  showSortPaths: boolean;
+  setShowSortPaths: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export function WallPanel({
@@ -36,8 +40,13 @@ export function WallPanel({
   onCopyShape,
   onPasteShape,
   hasClipboard,
+  wallSortPaths,
+  setWallSortPaths,
+  showSortPaths,
+  setShowSortPaths,
 }: WallPanelProps) {
   const selectedWall = selectedIndex !== null ? walls[selectedIndex] : null;
+  const anySortPaths = walls.some((w) => w._id && wallSortPaths[w._id] && wallSortPaths[w._id].length >= 2);
 
   return (
     <div className="flex flex-col text-white">
@@ -47,7 +56,21 @@ export function WallPanel({
           <h3 className="text-[11px] font-semibold uppercase tracking-wider text-zinc-500">
             Walls
           </h3>
-          <button
+          <div className="flex items-center gap-1.5">
+            {anySortPaths && (
+              <button
+                className={`flex h-6 items-center gap-1 rounded-md px-1.5 text-[10px] font-medium transition ${
+                  showSortPaths
+                    ? "bg-amber-500/15 text-amber-400 ring-1 ring-amber-500/30"
+                    : "bg-white/[0.04] text-zinc-500 hover:bg-white/[0.06] hover:text-zinc-400"
+                }`}
+                onClick={() => setShowSortPaths((prev) => !prev)}
+                title={showSortPaths ? "Hide sort paths" : "Show sort paths"}
+              >
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+              </button>
+            )}
+            <button
             className="flex h-6 items-center gap-1 rounded-md border border-dashed border-white/[0.1] px-2 text-[11px] font-medium text-zinc-400 transition hover:border-blue-500/40 hover:bg-blue-500/5 hover:text-blue-400"
             onClick={() => {
               setWalls((prev) => [
@@ -75,6 +98,7 @@ export function WallPanel({
             <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
             Add
           </button>
+          </div>
         </div>
 
         {walls.length === 0 ? (
@@ -111,6 +135,11 @@ export function WallPanel({
                 <span className="flex h-5 min-w-5 items-center justify-center rounded-md bg-white/[0.04] px-1 text-[10px] tabular-nums text-zinc-500">
                   {wall.shapes.length}
                 </span>
+                {wall._id && wallSortPaths[wall._id] && wallSortPaths[wall._id].length >= 2 && (
+                  <span className="flex h-5 items-center rounded-md bg-amber-500/10 px-1.5 text-[9px] font-medium text-amber-500" title="Has sort path">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+                  </span>
+                )}
               </button>
             ))}
           </div>
@@ -267,6 +296,90 @@ export function WallPanel({
                 Triangle
               </button>
             </div>
+          </div>
+
+          {/* Sort Direction */}
+          <div className="space-y-3 border-b border-white/[0.06] p-3">
+            <h3 className="text-[11px] font-semibold uppercase tracking-wider text-zinc-500">Sort Direction</h3>
+            {(() => {
+              const wallId = selectedWall._id;
+              const hasSortPath = wallId && wallSortPaths[wallId] && wallSortPaths[wallId].length >= 2;
+              return (
+                <div className="flex flex-col gap-2">
+                  {hasSortPath ? (
+                    <>
+                      <div className="flex items-center gap-2 rounded-lg bg-amber-500/5 px-2.5 py-2 ring-1 ring-amber-500/20">
+                        <span className="flex h-2 w-2 rounded-full bg-amber-500" />
+                        <span className="text-[11px] font-medium text-amber-400">
+                          {wallSortPaths[wallId!].length} point path defined
+                        </span>
+                      </div>
+                      <div className="grid grid-cols-2 gap-1.5">
+                        <button
+                          className={`flex flex-col items-center gap-1 rounded-lg py-2 text-[10px] font-semibold transition ${
+                            drawingMode === "sortPath"
+                              ? "bg-amber-500/20 text-amber-400 ring-1 ring-amber-500/30"
+                              : "bg-white/[0.03] text-zinc-400 hover:bg-white/[0.06] hover:text-white"
+                          }`}
+                          onClick={() => {
+                            // Clear existing and redraw
+                            if (wallId) {
+                              setWallSortPaths((prev) => {
+                                const next = { ...prev };
+                                delete next[wallId];
+                                return next;
+                              });
+                            }
+                            setDrawingTarget({ type: "wall", wallIndex: selectedIndex });
+                            setDrawingMode("sortPath");
+                          }}
+                        >
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M23 4v6h-6M1 20v-6h6"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>
+                          Redraw
+                        </button>
+                        <button
+                          className="flex flex-col items-center gap-1 rounded-lg py-2 text-[10px] font-semibold bg-white/[0.03] text-red-400/80 hover:bg-red-500/5 hover:text-red-400 transition"
+                          onClick={() => {
+                            if (wallId) {
+                              setWallSortPaths((prev) => {
+                                const next = { ...prev };
+                                delete next[wallId];
+                                return next;
+                              });
+                            }
+                          }}
+                        >
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
+                          Clear
+                        </button>
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <p className="text-[10px] text-zinc-500">
+                        Draw a path along the wall to define route sort order (left-to-right).
+                      </p>
+                      <button
+                        className={`flex items-center justify-center gap-1.5 rounded-lg py-2.5 text-[11px] font-semibold transition ${
+                          drawingMode === "sortPath"
+                            ? "bg-amber-500/20 text-amber-400 ring-1 ring-amber-500/30"
+                            : "bg-white/[0.03] text-zinc-400 hover:bg-white/[0.06] hover:text-white"
+                        }`}
+                        onClick={() => {
+                          setDrawingTarget({ type: "wall", wallIndex: selectedIndex });
+                          setDrawingMode("sortPath");
+                        }}
+                      >
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M5 12h14"/><path d="M12 5l7 7-7 7"/>
+                        </svg>
+                        Draw Sort Path
+                      </button>
+                    </>
+                  )}
+                </div>
+              );
+            })()}
           </div>
 
           {/* Shapes list */}

@@ -10,6 +10,13 @@ import { FeaturePanel } from "./FeaturePanel";
 import { LabelPanel } from "./LabelPanel";
 import { MapSettingsPanel } from "./MapSettingsPanel";
 
+export type DrawingMode = "none" | "segment" | "polygon" | "triangle" | "sortPath";
+
+export type DrawingTarget =
+  | { type: "wall"; wallIndex: number }
+  | { type: "feature"; featureIndex: number }
+  | null;
+
 type EditorTab = "walls" | "features" | "labels" | "settings";
 
 // Types for local editable state
@@ -91,6 +98,8 @@ export type MapSettings = {
   isActive: boolean;
 };
 
+export type WallSortPathMap = Record<string, { x: number; y: number }[]>;
+
 export type ClipboardItem = {
   shape: EditableShape;
   /** Style context from the parent wall/feature so paste can optionally apply styling */
@@ -138,12 +147,12 @@ export function MapEditorShell() {
   const [showWallNudgeOverlay, setShowWallNudgeOverlay] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [saveStatus, setSaveStatus] = useState<string | null>(null);
-  const [drawingMode, setDrawingMode] = useState<"none" | "segment" | "polygon" | "triangle">("none");
-  const [drawingTarget, setDrawingTarget] = useState<
-    | { type: "wall"; wallIndex: number }
-    | { type: "feature"; featureIndex: number }
-    | null
-  >(null);
+  const [drawingMode, setDrawingMode] = useState<DrawingMode>("none");
+  const [drawingTarget, setDrawingTarget] = useState<DrawingTarget>(null);
+
+  // Sort path state: keyed by gymWallId (string), storing polyline points
+  const [wallSortPaths, setWallSortPaths] = useState<WallSortPathMap>({});
+  const [showSortPaths, setShowSortPaths] = useState(true);
 
   // Clipboard for copy/paste (operates on individual shapes)
   const [clipboard, setClipboard] = useState<ClipboardItem>(null);
@@ -352,6 +361,10 @@ export function MapEditorShell() {
     api.mapEditor.listWallsForArea,
     selectedAreaId ? { gymAreaId: selectedAreaId } : "skip"
   );
+  const existingSortPaths = useQuery(
+    api.wallSortPaths.listByArea,
+    selectedAreaId ? { gymAreaId: selectedAreaId } : "skip"
+  );
 
   // Convex mutations
   const upsertAreaMap = useMutation(api.mapEditor.upsertAreaMap);
@@ -359,6 +372,8 @@ export function MapEditorShell() {
   const deleteWallMut = useMutation(api.mapEditor.deleteWall);
   const createArea = useMutation(api.mapEditor.createArea);
   const createZone = useMutation(api.mapEditor.createZone);
+  const upsertSortPath = useMutation(api.wallSortPaths.upsert);
+  const removeSortPath = useMutation(api.wallSortPaths.remove);
 
   // Load data from DB when area is selected
   const loadFromDb = useCallback(() => {
@@ -452,7 +467,16 @@ export function MapEditorShell() {
         }))
       );
     }
-  }, [existingMap, existingWalls]);
+
+    // Hydrate sort paths keyed by wall ID
+    if (existingSortPaths) {
+      const pathMap: WallSortPathMap = {};
+      for (const sp of existingSortPaths) {
+        pathMap[sp.gymWallId] = sp.points;
+      }
+      setWallSortPaths(pathMap);
+    }
+  }, [existingMap, existingWalls, existingSortPaths]);
 
   // Auto-load when data arrives
   React.useEffect(() => {
@@ -466,7 +490,7 @@ export function MapEditorShell() {
       loadFromDb();
       hasLoadedAreaRef.current = selectedAreaId;
     }
-  }, [selectedAreaId, existingMap, existingWalls, loadFromDb]);
+  }, [selectedAreaId, existingMap, existingWalls, existingSortPaths, loadFromDb]);
 
   // SVG viewbox parsing
   const viewBox = useMemo(() => {
@@ -558,6 +582,22 @@ export function MapEditorShell() {
 
       setWalls(nextWalls);
 
+      // Save sort paths for walls that have them
+      for (const wall of nextWalls) {
+        if (!wall._id) continue;
+        const points = wallSortPaths[wall._id];
+        if (points && points.length >= 2) {
+          await upsertSortPath({
+            gymId: selectedGymId,
+            gymWallId: wall._id,
+            points,
+          });
+        } else if (!points || points.length === 0) {
+          // Remove sort path if it was cleared
+          await removeSortPath({ gymWallId: wall._id });
+        }
+      }
+
       isHydratingFromDbRef.current = true;
       historyRef.current = [];
       lastSnapshotRef.current = {
@@ -582,8 +622,11 @@ export function MapEditorShell() {
     features,
     labels,
     walls,
+    wallSortPaths,
     upsertAreaMap,
     upsertWall,
+    upsertSortPath,
+    removeSortPath,
   ]);
 
   // Deletion
@@ -700,6 +743,9 @@ export function MapEditorShell() {
             setLabels={setLabels}
             showWallNudgeOverlay={showWallNudgeOverlay}
             setShowWallNudgeOverlay={setShowWallNudgeOverlay}
+            wallSortPaths={wallSortPaths}
+            setWallSortPaths={setWallSortPaths}
+            showSortPaths={showSortPaths}
           />
         ) : (
           <div className="flex flex-col items-center gap-4">
@@ -861,6 +907,10 @@ export function MapEditorShell() {
                   onCopyShape={handleCopyShapeAt}
                   onPasteShape={handlePaste}
                   hasClipboard={clipboard !== null}
+                  wallSortPaths={wallSortPaths}
+                  setWallSortPaths={setWallSortPaths}
+                  showSortPaths={showSortPaths}
+                  setShowSortPaths={setShowSortPaths}
                 />
               )}
               {activeTab === "features" && (
