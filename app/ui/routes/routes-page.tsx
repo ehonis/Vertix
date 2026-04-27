@@ -1,458 +1,285 @@
 "use client";
 
-import type { AppRouteAttempt, AppRouteCompletion } from "@/lib/appTypes";
-import { useState, useEffect, useCallback, useRef } from "react";
-import WallRoutes from "./wall-routes";
-import SearchRoutes from "./search-routes";
-import { motion } from "framer-motion";
-import { AnimatePresence } from "framer-motion";
-import RoutePopUp from "./route-pop-up";
-import RoutesMapShell from "./routes-map-shell";
-
-import { useSearchParams } from "next/navigation";
-import { useRouter } from "next/navigation";
+import { useState, useCallback, useMemo, useEffect } from "react";
+import { AnimatePresence, motion } from "motion/react";
+import { useQuery } from "convex/react";
+import { api } from "@/convex/_generated/api";
 import { RouteCompletionProvider } from "@/app/contexts/routeCompletionContext";
-import {
-  findCommunityGradeForRoute,
-  calculateCompletionXpForRoute,
-  isGradeHigher,
-} from "@/lib/route-shared";
-import { RouteWithExtraData } from "@/app/api/routes/get-wall-routes-non-archive/route";
-import { isWallPartKey, toWallPartKey, type WallPartKey } from "@/lib/wallLocations";
+import RoutesDotMapShell from "./routes-dot-map-shell";
+import RouteSlidePanel, { type RoutePanelData } from "./route-slide-panel";
+import SearchRoutes from "./search-routes";
 import type { AppUser } from "@/lib/appUser";
+import type { AppRouteAttempt, AppRouteCompletion } from "@/lib/appTypes";
+import RoutePopUp from "./route-pop-up";
 
 export default function RoutesPage({ user }: { user: AppUser | null | undefined }) {
-  const router = useRouter();
-  const searchParams = useSearchParams();
+  const [selectedDotId, setSelectedDotId] = useState<string | null>(null);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
-  const isClosingRef = useRef(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [searchText, setSearchText] = useState("");
+  const [isMobile, setIsMobile] = useState(false);
 
-  /**
-   * Get initial wall selection from URL params or localStorage
-   * This function determines which wall should be selected when the component loads
-   * Priority: URL search params > localStorage > null (no selection)
-   *
-   * @returns The initially selected wall location or null if none is stored
-   */
-  const getInitialWallSelection = (): WallPartKey | null => {
-    // First try to get from URL search params - this allows direct linking to specific walls
-    const wallParam = searchParams.get("wall");
-    if (isWallPartKey(wallParam)) {
-      return wallParam;
-    }
-
-    // Fallback to localStorage if no URL param - this persists selection across page refreshes
-    if (typeof window !== "undefined") {
-      const storedWall = localStorage.getItem("selectedWall");
-      const mappedWall = toWallPartKey(storedWall);
-      if (mappedWall) {
-        return mappedWall;
-      }
-    }
-
-    return null;
-  };
-
-  const [wall, setWall] = useState<WallPartKey | null>(getInitialWallSelection);
-  const [isTopDownActive, setIsTopDownActive] = useState(false);
-  const [isSearch, setIsSearch] = useState(false);
-  const [searchText, setSearchText] = useState<string>("");
-
-  const [isRoutePopUp, setIsRoutePopUp] = useState(false);
-  const [routePopUpId, setRoutePopUpId] = useState<string>("");
-  const [routePopUpName, setRoutePopUpName] = useState<string>("");
-  const [routePopUpGrade, setRoutePopUpGrade] = useState<string>("");
-  const [routePopUpColor, setRoutePopUpColor] = useState<string>("");
-
-  const [routePopUpCompletions, setRoutePopUpCompletions] = useState<number>(0);
-  const [routePopUpAttempts, setRoutePopUpAttempts] = useState<number>(0);
-
-  const [routePopUpUserGrade, setRoutePopUpUserGrade] = useState<string | null>(null);
-  const [routePopUpCommunityGrade, setRoutePopUpCommunityGrade] = useState<string | null>(null);
-  const [routePopUpXp, setRoutePopUpXp] = useState<{
-    xp: number;
-    baseXp: number;
-    xpExtrapolated: { type: string; xp: number }[];
-  } | null>(null);
-  const [routePopUpIsArchived, setRoutePopUpIsArchived] = useState<boolean>(false);
-  const [routePopUpBonusXp, setRoutePopUpBonusXp] = useState<number>(0);
-  /**
-   * Update URL and localStorage when wall selection changes
-   * This effect ensures that:
-   * 1. The URL reflects the current wall selection (for bookmarking/sharing)
-   * 2. The selection is persisted in localStorage (for page refreshes)
-   * 3. The browser history is updated without creating new entries
-   */
+  // Mobile detection
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      if (wall) {
-        // Update URL with wall parameter for direct linking and bookmarking
-        const url = new URL(window.location.href);
-        url.searchParams.set("wall", wall);
-        window.history.replaceState({}, "", url.toString());
-
-        // Store in localStorage for persistence across page refreshes
-        localStorage.setItem("selectedWall", wall);
-      } else {
-        // Remove wall parameter from URL when no wall is selected
-        const url = new URL(window.location.href);
-        url.searchParams.delete("wall");
-        window.history.replaceState({}, "", url.toString());
-
-        // Remove from localStorage when no wall is selected
-        localStorage.removeItem("selectedWall");
-      }
-    }
-  }, [wall]);
-
-  /**
-   * Memoized callback to handle wall selection changes from the TopDown component
-   * This prevents infinite re-renders by only recreating the function when needed
-   */
-  const handleTopDownChange = useCallback((data: WallPartKey | null) => {
-    if (data === null) {
-      setIsTopDownActive(false);
-      setWall(data);
-    } else {
-      setIsTopDownActive(true);
-      setWall(data);
-    }
+    const check = () => setIsMobile(window.innerWidth < 768);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
   }, []);
 
-  // Initialize isTopDownActive when wall is set from URL/localStorage
-  useEffect(() => {
-    if (wall) {
-      setIsTopDownActive(true);
-    }
-  }, [wall]);
+  // Fetch route dots for panel data lookup
+  const routeDots = useQuery(api.routes.getRoutesPageDots, {});
 
-  // Check for route ID in URL and open popup if present
-  useEffect(() => {
-    // Don't open if we're in the process of closing
-    if (isClosingRef.current) {
-      return;
-    }
-    const routeId = searchParams.get("route");
-    // Only open if route ID exists, it's different from current, and popup is not already open
-    if (routeId && routeId !== routePopUpId && !isRoutePopUp) {
-      const fetchAndOpenRoute = async () => {
-        try {
-          const queryParams = new URLSearchParams({
-            routeId: routeId,
-            ...(user?.id && { userId: user.id }),
-          });
-          const response = await fetch(`/api/routes/get-route-by-id?${queryParams.toString()}`);
-          if (!response.ok) {
-            console.error("Failed to fetch route");
-            return;
-          }
-          const { data } = await response.json();
-          const route: RouteWithExtraData = data;
+  // Build panel data for the selected route
+  const selectedRoute: RoutePanelData | null = useMemo(() => {
+    if (!selectedDotId || !routeDots) return null;
+    const dot = routeDots.find(r => r.id === selectedDotId);
+    if (!dot) return null;
+    return {
+      id: dot.id,
+      convexId: dot.convexId,
+      title: dot.title,
+      grade: dot.grade,
+      color: dot.color,
+      type: dot.type,
+      xp: dot.xp,
+      bonusXp: dot.bonusXp,
+      wallPart: dot.wallPart,
+      completionCount: dot.completionCount,
+      attemptCount: dot.attemptCount,
+      isArchived: dot.isArchived,
+    };
+  }, [selectedDotId, routeDots]);
 
-          // Calculate community grade
-          const communityGrade =
-            route.grade.toLowerCase() === "vfeature" || route.grade.toLowerCase() === "5.feature"
-              ? "none"
-              : findCommunityGradeForRoute(
-                  route.communityGrades.map(grade => ({
-                    id: typeof grade.id === "number" ? grade.id : 0,
-                    grade: grade.grade,
-                    routeId: grade.routeId,
-                    userId: grade.userId,
-                    createdAt: grade.createdAt ?? new Date(0),
-                    updatedAt: grade.updatedAt ?? new Date(0),
-                  }))
-                );
+  const handleSelectDot = useCallback((id: string | null) => {
+    setSelectedDotId(id);
+    if (id) setIsSearchOpen(false);
+  }, []);
 
-          // Get user grade if user exists
-          let userGrade: string | null = null;
-          if (
-            user &&
-            route.grade.toLowerCase() !== "vfeature" &&
-            route.grade.toLowerCase() !== "5.feature"
-          ) {
-            userGrade =
-              route.communityGrades.find(grade => grade.userId === user.id)?.grade || null;
-          }
+  const handleCompleted = useCallback(() => {
+    setRefreshTrigger(prev => prev + 1);
+  }, []);
 
-          // Calculate XP
-          let xp: {
-            xp: number;
-            baseXp: number;
-            xpExtrapolated: { type: string; xp: number }[];
-          } | null = null;
-          if (user && !route.isArchive) {
-            const routeType = route.grade.startsWith("5") ? "rope" : "boulder";
-            xp = calculateCompletionXpForRoute({
-              grade: route.grade,
-              previousCompletions: route.completions.length,
-              newHighestGrade: isGradeHigher(user as any, route.grade, routeType),
-              bonusXp: route.bonusXp || 0,
-            });
-          }
+  const handleClosePanel = useCallback(() => {
+    setSelectedDotId(null);
+  }, []);
 
-          // Open the popup
-          handleRoutePopUp(
-            route.id,
-            route.title,
-            route.grade,
-            route.color,
-            route.completions as AppRouteCompletion[],
-            route.attempts as AppRouteAttempt[],
-            userGrade,
-            communityGrade,
-            xp,
-            route.isArchive,
-            route.bonusXp || 0
-          );
-        } catch (error) {
-          console.error("Error fetching route:", error);
+  // Search overlay route pop-up state (for search result clicks)
+  const [searchPopup, setSearchPopup] = useState<{
+    id: string;
+    name: string;
+    grade: string;
+    color: string;
+    completions: number;
+    attempts: number;
+    userGrade: string | null;
+    communityGrade: string | null;
+    xp: { xp: number; baseXp: number; xpExtrapolated: { type: string; xp: number }[] } | null;
+    isArchived: boolean;
+    bonusXp: number;
+  } | null>(null);
+
+  const handleSearchRouteSelect = useCallback(
+    (
+      routeId: string,
+      name: string,
+      grade: string,
+      color: string,
+      completions: AppRouteCompletion[],
+      attempts: AppRouteAttempt[],
+      userGrade: string | null,
+      communityGrade: string,
+      xp: { xp: number; baseXp: number; xpExtrapolated: { type: string; xp: number }[] } | null,
+      isArchived: boolean,
+      bonusXp: number = 0,
+    ) => {
+      // Check if this route has a dot on the map, if so select it
+      if (routeDots) {
+        const dot = routeDots.find(r => r.id === routeId);
+        if (dot) {
+          setSelectedDotId(dot.id);
+          setIsSearchOpen(false);
+          return;
         }
-      };
-      fetchAndOpenRoute();
-    }
-  }, [searchParams, user, routePopUpId, isRoutePopUp]);
-
-  const searchInputVariants = {
-    hidden: {
-      width: 0,
-      opacity: 0,
+      }
+      // Otherwise open the legacy popup for non-placed routes
+      setSearchPopup({
+        id: routeId,
+        name,
+        grade,
+        color,
+        completions: completions.length,
+        attempts: attempts[0]?.attempts || 0,
+        userGrade,
+        communityGrade,
+        xp,
+        isArchived,
+        bonusXp,
+      });
     },
-    visible: {
-      width: "100%",
-      opacity: 1,
-      transition: {
-        duration: 0.4,
-        ease: [0.0, 0.0, 0.2, 1.0] as const,
-      },
-    },
-    exit: {
-      width: 0,
-      opacity: 0,
-      transition: {
-        duration: 0,
-        ease: [0.4, 0.0, 1.0, 1.0] as const,
-      },
-    },
-  };
-  const topDownVariants = {
-    visible: {
-      opacity: 1,
-      transition: {
-        duration: 0.3,
-        ease: [0.0, 0.0, 0.2, 1.0] as const,
-      },
-    },
-    exit: {
-      opacity: 0,
-      transition: {
-        duration: 0.3,
-        ease: [0.4, 0.0, 1.0, 1.0] as const,
-      },
-    },
-  };
+    [routeDots],
+  );
 
-  const handleSearchButton = () => {
-    setWall(null);
-    setIsSearch(!isSearch);
-    setIsTopDownActive(false);
-  };
-  const handleRoutePopUp = (
-    routeId: string,
-    name: string,
-    grade: string,
-    color: string,
-    completions: AppRouteCompletion[],
-    attempts: AppRouteAttempt[],
-    userGrade: string | null,
-    communityGrade: string | null,
-    xp: { xp: number; baseXp: number; xpExtrapolated: { type: string; xp: number }[] } | null,
-    isArchived: boolean,
-    bonusXp: number = 0
-  ) => {
-    setRoutePopUpId(routeId);
-    setRoutePopUpName(name);
-    setRoutePopUpGrade(grade);
-    setRoutePopUpColor(color);
-    setRoutePopUpCompletions(completions.length);
-    setRoutePopUpAttempts(attempts[0]?.attempts || 0);
-    setRoutePopUpCommunityGrade(communityGrade);
-    setRoutePopUpUserGrade(userGrade);
-    setRoutePopUpXp(xp);
-    setRoutePopUpIsArchived(isArchived);
-    setRoutePopUpBonusXp(bonusXp);
-    setIsRoutePopUp(true);
-
-    // Add route ID to URL
-    if (typeof window !== "undefined") {
-      const url = new URL(window.location.href);
-      url.searchParams.set("route", routeId);
-      window.history.pushState({}, "", url.toString());
-    }
-  };
-  const handleRoutePopUpCancel = () => {
-    // Set flag to prevent reopening during close
-    isClosingRef.current = true;
-
-    setRoutePopUpId("");
-    setRoutePopUpName("");
-    setRoutePopUpGrade("");
-    setRoutePopUpColor("");
-    setRoutePopUpCompletions(0);
-    setRoutePopUpAttempts(0);
-    setRoutePopUpCommunityGrade("");
-    setRoutePopUpUserGrade(null);
-    setRoutePopUpIsArchived(false);
-    setRoutePopUpBonusXp(0);
-    setIsRoutePopUp(false);
-
-    // Remove route ID from URL using Next.js router to ensure searchParams updates
-    if (typeof window !== "undefined") {
-      const url = new URL(window.location.href);
-      url.searchParams.delete("route");
-      const newUrl = url.pathname + (url.search ? url.search : "");
-      router.replace(newUrl, { scroll: false });
-    }
-
-    // Reset flag after a short delay to allow URL to update
-    setTimeout(() => {
-      isClosingRef.current = false;
-    }, 100);
-
-    // Trigger a refresh of the WallRoutes component data
+  const handleSearchPopupClose = useCallback(() => {
+    setSearchPopup(null);
     setRefreshTrigger(prev => prev + 1);
-  };
+  }, []);
 
-  const handleRouteCompleted = () => {
-    // Trigger a refresh of the WallRoutes component data when a route is completed
-    setRefreshTrigger(prev => prev + 1);
-  };
+  // ── Mobile: full-blocker download screen ──
+  if (isMobile) {
+    return (
+      <div className="flex h-[calc(100dvh-64px)] flex-col items-center justify-center bg-[#09090B] px-6 font-barlow text-white">
+        <div className="flex w-full max-w-sm flex-col items-center text-center">
+          {/* Icon */}
+          <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-3xl bg-gradient-to-br from-blue-600/20 to-purple-600/20 ring-1 ring-white/[0.08]">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-blue-400">
+              <rect x="5" y="2" width="14" height="20" rx="2" ry="2" />
+              <line x1="12" y1="18" x2="12.01" y2="18" />
+            </svg>
+          </div>
 
+          <h1 className="text-2xl font-bold tracking-tight">
+            Routes are best on the app
+          </h1>
+          <p className="mt-2 text-sm leading-relaxed text-zinc-400">
+            View the interactive map, complete routes, and track your progress with the full mobile experience.
+          </p>
+
+          {/* App store buttons */}
+          <div className="mt-8 flex w-full flex-col gap-3">
+            <a
+              href="#"
+              className="flex h-12 w-full items-center justify-center gap-2.5 rounded-xl bg-white text-[15px] font-semibold text-black transition active:scale-[0.97]"
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z" />
+              </svg>
+              Download on the App Store
+            </a>
+            <a
+              href="#"
+              className="flex h-12 w-full items-center justify-center gap-2.5 rounded-xl bg-white text-[15px] font-semibold text-black transition active:scale-[0.97]"
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M3.609 1.814L13.792 12 3.61 22.186a.996.996 0 0 1-.61-.92V2.734a1 1 0 0 1 .609-.92zm10.89 10.893l2.302 2.302-10.937 6.333 8.635-8.635zm3.199-3.199l2.302 2.302a1 1 0 0 1 0 1.38l-2.302 2.302L15.19 12l2.508-2.492zM5.864 2.658L16.8 9.99l-2.302 2.302-8.634-8.634z" />
+              </svg>
+              Get it on Google Play
+            </a>
+          </div>
+
+          {/* Disclaimer */}
+          <div className="mt-8 rounded-lg border border-white/[0.06] bg-white/[0.02] px-4 py-3">
+            <p className="text-[11px] leading-relaxed text-zinc-500">
+              You can switch to{" "}
+              <span className="font-medium text-zinc-400">&quot;Request Desktop Site&quot;</span>{" "}
+              in your browser menu to access the web version, but it is not optimized for mobile and may not work as expected.
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // ── Desktop layout ──
   return (
     <RouteCompletionProvider>
-      <div className="w-full  font-barlow text-white flex justify-center">
-        {isRoutePopUp && (
-          <AnimatePresence>
-            <RoutePopUp
-              onCancel={handleRoutePopUpCancel}
-              id={routePopUpId}
-              name={routePopUpName}
-              grade={routePopUpGrade}
-              user={user}
-              color={routePopUpColor}
-              completions={routePopUpCompletions}
-              attempts={routePopUpAttempts}
-              userGrade={routePopUpUserGrade}
-              communityGrade={routePopUpCommunityGrade}
-              onRouteCompleted={handleRouteCompleted}
-              xp={routePopUpXp}
-              isArchived={routePopUpIsArchived}
-              bonusXp={routePopUpBonusXp}
-            />
-          </AnimatePresence>
-        )}
-        <div className="flex flex-col w-xs md:w-md h-full items-center mt-6">
-          <div className="flex flex-col gap-1 w-full mb-3">
-            <div className="flex gap-2 w-full justify-between items-center">
-              {!isSearch && (
-                <h1 className="font-barlow text-white font-bold text-3xl text-start place-self-start italic">
-                  Routes
-                </h1>
-              )}
+      <div className="flex h-[calc(100dvh-64px)] flex-col bg-[#09090B] font-barlow text-white">
+        <div className="relative flex min-h-0 flex-1 overflow-hidden bg-[#08080A]">
+          {/* Map canvas */}
+          <RoutesDotMapShell
+            selectedId={selectedDotId}
+            onSelectDot={handleSelectDot}
+          />
 
-              <AnimatePresence>
-                {isSearch && (
-                  <motion.input
-                    key="search-input"
-                    type="text"
-                    className="border-b border-white w-full bg-transparent text-white placeholder-gray-500 focus:outline-none"
-                    placeholder="Search routes by name or grade"
-                    variants={searchInputVariants}
-                    value={searchText}
-                    onChange={e => setSearchText(e.target.value)}
-                    initial="hidden"
-                    animate="visible"
-                    exit="exit"
-                  />
-                )}
-              </AnimatePresence>
-              <button onClick={() => handleSearchButton()}>
-                {isSearch ? (
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth={1.5}
-                    stroke="currentColor"
-                    className="size-8"
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
-                  </svg>
-                ) : (
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth={1.5}
-                    stroke="currentColor"
-                    className="size-8"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
-                    />
-                  </svg>
-                )}
-              </button>
-            </div>
-          </div>
-          {isSearch && (
-            <div>
-              {user ? (
-                <SearchRoutes
-                  searchText={searchText}
-                  onData={handleRoutePopUp}
-                  user={user}
-                  refreshTrigger={refreshTrigger}
-                />
-              ) : null}
-            </div>
-          )}
+          {/* Bottom sheet panel */}
           <AnimatePresence>
-            {!isSearch && (
-              <motion.div
-                variants={topDownVariants}
-                animate="visible"
-                exit="exit"
-                className="flex flex-col w-full  "
-              >
-                <div className="bg-slate-900 rounded p-5 pl-4 py-3 flex flex-col justify-center items-center outline outline-blue-600">
-                  <RoutesMapShell onData={handleTopDownChange} initialSelection={wall} />
-                </div>
-                <p className="font-normal text-xs mt-1">
-                  Tap a wall on the map to see the routes there
-                </p>
-              </motion.div>
+            {selectedRoute && (
+              <RouteSlidePanel
+                route={selectedRoute}
+                user={user}
+                onClose={handleClosePanel}
+                onCompleted={handleCompleted}
+              />
             )}
           </AnimatePresence>
 
+          {/* Search overlay toggle */}
+          <button
+            type="button"
+            onClick={() => setIsSearchOpen(prev => !prev)}
+            className="absolute right-3 top-3 z-10 flex h-8 items-center gap-1.5 rounded-lg border border-white/[0.08] bg-[#0c0c0f]/90 px-3 text-zinc-400 shadow-lg backdrop-blur-sm transition hover:bg-white/[0.06] hover:text-zinc-200"
+          >
+            {isSearchOpen ? (
+              <>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M18 6 6 18" />
+                  <path d="m6 6 12 12" />
+                </svg>
+                <span className="text-xs font-medium">Close</span>
+              </>
+            ) : (
+              <>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="11" cy="11" r="8" />
+                  <path d="m21 21-4.3-4.3" />
+                </svg>
+                <span className="text-xs font-medium">Search</span>
+              </>
+            )}
+          </button>
+
+          {/* Search overlay */}
           <AnimatePresence>
-            {isTopDownActive && (
-              <motion.div variants={topDownVariants} animate="visible" exit="exit" className="mt-3">
-                <h2 className="font-barlow text-white font-bold text-2xl text-start place-self-start mb-2">
-                  Sorted by wall position
-                </h2>
-                <WallRoutes
-                  wall={wall}
-                  user={user ?? null}
-                  onData={handleRoutePopUp}
-                  refreshTrigger={refreshTrigger}
+            {isSearchOpen && (
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.2 }}
+                className="absolute right-3 top-14 z-30 w-[360px] max-h-[calc(100%-80px)] overflow-y-auto rounded-xl border border-white/[0.06] bg-[#0c0c0f]/95 p-4 backdrop-blur-md shadow-2xl"
+              >
+                <input
+                  type="text"
+                  value={searchText}
+                  onChange={e => setSearchText(e.target.value)}
+                  placeholder="Search by name or grade..."
+                  autoFocus
+                  className="mb-3 h-9 w-full rounded-lg border border-white/[0.08] bg-white/[0.04] px-3 text-sm text-zinc-200 placeholder-zinc-600 focus:border-blue-500/50 focus:outline-none focus:ring-1 focus:ring-blue-500/30"
                 />
+                {user && searchText && (
+                  <SearchRoutes
+                    searchText={searchText}
+                    onData={handleSearchRouteSelect}
+                    user={user}
+                    refreshTrigger={refreshTrigger}
+                  />
+                )}
               </motion.div>
             )}
           </AnimatePresence>
         </div>
+
+        {/* Search popup for non-placed routes */}
+        {searchPopup && (
+          <AnimatePresence>
+            <RoutePopUp
+              onCancel={handleSearchPopupClose}
+              id={searchPopup.id}
+              name={searchPopup.name}
+              grade={searchPopup.grade}
+              user={user}
+              color={searchPopup.color}
+              completions={searchPopup.completions}
+              attempts={searchPopup.attempts}
+              userGrade={searchPopup.userGrade}
+              communityGrade={searchPopup.communityGrade}
+              onRouteCompleted={handleCompleted}
+              xp={searchPopup.xp}
+              isArchived={searchPopup.isArchived}
+              bonusXp={searchPopup.bonusXp}
+            />
+          </AnimatePresence>
+        )}
       </div>
     </RouteCompletionProvider>
   );

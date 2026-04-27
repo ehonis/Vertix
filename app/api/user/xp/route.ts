@@ -42,15 +42,10 @@ export async function GET(req: NextRequest) {
       {}
     );
     const user = leaderboardData.total.find(entry => entry.id === userId) ?? null;
-
-    if (!user) {
-      return NextResponse.json({ error: "User not found" }, { status: 404 });
-    }
-
     const currentMonthXp = leaderboardData.monthly.find(entry => entry.user.id === userId)?.xp || 0;
 
     return NextResponse.json({
-      xp: user.totalXp || 0,
+      xp: user?.totalXp || 0,
       monthlyXp: currentMonthXp,
     });
   } catch (error) {

@@ -5,8 +5,8 @@ export default function Footer() {
   // Get the current pathname
   const pathname = usePathname();
 
-  // Don't render the footer if we're on a scroller page
-  if (pathname?.includes("scroller")) {
+  // Don't render the footer if we're on a scroller page or routes page
+  if (pathname?.includes("scroller") || pathname === "/routes") {
     return null;
   }
 

@@ -134,6 +134,61 @@ export const getRouteManagerRoutes = query({
   },
 });
 
+/**
+ * Lightweight query for the public /routes page dot-map view.
+ * Returns every placed, non-archived route with just enough data
+ * to render colored dots + grade text, plus the viewer's completion count.
+ */
+export const getRoutesPageDots = query({
+  args: {},
+  handler: async (ctx) => {
+    const currentUser: Doc<"users"> | null = await ctx.runQuery(api.users.getCurrent, {});
+    const routes = await ctx.db.query("routes").take(10000);
+    const placed = routes.filter(
+      (r) => !r.isArchived && r.x != null && r.y != null,
+    );
+
+    const dots = await Promise.all(
+      placed.map(async (route) => {
+        let completionCount = 0;
+        let attemptCount = 0;
+        if (currentUser) {
+          const completions = await getRouteCompletionsForUser(
+            ctx,
+            route._id,
+            currentUser._id,
+          );
+          completionCount = completions.length;
+          const attempts = await getRouteAttemptsForUser(
+            ctx,
+            route._id,
+            currentUser._id,
+          );
+          attemptCount = attempts[0]?.attempts ?? 0;
+        }
+        return {
+          id: route.legacyPrismaId ?? route._id,
+          convexId: route._id,
+          title: route.title,
+          grade: route.grade,
+          color: route.color,
+          type: route.type,
+          xp: route.xp,
+          bonusXp: route.bonusXp ?? 0,
+          x: route.x!,
+          y: route.y!,
+          wallPart: route.legacyLocationKey ?? null,
+          completionCount,
+          attemptCount,
+          isArchived: route.isArchived,
+        };
+      }),
+    );
+
+    return dots;
+  },
+});
+
 export const getRouteByLegacyOrConvexId = query({
   args: {
     routeId: v.string(),
